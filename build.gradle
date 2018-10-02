@@ -1,0 +1,142 @@
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
+
+buildscript {
+    // Synchronized versions numbers of GeckoView (Beta) artifacts.
+    ext.geckoBeta = [
+            // mozilla-beta: FENNEC_63_0b3
+            revision: '0269319281578bff4e01d77a21350bf91ba08620',
+            version: '63.0.20180904170936'
+    ]
+
+    ext.geckoRelease = [
+        // mozilla-release: FENNEC_62_0_RELEASE
+        revision: '9cbae12a3fff404ed2c12070ad475424d0ae869f',
+        version: '62.0.20180830143136'
+    ]
+
+    repositories {
+        google()
+        jcenter()
+    }
+
+    dependencies {
+        classpath Deps.tools_androidgradle
+        classpath Deps.tools_kotlingradle
+    }
+}
+
+plugins {
+    id("io.gitlab.arturbosch.detekt").version("1.0.0.RC7-3")
+}
+
+allprojects {
+    repositories {
+        google()
+        jcenter()
+
+        maven {
+            url "https://maven.mozilla.org/maven2"
+        }
+    }
+}
+
+subprojects {
+    apply plugin: 'jacoco'
+
+    afterEvaluate {
+        if (it.hasProperty('android')) {
+            jacoco {
+                toolVersion = "0.8.2"
+            }
+
+            android {
+                testOptions {
+                    unitTests {
+                        includeAndroidResources = true
+                    }
+                }
+
+                lintOptions {
+                    warningsAsErrors true
+                    abortOnError true
+                }
+            }
+
+            if (project.hasProperty("coverage") && project.name != "support-test") {
+                tasks.withType(Test) {
+                    jacoco.includeNoLocationClasses = true
+                    doLast { jacocoTestReport.execute() }
+                }
+
+                task jacocoTestReport(type: JacocoReport) {
+                    reports {
+                        xml.enabled = true
+                        html.enabled = true
+                    }
+
+                    def fileFilter = ['**/R.class', '**/R$*.class', '**/BuildConfig.*', '**/Manifest*.*',
+                                      '**/*Test*.*', 'android/**/*.*', '**/*$[0-9].*']
+                    def kotlinDebugTree = fileTree(dir: "$project.buildDir/tmp/kotlin-classes/debug", excludes: fileFilter)
+                    def javaDebugTree = fileTree(dir: "$project.buildDir/intermediates/classes/debug", excludes: fileFilter)
+                    def mainSrc = "$project.projectDir/src/main/java"
+
+                    sourceDirectories = files([mainSrc])
+                    classDirectories = files([kotlinDebugTree, javaDebugTree])
+                    executionData = fileTree(dir: project.buildDir, includes: [
+                            'jacoco/testDebugUnitTest.exec', 'outputs/code-coverage/connected/*coverage.ec'
+                    ])
+                }
+
+                android {
+                    buildTypes {
+                        debug {
+                            testCoverageEnabled true
+                        }
+                    }
+                }
+            }
+
+            if (it.hasProperty('kotlin')) {
+                android {
+                    kotlin {
+                        experimental {
+                            coroutines 'enable'
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}
+
+detekt {
+    // The version number is duplicated, please refer to plugins block for more details
+    version = "1.0.0.RC7-3"
+    profile("main") {
+        input = "$projectDir/app"
+        config = "$projectDir/config/detekt.yml"
+        filters = ".*test.*,.*/resources/.*,.*/tmp/.*"
+        output = "$projectDir/build/reports/detekt"
+        baseline = "$projectDir/config/detekt-baseline.xml"
+    }
+}
+
+configurations {
+    ktlint
+}
+
+dependencies {
+    ktlint "com.github.shyiko:ktlint:0.24.0"
+}
+
+task ktlint(type: JavaExec, group: "verification") {
+    description = "Check Kotlin code style."
+    classpath = configurations.ktlint
+    main = "com.github.shyiko.ktlint.Main"
+    args "components/**/*.kt"
+}

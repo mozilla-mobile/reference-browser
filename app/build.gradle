@@ -1,0 +1,103 @@
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+
+android {
+    compileSdkVersion Config.compileSdkVersion
+
+    defaultConfig {
+        applicationId "org.mozilla.reference.browser"
+        minSdkVersion Config.minSdkVersion
+        targetSdkVersion Config.targetSdkVersion
+        versionCode Config.versionCode
+        versionName Config.versionName
+
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    flavorDimensions "engine", "abi"
+
+    productFlavors {
+        // GeckoView release channels (GV release is not on maven.mozilla.org yet)
+        geckoNightly { dimension "engine" }
+        geckoBeta    { dimension "engine" }
+
+        // WebViewgeck
+        system { dimension "engine" }
+        
+        // Processor architectures
+        arm       { dimension "abi" }
+        x86       { dimension "abi" }
+        universal { dimension "abi" }
+    }
+
+    variantFilter { variant ->
+        def flavors = variant.flavors*.name.toString().toLowerCase()
+        if (flavors.contains("system") && !flavors.contains("universal")) {
+            setIgnore(true)
+        }
+
+        if (flavors.contains("gecko") && flavors.contains("universal")) {
+            setIgnore(true)
+        }
+    }
+}
+
+configurations {
+    systemUniversalImplementation {}
+
+    geckoNightlyArmImplementation {}
+    geckoNightlyX86Implementation {}
+
+    geckoBetaArmImplementation {}
+    geckoBetaX86Implementation {}
+}
+
+dependencies {
+    implementation Deps.mozilla_concept_engine
+    implementation Deps.mozilla_concept_tabstray
+    implementation Deps.mozilla_concept_toolbar
+
+    implementation Deps.mozilla_browser_search
+    implementation Deps.mozilla_browser_session
+    implementation Deps.mozilla_browser_tabstray
+    implementation Deps.mozilla_browser_toolbar
+    implementation Deps.mozilla_browser_menu
+
+    implementation Deps.mozilla_feature_intent
+    implementation Deps.mozilla_feature_search
+    implementation Deps.mozilla_feature_session
+    implementation Deps.mozilla_feature_toolbar
+    implementation Deps.mozilla_feature_tabs
+
+    implementation Deps.mozilla_ui_autocomplete
+
+    implementation Deps.mozilla_support_utils
+
+    systemUniversalImplementation Deps.mozilla_browser_engine_system
+
+    geckoNightlyImplementation Deps.mozilla_browser_engine_gecko_nightly
+    geckoNightlyArmImplementation Gecko.geckoview_nightly_arm
+    geckoNightlyX86Implementation Gecko.geckoview_nightly_x86
+
+    geckoBetaImplementation Deps.mozilla_browser_engine_gecko_beta
+    geckoBetaArmImplementation Gecko.geckoview_beta_arm
+    geckoBetaX86Implementation Gecko.geckoview_beta_x86
+
+    implementation Deps.kotlin_stdlib
+    implementation Deps.kotlin_coroutines
+
+    implementation Deps.support_appcompat
+    implementation Deps.support_constraintlayout
+}
