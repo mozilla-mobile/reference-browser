@@ -54,7 +54,7 @@ tasks:
             - -cx
             - >-
               cd ..
-              && git clone ${event.pull_request.head.repo.clone_url}
+              && git clone https://github.com/mozilla-mobile/reference-browser.git
               && cd reference-browser
               && git config advice.detachedHead false
               && git checkout ${event.after}
