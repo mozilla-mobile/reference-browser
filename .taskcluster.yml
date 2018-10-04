@@ -70,5 +70,5 @@ tasks:
         metadata:
           name: Reference Browser - Master push
           description: Building reference browser - triggered by a pull request.
-          owner: ${event.pull_request.user.login}@users.noreply.github.com
+          owner: skaspari@mozilla.com
           source: ${event.repository.url}
