@@ -9,6 +9,6 @@ import mozilla.components.concept.engine.Engine
 
 object EngineProvider {
     fun getEngine(context: Context, defaultSettings: DefaultSettings): Engine {
-        return SystemEngine(defaultSettings)
+        return SystemEngine(context, defaultSettings)
     }
 }

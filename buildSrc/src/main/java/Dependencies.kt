@@ -17,7 +17,7 @@ private object Versions {
 
     const val android_gradle_plugin = "3.1.4"
 
-    const val mozilla_android_components = "0.25.2"
+    const val mozilla_android_components = "0.26.0"
 }
 
 // Synchronized dependencies used by (some) modules
