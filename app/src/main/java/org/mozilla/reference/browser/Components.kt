@@ -37,7 +37,7 @@ class Components(
     val sessionStorage by lazy { DefaultSessionStorage(applicationContext) }
 
     val sessionManager by lazy {
-        SessionManager(engine).apply {
+        SessionManager(engine, defaultSession = { Session("about:blank") }).apply {
             sessionStorage.restore(this)
 
             if (size == 0) {
