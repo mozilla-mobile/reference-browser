@@ -3,9 +3,9 @@
 buildscript {
     // Synchronized versions numbers of GeckoView (Beta) artifacts.
     ext.geckoBeta = [
-            // mozilla-beta: FENNEC_63_0b3
-            revision: '0269319281578bff4e01d77a21350bf91ba08620',
-            version: '63.0.20180904170936'
+        // mozilla-beta: FENNEC_63_0b3
+        revision: '0269319281578bff4e01d77a21350bf91ba08620',
+        version: '63.0.20180904170936'
     ]
 
     ext.geckoRelease = [
@@ -138,5 +138,5 @@ task ktlint(type: JavaExec, group: "verification") {
     description = "Check Kotlin code style."
     classpath = configurations.ktlint
     main = "com.github.shyiko.ktlint.Main"
-    args "components/**/*.kt"
+    args "app/**/*.kt"
 }
