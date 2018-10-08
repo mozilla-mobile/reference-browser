@@ -32,11 +32,12 @@ plugins {
 allprojects {
     repositories {
         google()
-        jcenter()
 
         maven {
             url "https://maven.mozilla.org/maven2"
         }
+
+        jcenter()
     }
 }
 
