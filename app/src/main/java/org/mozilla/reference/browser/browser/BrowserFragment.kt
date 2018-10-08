@@ -2,7 +2,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-package org.mozilla.reference.browser
+package org.mozilla.reference.browser.browser
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -12,12 +12,13 @@ import android.view.ViewGroup
 import kotlinx.android.synthetic.main.fragment_browser.*
 import mozilla.components.feature.session.SessionFeature
 import mozilla.components.feature.tabs.toolbar.TabsToolbarFeature
-import mozilla.components.feature.toolbar.ToolbarFeature
+import org.mozilla.reference.browser.BackHandler
+import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.ext.requireComponents
+import org.mozilla.reference.browser.tabs.TabsTrayFragment
 
 class BrowserFragment : Fragment(), BackHandler {
     private lateinit var sessionFeature: SessionFeature
-    private lateinit var toolbarFeature: ToolbarFeature
     private lateinit var tabsToolbarFeature: TabsToolbarFeature
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -26,8 +27,6 @@ class BrowserFragment : Fragment(), BackHandler {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        toolbar.setMenuBuilder(requireComponents.menuBuilder)
 
         val sessionId = arguments?.getString(SESSION_ID)
 
@@ -38,12 +37,7 @@ class BrowserFragment : Fragment(), BackHandler {
                 requireComponents.sessionStorage,
                 sessionId)
 
-        toolbarFeature = ToolbarFeature(
-                toolbar,
-                requireComponents.sessionManager,
-                requireComponents.sessionUseCases.loadUrl,
-                requireComponents.defaultSearchUseCase,
-                sessionId)
+        lifecycle.addObserver(ToolbarIntegration(requireComponents, toolbar, sessionId))
 
         tabsToolbarFeature = TabsToolbarFeature(context!!, toolbar, ::showTabs)
     }
@@ -61,18 +55,16 @@ class BrowserFragment : Fragment(), BackHandler {
         super.onStart()
 
         sessionFeature.start()
-        toolbarFeature.start()
     }
 
     override fun onStop() {
         super.onStop()
 
         sessionFeature.stop()
-        toolbarFeature.stop()
     }
 
     override fun onBackPressed(): Boolean {
-        if (toolbarFeature.handleBackPressed()) {
+        if (toolbar.onBackPressed()) {
             return true
         }
 

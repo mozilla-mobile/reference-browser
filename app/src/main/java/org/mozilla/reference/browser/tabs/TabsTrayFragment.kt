@@ -2,7 +2,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-package org.mozilla.reference.browser
+package org.mozilla.reference.browser.tabs
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -11,6 +11,9 @@ import android.view.View
 import android.view.ViewGroup
 import kotlinx.android.synthetic.main.fragment_tabstray.*
 import mozilla.components.feature.tabs.tabstray.TabsFeature
+import org.mozilla.reference.browser.BackHandler
+import org.mozilla.reference.browser.R
+import org.mozilla.reference.browser.browser.BrowserFragment
 import org.mozilla.reference.browser.ext.requireComponents
 
 /**
