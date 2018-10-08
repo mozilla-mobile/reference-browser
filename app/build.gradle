@@ -69,6 +69,7 @@ dependencies {
     implementation Deps.mozilla_concept_tabstray
     implementation Deps.mozilla_concept_toolbar
 
+    implementation Deps.mozilla_browser_domains
     implementation Deps.mozilla_browser_search
     implementation Deps.mozilla_browser_session
     implementation Deps.mozilla_browser_tabstray

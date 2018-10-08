@@ -37,7 +37,7 @@ class BrowserFragment : Fragment(), BackHandler {
                 requireComponents.sessionStorage,
                 sessionId)
 
-        lifecycle.addObserver(ToolbarIntegration(requireComponents, toolbar, sessionId))
+        lifecycle.addObserver(ToolbarIntegration(requireContext(), toolbar, sessionId))
 
         tabsToolbarFeature = TabsToolbarFeature(context!!, toolbar, ::showTabs)
     }
