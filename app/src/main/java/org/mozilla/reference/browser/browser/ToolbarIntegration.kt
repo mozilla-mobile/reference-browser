@@ -7,24 +7,42 @@ package org.mozilla.reference.browser.browser
 import android.arch.lifecycle.Lifecycle
 import android.arch.lifecycle.LifecycleObserver
 import android.arch.lifecycle.OnLifecycleEvent
+import android.content.Context
+import mozilla.components.browser.domains.DomainAutoCompleteProvider
 import mozilla.components.browser.toolbar.BrowserToolbar
 import mozilla.components.feature.toolbar.ToolbarFeature
-import org.mozilla.reference.browser.Components
+import mozilla.components.ui.autocomplete.InlineAutocompleteEditText
+import org.mozilla.reference.browser.ext.components
 
 class ToolbarIntegration(
-    components: Components,
+    context: Context,
     toolbar: BrowserToolbar,
     sessionId: String? = null
 ) : LifecycleObserver {
+    private val autoCompleteProvider = DomainAutoCompleteProvider().apply {
+        initialize(context)
+    }
+
     init {
-        toolbar.setMenuBuilder(components.menuBuilder)
+        toolbar.setMenuBuilder(context.components.menuBuilder)
+
+        toolbar.setAutocompleteFilter { value, view ->
+            view?.let { _ ->
+                val result = autoCompleteProvider.autocomplete(value)
+                view.applyAutocompleteResult(
+                    InlineAutocompleteEditText.AutocompleteResult(result.text, result.source, result.size) {
+                        result.url
+                    }
+                )
+            }
+        }
     }
 
     private val toolbarFeature: ToolbarFeature = ToolbarFeature(
         toolbar,
-        components.sessionManager,
-        components.sessionUseCases.loadUrl,
-        components.defaultSearchUseCase,
+        context.components.sessionManager,
+        context.components.sessionUseCases.loadUrl,
+        context.components.defaultSearchUseCase,
         sessionId
     )
 
