@@ -28,8 +28,9 @@ class Components(
 
     // Engine
     val engine: Engine by lazy {
-        val defaultSettings = DefaultSettings()
-
+        val defaultSettings = DefaultSettings(
+            requestInterceptor = ContentRequestInterceptor(applicationContext)
+        )
         EngineProvider.getEngine(applicationContext, defaultSettings)
     }
 
