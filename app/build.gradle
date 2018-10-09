@@ -74,6 +74,7 @@ dependencies {
     implementation Deps.mozilla_browser_tabstray
     implementation Deps.mozilla_browser_toolbar
     implementation Deps.mozilla_browser_menu
+    implementation Deps.mozilla_browser_session
 
     implementation Deps.mozilla_feature_intent
     implementation Deps.mozilla_feature_search
