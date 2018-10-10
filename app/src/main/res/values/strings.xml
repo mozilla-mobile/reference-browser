@@ -5,5 +5,24 @@
 <resources>
     <string name="app_name">Reference Browser</string>
 
+    <!-- Menu option on the toolbar to open a new tab-->
     <string name="menu_action_add_tab">Add New Tab</string>
+
+    <!-- Preference summary for settings related sign in -->
+    <string name="preferences_sign_in_summary">Sync your tabs, logins and history</string>
+
+    <!-- Preference summary for settings related to send telemetry data -->
+    <string name="preferences_use_telemetry_summary">Send usage data</string>
+
+    <!-- Preference for settings related to changing the default browser -->
+    <string name="preferences_make_default_browser">Make default browser</string>
+
+    <!-- Preference for settings related to sign in -->
+    <string name="sign_in">Sign in</string>
+
+    <!-- Preference for settings related turn on telemetry data-->
+    <string name="use_telemetry">Use Telemetry</string>
+
+    <!-- Menu option on the toolbar that takes you to settings page-->
+    <string name="settings">Settings</string>
 </resources>
