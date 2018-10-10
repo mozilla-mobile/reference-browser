@@ -21,6 +21,7 @@ import mozilla.components.feature.intent.IntentProcessor
 import mozilla.components.feature.search.SearchUseCases
 import mozilla.components.feature.session.SessionUseCases
 import mozilla.components.feature.tabs.TabsUseCases
+import android.content.Intent
 
 class Components(
     private val applicationContext: Context
@@ -72,7 +73,7 @@ class Components(
                     Toast.makeText(applicationContext, "Share", Toast.LENGTH_SHORT).show()
                 },
                 SimpleBrowserMenuItem("Settings") {
-                    Toast.makeText(applicationContext, "Settings", Toast.LENGTH_SHORT).show()
+                    openSettingsActivity()
                 },
                 SimpleBrowserMenuItem("Clear Data") {
                     sessionUseCases.clearData.invoke()
@@ -81,6 +82,12 @@ class Components(
                     sessionUseCases.requestDesktopSite.invoke(checked)
                 }
         )
+    }
+
+    private fun openSettingsActivity() {
+        val intent = Intent(applicationContext, SettingsActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+        applicationContext.startActivity(intent)
     }
 
     private val menuToolbar by lazy {

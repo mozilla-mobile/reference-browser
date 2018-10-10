@@ -5,6 +5,7 @@
 package org.mozilla.reference.browser.ext
 
 import android.content.Context
+import android.support.annotation.StringRes
 import org.mozilla.reference.browser.BrowserApplication
 import org.mozilla.reference.browser.Components
 
@@ -19,3 +20,6 @@ val Context.application: BrowserApplication
  */
 val Context.components: Components
     get() = application.components
+
+fun Context.getPreferenceKey(@StringRes resourceId: Int): String =
+    resources.getString(resourceId)
