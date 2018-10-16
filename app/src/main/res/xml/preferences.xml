@@ -9,6 +9,10 @@
             android:title="@string/sign_in"
             android:summary="@string/preferences_sign_in_summary"/>
 
+    <android.support.v7.preference.Preference
+        android:key="@string/pref_key_firefox_account"
+        android:title="@string/firefox_account" />
+
     <android.support.v7.preference.SwitchPreferenceCompat
             android:defaultValue="false"
             android:title="@string/use_telemetry"
