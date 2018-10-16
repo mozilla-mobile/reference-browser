@@ -22,6 +22,8 @@ import mozilla.components.feature.search.SearchUseCases
 import mozilla.components.feature.session.SessionUseCases
 import mozilla.components.feature.tabs.TabsUseCases
 import android.content.Intent
+import org.mozilla.reference.browser.browser.FirefoxAccountsIntegration
+import org.mozilla.reference.browser.settings.SettingsActivity
 
 class Components(
     private val applicationContext: Context
@@ -30,7 +32,7 @@ class Components(
     // Engine
     val engine: Engine by lazy {
         val defaultSettings = DefaultSettings(
-            requestInterceptor = ContentRequestInterceptor(applicationContext)
+            requestInterceptor = AppRequestInterceptor(applicationContext)
         )
         EngineProvider.getEngine(applicationContext, defaultSettings)
     }
@@ -117,4 +119,11 @@ class Components(
 
     // Tabs
     val tabsUseCases: TabsUseCases by lazy { TabsUseCases(sessionManager) }
+
+    // Firefox Accounts
+    val firefoxAccountsIntegration: FirefoxAccountsIntegration by lazy {
+        FirefoxAccountsIntegration(applicationContext, tabsUseCases).apply {
+            init()
+        }
+    }
 }
