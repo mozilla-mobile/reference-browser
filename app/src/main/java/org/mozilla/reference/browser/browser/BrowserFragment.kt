@@ -4,6 +4,7 @@
 
 package org.mozilla.reference.browser.browser
 
+import android.app.Activity
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
@@ -40,6 +41,8 @@ class BrowserFragment : Fragment(), BackHandler {
         lifecycle.addObserver(ToolbarIntegration(requireContext(), toolbar, sessionId))
 
         tabsToolbarFeature = TabsToolbarFeature(context!!, toolbar, ::showTabs)
+
+        BrowserAutocompleteProvider(context!!, toolbar)
     }
 
     private fun showTabs() {

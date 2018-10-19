@@ -31,6 +31,8 @@ plugins {
 
 allprojects {
     repositories {
+        mavenLocal()
+
         google()
 
         maven {

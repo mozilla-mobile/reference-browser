@@ -85,6 +85,8 @@ dependencies {
 
     implementation Deps.mozilla_ui_autocomplete
 
+    implementation Deps.mozilla_service_sync_places
+
     implementation Deps.mozilla_support_utils
 
     systemUniversalImplementation Deps.mozilla_browser_engine_system
