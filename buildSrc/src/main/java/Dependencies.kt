@@ -44,9 +44,11 @@ object Deps {
     const val mozilla_feature_session = "org.mozilla.components:feature-session:${Versions.mozilla_android_components}"
     const val mozilla_feature_toolbar = "org.mozilla.components:feature-toolbar:${Versions.mozilla_android_components}"
     const val mozilla_feature_tabs = "org.mozilla.components:feature-tabs:${Versions.mozilla_android_components}"
+    const val mozilla_feature_downloads = "org.mozilla.components:feature-downloads:${Versions.mozilla_android_components}"
     const val mozilla_ui_autocomplete = "org.mozilla.components:ui-autocomplete:${Versions.mozilla_android_components}"
     const val mozilla_service_firefox_accounts = "org.mozilla.components:service-firefox-accounts:${Versions.mozilla_android_components}"
     const val mozilla_support_utils = "org.mozilla.components:support-utils:${Versions.mozilla_android_components}"
+    const val mozilla_support_ktx= "org.mozilla.components:support-ktx:${Versions.mozilla_android_components}"
 
     const val testing_junit = "junit:junit:${Versions.junit}"
     const val testing_robolectric = "org.robolectric:robolectric:${Versions.robolectric}"
