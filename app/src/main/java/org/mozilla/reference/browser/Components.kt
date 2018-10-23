@@ -42,7 +42,9 @@ class Components(
 
     val sessionManager by lazy {
         SessionManager(engine, defaultSession = { Session("about:blank") }).apply {
-            sessionStorage.restore(this)
+            sessionStorage.read(engine)?.let {
+                restore(it)
+            }
 
             if (size == 0) {
                 val initialSession = Session("https://www.mozilla.org")
