@@ -52,6 +52,14 @@ android {
             setIgnore(true)
         }
     }
+
+    splits {
+        abi {
+            enable true
+            reset()
+            include 'x86', 'armeabi-v7a'
+        }
+    }
 }
 
 configurations {
@@ -82,12 +90,15 @@ dependencies {
     implementation Deps.mozilla_feature_session
     implementation Deps.mozilla_feature_toolbar
     implementation Deps.mozilla_feature_tabs
+    implementation Deps.mozilla_feature_downloads
 
     implementation Deps.mozilla_ui_autocomplete
 
     implementation Deps.mozilla_service_sync_places
+    implementation Deps.mozilla_service_firefox_accounts
 
     implementation Deps.mozilla_support_utils
+    implementation Deps.mozilla_support_ktx
 
     systemUniversalImplementation Deps.mozilla_browser_engine_system
 

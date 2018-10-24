@@ -64,10 +64,10 @@
         </service>
 
         <activity
-          android:name=".SettingsActivity"
+          android:name=".settings.SettingsActivity"
           android:label="@string/settings"
           android:theme="@style/AppTheme"
-          android:parentActivityName=".BrowserActivity"/>
+          android:parentActivityName=".BrowserActivity" />
     </application>
 
 </manifest>
