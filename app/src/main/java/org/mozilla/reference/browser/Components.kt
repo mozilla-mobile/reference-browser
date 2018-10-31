@@ -15,6 +15,7 @@ import mozilla.components.browser.search.SearchEngineManager
 import mozilla.components.browser.session.Session
 import mozilla.components.browser.session.SessionManager
 import mozilla.components.browser.session.storage.DefaultSessionStorage
+import mozilla.components.browser.storage.memory.InMemoryHistoryStorage
 import mozilla.components.concept.engine.DefaultSettings
 import mozilla.components.concept.engine.Engine
 import mozilla.components.feature.intent.IntentProcessor
@@ -36,6 +37,9 @@ class Components(
         )
         EngineProvider.getEngine(applicationContext, defaultSettings)
     }
+
+    // Storage
+    val historyStorage by lazy { InMemoryHistoryStorage() }
 
     // Session
     val sessionStorage by lazy { DefaultSessionStorage(applicationContext) }

@@ -15,6 +15,7 @@ import kotlinx.android.synthetic.main.fragment_browser.*
 import mozilla.components.feature.downloads.DownloadsFeature
 import mozilla.components.feature.downloads.SimpleDownloadDialogFragment.DownloadDialogListener
 import mozilla.components.feature.session.SessionFeature
+import mozilla.components.feature.storage.HistoryTrackingFeature
 import mozilla.components.feature.tabs.toolbar.TabsToolbarFeature
 import mozilla.components.support.ktx.android.content.isPermissionGranted
 import org.mozilla.reference.browser.BackHandler
@@ -26,6 +27,7 @@ class BrowserFragment : Fragment(), BackHandler, DownloadDialogListener {
     private lateinit var sessionFeature: SessionFeature
     private lateinit var tabsToolbarFeature: TabsToolbarFeature
     private lateinit var downloadsFeature: DownloadsFeature
+    private lateinit var historyTrackingFeature: HistoryTrackingFeature
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_browser, container, false)
@@ -35,6 +37,10 @@ class BrowserFragment : Fragment(), BackHandler, DownloadDialogListener {
         super.onViewCreated(view, savedInstanceState)
 
         val sessionId = arguments?.getString(SESSION_ID)
+
+        historyTrackingFeature = HistoryTrackingFeature(
+                requireComponents.engine,
+                requireComponents.historyStorage)
 
         sessionFeature = SessionFeature(
                 requireComponents.sessionManager,
