@@ -17,7 +17,7 @@ private object Versions {
 
     const val android_gradle_plugin = "3.1.4"
 
-    const val mozilla_android_components = "0.28.0"
+    const val mozilla_android_components = "0.28.0-SNAPSHOT"
 }
 
 // Synchronized dependencies used by (some) modules
@@ -50,7 +50,7 @@ object Deps {
     const val mozilla_support_utils = "org.mozilla.components:support-utils:${Versions.mozilla_android_components}"
     const val mozilla_support_ktx= "org.mozilla.components:support-ktx:${Versions.mozilla_android_components}"
 
-    const val mozilla_service_sync_places = "org.mozilla.components:sync-places:0.28.0-SNAPSHOT" // TODO: use a released version.
+    const val mozilla_service_sync_places = "org.mozilla.components:service-sync-places:0.28.0-SNAPSHOT" // TODO: use a released version.
 
     const val testing_junit = "junit:junit:${Versions.junit}"
     const val testing_robolectric = "org.robolectric:robolectric:${Versions.robolectric}"

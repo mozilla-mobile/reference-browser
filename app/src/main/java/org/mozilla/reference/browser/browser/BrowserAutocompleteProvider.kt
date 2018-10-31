@@ -11,16 +11,11 @@ import android.content.Context
 import kotlinx.coroutines.experimental.launch
 import mozilla.components.browser.domains.DomainAutoCompleteProvider
 import mozilla.components.browser.toolbar.BrowserToolbar
-import mozilla.components.support.base.log.Log
 import mozilla.components.ui.autocomplete.InlineAutocompleteEditText
-import java.net.URL
-import org.mozilla.places.PlacesConnection
+import mozilla.components.service.sync.places.PlacesAwesomeBarProvider
 
-
-fun debug(message: String) {
-    Log.log(tag="BrowserAutocomplete", message=message);
-}
-
+// NOTE: this should be updated or replaced once mozilla.components.concept.awesomebar is in-place
+// and has an implementation. Consider this a proof-of-concept only.
 class BrowserAutocompleteProvider (
         context: Context,
         toolbar: BrowserToolbar,
@@ -31,7 +26,7 @@ class BrowserAutocompleteProvider (
     }
 
     // XXX - this should be in the "profile" dir, but I'm not sure how to fetch that.
-    private val placesConnection = PlacesConnection(context.getExternalFilesDir(null).absolutePath + "/places.sqlite", "")
+    private val placesProvider = PlacesAwesomeBarProvider(context)
 
     init {
         toolbar.setAutocompleteFilter { value, view ->
@@ -42,28 +37,16 @@ class BrowserAutocompleteProvider (
                     // XXX - given the inlineautocomplete functionality, we eventually want to perform
                     // an OriginOrUrl search - however, for now, we just perform a "normal" search,
                     // then iterate the results until we find one that matches at the start.
-                    debug("starting places search for $value")
-                    val placesResults = placesConnection.queryAutocomplete(value)
-                    debug("places search for $value, gave ${placesResults.size} matches")
-
-                    // Iterate all results and find something that matches at the start.
                     var finalResult: String? = null
                     var finalSource: String? = null
                     var finalSize: Int? = 0;
-                    for (r in placesResults) {
-                        var h = URL(r.url).host;
-                        if (h.startsWith("www.")) {
-                            h = h.substring(4)
-                        }
-                        if (h.startsWith(value)) {
-                            debug("places found matching result $h")
-                            finalResult = h
-                            finalSource = "places"
-                            finalSize = placesResults.size
-                        }
-                    }
-                    if (finalResult == null) {
-                        debug("places found no matching result - trying domain provider")
+
+                    val placesResult = placesProvider.getSuggestion(value)
+                    if (placesResult != null) {
+                        finalResult = placesResult
+                        finalSource = "places"
+                        finalSize = 1
+                    } else {
                         val result = domainAutoCompleteProvider.autocomplete(value)
                         finalResult = result.text
                         finalSource = result.source
