@@ -5,7 +5,7 @@
 package org.mozilla.reference.browser
 
 import android.content.Context
-import android.widget.Toast
+import android.content.Intent
 import kotlinx.coroutines.experimental.async
 import mozilla.components.browser.menu.BrowserMenuBuilder
 import mozilla.components.browser.menu.item.BrowserMenuItemToolbar
@@ -21,8 +21,8 @@ import mozilla.components.feature.intent.IntentProcessor
 import mozilla.components.feature.search.SearchUseCases
 import mozilla.components.feature.session.SessionUseCases
 import mozilla.components.feature.tabs.TabsUseCases
-import android.content.Intent
 import org.mozilla.reference.browser.browser.FirefoxAccountsIntegration
+import org.mozilla.reference.browser.ext.share
 import org.mozilla.reference.browser.settings.SettingsActivity
 
 class Components(
@@ -74,7 +74,8 @@ class Components(
         listOf(
                 menuToolbar,
                 SimpleBrowserMenuItem("Share") {
-                    Toast.makeText(applicationContext, "Share", Toast.LENGTH_SHORT).show()
+                    val url = sessionManager.selectedSession?.url ?: ""
+                    applicationContext.share(url)
                 },
                 SimpleBrowserMenuItem("Settings") {
                     openSettingsActivity()
