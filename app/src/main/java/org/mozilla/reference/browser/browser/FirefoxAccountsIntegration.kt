@@ -10,6 +10,7 @@ import android.arch.lifecycle.OnLifecycleEvent
 import android.content.Context
 import android.content.SharedPreferences
 import android.net.Uri
+import android.widget.Toast
 import kotlinx.coroutines.experimental.CoroutineScope
 import kotlinx.coroutines.experimental.Deferred
 import kotlinx.coroutines.experimental.Dispatchers
@@ -74,6 +75,10 @@ class FirefoxAccountsIntegration(
         profile = null
         getSharedPreferences().edit().putString(FXA_STATE_KEY, "").apply()
         init()
+    }
+
+    fun setDeviceName(name: String) {
+        Toast.makeText(context, "Device name changed to: ${name}", Toast.LENGTH_SHORT).show()
     }
 
     private fun persistProfile(profile: Profile) {

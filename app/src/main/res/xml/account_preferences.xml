@@ -10,6 +10,11 @@
             android:key="@string/pref_key_sync_now"
             android:title="@string/sync_now" />
 
+    <EditTextPreference
+        android:key="@string/pref_key_device_name"
+        android:defaultValue=""
+        android:title="@string/preferences_fxa_device_name" />
+
     <PreferenceCategory
         android:title="@string/sync_category">
 

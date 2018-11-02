@@ -17,6 +17,9 @@
     <!-- Preference for settings related to changing the default browser -->
     <string name="preferences_make_default_browser">Make default browser</string>
 
+    <!-- Preference to edit device name -->
+    <string name="preferences_fxa_device_name">Device name</string>
+
     <!-- Preference enables sync for logins -->
     <string name="preferences_sync_logins">Logins</string>
 
@@ -40,6 +43,9 @@
 
     <!-- Preference summary showing never synced -->
     <string name="preferences_sync_never_synced_summary">Last synced: never</string>
+
+    <!-- Preference for showing/changing device name -->
+    <string name="device_name">Device name</string>
 
     <!-- Preference category for sync settings -->
     <string name="sync_category">Choose what to sync</string>

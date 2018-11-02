@@ -6,12 +6,16 @@ package org.mozilla.reference.browser.settings
 
 import android.os.Bundle
 import android.support.v7.preference.Preference.OnPreferenceClickListener
+import android.support.v7.preference.Preference.OnPreferenceChangeListener
+import android.support.v7.preference.EditTextPreference
 import android.support.v7.preference.PreferenceFragmentCompat
 import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.ext.getPreferenceKey
 import org.mozilla.reference.browser.ext.requireComponents
 import org.mozilla.reference.browser.R.string.pref_key_sign_out
 import org.mozilla.reference.browser.R.string.pref_key_sync_now
+import org.mozilla.reference.browser.R.string.pref_key_device_name
+
 
 class AccountSettingsFragment : PreferenceFragmentCompat() {
 
@@ -30,6 +34,12 @@ class AccountSettingsFragment : PreferenceFragmentCompat() {
         preferenceSyncNow.isEnabled = false // Make this `fxaIntegration.profile == null` when implemented
         preferenceSyncNow.summary = getString(R.string.preferences_sync_never_synced_summary) // Use Long.timeSince()
         preferenceSyncNow.onPreferenceClickListener = getClickListenerForSyncNow()
+
+        // Device Name
+        val deviceNameKey = context?.getPreferenceKey(pref_key_device_name)
+        val preferenceDeviceName = findPreference(deviceNameKey) as EditTextPreference
+        preferenceDeviceName.setSummary(preferenceDeviceName.getText())
+        preferenceDeviceName.onPreferenceChangeListener = getChangeListenerForDeviceName()
     }
 
     private fun getClickListenerForSignOut(): OnPreferenceClickListener {
@@ -43,6 +53,15 @@ class AccountSettingsFragment : PreferenceFragmentCompat() {
     private fun getClickListenerForSyncNow(): OnPreferenceClickListener {
         return OnPreferenceClickListener {
             // Implement this Sync Now functionality when available.
+            true
+        }
+    }
+
+    private fun getChangeListenerForDeviceName(): OnPreferenceChangeListener {
+        return OnPreferenceChangeListener { pref, newValue ->
+            val name = newValue as String
+            pref.setSummary(name)
+            requireComponents.firefoxAccountsIntegration.setDeviceName(name)
             true
         }
     }
