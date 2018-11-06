@@ -2,12 +2,13 @@
    - License, v. 2.0. If a copy of the MPL was not distributed with this
    - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
 
-<android.support.v7.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<android.support.v7.preference.PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-        <android.support.v7.preference.Preference
-            android:key="@string/pref_key_sign_out"
-            android:title="@string/sign_out" />
-
+    <android.support.v7.preference.Preference
+            android:key="@string/pref_key_sync_now"
+            android:title="@string/sync_now" />
 
     <PreferenceCategory
         android:title="@string/sync_category">
@@ -21,5 +22,10 @@
             android:defaultValue="true"
             android:title="@string/preferences_sync_history" />
     </PreferenceCategory>
+
+    <org.mozilla.reference.browser.settings.CustomColorPreference
+            android:key="@string/pref_key_sign_out"
+            android:title="@string/sign_out"
+            app:titleColor="@color/photonRed50" />
 
 </android.support.v7.preference.PreferenceScreen>

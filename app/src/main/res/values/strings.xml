@@ -32,6 +32,15 @@
     <!-- Preference for signing out -->
     <string name="sign_out">Sign out</string>
 
+    <!-- Preference for syncing immediately -->
+    <string name="sync_now">Sync now</string>
+
+    <!-- Preference summary showing last time synced -->
+    <string name="preferences_sync_last_synced_summary">Last synced: %s</string>
+
+    <!-- Preference summary showing never synced -->
+    <string name="preferences_sync_never_synced_summary">Last synced: never</string>
+
     <!-- Preference category for sync settings -->
     <string name="sync_category">Choose what to sync</string>
 

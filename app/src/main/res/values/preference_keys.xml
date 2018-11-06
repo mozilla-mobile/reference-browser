@@ -5,6 +5,7 @@
 <resources>
     <string name="pref_key_sign_in" translatable="false">pref_key_sign_in</string>
     <string name="pref_key_sign_out" translatable="false">pref_key_sign_out</string>
+    <string name="pref_key_sync_now" translatable="false">pref_key_sync_now</string>
     <string name="pref_key_firefox_account" translatable="false">pref_key_firefox_account</string>
     <string name="pref_key_telemetry" translatable="false">pref_key_telemetry</string>
     <string name="pref_key_make_default_browser" translatable="false">pref_key_make_default_browser</string>
