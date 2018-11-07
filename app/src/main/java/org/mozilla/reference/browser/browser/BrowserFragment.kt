@@ -44,8 +44,9 @@ class BrowserFragment : Fragment(), BackHandler, DownloadDialogListener {
                 sessionId)
 
         lifecycle.addObserver(ToolbarIntegration(requireContext(), toolbar, sessionId))
+        lifecycle.addObserver(requireComponents.firefoxAccountsIntegration)
 
-        tabsToolbarFeature = TabsToolbarFeature(context!!, toolbar, ::showTabs)
+        tabsToolbarFeature = TabsToolbarFeature(toolbar, requireComponents.sessionManager, ::showTabs)
 
         downloadsFeature = DownloadsFeature(
                 requireContext(),
