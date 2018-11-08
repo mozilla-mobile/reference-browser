@@ -56,7 +56,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
         preferenceFirefoxAccount.onPreferenceClickListener = getClickListenerForFirefoxAccount()
         preferenceFirefoxAccount.isVisible = fxaIntegration.profile != null
-        preferenceFirefoxAccount.summary = fxaIntegration?.profile?.email
+        preferenceFirefoxAccount.summary = fxaIntegration.profile?.email
 
         preferenceMakeDefaultBrowser.onPreferenceClickListener = getClickListenerForMakeDefaultBrowser()
     }

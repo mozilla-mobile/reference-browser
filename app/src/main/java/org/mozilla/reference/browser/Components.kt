@@ -6,7 +6,9 @@ package org.mozilla.reference.browser
 
 import android.content.Context
 import android.content.Intent
-import kotlinx.coroutines.experimental.async
+import kotlinx.coroutines.experimental.CoroutineScope
+import kotlinx.coroutines.experimental.Dispatchers
+import kotlinx.coroutines.experimental.launch
 import mozilla.components.browser.menu.BrowserMenuBuilder
 import mozilla.components.browser.menu.item.BrowserMenuItemToolbar
 import mozilla.components.browser.menu.item.SimpleBrowserMenuCheckbox
@@ -58,7 +60,9 @@ class Components(
     // Search
     private val searchEngineManager by lazy {
         SearchEngineManager().apply {
-            async { load(applicationContext) }
+            CoroutineScope(Dispatchers.Default).launch {
+                load(applicationContext).await()
+            }
         }
     }
     private val searchUseCases by lazy { SearchUseCases(applicationContext, searchEngineManager, sessionManager) }

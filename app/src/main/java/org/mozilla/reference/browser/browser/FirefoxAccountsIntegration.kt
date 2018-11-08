@@ -97,7 +97,7 @@ class FirefoxAccountsIntegration(
             } catch (e: FxaException) {
                 null
             }
-        } ?: null
+        }
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
