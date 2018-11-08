@@ -52,4 +52,10 @@
 
     <!-- Menu option on the toolbar that takes you to account settings page-->
     <string name="account_settings">Account Settings</string>
+
+    <!-- Snackbar message when a non fatal crash happen-->
+    <string name="crash_report_non_fatal_message">Sorry. We crashed</string>
+
+    <!-- Snackbar action button when a non fatal crash happen-->
+    <string name="crash_report_non_fatal_action">Report</string>
 </resources>

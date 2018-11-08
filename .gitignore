@@ -50,3 +50,6 @@ l10n-repo/
 
 # jacoco.exec
 jacoco.exec
+
+# Sentry token file
+.sentry_token

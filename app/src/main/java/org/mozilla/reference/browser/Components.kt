@@ -4,6 +4,8 @@
 
 package org.mozilla.reference.browser
 
+import android.app.PendingIntent
+import android.app.PendingIntent.getBroadcast
 import android.content.Context
 import android.content.Intent
 import kotlinx.coroutines.experimental.CoroutineScope
@@ -23,6 +25,11 @@ import mozilla.components.feature.intent.IntentProcessor
 import mozilla.components.feature.search.SearchUseCases
 import mozilla.components.feature.session.SessionUseCases
 import mozilla.components.feature.tabs.TabsUseCases
+import mozilla.components.lib.crash.CrashReporter
+import mozilla.components.lib.crash.service.MozillaSocorroService
+import mozilla.components.lib.crash.service.SentryService
+import org.mozilla.reference.browser.BrowserApplication.Companion.NON_FATAL_CRASH_BROADCAST
+import org.mozilla.reference.browser.BuildConfig.SENTRY_TOKEN
 import org.mozilla.reference.browser.browser.FirefoxAccountsIntegration
 import org.mozilla.reference.browser.ext.share
 import org.mozilla.reference.browser.settings.SettingsActivity
@@ -132,5 +139,31 @@ class Components(
         FirefoxAccountsIntegration(applicationContext, tabsUseCases).apply {
             init()
         }
+    }
+
+    val crashReporter: CrashReporter by lazy {
+
+        val sentryService = SentryService(
+            applicationContext,
+            SENTRY_TOKEN,
+            sendEventForNativeCrashes = true
+        )
+
+        val socorroService = MozillaSocorroService(applicationContext, "ReferenceBrowser")
+
+        CrashReporter(
+            services = listOf(sentryService, socorroService),
+            shouldPrompt = CrashReporter.Prompt.ALWAYS,
+            promptConfiguration = CrashReporter.PromptConfiguration(
+                appName = applicationContext.getString(R.string.app_name),
+                organizationName = "Mozilla"
+            ),
+            nonFatalCrashIntent = createNonFatalPendingIntent(),
+            enabled = true
+        )
+    }
+
+    private fun createNonFatalPendingIntent(): PendingIntent {
+        return getBroadcast(applicationContext, 0, Intent(NON_FATAL_CRASH_BROADCAST), 0)
     }
 }

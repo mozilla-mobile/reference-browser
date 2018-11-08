@@ -7,6 +7,7 @@ package org.mozilla.reference.browser
 import android.app.Application
 import mozilla.components.support.base.log.Log
 import mozilla.components.support.base.log.sink.AndroidLogSink
+import org.mozilla.reference.browser.ext.isCrashReportActive
 
 class BrowserApplication : Application() {
     val components by lazy { Components(this) }
@@ -16,5 +17,13 @@ class BrowserApplication : Application() {
 
         // We want the log messages of all builds to go to Android logcat
         Log.addSink(AndroidLogSink())
+
+        if (isCrashReportActive) {
+            components.crashReporter.install(this)
+        }
+    }
+
+    companion object {
+        const val NON_FATAL_CRASH_BROADCAST = "org.mozilla.reference.browser"
     }
 }
