@@ -115,4 +115,5 @@ dependencies {
     implementation Deps.support_appcompat
     implementation Deps.support_constraintlayout
     implementation Deps.support_preference
+    implementation Deps.support_design
 }

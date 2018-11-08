@@ -64,6 +64,7 @@ object Deps {
     const val support_constraintlayout = "com.android.support.constraint:constraint-layout:${Versions.constraint_layout}"
     const val support_compat = "com.android.support:support-compat:${Versions.support_libraries}"
     const val support_preference = "com.android.support:preference-v7:${Versions.support_libraries}"
+    const val support_design = "com.android.support:design:${Versions.support_libraries}"
 
     const val tools_androidgradle = "com.android.tools.build:gradle:${Versions.android_gradle_plugin}"
     const val tools_kotlingradle = "org.jetbrains.kotlin:kotlin-gradle-plugin:${Versions.kotlin}"
