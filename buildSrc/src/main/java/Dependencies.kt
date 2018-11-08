@@ -18,6 +18,8 @@ private object Versions {
     const val android_gradle_plugin = "3.1.4"
 
     const val mozilla_android_components = "0.30.0"
+
+    const val sentry = "1.7.10"
 }
 
 // Synchronized dependencies used by (some) modules
@@ -51,6 +53,8 @@ object Deps {
     const val mozilla_service_firefox_accounts = "org.mozilla.components:service-firefox-accounts:${Versions.mozilla_android_components}"
     const val mozilla_support_utils = "org.mozilla.components:support-utils:${Versions.mozilla_android_components}"
     const val mozilla_support_ktx= "org.mozilla.components:support-ktx:${Versions.mozilla_android_components}"
+    const val mozilla_lib_crash = "org.mozilla.components:lib-crash:${Versions.mozilla_android_components}"
+    const val thirdparty_sentry = "io.sentry:sentry-android:${Versions.sentry}"
 
     const val testing_junit = "junit:junit:${Versions.junit}"
     const val testing_robolectric = "org.robolectric:robolectric:${Versions.robolectric}"

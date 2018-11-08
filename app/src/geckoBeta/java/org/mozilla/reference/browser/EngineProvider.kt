@@ -8,9 +8,20 @@ import android.content.Context
 import mozilla.components.browser.engine.gecko.GeckoEngine
 import mozilla.components.concept.engine.DefaultSettings
 import mozilla.components.concept.engine.Engine
+import mozilla.components.lib.crash.handler.CrashHandlerService
+import org.mozilla.geckoview.GeckoRuntime
+import org.mozilla.geckoview.GeckoRuntimeSettings
 
 object EngineProvider {
     fun getEngine(context: Context, defaultSettings: DefaultSettings): Engine {
-        return GeckoEngine(context, defaultSettings)
+
+        val settings = GeckoRuntimeSettings.Builder()
+                .crashHandler(CrashHandlerService::class.java)
+                .build()
+
+        // Crashes of this runtime will be forwarded to the crash reporter component
+        val runtime = GeckoRuntime.create(context, settings)
+
+        return GeckoEngine(context, defaultSettings, runtime)
     }
 }

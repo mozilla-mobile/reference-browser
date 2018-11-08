@@ -61,9 +61,38 @@ android {
         }
     }
 
+    lintOptions {
+        lintConfig file("lint.xml")
+    }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
+
+android.applicationVariants.all { variant ->
+
+// -------------------------------------------------------------------------------------------------
+// Sentry: Read token from local file if it exists (Only release builds)
+// -------------------------------------------------------------------------------------------------
+    print("Sentry token:  "+ variant.name)
+    try {
+        def token = new File("${rootDir}/.sentry_token").text.trim()
+        buildConfigField 'String', 'SENTRY_TOKEN', '"' + token + '"'
+        println "(Added from .sentry_token file)"
+    } catch (FileNotFoundException ignored) {
+        buildConfigField 'String', 'SENTRY_TOKEN', 'null'
+        println(" :( ")
+    }
+
+// -------------------------------------------------------------------------------------------------
+// Activating crash reports with command line parameter.
+// -------------------------------------------------------------------------------------------------
+    if (project.hasProperty("crashReportEnabled") && project.property("crashReportEnabled") == "true") {
+        buildConfigField 'boolean', 'CRASH_REPORTING_ENABLED', 'true'
+    } else {
+        buildConfigField 'boolean', 'CRASH_REPORTING_ENABLED', 'false'
     }
 }
 
@@ -105,6 +134,8 @@ dependencies {
 
     implementation Deps.mozilla_support_utils
     implementation Deps.mozilla_support_ktx
+    implementation Deps.mozilla_lib_crash
+    implementation Deps.thirdparty_sentry
 
     systemUniversalImplementation Deps.mozilla_browser_engine_system
 
