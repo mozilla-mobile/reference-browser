@@ -58,14 +58,14 @@ class Components(
     val sessionUseCases by lazy { SessionUseCases(sessionManager) }
 
     // Search
-    private val searchEngineManager by lazy {
+    val searchEngineManager by lazy {
         SearchEngineManager().apply {
             CoroutineScope(Dispatchers.Default).launch {
                 load(applicationContext).await()
             }
         }
     }
-    private val searchUseCases by lazy { SearchUseCases(applicationContext, searchEngineManager, sessionManager) }
+    val searchUseCases by lazy { SearchUseCases(applicationContext, searchEngineManager, sessionManager) }
     val defaultSearchUseCase by lazy { { searchTerms: String -> searchUseCases.defaultSearch.invoke(searchTerms) } }
 
     // Intent
