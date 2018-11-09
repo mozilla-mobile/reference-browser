@@ -25,6 +25,7 @@ import mozilla.components.service.fxa.Config
 import mozilla.components.service.fxa.FirefoxAccount
 import mozilla.components.service.fxa.FxaException
 import mozilla.components.service.fxa.Profile
+import mozilla.components.support.base.log.logger.Logger
 import kotlin.coroutines.experimental.CoroutineContext
 
 class FirefoxAccountsIntegration(
@@ -78,7 +79,12 @@ class FirefoxAccountsIntegration(
     }
 
     fun setDeviceName(name: String) {
-        Toast.makeText(context, "Device name changed to: ${name}", Toast.LENGTH_SHORT).show()
+        Logger.info("Let's change device name to: ${name}")
+        launch {
+            account.await().setDeviceName(name).await()
+            Logger.info("Device name changed to: ${name}")
+            Toast.makeText(context, "Device name changed to: ${name}", Toast.LENGTH_SHORT).show()
+        }
     }
 
     private fun persistProfile(profile: Profile) {
@@ -102,7 +108,7 @@ class FirefoxAccountsIntegration(
             } catch (e: FxaException) {
                 null
             }
-        } ?: null
+        }
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
