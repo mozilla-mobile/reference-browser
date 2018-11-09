@@ -5,6 +5,11 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <color name="placeholder_grey">#777777</color>
 
+    <color name="primaryDark">#ff333333</color>
+    <color name="primary">#ff333333</color>
+
+    <color name="icons">#ffffffff</color>
+
     <!-- Overriding color of tab counter icon in toolbar -->
-    <color name="mozac_ui_tabcounter_default_tint" tools:ignore="UnusedResources">#FFFFFFFF</color>
+    <color name="mozac_ui_tabcounter_default_tint" tools:ignore="UnusedResources">@color/icons</color>
 </resources>

@@ -18,7 +18,7 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="56dp"
-            android:background="#aaaaaa"
+            android:background="@color/primary"
             app:layout_scrollFlags="scroll|enterAlways|snap|exitUntilCollapsed" />
 
     </android.support.design.widget.AppBarLayout>
