@@ -65,14 +65,14 @@ class Components(
     val sessionUseCases by lazy { SessionUseCases(sessionManager) }
 
     // Search
-    private val searchEngineManager by lazy {
+    val searchEngineManager by lazy {
         SearchEngineManager().apply {
             CoroutineScope(Dispatchers.Default).launch {
                 load(applicationContext).await()
             }
         }
     }
-    private val searchUseCases by lazy { SearchUseCases(applicationContext, searchEngineManager, sessionManager) }
+    val searchUseCases by lazy { SearchUseCases(applicationContext, searchEngineManager, sessionManager) }
     val defaultSearchUseCase by lazy { { searchTerms: String -> searchUseCases.defaultSearch.invoke(searchTerms) } }
 
     // Intent
@@ -109,21 +109,21 @@ class Components(
     private val menuToolbar by lazy {
         val forward = BrowserMenuItemToolbar.Button(
                 mozilla.components.ui.icons.R.drawable.mozac_ic_forward,
-                iconTintColorResource = R.color.photonBlue90,
+                iconTintColorResource = R.color.icons,
                 contentDescription = "Forward") {
             sessionUseCases.goForward.invoke()
         }
 
         val refresh = BrowserMenuItemToolbar.Button(
                 mozilla.components.ui.icons.R.drawable.mozac_ic_refresh,
-                iconTintColorResource = R.color.photonBlue90,
+                iconTintColorResource = R.color.icons,
                 contentDescription = "Refresh") {
             sessionUseCases.reload.invoke()
         }
 
         val stop = BrowserMenuItemToolbar.Button(
                 mozilla.components.ui.icons.R.drawable.mozac_ic_stop,
-                iconTintColorResource = R.color.photonBlue90,
+                iconTintColorResource = R.color.icons,
                 contentDescription = "Stop") {
             sessionUseCases.stopLoading.invoke()
         }

@@ -14,7 +14,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:background="#aaaaaa"/>
+        android:elevation="4dp"
+        android:background="@color/primary"/>
 
     <mozilla.components.concept.tabstray.TabsTray
         android:id="@+id/tabsTray"

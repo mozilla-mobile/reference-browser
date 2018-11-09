@@ -3,11 +3,14 @@
    - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
 
 <resources>
-    <style name="AppThemeNotActionBar" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="AppThemeNotActionBar" parent="Theme.AppCompat.NoActionBar">
         <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
+
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorPrimaryDark">@color/primaryDark</item>
     </style>
 
-    <style name="AppTheme" parent="Theme.AppCompat.Light">
+    <style name="AppTheme" parent="Theme.AppCompat">
         <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
     </style>
 </resources>
