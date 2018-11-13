@@ -11,9 +11,8 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import kotlinx.coroutines.experimental.CoroutineScope
-import kotlinx.coroutines.experimental.Dispatchers
-import kotlinx.coroutines.experimental.launch
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import mozilla.components.lib.crash.Crash
 import mozilla.components.lib.crash.CrashReporter
 import org.mozilla.reference.browser.BrowserApplication.Companion.NON_FATAL_CRASH_BROADCAST
@@ -51,7 +50,7 @@ class CrashIntegration(
     }
 
     fun sendCrashReport(crash: Crash) {
-        CoroutineScope(Dispatchers.Default).launch {
+        GlobalScope.launch {
             crashReporter.submitReport(crash)
         }
     }

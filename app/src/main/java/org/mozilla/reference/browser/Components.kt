@@ -8,9 +8,8 @@ import android.app.PendingIntent
 import android.app.PendingIntent.getBroadcast
 import android.content.Context
 import android.content.Intent
-import kotlinx.coroutines.experimental.CoroutineScope
-import kotlinx.coroutines.experimental.Dispatchers
-import kotlinx.coroutines.experimental.launch
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import mozilla.components.browser.menu.BrowserMenuBuilder
 import mozilla.components.browser.menu.item.BrowserMenuItemToolbar
 import mozilla.components.browser.menu.item.SimpleBrowserMenuCheckbox
@@ -67,7 +66,7 @@ class Components(
     // Search
     val searchEngineManager by lazy {
         SearchEngineManager().apply {
-            CoroutineScope(Dispatchers.Default).launch {
+            GlobalScope.launch {
                 load(applicationContext).await()
             }
         }
