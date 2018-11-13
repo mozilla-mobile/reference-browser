@@ -33,7 +33,7 @@ android {
         geckoNightly { dimension "engine" }
         geckoBeta    { dimension "engine" }
 
-        // WebViewgeck
+        // WebView
         system { dimension "engine" }
         
         // Processor architectures
