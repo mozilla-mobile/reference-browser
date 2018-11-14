@@ -4,6 +4,15 @@
 
 A full-featured browser reference implementation using [Mozilla Android Components](https://github.com/mozilla-mobile/android-components).
 
+# Download Nightly builds
+
+Signed Nightly builds can be downloaded from:
+
+* [⬇️ ARM devices (Android 5+)](https://index.taskcluster.net/v1/task/project.mobile.reference-browser.nightly.latest/artifacts/public/reference-browser-arm.apk)
+* [⬇️ x86  devices (Android 5+)](https://index.taskcluster.net/v1/task/project.mobile.reference-browser.nightly.latest/artifacts/public/reference-browser-x86.apk)
+
+Note that all builds are signed with a non-production / throw-away key. The latest Nightly build task can be found [here](https://tools.taskcluster.net/index/project.mobile.reference-browser.nightly/latest).
+
 # Getting Involved
 
 We encourage you to participate in this open source project. We love pull requests, bug reports, ideas, (security) code reviews or any kind of positive contribution.
