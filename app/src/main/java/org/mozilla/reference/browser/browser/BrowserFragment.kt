@@ -55,6 +55,9 @@ class BrowserFragment : Fragment(), BackHandler, DownloadDialogListener {
             .addSessionProvider(
                 requireComponents.sessionManager,
                 requireComponents.tabsUseCases.selectSession)
+            .addHistoryProvider(
+                requireComponents.placesHistoryStorage,
+                requireComponents.sessionUseCases.loadUrl)
 
         tabsToolbarFeature = TabsToolbarFeature(toolbar, requireComponents.sessionManager, ::showTabs)
 

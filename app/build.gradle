@@ -92,6 +92,7 @@ dependencies {
     implementation Deps.mozilla_concept_engine
     implementation Deps.mozilla_concept_tabstray
     implementation Deps.mozilla_concept_toolbar
+    implementation Deps.mozilla_concept_storage
 
     implementation Deps.mozilla_browser_awesomebar
     implementation Deps.mozilla_browser_domains
@@ -101,6 +102,7 @@ dependencies {
     implementation Deps.mozilla_browser_toolbar
     implementation Deps.mozilla_browser_menu
     implementation Deps.mozilla_browser_session
+    implementation Deps.mozilla_browser_storage_sync
 
     implementation Deps.mozilla_feature_awesomebar
     implementation Deps.mozilla_feature_intent
@@ -109,6 +111,7 @@ dependencies {
     implementation Deps.mozilla_feature_toolbar
     implementation Deps.mozilla_feature_tabs
     implementation Deps.mozilla_feature_downloads
+    implementation Deps.mozilla_feature_storage
 
     implementation Deps.mozilla_ui_autocomplete
 
