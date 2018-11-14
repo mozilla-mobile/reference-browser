@@ -7,68 +7,58 @@ policy:
 tasks:
   - $if: 'tasks_for == "github-pull-request" && event["action"] in ["opened", "reopened", "synchronize"]'
     then:
-      created: {$fromNow: ''}
-      deadline: {$fromNow: '2 hours'}
-      provisionerId: aws-provisioner-v1
-      workerType: github-worker
-      scopes: []
-      payload:
-        maxRunTime: 7200
-        image: mozillamobile/android-components:1.5
-        command:
-          - /bin/bash
-          - --login
-          - -cx
-          - >-
-            cd ..
-            && git clone ${event.pull_request.head.repo.clone_url}
-            && cd reference-browser
-            && git config advice.detachedHead false
-            && git checkout ${event.pull_request.head.sha}
-            && ./gradlew --no-daemon clean assemble ktlint detektCheck lint
-        artifacts:
-          public/reports:
-            type: directory
-            path: /build/reference-browser/app/build/reports
-            expires: {$fromNow: '1 week'}
-      metadata:
-        name: Reference Browser - Pull request
-        description: Building reference browser - triggered by a pull request.
-        owner: ${event.pull_request.user.login}@users.noreply.github.com
-        source: ${event.repository.url}
-  - $if: 'tasks_for == "github-push"'
-    then:
-      $if: 'event.ref == "refs/heads/master"'
-      then:
+      $let:
+        decision_task_id: {$eval: as_slugid("decision_task")}
+        expires_in: {$fromNow: '1 year'}
+        scheduler_id: taskcluster-github
+        user: ${event.sender.login}
+        head_branch: ${event.pull_request.head.ref}
+        head_rev: ${event.pull_request.head.sha}
+        repository: ${event.pull_request.head.repo.clone_url}
+        pull_request_title: ${event.pull_request.title}
+        pull_request_number: ${event.pull_request.number}
+        pull_request_url: ${event.pull_request.html_url}
+      in:
+        taskId: ${decision_task_id}
+        taskGroupId: ${decision_task_id}
         created: {$fromNow: ''}
+        expires: ${expires_in}
         deadline: {$fromNow: '2 hours'}
         provisionerId: aws-provisioner-v1
         workerType: github-worker
-        scopes: []
+        scopes:
+          - queue:create-task:aws-provisioner-v1/github-worker
+          - queue:scheduler-id:${scheduler_id}
         payload:
           maxRunTime: 7200
-          image: mozillamobile/android-components:1.5
+          image: mozillamobile/android-components:1.9
+          env:
+            TASK_ID: ${decision_task_id}
+            SCHEDULER_ID: ${scheduler_id}
+            MOBILE_HEAD_REPOSITORY: ${repository}
+            MOBILE_HEAD_BRANCH: ${head_branch}
+            MOBILE_HEAD_REV: ${head_rev}
+            GITHUB_PULL_TITLE: ${pull_request_title}
           command:
             - /bin/bash
             - --login
             - -cx
             - >-
               cd ..
-              && git clone https://github.com/mozilla-mobile/reference-browser.git
+              && git clone ${event.pull_request.head.repo.clone_url}
               && cd reference-browser
               && git config advice.detachedHead false
-              && git checkout ${event.after}
-              && ./gradlew --no-daemon clean assemble ktlint detektCheck lint
+              && git checkout ${event.pull_request.head.sha}
+              && python automation/taskcluster/decision_task.py
+          features:
+            taskclusterProxy: true
           artifacts:
             public/reports:
               type: directory
               path: /build/reference-browser/app/build/reports
               expires: {$fromNow: '1 week'}
-            public/builds:
-              type: directory
-              path: /build/reference-browser/app/build/outputs/apk
         metadata:
-          name: Reference Browser - Master push
+          name: Decision task
           description: Building reference browser - triggered by a pull request.
-          owner: skaspari@mozilla.com
+          owner: ${event.pull_request.user.login}@users.noreply.github.com
           source: ${event.repository.url}
