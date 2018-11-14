@@ -128,3 +128,15 @@ dependencies {
     implementation Deps.support_preference
     implementation Deps.support_design
 }
+
+// -------------------------------------------------------------------------------------------------
+// Task for printing all vuild variants to build variants in parallel in automation
+// -------------------------------------------------------------------------------------------------
+task printBuildVariants {
+    doLast {
+        def buildVariants = android.applicationVariants.collect { variant ->
+            variant.name
+        }
+        println "variants: " + groovy.json.JsonOutput.toJson(buildVariants)
+    }
+}
