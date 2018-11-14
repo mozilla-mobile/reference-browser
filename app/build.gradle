@@ -24,33 +24,20 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+        debug {
+            applicationIdSuffix ".debug"
+        }
     }
 
     flavorDimensions "engine", "abi"
 
     productFlavors {
-        // GeckoView release channels (GV release is not on maven.mozilla.org yet)
+        // GeckoView release channels (For now only Nightly)
         geckoNightly { dimension "engine" }
-        geckoBeta    { dimension "engine" }
 
-        // WebView
-        system { dimension "engine" }
-        
         // Processor architectures
         arm       { dimension "abi" }
         x86       { dimension "abi" }
-        universal { dimension "abi" }
-    }
-
-    variantFilter { variant ->
-        def flavors = variant.flavors*.name.toString().toLowerCase()
-        if (flavors.contains("system") && !flavors.contains("universal")) {
-            setIgnore(true)
-        }
-
-        if (flavors.contains("gecko") && flavors.contains("universal")) {
-            setIgnore(true)
-        }
     }
 
     splits {
@@ -97,13 +84,8 @@ android.applicationVariants.all { variant ->
 }
 
 configurations {
-    systemUniversalImplementation {}
-
     geckoNightlyArmImplementation {}
     geckoNightlyX86Implementation {}
-
-    geckoBetaArmImplementation {}
-    geckoBetaX86Implementation {}
 }
 
 dependencies {
@@ -140,15 +122,9 @@ dependencies {
     implementation Deps.mozilla_lib_crash
     implementation Deps.thirdparty_sentry
 
-    systemUniversalImplementation Deps.mozilla_browser_engine_system
-
     geckoNightlyImplementation Deps.mozilla_browser_engine_gecko_nightly
     geckoNightlyArmImplementation Gecko.geckoview_nightly_arm
     geckoNightlyX86Implementation Gecko.geckoview_nightly_x86
-
-    geckoBetaImplementation Deps.mozilla_browser_engine_gecko_beta
-    geckoBetaArmImplementation Gecko.geckoview_beta_arm
-    geckoBetaX86Implementation Gecko.geckoview_beta_x86
 
     implementation Deps.kotlin_stdlib
     implementation Deps.kotlin_coroutines
@@ -157,4 +133,16 @@ dependencies {
     implementation Deps.support_constraintlayout
     implementation Deps.support_preference
     implementation Deps.support_design
+}
+
+// -------------------------------------------------------------------------------------------------
+// Task for printing all vuild variants to build variants in parallel in automation
+// -------------------------------------------------------------------------------------------------
+task printBuildVariants {
+    doLast {
+        def buildVariants = android.applicationVariants.collect { variant ->
+            variant.name
+        }
+        println "variants: " + groovy.json.JsonOutput.toJson(buildVariants)
+    }
 }
