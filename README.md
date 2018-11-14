@@ -18,19 +18,6 @@ Before you attempt to make a contribution please read the [Community Participati
 
 * Subscribe to our mailing list [android-components@](https://lists.mozilla.org/listinfo/android-components) to keep up to date ([Archives](https://lists.mozilla.org/pipermail/android-components/)).
 
-# Build variants
-
-The reference browser has two product flavor dimensions:
-
-* **engine**: The web rendering engine used by the app:
-  * geckoNightly (GeckoView Nightly channel)
-  * geckoBeta (GeckoView Beta channel)
-  * system (Android WebView)
-* **abi**: The processor architecture. For GeckoView-based builds we support different processor architectures. WebView builds just support the "universal" flavor.
-  * arm
-  * x86
-  * universal
-
 # License
 
     This Source Code Form is subject to the terms of the Mozilla Public
