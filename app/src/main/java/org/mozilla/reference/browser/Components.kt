@@ -135,9 +135,7 @@ class Components(
 
     // Firefox Accounts
     val firefoxAccountsIntegration: FirefoxAccountsIntegration by lazy {
-        FirefoxAccountsIntegration(applicationContext, tabsUseCases).apply {
-            init()
-        }
+        FirefoxAccountsIntegration(applicationContext, tabsUseCases)
     }
 
     val crashReporter: CrashReporter by lazy {

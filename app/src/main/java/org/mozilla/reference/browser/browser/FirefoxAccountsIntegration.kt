@@ -49,6 +49,7 @@ class FirefoxAccountsIntegration(
     var profile: Profile? = null
         private set
 
+    @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
     fun init() {
         job = Job()
 
