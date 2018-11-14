@@ -29,9 +29,8 @@ android {
     flavorDimensions "engine", "abi"
 
     productFlavors {
-        // GeckoView release channels (GV release is not on maven.mozilla.org yet)
+        // GeckoView release channels (For now only Nightly)
         geckoNightly { dimension "engine" }
-        geckoBeta    { dimension "engine" }
 
         // Processor architectures
         arm       { dimension "abi" }
@@ -84,9 +83,6 @@ android.applicationVariants.all { variant ->
 configurations {
     geckoNightlyArmImplementation {}
     geckoNightlyX86Implementation {}
-
-    geckoBetaArmImplementation {}
-    geckoBetaX86Implementation {}
 }
 
 dependencies {
@@ -123,10 +119,6 @@ dependencies {
     geckoNightlyImplementation Deps.mozilla_browser_engine_gecko_nightly
     geckoNightlyArmImplementation Gecko.geckoview_nightly_arm
     geckoNightlyX86Implementation Gecko.geckoview_nightly_x86
-
-    geckoBetaImplementation Deps.mozilla_browser_engine_gecko_beta
-    geckoBetaArmImplementation Gecko.geckoview_beta_arm
-    geckoBetaX86Implementation Gecko.geckoview_beta_x86
 
     implementation Deps.kotlin_stdlib
     implementation Deps.kotlin_coroutines
