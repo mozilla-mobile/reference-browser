@@ -33,24 +33,9 @@ android {
         geckoNightly { dimension "engine" }
         geckoBeta    { dimension "engine" }
 
-        // WebView
-        system { dimension "engine" }
-        
         // Processor architectures
         arm       { dimension "abi" }
         x86       { dimension "abi" }
-        universal { dimension "abi" }
-    }
-
-    variantFilter { variant ->
-        def flavors = variant.flavors*.name.toString().toLowerCase()
-        if (flavors.contains("system") && !flavors.contains("universal")) {
-            setIgnore(true)
-        }
-
-        if (flavors.contains("gecko") && flavors.contains("universal")) {
-            setIgnore(true)
-        }
     }
 
     splits {
@@ -97,8 +82,6 @@ android.applicationVariants.all { variant ->
 }
 
 configurations {
-    systemUniversalImplementation {}
-
     geckoNightlyArmImplementation {}
     geckoNightlyX86Implementation {}
 
@@ -136,8 +119,6 @@ dependencies {
     implementation Deps.mozilla_support_ktx
     implementation Deps.mozilla_lib_crash
     implementation Deps.thirdparty_sentry
-
-    systemUniversalImplementation Deps.mozilla_browser_engine_system
 
     geckoNightlyImplementation Deps.mozilla_browser_engine_gecko_nightly
     geckoNightlyArmImplementation Gecko.geckoview_nightly_arm
