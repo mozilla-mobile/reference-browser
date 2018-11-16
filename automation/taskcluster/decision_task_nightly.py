@@ -54,7 +54,7 @@ def generate_build_task():
                 "/bin/bash",
                 "--login",
                 "-cx",
-                "cd .. && git clone https://github.com/mozilla-mobile/reference-browser.git && cd reference-browser && %s" % (command)
+                "cd .. && git clone https://github.com/mozilla-mobile/reference-browser.git && cd reference-browser && %s" % command
             ],
             "artifacts": {
                 "public": {
