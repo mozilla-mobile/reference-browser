@@ -49,7 +49,6 @@ def generate_build_task(apks, tag):
             "chainOfTrust": True
         },
         artifacts=artifacts,
-        worker_type="gecko-focus",
         scopes=[
             "secrets:get:project/mobile/reference-browser/sentry"
         ]
