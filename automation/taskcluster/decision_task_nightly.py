@@ -49,7 +49,7 @@ def generate_build_task():
                 'taskclusterProxy': True
             },
             "maxRunTime": 7200,
-            "image": "mozillamobile/android-components:1.9",
+            "image": "mozillamobile/android-components:1.10",
             "command": [
                 "/bin/bash",
                 "--login",

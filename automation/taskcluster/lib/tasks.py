@@ -14,7 +14,7 @@ class TaskBuilder(object):
         self.source = source
         self.scheduler_id = scheduler_id
 
-    def build_task(self, name, description, command, worker_type,
+    def build_task(self, name, description, command,
                    artifacts={}, scopes=[], features={}):
         created = datetime.datetime.now()
         expires = taskcluster.fromNow('1 year')
@@ -26,7 +26,7 @@ class TaskBuilder(object):
         })
 
         return {
-            "workerType": worker_type,
+            "workerType": 'gecko-focus',
             "taskGroupId": self.task_id,
             "schedulerId": self.scheduler_id,
             "expires": taskcluster.stringDate(expires),
