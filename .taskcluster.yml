@@ -62,10 +62,10 @@ tasks:
           description: Building reference browser - triggered by a pull request.
           owner: ${event.pull_request.user.login}@users.noreply.github.com
           source: ${event.repository.url}
-  - $if: 'tasks_for == "github-release"'
+  - $if: 'tasks_for == "cron"'
     then:
       $let:
-        decision_task_id: {$eval: as_slugid("decision_task")}
+        decision_task_id: {$eval: as_slugid('decision_task')}
         expires_in: {$fromNow: '1 year'}
         repository: https://github.com/mozilla-mobile/reference-browser
         scheduler_id: taskcluster-github
@@ -79,7 +79,7 @@ tasks:
         provisionerId: aws-provisioner-v1
         workerType: gecko-focus   # This workerType has ChainOfTrust enabled
         requires: all-completed   # Must be explicit because of Chain of Trust
-        priority: highest
+        priority: medium
         retries: 5
         scopes:
           - queue:scheduler-id:${scheduler_id}
@@ -90,20 +90,17 @@ tasks:
           - project:mobile:reference-browser:releng:signing:format:reference-browser-jar
           - project:mobile:reference-browser:releng:googleplay:product:reference-browser
           - secrets:get:project/reference-browser/tokens
-          - queue:route:index.project.mobile.reference-browser.release.latest
+          - queue:route:index.project.mobile.reference-browser.nightly.latest
         payload:
           maxRunTime: 600   # Decision should remain fast enough to schedule a handful of tasks
-          image: mozillamobile/reference-browser:1.0
+          image: mozillamobile/android-components:1.10
           features:
             taskclusterProxy: true
             chainOfTrust: true
           env:
             TASK_ID: ${decision_task_id}
             SCHEDULER_ID: ${scheduler_id}
-            MOBILE_HEAD_REPOSITORY: ${repository}
-            MOBILE_HEAD_BRANCH: ${event.release.target_commitish}
             MOBILE_HEAD_REV: ${event.release.tag_name}
-            MOBILE_TRIGGERED_BY: ${event.sender.login}
           command:
             - /bin/bash
             - --login
@@ -111,14 +108,12 @@ tasks:
             - >-
               git fetch origin --tags
               && git config advice.detachedHead false
-              && git checkout ${event.release.tag_name}
-              && python automation/taskcluster/release.py \   # Add release.py file
-                --tag ${event.release.tag_name} \
-                --track alpha \
+              && git reset --hard origin/master
+              && python automation/taskcluster/decision_task_nightly.py \
                 --commit \
-                --output /opt/reference-browser/app/build/outputs/apk \
-                --apk referenceBrowserX86/release/app-reference-browser-x86-release-unsigned.apk \
-                --apk referenceBrowserArm/release/app-reference-browser-arm-release-unsigned.apk
+                --output app/build/outputs/apk \
+                --apk geckoNightlyX86/release/app-geckoNightly-x86-x86-release-unsigned.apk \
+                --apk gechoNightlyArm/release/app-geckoNightly-arm-armeabi-v7a-release-unsigned.apk
           artifacts:
             public/task-graph.json:
               type: file
@@ -133,9 +128,10 @@ tasks:
               path: /opt/reference-browser/parameters.yml
               expires: ${expires_in}
         extra:
+          cron: {$json: {$eval: 'cron'}}
           tasks_for: ${tasks_for}
         metadata:
-          name: Decision task (${event.release.tag_name})
-          description: Scheduling tasks for releasing reference browser
-          owner: ${event.sender.login}@users.noreply.github.com
+          name: Decision task (nightly)
+          description: Scheduling tasks for nightly release of reference browser
+          owner: skaspari@mozilla.com
           source: ${repository}/raw/${event.release.tag_name}/.taskcluster.yml

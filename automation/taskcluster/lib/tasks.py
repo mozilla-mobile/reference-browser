@@ -42,7 +42,7 @@ class TaskBuilder(object):
             "payload": {
                 "features": features,
                 "maxRunTime": 7200,
-                "image": "mozillamobile/reference-browser:1.0",
+                "image": "mozillamobile/android-components:1.10",
                 "command": [
                     "/bin/bash",
                     "--login",
@@ -98,7 +98,7 @@ class TaskBuilder(object):
             }
         }
 
-    def build_push_task(self, signing_task_id, name, description, track, commit, apks=[], scopes=[]):
+    def build_push_task(self, signing_task_id, name, description, commit, apks=[], scopes=[]):
         created = datetime.datetime.now()
         expires = taskcluster.fromNow('1 year')
         deadline = taskcluster.fromNow('1 day')
@@ -119,7 +119,7 @@ class TaskBuilder(object):
             "requires": 'all-completed',
             "payload": {
                 "commit": commit,
-                "google_play_track": track,
+                "google_play_track": 'nightly',   # TODO @jlorenzo nightly Google Play
                 "upstreamArtifacts": [{
                     "paths": apks,
                     "taskId": signing_task_id,
