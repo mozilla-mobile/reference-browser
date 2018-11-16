@@ -16,7 +16,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import mozilla.components.concept.engine.EngineSession
 import mozilla.components.concept.engine.request.RequestInterceptor
 import mozilla.components.feature.tabs.TabsUseCases
@@ -103,7 +102,12 @@ class FirefoxAccountsIntegration(
 
     @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
     fun destroy() {
-        runBlocking { account.await().close() }
+        if (account.isCompleted) {
+            account.getCompleted().close()
+        } else {
+            account.cancel()
+        }
+
         job.cancel()
     }
 
