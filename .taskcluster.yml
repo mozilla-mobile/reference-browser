@@ -31,7 +31,7 @@ tasks:
           - queue:scheduler-id:${scheduler_id}
         payload:
           maxRunTime: 7200
-          image: mozillamobile/android-components:1.9
+          image: mozillamobile/android-components:1.10
           env:
             TASK_ID: ${decision_task_id}
             SCHEDULER_ID: ${scheduler_id}
