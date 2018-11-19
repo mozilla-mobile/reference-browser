@@ -19,6 +19,7 @@ import mozilla.components.browser.session.Session
 import mozilla.components.browser.session.SessionManager
 import mozilla.components.browser.session.storage.DefaultSessionStorage
 import mozilla.components.browser.storage.sync.PlacesHistoryStorage
+import mozilla.components.browser.storage.sync.PlacesSync
 import mozilla.components.concept.engine.DefaultSettings
 import mozilla.components.concept.engine.Engine
 import mozilla.components.feature.intent.IntentProcessor
@@ -66,6 +67,7 @@ class Components(
 
     // Places.
     val placesHistoryStorage by lazy { PlacesHistoryStorage(applicationContext) }
+    val placesSync by lazy { PlacesSync(applicationContext) }
 
     // Search
     val searchEngineManager by lazy {

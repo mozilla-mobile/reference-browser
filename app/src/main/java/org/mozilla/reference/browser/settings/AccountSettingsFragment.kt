@@ -9,6 +9,7 @@ import android.support.v7.preference.Preference.OnPreferenceClickListener
 import android.support.v7.preference.PreferenceFragmentCompat
 import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.ext.getPreferenceKey
+import org.mozilla.reference.browser.ext.timeSince
 import org.mozilla.reference.browser.ext.requireComponents
 import org.mozilla.reference.browser.R.string.pref_key_sign_out
 import org.mozilla.reference.browser.R.string.pref_key_sync_now
@@ -27,8 +28,10 @@ class AccountSettingsFragment : PreferenceFragmentCompat() {
 
         // Sync Now
         val preferenceSyncNow = findPreference(syncNowKey)
-        preferenceSyncNow.isEnabled = false // Make this `fxaIntegration.profile == null` when implemented
-        preferenceSyncNow.summary = getString(R.string.preferences_sync_never_synced_summary) // Use Long.timeSince()
+        preferenceSyncNow.isEnabled = requireComponents.firefoxAccountsIntegration.profile != null
+
+        val lastSync = requireComponents.firefoxAccountsIntegration.getLastSync()
+        preferenceSyncNow.summary = System.currentTimeMillis().timeSince(context!!, lastSync)
         preferenceSyncNow.onPreferenceClickListener = getClickListenerForSyncNow()
     }
 
@@ -42,7 +45,11 @@ class AccountSettingsFragment : PreferenceFragmentCompat() {
 
     private fun getClickListenerForSyncNow(): OnPreferenceClickListener {
         return OnPreferenceClickListener {
-            // Implement this Sync Now functionality when available.
+            requireComponents.firefoxAccountsIntegration.syncNow()
+            // XXX - we want to await on the above, so we can update the summary, but
+            // I'm not sure how to do that - we need a coroutine scope here?
+            // val lastSync = requireComponents.firefoxAccountsIntegration.getLastSync()
+            // preferenceSyncNow.summary = System.currentTimeMillis().timeSince(context!!, lastSync)
             true
         }
     }

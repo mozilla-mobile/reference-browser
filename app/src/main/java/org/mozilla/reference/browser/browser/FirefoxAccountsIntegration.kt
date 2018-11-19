@@ -24,7 +24,10 @@ import mozilla.components.service.fxa.Config
 import mozilla.components.service.fxa.FirefoxAccount
 import mozilla.components.service.fxa.FxaException
 import mozilla.components.service.fxa.Profile
+import mozilla.components.service.fxa.OAuthInfo
 import kotlin.coroutines.CoroutineContext
+import org.mozilla.places.SyncAuthInfo
+import org.mozilla.reference.browser.ext.application
 
 class FirefoxAccountsIntegration(
     private val context: Context,
@@ -32,12 +35,31 @@ class FirefoxAccountsIntegration(
 ) : CoroutineScope, LifecycleObserver {
 
     companion object {
+        // This is the production FxA server - we take a special step if
+        // FXA_SERVER isn't set to this.
+        const val FXA_PRODUCTION_SERVER = "https://accounts.firefox.com"
+
+        // This is the FxA server we wish to hit. Note that eventually this
+        // needs to be able to be configured by the user somehow so they
+        // can self-host - but for now we keep it as a hard-coded constant.
+
+        // XXX - note that production isn't yet configured for this app.
+        // const val FXA_SERVER = "https://accounts.firefox.com"
+        const val FXA_SERVER = "https://latest.dev.lcip.org"
+
+        // The client ID of the reference browser.
         const val CLIENT_ID = "3c49430b43dfba77"
-        const val REDIRECT_URL = "https://accounts.firefox.com/oauth/success/3c49430b43dfba77"
+        const val REDIRECT_URL = "$FXA_SERVER/oauth/success/$CLIENT_ID"
         const val SUCCESS_PATH = "connect_another_device?showSuccessMessage=true"
         const val FXA_STATE_PREFS_KEY = "fxaAppState"
         const val FXA_STATE_KEY = "fxaState"
-        val SCOPES: Array<String> = arrayOf("profile")
+        // This is slighly messy - here we need to know the union of all "scopes"
+        // needed by components which rely on FxA integration. If this list
+        // grows too far we probably want to find a way to determine the set
+        // at runtime.
+        val SCOPES: Array<String> = arrayOf("profile", "https://identity.mozilla.com/apps/oldsync")
+
+        const val FXA_LAST_SYNCED_AT_KEY = "lastSyncedAt"
     }
 
     private lateinit var job: Job
@@ -58,7 +80,12 @@ class FirefoxAccountsIntegration(
                 profile = it.getProfile(true).await()
                 return@async it
             }
-            return@async Config.release().await().use { config ->
+            val initConfig = if (FXA_SERVER == FXA_PRODUCTION_SERVER) {
+                Config.release();
+            } else {
+                Config.custom(FXA_SERVER);
+            }
+            return@async initConfig.await().use { config ->
                 FirefoxAccount(config, CLIENT_ID, REDIRECT_URL)
             }
         }
@@ -66,14 +93,17 @@ class FirefoxAccountsIntegration(
 
     fun authenticate() {
         launch {
-            val url = account.await().beginOAuthFlow(SCOPES, false).await()
+            val url = account.await().beginOAuthFlow(SCOPES, true).await()
             tabsUseCases.addSession.invoke(url)
         }
     }
 
     fun logout() {
         profile = null
-        getSharedPreferences().edit().putString(FXA_STATE_KEY, "").apply()
+        val prefs = getSharedPreferences().edit()
+        prefs.putString(FXA_STATE_KEY, "")
+        prefs.putLong(FXA_LAST_SYNCED_AT_KEY, 0)
+        prefs.apply()
         init()
     }
 
@@ -99,6 +129,33 @@ class FirefoxAccountsIntegration(
                 null
             }
         }
+    }
+
+    fun syncNow(): Deferred<Unit> {
+        return async {
+            val tokenServerURL = account.await().getTokenServerEndpointURL()
+            val token = account.await().getCachedOAuthToken(SCOPES).await()
+                    ?: throw RuntimeException("can't get a token!")
+
+            val keys = token.keys ?: throw RuntimeException("keys are missing!")
+            val keyInfo = keys["https://identity.mozilla.com/apps/oldsync"]
+                    ?: throw RuntimeException("Key info is missing!")
+
+            val sai = SyncAuthInfo(
+                    kid = keyInfo.kid,
+                    fxaAccessToken = token.accessToken,
+                    syncKey = keyInfo.k,
+                    tokenserverURL = tokenServerURL)
+            val status = context.application.components.placesSync.sync(sai).await();
+            if (status == context.application.components.placesSync.COMPLETED_OK) {
+                val now = System.currentTimeMillis()
+                getSharedPreferences().edit().putLong(FXA_LAST_SYNCED_AT_KEY, now).apply()
+            }
+        }
+    }
+
+    fun getLastSync(): Long {
+        return getSharedPreferences().getLong(FXA_LAST_SYNCED_AT_KEY, 0)
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
