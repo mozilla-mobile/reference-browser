@@ -42,7 +42,6 @@ class BrowserFragment : Fragment(), BackHandler, DownloadDialogListener {
                 requireComponents.sessionManager,
                 requireComponents.sessionUseCases,
                 engineView,
-                requireComponents.sessionStorage,
                 sessionId)
 
         lifecycle.addObserver(ToolbarIntegration(requireContext(), toolbar, sessionId))

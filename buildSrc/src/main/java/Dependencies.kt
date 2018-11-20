@@ -17,7 +17,7 @@ private object Versions {
 
     const val android_gradle_plugin = "3.1.4"
 
-    const val mozilla_android_components = "0.31.0"
+    const val mozilla_android_components = "0.32.0"
 
     const val sentry = "1.7.10"
 }

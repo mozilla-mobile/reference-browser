@@ -17,7 +17,7 @@ import mozilla.components.browser.menu.item.SimpleBrowserMenuItem
 import mozilla.components.browser.search.SearchEngineManager
 import mozilla.components.browser.session.Session
 import mozilla.components.browser.session.SessionManager
-import mozilla.components.browser.session.storage.DefaultSessionStorage
+import mozilla.components.browser.session.storage.SessionStorage
 import mozilla.components.browser.storage.sync.PlacesHistoryStorage
 import mozilla.components.concept.engine.DefaultSettings
 import mozilla.components.concept.engine.Engine
@@ -33,6 +33,7 @@ import org.mozilla.reference.browser.BuildConfig.SENTRY_TOKEN
 import org.mozilla.reference.browser.browser.FirefoxAccountsIntegration
 import org.mozilla.reference.browser.ext.share
 import org.mozilla.reference.browser.settings.SettingsActivity
+import java.util.concurrent.TimeUnit
 
 class Components(
     private val applicationContext: Context
@@ -47,18 +48,21 @@ class Components(
     }
 
     // Session
-    val sessionStorage by lazy { DefaultSessionStorage(applicationContext) }
+    val sessionStorage by lazy { SessionStorage(applicationContext, engine) }
 
     val sessionManager by lazy {
         SessionManager(engine, defaultSession = { Session("about:blank") }).apply {
-            sessionStorage.read(engine)?.let {
-                restore(it)
-            }
+            sessionStorage.restore()?.let { snapshot -> restore(snapshot) }
 
             if (size == 0) {
                 val initialSession = Session("https://www.mozilla.org")
                 add(initialSession)
             }
+
+            sessionStorage.autoSave(this)
+                .periodicallyInForeground(interval = 30, unit = TimeUnit.SECONDS)
+                .whenGoingToBackground()
+                .whenSessionsChange()
         }
     }
 
