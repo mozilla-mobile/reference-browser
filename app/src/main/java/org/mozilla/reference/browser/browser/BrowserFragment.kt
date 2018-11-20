@@ -6,8 +6,8 @@ package org.mozilla.reference.browser.browser
 
 import android.Manifest.permission.WRITE_EXTERNAL_STORAGE
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v4.content.PermissionChecker.PERMISSION_GRANTED
+import androidx.fragment.app.Fragment
+import androidx.core.content.PermissionChecker.PERMISSION_GRANTED
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -23,7 +23,7 @@ import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.ext.requireComponents
 import org.mozilla.reference.browser.tabs.TabsTrayFragment
 
-class BrowserFragment : Fragment(), BackHandler, DownloadDialogListener {
+class BrowserFragment : androidx.fragment.app.Fragment(), BackHandler, DownloadDialogListener {
     private lateinit var sessionFeature: SessionFeature
     private lateinit var tabsToolbarFeature: TabsToolbarFeature
     private lateinit var downloadsFeature: DownloadsFeature

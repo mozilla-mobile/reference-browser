@@ -7,9 +7,9 @@ package org.mozilla.reference.browser
 import android.content.ComponentCallbacks2
 import android.content.Context
 import android.os.Bundle
-import android.support.design.widget.Snackbar
-import android.support.design.widget.Snackbar.LENGTH_LONG
-import android.support.v7.app.AppCompatActivity
+import com.google.android.material.snackbar.Snackbar
+import com.google.android.material.snackbar.Snackbar.LENGTH_LONG
+import androidx.appcompat.app.AppCompatActivity
 import android.util.AttributeSet
 import android.view.View
 import mozilla.components.browser.tabstray.BrowserTabsTray

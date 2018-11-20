@@ -16,7 +16,7 @@ android {
         versionCode Config.versionCode
         versionName Config.versionName
 
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
@@ -130,10 +130,10 @@ dependencies {
     implementation Deps.kotlin_stdlib
     implementation Deps.kotlin_coroutines
 
-    implementation Deps.support_appcompat
-    implementation Deps.support_constraintlayout
-    implementation Deps.support_preference
-    implementation Deps.support_design
+    implementation Deps.androidx_appcompat
+    implementation Deps.androidx_constraintlayout
+    implementation Deps.androidx_preference
+    implementation Deps.google_material
 }
 
 // -------------------------------------------------------------------------------------------------
