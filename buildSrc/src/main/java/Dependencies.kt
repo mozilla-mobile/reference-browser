@@ -12,7 +12,7 @@ private object Versions {
     const val mockito = "2.21.0"
     const val mockwebserver = "3.10.0"
 
-    const val support_libraries = "27.1.1"
+    const val support_libraries = "28.0.0"
     const val constraint_layout = "1.1.2"
 
     const val android_gradle_plugin = "3.1.4"
@@ -64,14 +64,8 @@ object Deps {
     const val testing_mockito = "org.mockito:mockito-core:${Versions.mockito}"
     const val testing_mockwebserver = "com.squareup.okhttp3:mockwebserver:${Versions.mockwebserver}"
 
-    const val support_annotations = "com.android.support:support-annotations:${Versions.support_libraries}"
-    const val support_cardview = "com.android.support:cardview-v7:${Versions.support_libraries}"
-    const val support_recyclerview = "com.android.support:recyclerview-v7:${Versions.support_libraries}"
     const val support_appcompat = "com.android.support:appcompat-v7:${Versions.support_libraries}"
-    const val support_customtabs = "com.android.support:customtabs:${Versions.support_libraries}"
-    const val support_fragment = "com.android.support:support-fragment:${Versions.support_libraries}"
     const val support_constraintlayout = "com.android.support.constraint:constraint-layout:${Versions.constraint_layout}"
-    const val support_compat = "com.android.support:support-compat:${Versions.support_libraries}"
     const val support_preference = "com.android.support:preference-v7:${Versions.support_libraries}"
     const val support_design = "com.android.support:design:${Versions.support_libraries}"
 
