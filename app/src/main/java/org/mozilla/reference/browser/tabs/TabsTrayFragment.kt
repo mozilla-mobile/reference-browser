@@ -5,7 +5,7 @@
 package org.mozilla.reference.browser.tabs
 
 import android.os.Bundle
-import android.support.v4.app.Fragment
+import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,7 +19,7 @@ import org.mozilla.reference.browser.ext.requireComponents
 /**
  * A fragment for displaying the tabs tray.
  */
-class TabsTrayFragment : Fragment(), BackHandler {
+class TabsTrayFragment : androidx.fragment.app.Fragment(), BackHandler {
     private var tabsFeature: TabsFeature? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =

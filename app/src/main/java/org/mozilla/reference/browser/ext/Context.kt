@@ -11,7 +11,7 @@ import android.content.Intent.ACTION_SEND
 import android.content.Intent.EXTRA_SUBJECT
 import android.content.Intent.EXTRA_TEXT
 import android.content.Intent.FLAG_ACTIVITY_NEW_TASK
-import android.support.annotation.StringRes
+import androidx.annotation.StringRes
 import mozilla.components.support.base.log.Log.Priority.WARN
 import mozilla.components.support.base.log.Log
 import org.mozilla.reference.browser.BrowserApplication

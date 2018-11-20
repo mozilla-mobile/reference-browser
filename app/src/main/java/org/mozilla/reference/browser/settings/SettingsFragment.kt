@@ -7,8 +7,8 @@ package org.mozilla.reference.browser.settings
 import android.content.Intent
 import android.os.Bundle
 import android.provider.Settings
-import android.support.v7.preference.Preference.OnPreferenceClickListener
-import android.support.v7.preference.PreferenceFragmentCompat
+import androidx.preference.Preference.OnPreferenceClickListener
+import androidx.preference.PreferenceFragmentCompat
 import android.widget.Toast
 import android.widget.Toast.LENGTH_SHORT
 import org.mozilla.reference.browser.R

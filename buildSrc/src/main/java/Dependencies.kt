@@ -7,19 +7,17 @@ private object Versions {
     const val kotlin = "1.3.0"
     const val coroutines = "1.0.1"
 
-    const val junit = "4.12"
-    const val robolectric = "3.8"
-    const val mockito = "2.21.0"
-    const val mockwebserver = "3.10.0"
+    const val androidx_appcompat = "1.0.2"
+    const val androidx_constraintlayout = "1.1.3"
+    const val androidx_preference = "1.0.0"
 
-    const val support_libraries = "28.0.0"
-    const val constraint_layout = "1.1.2"
+    const val google_material = "1.0.0"
 
-    const val android_gradle_plugin = "3.1.4"
+    const val android_gradle_plugin = "3.2.1"
 
     const val mozilla_android_components = "0.32.0"
 
-    const val sentry = "1.7.10"
+    const val thirdparty_sentry = "1.7.10"
 }
 
 // Synchronized dependencies used by (some) modules
@@ -57,17 +55,13 @@ object Deps {
     const val mozilla_support_utils = "org.mozilla.components:support-utils:${Versions.mozilla_android_components}"
     const val mozilla_support_ktx= "org.mozilla.components:support-ktx:${Versions.mozilla_android_components}"
     const val mozilla_lib_crash = "org.mozilla.components:lib-crash:${Versions.mozilla_android_components}"
-    const val thirdparty_sentry = "io.sentry:sentry-android:${Versions.sentry}"
 
-    const val testing_junit = "junit:junit:${Versions.junit}"
-    const val testing_robolectric = "org.robolectric:robolectric:${Versions.robolectric}"
-    const val testing_mockito = "org.mockito:mockito-core:${Versions.mockito}"
-    const val testing_mockwebserver = "com.squareup.okhttp3:mockwebserver:${Versions.mockwebserver}"
+    const val thirdparty_sentry = "io.sentry:sentry-android:${Versions.thirdparty_sentry}"
 
-    const val support_appcompat = "com.android.support:appcompat-v7:${Versions.support_libraries}"
-    const val support_constraintlayout = "com.android.support.constraint:constraint-layout:${Versions.constraint_layout}"
-    const val support_preference = "com.android.support:preference-v7:${Versions.support_libraries}"
-    const val support_design = "com.android.support:design:${Versions.support_libraries}"
+    const val androidx_appcompat = "androidx.appcompat:appcompat:${Versions.androidx_appcompat}"
+    const val androidx_constraintlayout = "androidx.constraintlayout:constraintlayout:${Versions.androidx_constraintlayout}"
+    const val androidx_preference = "androidx.preference:preference-ktx:${Versions.androidx_preference}"
+    const val google_material = "com.google.android.material:material:${Versions.google_material}"
 
     const val tools_androidgradle = "com.android.tools.build:gradle:${Versions.android_gradle_plugin}"
     const val tools_kotlingradle = "org.jetbrains.kotlin:kotlin-gradle-plugin:${Versions.kotlin}"
