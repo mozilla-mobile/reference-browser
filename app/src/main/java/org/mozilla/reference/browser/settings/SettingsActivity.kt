@@ -5,7 +5,7 @@
 package org.mozilla.reference.browser.settings
 
 import android.R.id.content
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MenuItem
 

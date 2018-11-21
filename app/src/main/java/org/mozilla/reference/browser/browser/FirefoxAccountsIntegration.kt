@@ -4,9 +4,9 @@
 
 package org.mozilla.reference.browser.browser
 
-import android.arch.lifecycle.Lifecycle
-import android.arch.lifecycle.LifecycleObserver
-import android.arch.lifecycle.OnLifecycleEvent
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleObserver
+import androidx.lifecycle.OnLifecycleEvent
 import android.content.Context
 import android.content.SharedPreferences
 import android.net.Uri
@@ -16,7 +16,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import mozilla.components.concept.engine.EngineSession
 import mozilla.components.concept.engine.request.RequestInterceptor
 import mozilla.components.feature.tabs.TabsUseCases
@@ -160,7 +159,12 @@ class FirefoxAccountsIntegration(
 
     @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
     fun destroy() {
-        runBlocking { account.await().close() }
+        if (account.isCompleted) {
+            account.getCompleted().close()
+        } else {
+            account.cancel()
+        }
+
         job.cancel()
     }
 

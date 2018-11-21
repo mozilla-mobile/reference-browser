@@ -4,11 +4,11 @@
 
 package org.mozilla.reference.browser.ext
 
-import android.support.v4.app.Fragment
+import androidx.fragment.app.Fragment
 import org.mozilla.reference.browser.Components
 
 /**
  * Get the requireComponents of this application.
  */
-val Fragment.requireComponents: Components
+val androidx.fragment.app.Fragment.requireComponents: Components
     get() = requireContext().components
