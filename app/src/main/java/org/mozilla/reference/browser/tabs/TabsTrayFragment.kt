@@ -50,7 +50,12 @@ class TabsTrayFragment : Fragment(), BackHandler {
         toolbar.setOnMenuItemClickListener {
             when (it.itemId) {
                 R.id.newTab -> {
-                    requireComponents.tabsUseCases.addTab.invoke("about:blank", selectTab = true)
+                    when (regularTabs) {
+                        true ->
+                            requireComponents.tabsUseCases.addTab.invoke("about:blank", selectTab = true)
+                        false ->
+                            requireComponents.tabsUseCases.addPrivateTab.invoke("about:privatebrowsing", selectTab = true)
+                    }
                     closeTabsTray()
                 }
             }
