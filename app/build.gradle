@@ -115,6 +115,7 @@ dependencies {
     implementation Deps.mozilla_feature_storage
 
     implementation Deps.mozilla_ui_autocomplete
+    implementation Deps.mozilla_ui_colors
 
     implementation Deps.mozilla_service_firefox_accounts
 
