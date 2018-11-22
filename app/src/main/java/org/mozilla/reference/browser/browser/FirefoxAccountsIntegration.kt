@@ -10,6 +10,7 @@ import androidx.lifecycle.OnLifecycleEvent
 import android.content.Context
 import android.content.SharedPreferences
 import android.net.Uri
+import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
@@ -23,6 +24,7 @@ import mozilla.components.service.fxa.Config
 import mozilla.components.service.fxa.FirefoxAccount
 import mozilla.components.service.fxa.FxaException
 import mozilla.components.service.fxa.Profile
+import mozilla.components.support.base.log.Log
 import kotlin.coroutines.CoroutineContext
 
 class FirefoxAccountsIntegration(
@@ -39,9 +41,17 @@ class FirefoxAccountsIntegration(
         val SCOPES: Array<String> = arrayOf("profile")
     }
 
+    private val exceptionHandler = CoroutineExceptionHandler { _, e ->
+        Log.log(
+            Log.Priority.ERROR,
+            message = "Error occurred during Firefox Account authentication",
+            throwable = e,
+            tag = "Reference-Browser")
+    }
+
     private lateinit var job: Job
     override val coroutineContext: CoroutineContext
-        get() = Dispatchers.Main + job
+        get() = Dispatchers.Main + job + exceptionHandler
 
     private lateinit var account: Deferred<FirefoxAccount>
 
@@ -103,7 +113,16 @@ class FirefoxAccountsIntegration(
     @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
     fun destroy() {
         if (account.isCompleted) {
-            account.getCompleted().close()
+            try {
+                account.getCompleted().close()
+            } catch (e: FxaException) {
+                Log.log(
+                    Log.Priority.DEBUG,
+                    message = "Error occurred when closing Firefox Account",
+                    throwable = e,
+                    tag = "Reference-Browser"
+                )
+            }
         } else {
             account.cancel()
         }
