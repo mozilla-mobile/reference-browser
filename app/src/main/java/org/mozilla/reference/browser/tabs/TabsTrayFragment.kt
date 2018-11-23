@@ -33,7 +33,7 @@ class TabsTrayFragment : Fragment(), BackHandler {
     private lateinit var tabsButton: BrowserToolbar.TwoStateButton
     private lateinit var privateTabsButton: BrowserToolbar.TwoStateButton
     private val browserActions: MutableList<DisplayAction> = mutableListOf()
-    private var regularTabs = true
+    private var isPrivateTab = false
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
         inflater.inflate(R.layout.fragment_tabstray, container, false)
@@ -50,7 +50,7 @@ class TabsTrayFragment : Fragment(), BackHandler {
         toolbar.setOnMenuItemClickListener {
             when (it.itemId) {
                 R.id.newTab -> {
-                    when (regularTabs) {
+                    when (isPrivateTab) {
                         true ->
                             requireComponents.tabsUseCases.addTab.invoke("about:blank", selectTab = true)
                         false ->
@@ -67,8 +67,10 @@ class TabsTrayFragment : Fragment(), BackHandler {
                 "Tabs",
                 resources.getThemedDrawable(R.drawable.mozac_ic_tab).colorTint(photonPurple50),
                 "Tabs selected",
-                isEnabled = { regularTabs }
+                isEnabled = { !isPrivateTab }
         ) {
+            isPrivateTab = false
+            invalidateActions()
         }
 
         privateTabsButton = BrowserToolbar.TwoStateButton(
@@ -76,8 +78,10 @@ class TabsTrayFragment : Fragment(), BackHandler {
                 "Private tabs",
                 resources.getThemedDrawable(R.drawable.mozac_ic_globe).colorTint(photonPurple50),
                 "Private tabs selected",
-                isEnabled = { !regularTabs }
+                isEnabled = { isPrivateTab }
         ) {
+            isPrivateTab = true
+            invalidateActions()
         }
 
         toolbar.apply {
@@ -89,7 +93,10 @@ class TabsTrayFragment : Fragment(), BackHandler {
             tabsTray,
             requireComponents.sessionManager,
             requireComponents.tabsUseCases,
+            { it.private == isPrivateTab },
             ::closeTabsTray)
+
+        invalidateActions()
     }
 
     override fun onStart() {
@@ -114,6 +121,27 @@ class TabsTrayFragment : Fragment(), BackHandler {
             replace(R.id.container, BrowserFragment.create())
             commit()
         }
+    }
+
+    private fun invalidateActions() {
+        for (action in browserActions) {
+            val visible = action.actual.visible()
+
+            if (!visible && action.view != null) {
+                // Action should not be visible anymore. Remove view.
+                toolbar.removeView(action.view)
+                action.view = null
+            } else if (visible && action.view == null) {
+                // Action should be visible. Add view for it.
+                action.actual.createView(toolbar).let {
+                    action.view = it
+                    toolbar.addView(it)
+                }
+            }
+
+            action.view?.let { action.actual.bind(it) }
+        }
+        tabsFeature?.invalidate()
     }
 
     private fun Resources.getThemedDrawable(@DrawableRes resId: Int) = getDrawable(resId, context?.theme)
