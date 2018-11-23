@@ -9,4 +9,8 @@
         android:icon="@drawable/mozac_ic_tab_new"
         android:title="@string/menu_action_add_tab"
         app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/closeTab"
+        android:title="@string/menu_action_close_tabs"
+        app:showAsAction="never" />
 </menu>
