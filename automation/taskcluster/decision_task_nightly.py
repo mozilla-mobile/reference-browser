@@ -6,6 +6,8 @@
 Decision task for nightly releases.
 """
 
+from __future__ import print_function
+
 import argparse
 import json
 import lib.tasks
@@ -32,10 +34,9 @@ def generate_build_task(apks):
             "path": apk,
             "expires": taskcluster.stringDate(taskcluster.fromNow('1 year'))
         }
-        artifacts["public/%s" % os.path.basename(apk)] = artifact
+        artifacts["public/{}".format(os.path.basename(apk))] = artifact
 
     checkout = "git fetch origin && git reset --hard origin/master"
-    assemble_task = 'assembleRelease'
 
     return taskcluster.slugId(), BUILDER.build_task(
         name="(Reference Browser) Build task",
@@ -43,9 +44,10 @@ def generate_build_task(apks):
         command=(checkout +
                  ' && python automation/taskcluster/helper/get-secret.py '
                  '-s project/mobile/reference-browser/sentry -k dsn -f .sentry_token'
-                 ' && ./gradlew --no-daemon clean test ' + assemble_task),
+                 ' && ./gradlew --no-daemon -PcrashReportingEnabled clean assembleRelease test'),
         features={
-            "chainOfTrust": True   # TODO need 'taskClusterProxy': True?
+            "chainOfTrust": True,
+            "taskClusterProxy": True
         },
         artifacts=artifacts,
         scopes=[
@@ -130,7 +132,7 @@ def nightly(apks, commit):
     task_graph[push_task_id] = {}
     task_graph[push_task_id]['task'] = queue.task(push_task_id)
 
-    print json.dumps(task_graph, indent=4, seperators=(',', ': '))
+    print(json.dumps(task_graph, indent=4, seperators=(',', ': ')))
 
     with open('task-graph.json', 'w') as f:
         json.dump(task_graph, f)
