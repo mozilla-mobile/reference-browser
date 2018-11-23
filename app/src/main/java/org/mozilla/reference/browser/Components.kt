@@ -146,6 +146,23 @@ class Components(
     // Tabs
     val tabsUseCases: TabsUseCases by lazy { TabsUseCases(sessionManager) }
 
+    // TODO work around until we have https://github.com/mozilla-mobile/android-components/issues/1457
+    val removeSessions = {
+        sessionManager.all.filter { session ->
+            !session.private
+        }.forEach { session ->
+            sessionManager.remove(session)
+        }
+    }
+
+    val removePrivateSessions = {
+        sessionManager.all.filter { session ->
+            session.private
+        }.forEach { session ->
+            sessionManager.remove(session)
+        }
+    }
+
     // Firefox Accounts
     val firefoxAccountsIntegration: FirefoxAccountsIntegration by lazy {
         FirefoxAccountsIntegration(applicationContext, tabsUseCases)
