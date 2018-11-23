@@ -10,10 +10,18 @@ import mozilla.components.browser.errorpages.ErrorType
 import mozilla.components.concept.engine.EngineSession
 import mozilla.components.concept.engine.request.RequestInterceptor
 import org.mozilla.reference.browser.ext.components
+import org.mozilla.reference.browser.tabs.PrivatePage
 
 class AppRequestInterceptor(private val context: Context) : RequestInterceptor {
     override fun onLoadRequest(session: EngineSession, uri: String): RequestInterceptor.InterceptionResponse? {
-        return context.components.firefoxAccountsIntegration.interceptor.onLoadRequest(session, uri)
+        return when (uri) {
+            "about:privatebrowsing" -> {
+                val page = PrivatePage.createPrivateBrowsingPage(context, uri)
+                return RequestInterceptor.InterceptionResponse.Content(page, encoding = "base64")
+            }
+
+            else -> context.components.firefoxAccountsIntegration.interceptor.onLoadRequest(session, uri)
+        }
     }
 
     override fun onErrorRequest(
