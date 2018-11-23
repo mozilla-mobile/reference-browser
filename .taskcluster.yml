@@ -86,11 +86,11 @@ tasks:
           - queue:create-task:highest:aws-provisioner-v1/gecko-focus
           - queue:create-task:highest:scriptworker-prov-v1/mobile-signing-v1
           - queue:create-task:highest:scriptworker-prov-v1/mobile-pushapk-v1
-          - project:mobile:reference-browser:releng:signing:cert:release-signing
-          - project:mobile:reference-browser:releng:signing:format:reference-browser-jar
+          - project:mobile:reference-browser:releng:signing:cert:dep-signing
+          - project:mobile:reference-browser:releng:signing:format:autograph_apk_reference_browser
           - project:mobile:reference-browser:releng:googleplay:product:reference-browser
-          - secrets:get:project/reference-browser/tokens
-          - queue:route:index.project.mobile.reference-browser.nightly.latest
+          - secrets:get:project/mobile/reference-browser/sentry
+          - queue:route:index.project.mobile.reference-browser.staging-nightly.latest
         payload:
           maxRunTime: 600   # Decision should remain fast enough to schedule a handful of tasks
           image: mozillamobile/android-components:1.10
