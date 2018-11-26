@@ -6,11 +6,11 @@ package org.mozilla.reference.browser.browser
 
 import android.Manifest.permission.WRITE_EXTERNAL_STORAGE
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import androidx.core.content.PermissionChecker.PERMISSION_GRANTED
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.fragment_browser.*
 import mozilla.components.feature.awesomebar.AwesomeBarFeature
 import mozilla.components.feature.downloads.DownloadsFeature
@@ -45,14 +45,14 @@ class BrowserFragment : Fragment(), BackHandler {
 
         lifecycle.addObserver(ToolbarIntegration(
             requireContext(),
-            toolbar,
+            tabsPanel,
             requireComponents.placesHistoryStorage,
             requireComponents.shippedDomainsProvider,
             sessionId))
 
         lifecycle.addObserver(requireComponents.firefoxAccountsIntegration)
 
-        awesomeBarFeature = AwesomeBarFeature(awesomeBar, toolbar, engineView)
+        awesomeBarFeature = AwesomeBarFeature(awesomeBar, tabsPanel, engineView)
             .addSearchProvider(
                 requireComponents.searchEngineManager.getDefaultSearchEngine(requireContext()),
                 requireComponents.searchUseCases.defaultSearch)
@@ -63,7 +63,7 @@ class BrowserFragment : Fragment(), BackHandler {
                 requireComponents.placesHistoryStorage,
                 requireComponents.sessionUseCases.loadUrl)
 
-        tabsToolbarFeature = TabsToolbarFeature(toolbar, requireComponents.sessionManager, ::showTabs)
+        tabsToolbarFeature = TabsToolbarFeature(tabsPanel, requireComponents.sessionManager, ::showTabs)
 
         downloadsFeature = DownloadsFeature(
                 requireContext(),
@@ -100,7 +100,7 @@ class BrowserFragment : Fragment(), BackHandler {
     }
 
     override fun onBackPressed(): Boolean {
-        if (toolbar.onBackPressed()) {
+        if (tabsPanel.onBackPressed()) {
             return true
         }
 
