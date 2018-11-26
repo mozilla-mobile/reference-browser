@@ -15,6 +15,7 @@ import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.R.string.pref_key_firefox_account
 import org.mozilla.reference.browser.ext.getPreferenceKey
 import org.mozilla.reference.browser.R.string.pref_key_sign_in
+import org.mozilla.reference.browser.R.string.pref_key_sign_in_pair
 import org.mozilla.reference.browser.R.string.pref_key_make_default_browser
 import org.mozilla.reference.browser.ext.requireComponents
 
@@ -44,15 +45,20 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
     private fun setupPreferences() {
         val signInKey = context?.getPreferenceKey(pref_key_sign_in)
+        val signInPairKey = context?.getPreferenceKey(pref_key_sign_in_pair)
         val firefoxAccountKey = context?.getPreferenceKey(pref_key_firefox_account)
         val makeDefaultBrowserKey = context?.getPreferenceKey(pref_key_make_default_browser)
         val preferenceSignIn = findPreference(signInKey)
+        val preferenceSignInPair = findPreference(signInPairKey)
         val preferenceFirefoxAccount = findPreference(firefoxAccountKey)
         val preferenceMakeDefaultBrowser = findPreference(makeDefaultBrowserKey)
         val fxaIntegration = requireComponents.firefoxAccountsIntegration
 
         preferenceSignIn.onPreferenceClickListener = getClickListenerForSignIn()
         preferenceSignIn.isVisible = fxaIntegration.profile == null
+
+        preferenceSignInPair.onPreferenceClickListener = getClickListenerForSignInPair()
+        preferenceSignInPair.isVisible = fxaIntegration.profile == null
 
         preferenceFirefoxAccount.onPreferenceClickListener = getClickListenerForFirefoxAccount()
         preferenceFirefoxAccount.isVisible = fxaIntegration.profile != null
@@ -95,6 +101,17 @@ class SettingsFragment : PreferenceFragmentCompat() {
             true
         }
     }
+
+    private fun getClickListenerForSignInPair(): OnPreferenceClickListener {
+        return OnPreferenceClickListener { _ ->
+            fragmentManager?.beginTransaction()
+                    ?.replace(android.R.id.content, ScanFragment())
+                    ?.addToBackStack(null)
+                    ?.commit()
+            true
+        }
+    }
+
 
     private fun getActionBarUpdater() = activity as ActionBarUpdater
 }

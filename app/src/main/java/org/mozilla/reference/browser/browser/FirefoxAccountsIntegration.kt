@@ -80,6 +80,13 @@ class FirefoxAccountsIntegration(
         }
     }
 
+    fun pair(pairingUrl: String) {
+        launch {
+            val url = account.await().beginPairingFlow(pairingUrl, SCOPES).await()
+            tabsUseCases.addSession.invoke(url)
+        }
+    }
+
     fun logout() {
         profile = null
         getSharedPreferences().edit().putString(FXA_STATE_KEY, "").apply()

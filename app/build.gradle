@@ -134,6 +134,9 @@ dependencies {
     implementation Deps.androidx_constraintlayout
     implementation Deps.androidx_preference
     implementation Deps.google_material
+    implementation ('me.dm7.barcodescanner:zxing:1.9.8') {
+        exclude module: 'support-v4'
+    }
 }
 
 // -------------------------------------------------------------------------------------------------
