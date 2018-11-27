@@ -4,7 +4,7 @@
 
 // Synchronized version numbers for dependencies used by (some) modules
 private object Versions {
-    const val kotlin = "1.3.0"
+    const val kotlin = "1.3.10"
     const val coroutines = "1.0.1"
 
     const val androidx_appcompat = "1.0.2"
@@ -15,7 +15,7 @@ private object Versions {
 
     const val android_gradle_plugin = "3.2.1"
 
-    const val mozilla_android_components = "0.32.0"
+    const val mozilla_android_components = "0.33.0"
 
     const val thirdparty_sentry = "1.7.10"
 }

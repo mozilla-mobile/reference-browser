@@ -9,14 +9,18 @@ import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.OnLifecycleEvent
 import android.content.Context
 import mozilla.components.browser.domains.DomainAutoCompleteProvider
+import mozilla.components.browser.domains.DomainAutocompleteProvider
 import mozilla.components.browser.toolbar.BrowserToolbar
+import mozilla.components.concept.storage.HistoryStorage
+import mozilla.components.feature.toolbar.ToolbarAutocompleteFeature
 import mozilla.components.feature.toolbar.ToolbarFeature
-import mozilla.components.ui.autocomplete.InlineAutocompleteEditText
 import org.mozilla.reference.browser.ext.components
 
 class ToolbarIntegration(
     context: Context,
     toolbar: BrowserToolbar,
+    historyStorage: HistoryStorage,
+    domainAutocompleteProvider: DomainAutocompleteProvider,
     sessionId: String? = null
 ) : LifecycleObserver {
     private val autoCompleteProvider = DomainAutoCompleteProvider().apply {
@@ -26,17 +30,13 @@ class ToolbarIntegration(
     init {
         toolbar.setMenuBuilder(context.components.menuBuilder)
 
-        toolbar.setAutocompleteFilter { value, view ->
-            view?.let { _ ->
-                val result = autoCompleteProvider.autocomplete(value)
-                view.applyAutocompleteResult(
-                    InlineAutocompleteEditText.AutocompleteResult(result.text, result.source, result.size) {
-                        result.url
-                    }
-                )
-            }
+        ToolbarAutocompleteFeature(toolbar).apply {
+            addHistoryStorageProvider(historyStorage)
+            addDomainProvider(domainAutocompleteProvider)
         }
     }
+
+    private val toolbarAutoToolbarFeature = ToolbarAutocompleteFeature(toolbar)
 
     private val toolbarFeature: ToolbarFeature = ToolbarFeature(
         toolbar,
