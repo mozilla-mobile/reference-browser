@@ -37,7 +37,7 @@ class TabsTrayFragment : androidx.fragment.app.Fragment(), BackHandler {
         toolbar.setOnMenuItemClickListener {
             when (it.itemId) {
                 R.id.newTab -> {
-                    requireComponents.tabsUseCases.addSession.invoke("about:blank", selectTab = true)
+                    requireComponents.tabsUseCases.addTab.invoke("about:blank", selectTab = true)
                     closeTabsTray()
                 }
             }

@@ -10,6 +10,7 @@ import android.content.Context
 import android.content.Intent
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import mozilla.components.browser.domains.ShippedDomainsProvider
 import mozilla.components.browser.menu.BrowserMenuBuilder
 import mozilla.components.browser.menu.item.BrowserMenuItemToolbar
 import mozilla.components.browser.menu.item.SimpleBrowserMenuCheckbox
@@ -87,6 +88,10 @@ class Components(
 
     // Menu
     val menuBuilder by lazy { BrowserMenuBuilder(menuItems) }
+
+    val shippedDomainsProvider by lazy {
+        ShippedDomainsProvider().also { it.initialize(applicationContext) }
+    }
 
     private val menuItems by lazy {
         listOf(

@@ -14,7 +14,6 @@ import android.view.ViewGroup
 import kotlinx.android.synthetic.main.fragment_browser.*
 import mozilla.components.feature.awesomebar.AwesomeBarFeature
 import mozilla.components.feature.downloads.DownloadsFeature
-import mozilla.components.feature.downloads.SimpleDownloadDialogFragment.DownloadDialogListener
 import mozilla.components.feature.session.SessionFeature
 import mozilla.components.feature.tabs.toolbar.TabsToolbarFeature
 import mozilla.components.support.ktx.android.content.isPermissionGranted
@@ -23,7 +22,7 @@ import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.ext.requireComponents
 import org.mozilla.reference.browser.tabs.TabsTrayFragment
 
-class BrowserFragment : androidx.fragment.app.Fragment(), BackHandler, DownloadDialogListener {
+class BrowserFragment : Fragment(), BackHandler {
     private lateinit var sessionFeature: SessionFeature
     private lateinit var tabsToolbarFeature: TabsToolbarFeature
     private lateinit var downloadsFeature: DownloadsFeature
@@ -44,7 +43,13 @@ class BrowserFragment : androidx.fragment.app.Fragment(), BackHandler, DownloadD
                 engineView,
                 sessionId)
 
-        lifecycle.addObserver(ToolbarIntegration(requireContext(), toolbar, sessionId))
+        lifecycle.addObserver(ToolbarIntegration(
+            requireContext(),
+            toolbar,
+            requireComponents.placesHistoryStorage,
+            requireComponents.shippedDomainsProvider,
+            sessionId))
+
         lifecycle.addObserver(requireComponents.firefoxAccountsIntegration)
 
         awesomeBarFeature = AwesomeBarFeature(awesomeBar, toolbar, engineView)
@@ -53,7 +58,7 @@ class BrowserFragment : androidx.fragment.app.Fragment(), BackHandler, DownloadD
                 requireComponents.searchUseCases.defaultSearch)
             .addSessionProvider(
                 requireComponents.sessionManager,
-                requireComponents.tabsUseCases.selectSession)
+                requireComponents.tabsUseCases.selectTab)
             .addHistoryProvider(
                 requireComponents.placesHistoryStorage,
                 requireComponents.sessionUseCases.loadUrl)

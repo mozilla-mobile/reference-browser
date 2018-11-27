@@ -3,7 +3,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 private object GeckoVersions {
-    const val nightly_version = "65.0.20181116100120"
+    const val nightly_version = "65.0.20181123100059"
 }
 
 object Gecko {

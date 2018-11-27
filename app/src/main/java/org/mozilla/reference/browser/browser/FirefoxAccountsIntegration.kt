@@ -76,7 +76,7 @@ class FirefoxAccountsIntegration(
     fun authenticate() {
         launch {
             val url = account.await().beginOAuthFlow(SCOPES, false).await()
-            tabsUseCases.addSession.invoke(url)
+            tabsUseCases.addTab.invoke(url)
         }
     }
 
