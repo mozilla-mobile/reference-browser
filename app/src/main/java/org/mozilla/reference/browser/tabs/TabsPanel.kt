@@ -68,7 +68,7 @@ class TabsPanel @JvmOverloads constructor(
             }
         }
         privateButton = ToggleImageButton(context).apply {
-            setImageDrawable(resources.getThemedDrawable(R.drawable.mozac_ic_globe))
+            setImageDrawable(resources.getThemedDrawable(R.drawable.mozac_ic_private_browsing))
             setOnCheckedChangeListener { _, checked ->
                 if (checked) {
                     updateToggleStates(this, button, true)
