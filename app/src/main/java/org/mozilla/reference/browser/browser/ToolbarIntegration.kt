@@ -4,10 +4,10 @@
 
 package org.mozilla.reference.browser.browser
 
+import android.content.Context
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.OnLifecycleEvent
-import android.content.Context
 import mozilla.components.browser.domains.autocomplete.DomainAutocompleteProvider
 import mozilla.components.browser.toolbar.BrowserToolbar
 import mozilla.components.concept.storage.HistoryStorage
