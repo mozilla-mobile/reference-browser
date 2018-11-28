@@ -105,6 +105,7 @@ dependencies {
     implementation Deps.mozilla_browser_storage_sync
 
     implementation Deps.mozilla_feature_awesomebar
+    implementation Deps.mozilla_feature_contextmenu
     implementation Deps.mozilla_feature_customtabs
     implementation Deps.mozilla_feature_intent
     implementation Deps.mozilla_feature_search

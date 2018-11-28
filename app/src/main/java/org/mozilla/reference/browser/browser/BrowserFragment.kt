@@ -52,6 +52,13 @@ class BrowserFragment : Fragment(), BackHandler {
 
         lifecycle.addObserver(requireComponents.firefoxAccountsIntegration)
 
+        lifecycle.addObserver(ContextMenuIntegration(
+            requireContext(),
+            requireFragmentManager(),
+            requireComponents.sessionManager,
+            requireComponents.tabsUseCases,
+            view))
+
         awesomeBarFeature = AwesomeBarFeature(awesomeBar, tabsPanel, engineView)
             .addSearchProvider(
                 requireComponents.searchEngineManager.getDefaultSearchEngine(requireContext()),
