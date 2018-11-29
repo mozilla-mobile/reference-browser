@@ -7,6 +7,7 @@ package org.mozilla.reference.browser.settings
 import android.content.Intent
 import android.os.Bundle
 import android.provider.Settings
+import androidx.preference.Preference.OnPreferenceChangeListener
 import androidx.preference.Preference.OnPreferenceClickListener
 import androidx.preference.PreferenceFragmentCompat
 import android.widget.Toast
@@ -16,6 +17,7 @@ import org.mozilla.reference.browser.R.string.pref_key_firefox_account
 import org.mozilla.reference.browser.ext.getPreferenceKey
 import org.mozilla.reference.browser.R.string.pref_key_sign_in
 import org.mozilla.reference.browser.R.string.pref_key_make_default_browser
+import org.mozilla.reference.browser.R.string.pref_key_remote_debugging
 import org.mozilla.reference.browser.ext.requireComponents
 
 class SettingsFragment : PreferenceFragmentCompat() {
@@ -46,9 +48,11 @@ class SettingsFragment : PreferenceFragmentCompat() {
         val signInKey = context?.getPreferenceKey(pref_key_sign_in)
         val firefoxAccountKey = context?.getPreferenceKey(pref_key_firefox_account)
         val makeDefaultBrowserKey = context?.getPreferenceKey(pref_key_make_default_browser)
+        val remoteDebuggingKey = context?.getPreferenceKey(pref_key_remote_debugging)
         val preferenceSignIn = findPreference(signInKey)
         val preferenceFirefoxAccount = findPreference(firefoxAccountKey)
         val preferenceMakeDefaultBrowser = findPreference(makeDefaultBrowserKey)
+        val preferenceRemoteDebugging = findPreference(remoteDebuggingKey)
         val fxaIntegration = requireComponents.firefoxAccountsIntegration
 
         preferenceSignIn.onPreferenceClickListener = getClickListenerForSignIn()
@@ -59,6 +63,8 @@ class SettingsFragment : PreferenceFragmentCompat() {
         preferenceFirefoxAccount.summary = fxaIntegration.profile?.email
 
         preferenceMakeDefaultBrowser.onPreferenceClickListener = getClickListenerForMakeDefaultBrowser()
+
+        preferenceRemoteDebugging.onPreferenceChangeListener = getChangeListenerForRemoteDebugging()
     }
 
     private fun getClickListenerForMakeDefaultBrowser(): OnPreferenceClickListener {
@@ -92,6 +98,13 @@ class SettingsFragment : PreferenceFragmentCompat() {
             getActionBarUpdater().apply {
                 updateTitle(R.string.account_settings)
             }
+            true
+        }
+    }
+
+    private fun getChangeListenerForRemoteDebugging(): OnPreferenceChangeListener {
+        return OnPreferenceChangeListener { _, newValue ->
+            requireComponents.engine.settings.remoteDebuggingEnabled = newValue as Boolean
             true
         }
     }

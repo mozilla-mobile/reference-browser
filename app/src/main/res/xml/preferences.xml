@@ -24,4 +24,14 @@
             android:key="@string/pref_key_make_default_browser"
             android:title="@string/preferences_make_default_browser"/>
 
+    <PreferenceCategory
+        android:title="@string/developer_tools_category">
+
+        <androidx.preference.SwitchPreferenceCompat
+            android:key="@string/pref_key_remote_debugging"
+            android:defaultValue="false"
+            android:title="@string/preferences_remote_debugging" />
+
+    </PreferenceCategory>
+
 </androidx.preference.PreferenceScreen>
