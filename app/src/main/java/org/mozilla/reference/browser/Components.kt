@@ -8,6 +8,7 @@ import android.app.PendingIntent
 import android.app.PendingIntent.getBroadcast
 import android.content.Context
 import android.content.Intent
+import android.preference.PreferenceManager.getDefaultSharedPreferences
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import mozilla.components.browser.domains.ShippedDomainsProvider
@@ -31,7 +32,9 @@ import mozilla.components.lib.crash.service.MozillaSocorroService
 import mozilla.components.lib.crash.service.SentryService
 import org.mozilla.reference.browser.BrowserApplication.Companion.NON_FATAL_CRASH_BROADCAST
 import org.mozilla.reference.browser.BuildConfig.SENTRY_TOKEN
+import org.mozilla.reference.browser.R.string.pref_key_remote_debugging
 import org.mozilla.reference.browser.browser.FirefoxAccountsIntegration
+import org.mozilla.reference.browser.ext.getPreferenceKey
 import org.mozilla.reference.browser.ext.share
 import org.mozilla.reference.browser.settings.SettingsActivity
 import java.util.concurrent.TimeUnit
@@ -43,7 +46,9 @@ class Components(
     // Engine
     val engine: Engine by lazy {
         val defaultSettings = DefaultSettings(
-            requestInterceptor = AppRequestInterceptor(applicationContext)
+            requestInterceptor = AppRequestInterceptor(applicationContext),
+            remoteDebuggingEnabled = getDefaultSharedPreferences(applicationContext)
+                    .getBoolean(applicationContext.getPreferenceKey(pref_key_remote_debugging), false)
         )
         EngineProvider.getEngine(applicationContext, defaultSettings)
     }
