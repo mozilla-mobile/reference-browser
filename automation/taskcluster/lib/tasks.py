@@ -61,13 +61,13 @@ class TaskBuilder(object):
             }
         }
 
-    def build_signing_task(self, build_task_id, name, description, signing_format, apks=[], scopes=[], routes=[]):
+    def build_signing_task(self, build_task_id, name, description, signing_format, is_staging, apks=[], scopes=[], routes=[]):
         created = datetime.datetime.now()
         expires = taskcluster.fromNow('1 year')
         deadline = taskcluster.fromNow('1 day')
 
         return {
-            "workerType": 'mobile-signing-v1',
+            "workerType": 'mobile-signing-dep-v1' if is_staging else 'mobile-signing-v1',
             "taskGroupId": self.task_id,
             "schedulerId": self.scheduler_id,
             "expires": taskcluster.stringDate(expires),
@@ -98,13 +98,13 @@ class TaskBuilder(object):
             }
         }
 
-    def build_push_task(self, signing_task_id, name, description, commit, apks=[], scopes=[]):
+    def build_push_task(self, signing_task_id, name, description, commit, is_staging, apks=[], scopes=[]):
         created = datetime.datetime.now()
         expires = taskcluster.fromNow('1 year')
         deadline = taskcluster.fromNow('1 day')
 
         return {
-            "workerType": 'mobile-pushapk-v1',
+            "workerType": 'mobile-pushapk-dep-v1' if is_staging else 'mobile-pushapk-v1',
             "taskGroupId": self.task_id,
             "schedulerId": self.scheduler_id,
             "expires": taskcluster.stringDate(expires),
@@ -119,7 +119,8 @@ class TaskBuilder(object):
             "requires": 'all-completed',
             "payload": {
                 "commit": commit,
-                "google_play_track": 'nightly',   # TODO @jlorenzo nightly Google Play
+                "do_not_contact_google_play": True if is_staging else False,
+                "google_play_track": 'nightly',
                 "upstreamArtifacts": [{
                     "paths": apks,
                     "taskId": signing_task_id,
