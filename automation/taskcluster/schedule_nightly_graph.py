@@ -2,8 +2,7 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-# TODO: need permission to change TC hook to point to this file instead
-
+import argparse
 import datetime
 import jsone
 import os
@@ -17,10 +16,15 @@ from lib.tasks import schedule_task
 ROOT = os.path.join(os.path.dirname(__file__), '../..')
 
 
-def calculate_branch_and_head_rev(root):
+def calculate_git_references(root):
     repo = Repo(root)
+    remote = repo.remote()
     branch = repo.head.reference
-    return str(branch), str(branch.commit)
+
+    assert remote.url.startswith('https://github.com'), 'expected remote to be a GitHub repository (accessed via HTTPs)'
+    url = remote.url[:-4] if remote.url.endswith('.git') else remote.url
+
+    return url, str(branch), str(branch.commit)
 
 
 def make_decision_task(params):
@@ -43,9 +47,14 @@ def make_decision_task(params):
         },
         'now': datetime.datetime.utcnow().isoformat()[:23] + 'Z',
         'as_slugid': as_slugid,
+        'command_staging_flag': '--staging' if params['is_staging'] else '',
+        'route_environment': 'staging-nightly' if params['is_staging'] else 'nightly',
+        'signing_environment': 'dep-signing' if params['is_staging'] else 'release-signing',
+        'pushapk_environment': ':dep' if params['is_staging'] else '',
+        'scriptworker_environment': '-dep' if params['is_staging'] else '',
         'event': {
             'repository': {
-                'clone_url': params['repository_url']
+                'clone_url': params['repository_github_http_url']
             },
             'release': {
                 'tag_name': params['head_rev'],
@@ -66,12 +75,13 @@ def make_decision_task(params):
     return task_id, task
 
 
-if __name__ == '__main__':
+def schedule(is_staging):
     queue = taskcluster.Queue({'baseUrl': 'http://taskcluster/queue/v1'})
 
-    branch, head_rev = calculate_branch_and_head_rev(ROOT)
+    repository_github_http_url, branch, head_rev = calculate_git_references(ROOT)
     params = {
-        'repository_url': 'https://github.com/mozilla-mobile/reference-browser',
+        'is_staging': is_staging,
+        'repository_github_http_url': repository_github_http_url,
         'head_rev': head_rev,
         'branch': branch,
         'cron_task_id': os.environ.get('CRON_TASK_ID', '<cron_task_id>')
@@ -79,3 +89,13 @@ if __name__ == '__main__':
     decision_task_id, decision_task = make_decision_task(params)
     schedule_task(queue, decision_task_id, decision_task)
     print('All scheduled!')
+
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description='Schedule a nightly release pipeline')
+
+    parser.add_argument('--staging', action='store_true',
+                        help="Perform a staging build (use dep workers, don't communicate with Google Play) ")
+
+    result = parser.parse_args()
+    schedule(result.staging)
