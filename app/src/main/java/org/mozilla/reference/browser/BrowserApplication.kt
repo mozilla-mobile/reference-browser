@@ -9,6 +9,8 @@ import mozilla.components.support.base.log.Log
 import mozilla.components.support.base.log.sink.AndroidLogSink
 import org.mozilla.reference.browser.ext.isCrashReportActive
 
+import mozilla.appservices.ReferenceBrowserMegazord
+
 class BrowserApplication : Application() {
     val components by lazy { Components(this) }
 
@@ -21,6 +23,8 @@ class BrowserApplication : Application() {
         if (isCrashReportActive) {
             components.analytics.crashReporter.install(this)
         }
+
+        ReferenceBrowserMegazord.init()
     }
 
     companion object {

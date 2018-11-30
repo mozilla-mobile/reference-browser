@@ -14,6 +14,7 @@ private object Versions {
     const val google_material = "1.0.0"
 
     const val android_gradle_plugin = "3.2.1"
+    const val appservices_gradle_plugin = "0.2.0"
 
     const val mozilla_android_components = "0.35.1"
 
@@ -75,4 +76,5 @@ object Deps {
 
     const val tools_androidgradle = "com.android.tools.build:gradle:${Versions.android_gradle_plugin}"
     const val tools_kotlingradle = "org.jetbrains.kotlin:kotlin-gradle-plugin:${Versions.kotlin}"
+    const val tools_appservicesgradle = "org.mozilla.appservices:gradle-plugin:${Versions.appservices_gradle_plugin}"
 }
