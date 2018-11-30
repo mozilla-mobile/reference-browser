@@ -13,16 +13,13 @@
     <string name="menu_action_close_tabs_private">Close Private Tabs</string>
 
     <!-- Preference summary for settings related sign in -->
-    <string name="preferences_sign_in_summary">Sync your tabs, logins and history</string>
+    <string name="preferences_sign_in_summary">Sync your history</string>
 
     <!-- Preference summary for settings related to send telemetry data -->
     <string name="preferences_use_telemetry_summary">Send usage data</string>
 
     <!-- Preference for settings related to changing the default browser -->
     <string name="preferences_make_default_browser">Make default browser</string>
-
-    <!-- Preference enables sync for logins -->
-    <string name="preferences_sync_logins">Logins</string>
 
     <!-- Preference enables sync for history -->
     <string name="preferences_sync_history">History</string>
@@ -41,6 +38,9 @@
 
     <!-- Preference for syncing immediately -->
     <string name="sync_now">Sync now</string>
+
+    <!-- Preference for syncing immediately -->
+    <string name="syncing">Syncing</string>
 
     <!-- Preference summary showing last time synced -->
     <string name="preferences_sync_last_synced_summary">Last synced: %s</string>

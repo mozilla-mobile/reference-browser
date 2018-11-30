@@ -38,7 +38,14 @@ class FirefoxAccountsIntegration(
         const val SUCCESS_PATH = "connect_another_device?showSuccessMessage=true"
         const val FXA_STATE_PREFS_KEY = "fxaAppState"
         const val FXA_STATE_KEY = "fxaState"
-        val SCOPES: Array<String> = arrayOf("profile")
+        const val FXA_LAST_SYNCED_KEY = "lastSyncedAt"
+        const val FXA_NEVER_SYNCED_TS: Long = 0
+
+        // This is slightly messy - here we need to know the union of all "scopes"
+        // needed by components which rely on FxA integration. If this list
+        // grows too far we probably want to find a way to determine the set
+        // at runtime.
+        val SCOPES: Array<String> = arrayOf("profile", "https://identity.mozilla.com/apps/oldsync")
     }
 
     private val exceptionHandler = CoroutineExceptionHandler { _, e ->
@@ -53,7 +60,7 @@ class FirefoxAccountsIntegration(
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.Main + job + exceptionHandler
 
-    private lateinit var account: Deferred<FirefoxAccount>
+    lateinit var account: Deferred<FirefoxAccount>
 
     var profile: Profile? = null
         private set
@@ -68,22 +75,33 @@ class FirefoxAccountsIntegration(
                 return@async it
             }
 
-            val config = Config.release(CLIENT_ID, REDIRECT_URL)
-            return@async FirefoxAccount(config)
+            FirefoxAccount(Config.release(CLIENT_ID, REDIRECT_URL))
         }
     }
 
     fun authenticate() {
         launch {
-            val url = account.await().beginOAuthFlow(SCOPES, false).await()
+            val url = account.await().beginOAuthFlow(SCOPES, true).await()
             tabsUseCases.addTab.invoke(url)
         }
     }
 
     fun logout() {
         profile = null
-        getSharedPreferences().edit().remove(FXA_STATE_KEY).apply()
+        getSharedPreferences()
+                .edit()
+                .remove(FXA_STATE_KEY)
+                .remove(FXA_LAST_SYNCED_KEY)
+                .apply()
         init()
+    }
+
+    fun getLastSynced(): Long {
+        return getSharedPreferences().getLong(FXA_LAST_SYNCED_KEY, FXA_NEVER_SYNCED_TS)
+    }
+
+    fun setLastSynced(ts: Long) {
+        getSharedPreferences().edit().putLong(FXA_LAST_SYNCED_KEY, ts).apply()
     }
 
     private fun persistProfile(profile: Profile) {
