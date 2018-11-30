@@ -14,10 +14,6 @@
         android:title="@string/sync_category">
 
         <CheckBoxPreference
-            android:key="@string/pref_key_sync_logins"
-            android:defaultValue="true"
-            android:title="@string/preferences_sync_logins" />
-        <CheckBoxPreference
             android:key="@string/pref_key_sync_history"
             android:defaultValue="true"
             android:title="@string/preferences_sync_history" />
