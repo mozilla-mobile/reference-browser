@@ -67,9 +67,9 @@ class FirefoxAccountsIntegration(
                 profile = it.getProfile(true).await()
                 return@async it
             }
-            return@async Config.release().await().use { config ->
-                FirefoxAccount(config, CLIENT_ID, REDIRECT_URL)
-            }
+
+            val config = Config.release(CLIENT_ID, REDIRECT_URL)
+            return@async FirefoxAccount(config)
         }
     }
 

@@ -15,7 +15,7 @@ private object Versions {
 
     const val android_gradle_plugin = "3.2.1"
 
-    const val mozilla_android_components = "0.33.0"
+    const val mozilla_android_components = "0.34.0"
 
     const val thirdparty_sentry = "1.7.10"
 }
