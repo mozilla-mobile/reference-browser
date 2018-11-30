@@ -11,17 +11,21 @@ import mozilla.components.concept.engine.Engine
 import mozilla.components.lib.crash.handler.CrashHandlerService
 import org.mozilla.geckoview.GeckoRuntime
 import org.mozilla.geckoview.GeckoRuntimeSettings
+import org.mozilla.reference.browser.ext.isCrashReportActive
 
 object EngineProvider {
     fun getEngine(context: Context, defaultSettings: DefaultSettings): Engine {
 
-        val settings = GeckoRuntimeSettings.Builder()
-                .crashHandler(CrashHandlerService::class.java)
-                .build()
+        return if (isCrashReportActive) {
+            val settings = GeckoRuntimeSettings.Builder()
+                    .crashHandler(CrashHandlerService::class.java)
+                    .build()
+            // Crashes of this runtime will be forwarded to the crash reporter component
+            val runtime = GeckoRuntime.create(context, settings)
 
-        // Crashes of this runtime will be forwarded to the crash reporter component
-        val runtime = GeckoRuntime.create(context, settings)
-
-        return GeckoEngine(context, defaultSettings, runtime)
+            GeckoEngine(context, defaultSettings, runtime)
+        } else {
+            GeckoEngine(context, defaultSettings)
+        }
     }
 }
