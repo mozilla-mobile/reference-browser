@@ -100,7 +100,7 @@ class FirefoxAccountsIntegration(
     }
 
     private fun getAuthenticatedAccount(): FirefoxAccount? {
-        val savedJSON = getSharedPreferences().getString(FXA_STATE_KEY, "")
+        val savedJSON = getSharedPreferences().getString(FXA_STATE_KEY, null)
         return savedJSON?.let {
             try {
                 FirefoxAccount.fromJSONString(it)
