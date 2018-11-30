@@ -82,7 +82,7 @@ class FirefoxAccountsIntegration(
 
     fun logout() {
         profile = null
-        getSharedPreferences().edit().putString(FXA_STATE_KEY, "").apply()
+        getSharedPreferences().edit().remove(FXA_STATE_KEY).apply()
         init()
     }
 
