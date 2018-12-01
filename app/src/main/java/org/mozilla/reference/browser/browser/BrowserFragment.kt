@@ -14,6 +14,7 @@ import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.fragment_browser.*
 import mozilla.components.feature.awesomebar.AwesomeBarFeature
 import mozilla.components.feature.downloads.DownloadsFeature
+import mozilla.components.feature.prompts.PromptFeature
 import mozilla.components.feature.session.SessionFeature
 import mozilla.components.feature.tabs.toolbar.TabsToolbarFeature
 import mozilla.components.support.ktx.android.content.isPermissionGranted
@@ -27,6 +28,7 @@ class BrowserFragment : Fragment(), BackHandler {
     private lateinit var tabsToolbarFeature: TabsToolbarFeature
     private lateinit var downloadsFeature: DownloadsFeature
     private lateinit var awesomeBarFeature: AwesomeBarFeature
+    private lateinit var promptsFeature: PromptFeature
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_browser, container, false)
@@ -81,6 +83,8 @@ class BrowserFragment : Fragment(), BackHandler {
         downloadsFeature.onNeedToRequestPermissions = { _, _ ->
             requestPermissions(arrayOf(WRITE_EXTERNAL_STORAGE), PERMISSION_WRITE_STORAGE_REQUEST)
         }
+
+        promptsFeature = PromptFeature(requireComponents.sessionManager, requireFragmentManager())
     }
 
     private fun showTabs() {
@@ -97,6 +101,7 @@ class BrowserFragment : Fragment(), BackHandler {
 
         sessionFeature.start()
         downloadsFeature.start()
+        promptsFeature.start()
     }
 
     override fun onStop() {
@@ -104,6 +109,7 @@ class BrowserFragment : Fragment(), BackHandler {
 
         sessionFeature.stop()
         downloadsFeature.stop()
+        promptsFeature.stop()
     }
 
     override fun onBackPressed(): Boolean {
