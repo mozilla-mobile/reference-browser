@@ -5,19 +5,12 @@
 package org.mozilla.reference.browser
 
 import android.app.Application
-import mozilla.components.feature.storage.HistoryTrackingFeature
 import mozilla.components.support.base.log.Log
 import mozilla.components.support.base.log.sink.AndroidLogSink
 import org.mozilla.reference.browser.ext.isCrashReportActive
 
 class BrowserApplication : Application() {
     val components by lazy { Components(this) }
-
-    val historyTrackingFeature by lazy {
-        HistoryTrackingFeature(
-            this.components.engine,
-            this.components.placesHistoryStorage)
-    }
 
     override fun onCreate() {
         super.onCreate()
