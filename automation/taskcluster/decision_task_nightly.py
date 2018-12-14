@@ -58,10 +58,6 @@ def generate_build_task(apks):
 
 
 def generate_signing_task(build_task_id, apks, is_staging):
-    artifacts = []
-    for apk in apks:
-        artifacts.append("public/{}".format(os.path.basename(apk)))
-
     routes = []
 
     scopes = [
@@ -79,7 +75,7 @@ def generate_signing_task(build_task_id, apks, is_staging):
         build_task_id,
         name="(Reference Browser) Signing task",
         description="Sign release builds of Reference Browser",
-        apks=artifacts,
+        apks=["public/{}".format(os.path.basename(apk)) for apk in apks],
         scopes=scopes,
         routes=routes,
         signing_format='autograph_apk_reference_browser',
@@ -88,18 +84,14 @@ def generate_signing_task(build_task_id, apks, is_staging):
 
 
 def generate_push_task(signing_task_id, apks, commit, is_staging):
-    artifacts = []
-    for apk in apks:
-        artifacts.append("public/{}".format(os.path.basename(apk)))
 
     return taskcluster.slugId(), BUILDER.build_push_task(
         signing_task_id,
         name="(Reference Browser) Push task",
         description="Upload signed release builds of Reference Browser to Google Play",
-        apks=artifacts,
+        apks=["public/{}".format(os.path.basename(apk)) for apk in apks],
         scopes=[
-            "project:mobile:focus:releng:googleplay:product:reference-browser{}".format(
-                ':dep' if is_staging else '')
+            "project:mobile:focus:releng:googleplay:product:reference-browser{}".format(':dep' if is_staging else '')
         ],
         commit=commit,
         is_staging=is_staging

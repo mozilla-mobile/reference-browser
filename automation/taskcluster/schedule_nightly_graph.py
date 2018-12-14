@@ -16,14 +16,19 @@ from lib.tasks import schedule_task
 ROOT = os.path.join(os.path.dirname(__file__), '../..')
 
 
+class InvalidGithubRepositoryError(Exception):
+    pass
+
+
 def calculate_git_references(root):
     repo = Repo(root)
     remote = repo.remote()
     branch = repo.head.reference
 
-    assert remote.url.startswith('https://github.com'), 'expected remote to be a GitHub repository (accessed via HTTPs)'
-    url = remote.url[:-4] if remote.url.endswith('.git') else remote.url
+    if not remote.url.startswith('https://github.com'):
+        raise InvalidGithubRepositoryError('expected remote to be a GitHub repository (accessed via HTTPs)')
 
+    url = remote.url[:-4] if remote.url.endswith('.git') else remote.url
     return url, str(branch), str(branch.commit)
 
 
