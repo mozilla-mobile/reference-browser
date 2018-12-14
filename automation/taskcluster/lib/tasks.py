@@ -119,7 +119,6 @@ class TaskBuilder(object):
             "requires": 'all-completed',
             "payload": {
                 "commit": commit,
-                "do_not_contact_google_play": True if is_staging else False,
                 "google_play_track": 'nightly',
                 "upstreamArtifacts": [{
                     "paths": apks,

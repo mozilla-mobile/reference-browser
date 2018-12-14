@@ -69,6 +69,10 @@ tasks:
         expires_in: {$fromNow: '1 year'}
         repository: ${event.repository.clone_url}
         scheduler_id: focus-nightly-sched
+        command_staging_flag:
+          $if: 'repository == "https://github.com/mozilla-mobile/reference-browser"'
+          then: '--staging'
+          else: ''
       in:
         taskId: ${decision_task_id}
         taskGroupId: ${decision_task_id}   # Must be explicit because of Chain of Trust
@@ -82,15 +86,24 @@ tasks:
         priority: medium
         retries: 5
         scopes:
-          - queue:scheduler-id:${scheduler_id}
-          - queue:create-task:highest:aws-provisioner-v1/gecko-focus
-          - queue:create-task:highest:scriptworker-prov-v1/mobile-signing${scriptworker_environment}-v1
-          - queue:create-task:highest:scriptworker-prov-v1/mobile-pushapk${scriptworker_environment}-v1
-          - project:mobile:reference-browser:releng:signing:cert:${signing_environment}
-          - project:mobile:reference-browser:releng:signing:format:autograph_apk_reference_browser
-          - project:mobile:focus:releng:googleplay:product:reference-browser${pushapk_environment}
-          - secrets:get:project/mobile/reference-browser/sentry
-          - queue:route:index.project.mobile.reference-browser.${route_environment}.latest
+          $flatten:
+            - queue:scheduler-id:${scheduler_id}
+            - queue:create-task:highest:aws-provisioner-v1/gecko-focus
+            - project:mobile:reference-browser:releng:signing:format:autograph_apk_reference_browser
+            - secrets:get:project/mobile/reference-browser/sentry
+            - $if: 'repository == "https://github.com/mozilla-mobile/reference-browser"'
+              then:
+                - queue:create-task:highest:scriptworker-prov-v1/mobile-signing-v1
+                - queue:create-task:highest:scriptworker-prov-v1/mobile-pushapk-v1
+                - project:mobile:reference-browser:releng:signing:cert:release-signing
+                - project:mobile:focus:releng:googleplay:product:reference-browser
+                - queue:route:index.project.mobile.reference-browser.nightly.latest
+              else:
+                - queue:create-task:highest:scriptworker-prov-v1/mobile-signing-dep-v1
+                - queue:create-task:highest:scriptworker-prov-v1/mobile-pushapk-dep-v1
+                - project:mobile:reference-browser:releng:signing:cert:dep-signing
+                - project:mobile:focus:releng:googleplay:product:reference-browser:dep
+                - queue:route:index.project.mobile.reference-browser.staging-nightly.latest
         payload:
           maxRunTime: 600   # Decision should remain fast enough to schedule a handful of tasks
           image: mozillamobile/android-components:1.10
@@ -100,8 +113,10 @@ tasks:
           env:
             TASK_ID: ${decision_task_id}
             SCHEDULER_ID: ${scheduler_id}
-            MOBILE_GITHUB_HTTP_REPOSITORY: ${event.repository.clone_url}
+            MOBILE_HEAD_REPOSITORY: ${repository}
+            MOBILE_HEAD_BRANCH: ${event.release.target_commitish}
             MOBILE_HEAD_REV: ${event.release.tag_name}
+            MOBILE_TRIGGERED_BY: ${event.sender.login}
           command:
             - /bin/bash
             - --login
@@ -116,7 +131,7 @@ tasks:
                 --output app/build/outputs/apk \
                 --apk geckoNightlyX86/release/app-geckoNightly-x86-x86-release-unsigned.apk \
                 --apk geckoNightlyArm/release/app-geckoNightly-arm-armeabi-v7a-release-unsigned.apk \
-                ${command_staging_flag}
+                --staging
           artifacts:
             public/task-graph.json:
               type: file
