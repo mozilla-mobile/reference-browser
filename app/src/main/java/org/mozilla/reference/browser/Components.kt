@@ -27,8 +27,8 @@ import mozilla.components.concept.engine.DefaultSettings
 import mozilla.components.concept.engine.Engine
 import mozilla.components.feature.intent.IntentProcessor
 import mozilla.components.feature.search.SearchUseCases
+import mozilla.components.feature.session.HistoryDelegate
 import mozilla.components.feature.session.SessionUseCases
-import mozilla.components.feature.storage.HistoryTrackingFeature
 import mozilla.components.feature.sync.FirefoxSyncFeature
 import mozilla.components.feature.tabs.TabsUseCases
 import mozilla.components.lib.crash.CrashReporter
@@ -52,7 +52,8 @@ class Components(
         val defaultSettings = DefaultSettings(
             requestInterceptor = AppRequestInterceptor(applicationContext),
             remoteDebuggingEnabled = getDefaultSharedPreferences(applicationContext)
-                    .getBoolean(applicationContext.getPreferenceKey(pref_key_remote_debugging), false)
+                .getBoolean(applicationContext.getPreferenceKey(pref_key_remote_debugging), false),
+            historyTrackingDelegate = HistoryDelegate(placesHistoryStorage)
         )
         EngineProvider.getEngine(applicationContext, defaultSettings)
     }
@@ -80,8 +81,6 @@ class Components(
 
     // Places.
     val placesHistoryStorage by lazy { PlacesHistoryStorage(applicationContext) }
-
-    val historyTrackingFeature = HistoryTrackingFeature(engine, placesHistoryStorage)
 
     val firefoxSyncFeature by lazy {
         FirefoxSyncFeature(Dispatchers.IO) {

@@ -140,7 +140,6 @@ dependencies {
     implementation Deps.mozilla_feature_toolbar
     implementation Deps.mozilla_feature_tabs
     implementation Deps.mozilla_feature_downloads
-    implementation Deps.mozilla_feature_storage
     implementation Deps.mozilla_feature_prompts
 
     implementation Deps.mozilla_ui_autocomplete
