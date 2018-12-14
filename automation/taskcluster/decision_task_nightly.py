@@ -37,7 +37,7 @@ def generate_build_task(apks):
         }
         artifacts["public/{}".format(os.path.basename(apk))] = artifact
 
-    checkout = 'git clone {} && cd reference-browser'.format(GITHUB_HTTP_REPOSITORY)
+    checkout = 'git clone {} && cd reference-browser && git checkout {}'.format(GITHUB_HTTP_REPOSITORY, HEAD_REV)
 
     return taskcluster.slugId(), BUILDER.build_task(
         name="(Reference Browser) Build task",
