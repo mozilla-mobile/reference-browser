@@ -47,11 +47,6 @@ def make_decision_task(params):
         },
         'now': datetime.datetime.utcnow().isoformat()[:23] + 'Z',
         'as_slugid': as_slugid,
-        'command_staging_flag': '--staging' if params['is_staging'] else '',
-        'route_environment': 'staging-nightly' if params['is_staging'] else 'nightly',
-        'signing_environment': 'dep-signing' if params['is_staging'] else 'release-signing',
-        'pushapk_environment': ':dep' if params['is_staging'] else '',
-        'scriptworker_environment': '-dep' if params['is_staging'] else '',
         'event': {
             'repository': {
                 'clone_url': params['repository_github_http_url']

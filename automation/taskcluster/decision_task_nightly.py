@@ -16,7 +16,7 @@ import taskcluster
 
 TASK_ID = os.environ.get('TASK_ID')
 SCHEDULER_ID = os.environ.get('SCHEDULER_ID')
-GITHUB_HTTP_REPOSITORY = os.environ.get('MOBILE_GITHUB_HTTP_REPOSITORY')
+GITHUB_HTTP_REPOSITORY = os.environ.get('MOBILE_HEAD_REPOSITORY')
 HEAD_REV = os.environ.get('MOBILE_HEAD_REV')
 
 BUILDER = lib.tasks.TaskBuilder(
@@ -45,7 +45,7 @@ def generate_build_task(apks):
         command=('cd .. && ' + checkout +
                  ' && python automation/taskcluster/helper/get-secret.py'
                  ' -s project/mobile/reference-browser/sentry -k dsn -f .sentry_token'
-                 ' && ./gradlew --no-daemon -PcrashReportingEnabled clean assembleRelease test'),
+                 ' && ./gradlew --no-daemon -PcrashReportingEnabled clean assembleRelease'),
         features={
             "chainOfTrust": True,
             "taskClusterProxy": True
@@ -82,7 +82,7 @@ def generate_signing_task(build_task_id, apks, is_staging):
         apks=artifacts,
         scopes=scopes,
         routes=routes,
-        signing_format='reference-browser-jar',
+        signing_format='autograph_apk_reference_browser',
         is_staging=is_staging
     )
 

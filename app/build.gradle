@@ -5,6 +5,7 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
+apply from: "$project.rootDir/automation/gradle/versionCode.gradle"
 
 android {
     compileSdkVersion Config.compileSdkVersion
@@ -80,6 +81,33 @@ android.applicationVariants.all { variant ->
         buildConfigField 'boolean', 'CRASH_REPORTING_ENABLED', 'true'
     } else {
         buildConfigField 'boolean', 'CRASH_REPORTING_ENABLED', 'false'
+    }
+
+// -------------------------------------------------------------------------------------------------
+// Generating version codes for Google Play
+// -------------------------------------------------------------------------------------------------
+    def buildType = variant.buildType.name
+
+    if (buildType == "release" || buildType == "nightly") {
+        def versionCode = generatedVersionCode
+
+        // The Google Play Store does not allow multiple APKs for the same app that all have the
+        // same version code. Therefore we need to have different version codes for our ARM and x86
+        // builds.
+
+        // Our generated version code now has a length of 9 (See tools/gradle/versionCode.gradle).
+        // Our x86 builds need a higher version code to avoid installing ARM builds on an x86 device
+        // with ARM compatibility mode.
+
+        if (variant.flavorName.contains("X86")) {
+            versionCode = versionCode + 2
+        } else if (variant.flavorName.contains("Aarch64")) {
+            versionCode = versionCode + 1
+        }
+
+        variant.outputs.all { output ->
+            setVersionCodeOverride(versionCode)
+        }
     }
 }
 
