@@ -17,8 +17,10 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
+import mozilla.components.browser.storage.sync.SyncAuthInfo
 import mozilla.components.concept.engine.EngineSession
 import mozilla.components.concept.engine.request.RequestInterceptor
+import mozilla.components.feature.sync.FirefoxSyncFeature
 import mozilla.components.feature.tabs.TabsUseCases
 import mozilla.components.service.fxa.Config
 import mozilla.components.service.fxa.FirefoxAccount
@@ -29,7 +31,8 @@ import kotlin.coroutines.CoroutineContext
 
 class FirefoxAccountsIntegration(
     private val context: Context,
-    private val tabsUseCases: TabsUseCases
+    private val tabsUseCases: TabsUseCases,
+    private val firefoxSyncFeature: FirefoxSyncFeature<SyncAuthInfo>
 ) : CoroutineScope, LifecycleObserver {
 
     companion object {
@@ -148,6 +151,14 @@ class FirefoxAccountsIntegration(
         job.cancel()
     }
 
+    suspend fun syncNow() {
+        firefoxSyncFeature.sync(
+            account.await()
+        )
+
+        setLastSynced(System.currentTimeMillis())
+    }
+
     val interceptor = object : RequestInterceptor {
         override fun onLoadRequest(session: EngineSession, uri: String): RequestInterceptor.InterceptionResponse? {
             if (uri.startsWith(REDIRECT_URL)) {
@@ -159,6 +170,9 @@ class FirefoxAccountsIntegration(
                     account.completeOAuthFlow(code, state).await()
                     val profile = account.getProfile().await()
                     persistProfile(profile)
+
+                    // Now that we're logged in, kick off initial sync.
+                    CoroutineScope(Dispatchers.IO).launch { syncNow() }
                 }
                 // TODO this can be simplified once https://github.com/mozilla/application-services/issues/305 lands
                 val successUrl = "${parsedUri.scheme}://${parsedUri.host}/$SUCCESS_PATH"

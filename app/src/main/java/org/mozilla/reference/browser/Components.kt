@@ -9,7 +9,6 @@ import android.app.PendingIntent.getBroadcast
 import android.content.Context
 import android.content.Intent
 import android.preference.PreferenceManager.getDefaultSharedPreferences
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import mozilla.components.browser.domains.autocomplete.ShippedDomainsProvider
@@ -83,10 +82,10 @@ class Components(
     val placesHistoryStorage by lazy { PlacesHistoryStorage(applicationContext) }
 
     val firefoxSyncFeature by lazy {
-        FirefoxSyncFeature(Dispatchers.IO) {
+        FirefoxSyncFeature(
+            mapOf("history" to placesHistoryStorage)
+        ) {
             SyncAuthInfo(it.kid, it.fxaAccessToken, it.syncKey, it.tokenServerUrl)
-        }.also {
-            it.addSyncable("history", placesHistoryStorage)
         }
     }
 
@@ -183,7 +182,7 @@ class Components(
 
     // Firefox Accounts
     val firefoxAccountsIntegration: FirefoxAccountsIntegration by lazy {
-        FirefoxAccountsIntegration(applicationContext, tabsUseCases)
+        FirefoxAccountsIntegration(applicationContext, tabsUseCases, firefoxSyncFeature)
     }
 
     val crashReporter: CrashReporter by lazy {
