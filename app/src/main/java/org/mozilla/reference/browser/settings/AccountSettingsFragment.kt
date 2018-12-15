@@ -4,6 +4,7 @@
 
 package org.mozilla.reference.browser.settings
 
+import android.content.Context
 import android.os.Bundle
 import android.text.format.DateUtils
 import androidx.preference.Preference
@@ -12,14 +13,34 @@ import androidx.preference.PreferenceFragmentCompat
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import mozilla.components.feature.sync.SyncStatusObserver
 import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.ext.getPreferenceKey
 import org.mozilla.reference.browser.ext.requireComponents
 import org.mozilla.reference.browser.R.string.pref_key_sign_out
 import org.mozilla.reference.browser.R.string.pref_key_sync_now
 import org.mozilla.reference.browser.browser.FirefoxAccountsIntegration
+import org.mozilla.reference.browser.ext.components
 
 class AccountSettingsFragment : PreferenceFragmentCompat() {
+    private val syncStatusObserver = object : SyncStatusObserver {
+        override fun onIdle() {
+            CoroutineScope(Dispatchers.Main).launch {
+                val pref = findPreference(context?.getPreferenceKey(pref_key_sync_now))
+                pref.title = getString(R.string.sync_now)
+                pref.isEnabled = true
+                updateLastSyncedTimePref(context!!, pref)
+            }
+        }
+
+        override fun onStarted() {
+            CoroutineScope(Dispatchers.Main).launch {
+                val pref = findPreference(context?.getPreferenceKey(pref_key_sync_now))
+                pref.title = getString(R.string.syncing)
+                pref.isEnabled = false
+            }
+        }
+    }
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.account_preferences, rootKey)
@@ -33,14 +54,24 @@ class AccountSettingsFragment : PreferenceFragmentCompat() {
 
         // Sync Now
         val preferenceSyncNow = findPreference(syncNowKey)
-        preferenceSyncNow.isEnabled = true
-        updateLastSyncedTimePref(preferenceSyncNow)
+        updateLastSyncedTimePref(context!!, preferenceSyncNow)
 
         preferenceSyncNow.onPreferenceClickListener = getClickListenerForSyncNow()
+
+        if (requireComponents.firefoxSyncFeature.syncRunning()) {
+            preferenceSyncNow.title = getString(R.string.syncing)
+            preferenceSyncNow.isEnabled = false
+        } else {
+            preferenceSyncNow.isEnabled = true
+        }
+
+        // NB: ObserverRegistry will take care of cleaning up internal references to 'observer' and
+        // 'owner' when appropriate.
+        requireComponents.firefoxSyncFeature.register(syncStatusObserver, owner = this, autoPause = true)
     }
 
-    private fun updateLastSyncedTimePref(pref: Preference) {
-        val lastSyncTime = requireComponents.firefoxAccountsIntegration.getLastSynced()
+    fun updateLastSyncedTimePref(context: Context, pref: Preference) {
+        val lastSyncTime = context.components.firefoxAccountsIntegration.getLastSynced()
 
         if (lastSyncTime == FirefoxAccountsIntegration.FXA_NEVER_SYNCED_TS) {
             pref.summary = getString(R.string.preferences_sync_never_synced_summary)
@@ -62,21 +93,8 @@ class AccountSettingsFragment : PreferenceFragmentCompat() {
 
     private fun getClickListenerForSyncNow(): OnPreferenceClickListener {
         return OnPreferenceClickListener {
-            it.title = getString(R.string.syncing)
-            it.isEnabled = false
-
-            CoroutineScope(Dispatchers.Main).launch {
-                CoroutineScope(Dispatchers.IO).launch {
-                    requireComponents.firefoxSyncFeature.sync(
-                            requireComponents.firefoxAccountsIntegration.account.await()
-                    ).await()
-                }.join()
-
-                it.title = getString(R.string.sync_now)
-                it.isEnabled = true
-
-                requireComponents.firefoxAccountsIntegration.setLastSynced(System.currentTimeMillis())
-                updateLastSyncedTimePref(it)
+            CoroutineScope(Dispatchers.IO).launch {
+                requireComponents.firefoxAccountsIntegration.syncNow()
             }
             true
         }
