@@ -81,6 +81,32 @@ android.applicationVariants.all { variant ->
     } else {
         buildConfigField 'boolean', 'CRASH_REPORTING_ENABLED', 'false'
     }
+
+// -------------------------------------------------------------------------------------------------
+// Generating version codes for Google Play
+// -------------------------------------------------------------------------------------------------
+    def buildType = variant.buildType.name
+
+    if (buildType == "release" || buildType == "nightly") {
+        def versionCode = project.android.defaultConfig.versionCode
+
+        // The Google Play Store does not allow multiple APKs for the same app that all have the
+        // same version code. Therefore we need to have different version codes for our ARM and x86
+        // builds.
+
+        // Our x86 builds need a higher version code to avoid installing ARM builds on an x86 device
+        // with ARM compatibility mode.
+
+        if (variant.flavorName.contains("X86")) {
+            versionCode = versionCode + 2
+        } else if (variant.flavorName.contains("Aarch64")) {
+            versionCode = versionCode + 1
+        }
+
+        variant.outputs.all { output ->
+            setVersionCodeOverride(versionCode)
+        }
+    }
 }
 
 configurations {
@@ -114,7 +140,6 @@ dependencies {
     implementation Deps.mozilla_feature_toolbar
     implementation Deps.mozilla_feature_tabs
     implementation Deps.mozilla_feature_downloads
-    implementation Deps.mozilla_feature_storage
     implementation Deps.mozilla_feature_prompts
 
     implementation Deps.mozilla_ui_autocomplete

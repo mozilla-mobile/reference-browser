@@ -9,7 +9,6 @@ import android.app.PendingIntent.getBroadcast
 import android.content.Context
 import android.content.Intent
 import android.preference.PreferenceManager.getDefaultSharedPreferences
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import mozilla.components.browser.domains.autocomplete.ShippedDomainsProvider
@@ -27,8 +26,8 @@ import mozilla.components.concept.engine.DefaultSettings
 import mozilla.components.concept.engine.Engine
 import mozilla.components.feature.intent.IntentProcessor
 import mozilla.components.feature.search.SearchUseCases
+import mozilla.components.feature.session.HistoryDelegate
 import mozilla.components.feature.session.SessionUseCases
-import mozilla.components.feature.storage.HistoryTrackingFeature
 import mozilla.components.feature.sync.FirefoxSyncFeature
 import mozilla.components.feature.tabs.TabsUseCases
 import mozilla.components.lib.crash.CrashReporter
@@ -52,7 +51,8 @@ class Components(
         val defaultSettings = DefaultSettings(
             requestInterceptor = AppRequestInterceptor(applicationContext),
             remoteDebuggingEnabled = getDefaultSharedPreferences(applicationContext)
-                    .getBoolean(applicationContext.getPreferenceKey(pref_key_remote_debugging), false)
+                .getBoolean(applicationContext.getPreferenceKey(pref_key_remote_debugging), false),
+            historyTrackingDelegate = HistoryDelegate(placesHistoryStorage)
         )
         EngineProvider.getEngine(applicationContext, defaultSettings)
     }
@@ -81,13 +81,11 @@ class Components(
     // Places.
     val placesHistoryStorage by lazy { PlacesHistoryStorage(applicationContext) }
 
-    val historyTrackingFeature = HistoryTrackingFeature(engine, placesHistoryStorage)
-
     val firefoxSyncFeature by lazy {
-        FirefoxSyncFeature(Dispatchers.IO) {
+        FirefoxSyncFeature(
+            mapOf("history" to placesHistoryStorage)
+        ) {
             SyncAuthInfo(it.kid, it.fxaAccessToken, it.syncKey, it.tokenServerUrl)
-        }.also {
-            it.addSyncable("history", placesHistoryStorage)
         }
     }
 
@@ -184,7 +182,7 @@ class Components(
 
     // Firefox Accounts
     val firefoxAccountsIntegration: FirefoxAccountsIntegration by lazy {
-        FirefoxAccountsIntegration(applicationContext, tabsUseCases)
+        FirefoxAccountsIntegration(applicationContext, tabsUseCases, firefoxSyncFeature)
     }
 
     val crashReporter: CrashReporter by lazy {

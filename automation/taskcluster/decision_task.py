@@ -51,7 +51,7 @@ def create_raw_task(name, description, full_command, scopes = []):
                 'taskclusterProxy': True
             },
             "maxRunTime": 7200,
-            "image": "mozillamobile/android-components:1.9",
+            "image": "mozillamobile/android-components:1.10",
             "command": [
                 "/bin/bash",
                 "--login",
@@ -67,7 +67,7 @@ def create_raw_task(name, description, full_command, scopes = []):
         "metadata": {
             "name": name,
             "description": description,
-            "owner": "skaspari@mozilla.com",
+            "owner": "android-components-team@mozilla.com",
             "source": "https://github.com/mozilla-mobile/android-components"
         }
     }
