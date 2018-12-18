@@ -88,7 +88,7 @@ android.applicationVariants.all { variant ->
 // -------------------------------------------------------------------------------------------------
     def buildType = variant.buildType.name
 
-    if (buildType == "release" || buildType == "nightly") {
+    if (buildType == "release") {
         def versionCode = generatedVersionCode
 
         // The Google Play Store does not allow multiple APKs for the same app that all have the
