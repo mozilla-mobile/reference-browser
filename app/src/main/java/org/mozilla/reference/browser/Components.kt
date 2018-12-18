@@ -36,29 +36,30 @@ import mozilla.components.lib.crash.service.SentryService
 import org.mozilla.reference.browser.BrowserApplication.Companion.NON_FATAL_CRASH_BROADCAST
 import org.mozilla.reference.browser.BuildConfig.SENTRY_TOKEN
 import org.mozilla.reference.browser.R.string.pref_key_remote_debugging
+import org.mozilla.reference.browser.R.string.pref_key_testing_mode
 import org.mozilla.reference.browser.browser.FirefoxAccountsIntegration
 import org.mozilla.reference.browser.ext.getPreferenceKey
 import org.mozilla.reference.browser.ext.share
 import org.mozilla.reference.browser.settings.SettingsActivity
 import java.util.concurrent.TimeUnit
 
-class Components(
-    private val applicationContext: Context
-) {
+class Components(private val context: Context) {
+
+    val prefs by lazy { getDefaultSharedPreferences(context) }
 
     // Engine
     val engine: Engine by lazy {
         val defaultSettings = DefaultSettings(
-            requestInterceptor = AppRequestInterceptor(applicationContext),
-            remoteDebuggingEnabled = getDefaultSharedPreferences(applicationContext)
-                .getBoolean(applicationContext.getPreferenceKey(pref_key_remote_debugging), false),
+            requestInterceptor = AppRequestInterceptor(context),
+            remoteDebuggingEnabled = prefs.getBoolean(context.getPreferenceKey(pref_key_remote_debugging), false),
+            testingModeEnabled = prefs.getBoolean(context.getPreferenceKey(pref_key_testing_mode), false),
             historyTrackingDelegate = HistoryDelegate(placesHistoryStorage)
         )
-        EngineProvider.getEngine(applicationContext, defaultSettings)
+        EngineProvider.getEngine(context, defaultSettings)
     }
 
     // Session
-    val sessionStorage by lazy { SessionStorage(applicationContext, engine) }
+    val sessionStorage by lazy { SessionStorage(context, engine) }
 
     val sessionManager by lazy {
         SessionManager(engine, defaultSession = { Session("about:blank") }).apply {
@@ -79,7 +80,7 @@ class Components(
     val sessionUseCases by lazy { SessionUseCases(sessionManager) }
 
     // Places.
-    val placesHistoryStorage by lazy { PlacesHistoryStorage(applicationContext) }
+    val placesHistoryStorage by lazy { PlacesHistoryStorage(context) }
 
     val firefoxSyncFeature by lazy {
         FirefoxSyncFeature(
@@ -93,11 +94,11 @@ class Components(
     val searchEngineManager by lazy {
         SearchEngineManager().apply {
             GlobalScope.launch {
-                load(applicationContext).await()
+                load(context).await()
             }
         }
     }
-    val searchUseCases by lazy { SearchUseCases(applicationContext, searchEngineManager, sessionManager) }
+    val searchUseCases by lazy { SearchUseCases(context, searchEngineManager, sessionManager) }
     val defaultSearchUseCase by lazy { { searchTerms: String -> searchUseCases.defaultSearch.invoke(searchTerms) } }
 
     // Intent
@@ -107,7 +108,7 @@ class Components(
     val menuBuilder by lazy { BrowserMenuBuilder(menuItems) }
 
     val shippedDomainsProvider by lazy {
-        ShippedDomainsProvider().also { it.initialize(applicationContext) }
+        ShippedDomainsProvider().also { it.initialize(context) }
     }
 
     private val menuItems by lazy {
@@ -115,7 +116,7 @@ class Components(
                 menuToolbar,
                 SimpleBrowserMenuItem("Share") {
                     val url = sessionManager.selectedSession?.url ?: ""
-                    applicationContext.share(url)
+                    context.share(url)
                 },
                 SimpleBrowserMenuItem("Settings") {
                     openSettingsActivity()
@@ -130,9 +131,9 @@ class Components(
     }
 
     private fun openSettingsActivity() {
-        val intent = Intent(applicationContext, SettingsActivity::class.java)
+        val intent = Intent(context, SettingsActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-        applicationContext.startActivity(intent)
+        context.startActivity(intent)
     }
 
     private val menuToolbar by lazy {
@@ -182,24 +183,24 @@ class Components(
 
     // Firefox Accounts
     val firefoxAccountsIntegration: FirefoxAccountsIntegration by lazy {
-        FirefoxAccountsIntegration(applicationContext, tabsUseCases, firefoxSyncFeature)
+        FirefoxAccountsIntegration(context, tabsUseCases, firefoxSyncFeature)
     }
 
     val crashReporter: CrashReporter by lazy {
 
         val sentryService = SentryService(
-            applicationContext,
+            context,
             SENTRY_TOKEN,
             sendEventForNativeCrashes = true
         )
 
-        val socorroService = MozillaSocorroService(applicationContext, "ReferenceBrowser")
+        val socorroService = MozillaSocorroService(context, "ReferenceBrowser")
 
         CrashReporter(
             services = listOf(sentryService, socorroService),
             shouldPrompt = CrashReporter.Prompt.ALWAYS,
             promptConfiguration = CrashReporter.PromptConfiguration(
-                appName = applicationContext.getString(R.string.app_name),
+                appName = context.getString(R.string.app_name),
                 organizationName = "Mozilla"
             ),
             nonFatalCrashIntent = createNonFatalPendingIntent(),
@@ -208,6 +209,6 @@ class Components(
     }
 
     private fun createNonFatalPendingIntent(): PendingIntent {
-        return getBroadcast(applicationContext, 0, Intent(NON_FATAL_CRASH_BROADCAST), 0)
+        return getBroadcast(context, 0, Intent(NON_FATAL_CRASH_BROADCAST), 0)
     }
 }
