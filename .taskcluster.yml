@@ -154,5 +154,5 @@ tasks:
         metadata:
           name: Decision task (nightly)
           description: Scheduling tasks for nightly release of reference browser
-          owner: skaspari@mozilla.com
+          owner: android-components-team@mozilla.com
           source: ${repository}/raw/${event.release.tag_name}/.taskcluster.yml
