@@ -5,6 +5,7 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
+apply from: "$project.rootDir/automation/gradle/versionCode.gradle"
 
 android {
     compileSdkVersion Config.compileSdkVersion
@@ -88,7 +89,7 @@ android.applicationVariants.all { variant ->
     def buildType = variant.buildType.name
 
     if (buildType == "release" || buildType == "nightly") {
-        def versionCode = project.android.defaultConfig.versionCode
+        def versionCode = generatedVersionCode
 
         // The Google Play Store does not allow multiple APKs for the same app that all have the
         // same version code. Therefore we need to have different version codes for our ARM and x86
