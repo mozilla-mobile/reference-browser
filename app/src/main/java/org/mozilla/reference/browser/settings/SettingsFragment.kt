@@ -53,7 +53,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
         val preferenceFirefoxAccount = findPreference(firefoxAccountKey)
         val preferenceMakeDefaultBrowser = findPreference(makeDefaultBrowserKey)
         val preferenceRemoteDebugging = findPreference(remoteDebuggingKey)
-        val fxaIntegration = requireComponents.firefoxAccountsIntegration
+        val fxaIntegration = requireComponents.services.accounts
 
         preferenceSignIn.onPreferenceClickListener = getClickListenerForSignIn()
         preferenceSignIn.isVisible = fxaIntegration.profile == null
@@ -84,7 +84,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
     private fun getClickListenerForSignIn(): OnPreferenceClickListener {
         return OnPreferenceClickListener { _ ->
             activity?.finish()
-            requireComponents.firefoxAccountsIntegration.authenticate()
+            requireComponents.services.accounts.authenticate()
             true
         }
     }
@@ -104,7 +104,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
     private fun getChangeListenerForRemoteDebugging(): OnPreferenceChangeListener {
         return OnPreferenceChangeListener { _, newValue ->
-            requireComponents.engine.settings.remoteDebuggingEnabled = newValue as Boolean
+            requireComponents.core.engine.settings.remoteDebuggingEnabled = newValue as Boolean
             true
         }
     }

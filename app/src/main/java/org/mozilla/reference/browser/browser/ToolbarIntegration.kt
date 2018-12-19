@@ -23,7 +23,7 @@ class ToolbarIntegration(
     sessionId: String? = null
 ) : LifecycleObserver {
     init {
-        toolbar.setMenuBuilder(context.components.menuBuilder)
+        toolbar.setMenuBuilder(context.components.toolbar.menuBuilder)
 
         ToolbarAutocompleteFeature(toolbar).apply {
             addHistoryStorageProvider(historyStorage)
@@ -33,9 +33,9 @@ class ToolbarIntegration(
 
     private val toolbarFeature: ToolbarFeature = ToolbarFeature(
         toolbar,
-        context.components.sessionManager,
-        context.components.sessionUseCases.loadUrl,
-        context.components.defaultSearchUseCase,
+        context.components.core.sessionManager,
+        context.components.useCases.sessionUseCases.loadUrl,
+        { searchTerms -> context.components.useCases.searchUseCases.defaultSearch.invoke(searchTerms) },
         sessionId
     )
 

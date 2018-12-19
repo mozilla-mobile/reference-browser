@@ -58,7 +58,7 @@ class AccountSettingsFragment : PreferenceFragmentCompat() {
 
         preferenceSyncNow.onPreferenceClickListener = getClickListenerForSyncNow()
 
-        if (requireComponents.firefoxSyncFeature.syncRunning()) {
+        if (requireComponents.services.sync.syncRunning()) {
             preferenceSyncNow.title = getString(R.string.syncing)
             preferenceSyncNow.isEnabled = false
         } else {
@@ -67,11 +67,11 @@ class AccountSettingsFragment : PreferenceFragmentCompat() {
 
         // NB: ObserverRegistry will take care of cleaning up internal references to 'observer' and
         // 'owner' when appropriate.
-        requireComponents.firefoxSyncFeature.register(syncStatusObserver, owner = this, autoPause = true)
+        requireComponents.services.sync.register(syncStatusObserver, owner = this, autoPause = true)
     }
 
     fun updateLastSyncedTimePref(context: Context, pref: Preference) {
-        val lastSyncTime = context.components.firefoxAccountsIntegration.getLastSynced()
+        val lastSyncTime = context.components.services.accounts.getLastSynced()
 
         if (lastSyncTime == FirefoxAccountsIntegration.FXA_NEVER_SYNCED_TS) {
             pref.summary = getString(R.string.preferences_sync_never_synced_summary)
@@ -85,7 +85,7 @@ class AccountSettingsFragment : PreferenceFragmentCompat() {
 
     private fun getClickListenerForSignOut(): OnPreferenceClickListener {
         return OnPreferenceClickListener {
-            requireComponents.firefoxAccountsIntegration.logout()
+            requireComponents.services.accounts.logout()
             activity?.onBackPressed()
             true
         }
@@ -94,7 +94,7 @@ class AccountSettingsFragment : PreferenceFragmentCompat() {
     private fun getClickListenerForSyncNow(): OnPreferenceClickListener {
         return OnPreferenceClickListener {
             CoroutineScope(Dispatchers.IO).launch {
-                requireComponents.firefoxAccountsIntegration.syncNow()
+                requireComponents.services.accounts.syncNow()
             }
             true
         }

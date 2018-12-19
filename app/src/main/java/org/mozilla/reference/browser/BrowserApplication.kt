@@ -19,7 +19,7 @@ class BrowserApplication : Application() {
         Log.addSink(AndroidLogSink())
 
         if (isCrashReportActive) {
-            components.crashReporter.install(this)
+            components.analytics.crashReporter.install(this)
         }
     }
 
