@@ -95,6 +95,16 @@ android.applicationVariants.all { variant ->
     }
 
 // -------------------------------------------------------------------------------------------------
+// Activating telemetry  with command line paramter.
+// -------------------------------------------------------------------------------------------------
+
+if (project.hasProperty("telemetry") && project.property("telemetry") == "true") {
+    buildConfigField 'boolean', 'TELEMETRY_ENABLED', 'true'
+} else {
+    buildConfigField 'boolean', 'TELEMETRY_ENABLED', 'false'
+}
+
+// -------------------------------------------------------------------------------------------------
 // Generating version codes for Google Play
 // -------------------------------------------------------------------------------------------------
     def buildType = variant.buildType.name
