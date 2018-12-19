@@ -16,9 +16,12 @@ import kotlinx.android.synthetic.main.fragment_browser.*
 import mozilla.components.feature.awesomebar.AwesomeBarFeature
 import mozilla.components.feature.downloads.DownloadsFeature
 import mozilla.components.feature.prompts.PromptFeature
+import mozilla.components.feature.session.FullScreenFeature
 import mozilla.components.feature.session.SessionFeature
 import mozilla.components.feature.tabs.toolbar.TabsToolbarFeature
 import mozilla.components.support.ktx.android.content.isPermissionGranted
+import mozilla.components.support.ktx.android.view.enterToImmersiveMode
+import mozilla.components.support.ktx.android.view.exitImmersiveModeIfNeeded
 import org.mozilla.reference.browser.BackHandler
 import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.ext.requireComponents
@@ -30,6 +33,7 @@ class BrowserFragment : Fragment(), BackHandler {
     private lateinit var downloadsFeature: DownloadsFeature
     private lateinit var awesomeBarFeature: AwesomeBarFeature
     private lateinit var promptsFeature: PromptFeature
+    private lateinit var fullScreenFeature: FullScreenFeature
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_browser, container, false)
@@ -48,7 +52,7 @@ class BrowserFragment : Fragment(), BackHandler {
 
         lifecycle.addObserver(ToolbarIntegration(
             requireContext(),
-            tabsPanel,
+            toolbar,
             requireComponents.core.historyStorage,
             requireComponents.toolbar.shippedDomainsProvider,
             sessionId))
@@ -62,7 +66,7 @@ class BrowserFragment : Fragment(), BackHandler {
             requireComponents.useCases.tabsUseCases,
             view))
 
-        awesomeBarFeature = AwesomeBarFeature(awesomeBar, tabsPanel, engineView)
+        awesomeBarFeature = AwesomeBarFeature(awesomeBar, toolbar, engineView)
             .addSearchProvider(
                 requireComponents.search.searchEngineManager.getDefaultSearchEngine(requireContext()),
                 requireComponents.useCases.searchUseCases.defaultSearch)
@@ -73,7 +77,7 @@ class BrowserFragment : Fragment(), BackHandler {
                 requireComponents.core.historyStorage,
                 requireComponents.useCases.sessionUseCases.loadUrl)
 
-        tabsToolbarFeature = TabsToolbarFeature(tabsPanel, requireComponents.core.sessionManager, ::showTabs)
+        tabsToolbarFeature = TabsToolbarFeature(toolbar, requireComponents.core.sessionManager, ::showTabs)
 
         downloadsFeature = DownloadsFeature(
                 requireContext(),
@@ -90,6 +94,12 @@ class BrowserFragment : Fragment(), BackHandler {
             sessionManager = requireComponents.core.sessionManager,
             fragmentManager = requireFragmentManager()
         ) { _, _, _ -> /* TODO handle this in the future when needed. */ }
+
+        fullScreenFeature = FullScreenFeature(
+            requireComponents.core.sessionManager,
+            requireComponents.useCases.sessionUseCases,
+            sessionId, ::fullScreenChanged
+        )
     }
 
     private fun showTabs() {
@@ -101,12 +111,23 @@ class BrowserFragment : Fragment(), BackHandler {
         }
     }
 
+    private fun fullScreenChanged(enabled: Boolean) {
+        if (enabled) {
+            activity?.enterToImmersiveMode()
+            toolbar.visibility = View.GONE
+        } else {
+            activity?.exitImmersiveModeIfNeeded()
+            toolbar.visibility = View.VISIBLE
+        }
+    }
+
     override fun onStart() {
         super.onStart()
 
         sessionFeature.start()
         downloadsFeature.start()
         promptsFeature.start()
+        fullScreenFeature.start()
     }
 
     override fun onStop() {
@@ -115,10 +136,16 @@ class BrowserFragment : Fragment(), BackHandler {
         sessionFeature.stop()
         downloadsFeature.stop()
         promptsFeature.stop()
+        fullScreenFeature.stop()
     }
 
+    @Suppress("ReturnCount")
     override fun onBackPressed(): Boolean {
-        if (tabsPanel.onBackPressed()) {
+        if (fullScreenFeature.onBackPressed()) {
+            return true
+        }
+
+        if (toolbar.onBackPressed()) {
             return true
         }
 
