@@ -5,10 +5,13 @@
 package org.mozilla.reference.browser
 
 import android.app.Application
+import mozilla.components.service.glean.Glean
+import mozilla.components.service.glean.config.Configuration
 import mozilla.components.support.base.log.Log
 import mozilla.components.support.base.log.logger.Logger
 import mozilla.components.support.base.log.sink.AndroidLogSink
 import org.mozilla.reference.browser.ext.isCrashReportActive
+import org.mozilla.reference.browser.settings.Settings
 
 class BrowserApplication : Application() {
     val components by lazy { Components(this) }
@@ -18,6 +21,9 @@ class BrowserApplication : Application() {
 
         // We want the log messages of all builds to go to Android logcat
         Log.addSink(AndroidLogSink())
+
+        Glean.initialize(this, Configuration(applicationId = packageName))
+        Glean.setMetricsEnabled(BuildConfig.TELEMETRY_ENABLED && Settings.isTelemetryEnabled(this))
 
         if (isCrashReportActive) {
             components.analytics.crashReporter.install(this)

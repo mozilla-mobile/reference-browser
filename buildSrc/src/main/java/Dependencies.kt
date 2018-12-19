@@ -3,7 +3,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 // Synchronized version numbers for dependencies used by (some) modules
-private object Versions {
+object Versions {
     const val kotlin = "1.3.10"
     const val coroutines = "1.0.1"
 
@@ -68,6 +68,7 @@ object Deps {
     const val mozilla_ui_colors = "org.mozilla.components:ui-colors:${Versions.mozilla_android_components}"
 
     const val mozilla_service_firefox_accounts = "org.mozilla.components:service-firefox-accounts:${Versions.mozilla_android_components}"
+    const val mozilla_service_glean = "org.mozilla.components:service-glean:${Versions.mozilla_android_components}"
 
     const val mozilla_support_utils = "org.mozilla.components:support-utils:${Versions.mozilla_android_components}"
     const val mozilla_support_ktx= "org.mozilla.components:support-ktx:${Versions.mozilla_android_components}"
