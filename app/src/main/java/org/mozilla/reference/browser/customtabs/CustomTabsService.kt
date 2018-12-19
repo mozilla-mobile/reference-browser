@@ -11,5 +11,5 @@ import mozilla.components.feature.customtabs.AbstractCustomTabsService
 import org.mozilla.reference.browser.ext.components
 
 class CustomTabsService : AbstractCustomTabsService() {
-    override val engine: Engine by lazy { components.engine }
+    override val engine: Engine by lazy { components.core.engine }
 }

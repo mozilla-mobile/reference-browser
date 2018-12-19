@@ -31,8 +31,8 @@ class TabsTrayFragment : Fragment(), BackHandler {
 
         tabsFeature = TabsFeature(
             tabsTray,
-            requireComponents.sessionManager,
-            requireComponents.tabsUseCases,
+            requireComponents.core.sessionManager,
+            requireComponents.useCases.tabsUseCases,
             ::closeTabsTray)
 
         tabsPanel.initialize(tabsFeature) { closeTabsTray() }

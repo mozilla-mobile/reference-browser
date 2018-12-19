@@ -16,7 +16,7 @@ class IntentReceiverActivity : Activity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        components.sessionIntentProcessor.process(intent)
+        components.utils.intentProcessor.process(intent)
 
         val intent = Intent(intent)
         if (CustomTabConfig.isCustomTabIntent(SafeIntent(intent))) {

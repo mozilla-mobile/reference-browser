@@ -42,7 +42,7 @@ open class BrowserActivity : AppCompatActivity(), ComponentCallbacks2 {
         }
 
         if (isCrashReportActive) {
-            crashIntegration = CrashIntegration(this, components.crashReporter) { crash ->
+            crashIntegration = CrashIntegration(this, components.analytics.crashReporter) { crash ->
                 onNonFatalCrash(crash)
             }
             lifecycle.addObserver(crashIntegration)
@@ -61,13 +61,13 @@ open class BrowserActivity : AppCompatActivity(), ComponentCallbacks2 {
 
     override fun onCreateView(parent: View?, name: String?, context: Context, attrs: AttributeSet?): View? =
         when (name) {
-            EngineView::class.java.name -> components.engine.createView(context, attrs).asView()
+            EngineView::class.java.name -> components.core.engine.createView(context, attrs).asView()
             TabsTray::class.java.name -> BrowserTabsTray(context, attrs)
             else -> super.onCreateView(parent, name, context, attrs)
         }
 
     override fun onTrimMemory(level: Int) {
-        components.sessionManager.onLowMemory()
+        components.core.sessionManager.onLowMemory()
     }
 
     private fun onNonFatalCrash(crash: Crash) {
