@@ -6,10 +6,9 @@ package org.mozilla.reference.browser
 
 import android.app.Application
 import mozilla.components.support.base.log.Log
+import mozilla.components.support.base.log.logger.Logger
 import mozilla.components.support.base.log.sink.AndroidLogSink
 import org.mozilla.reference.browser.ext.isCrashReportActive
-
-import mozilla.appservices.ReferenceBrowserMegazord
 
 class BrowserApplication : Application() {
     val components by lazy { Components(this) }
@@ -24,7 +23,20 @@ class BrowserApplication : Application() {
             components.analytics.crashReporter.install(this)
         }
 
-        ReferenceBrowserMegazord.init()
+        // mozilla.appservices.ReferenceBrowserMegazord will be missing if we're doing an application-services
+        // dependency substitution locally. That class is supplied dynamically by the org.mozilla.appservices
+        // gradle plugin, and that won't happen if we're not megazording. We won't megazord if we're
+        // locally substituting every module that's part of the megazord's definition, which is what
+        // happens during a local substitution of application-services.
+        // As a workaround, use reflections to conditionally initialize the megazord in case it's present.
+        // See https://github.com/mozilla-mobile/reference-browser/pull/356.
+        try {
+            val megazordClass = Class.forName("mozilla.appservices.ReferenceBrowserMegazord")
+            val megazordInitMethod = megazordClass.getDeclaredMethod("init")
+            megazordInitMethod.invoke(megazordClass)
+        } catch (e: ClassNotFoundException) {
+            Logger.info("mozilla.appservices.ReferenceBrowserMegazord not found; skipping megazord init.")
+        }
     }
 
     companion object {
