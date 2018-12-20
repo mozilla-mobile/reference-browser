@@ -40,43 +40,43 @@ class BrowserFragment : Fragment(), BackHandler {
         val sessionId = arguments?.getString(SESSION_ID)
 
         sessionFeature = SessionFeature(
-                requireComponents.sessionManager,
-                requireComponents.sessionUseCases,
+                requireComponents.core.sessionManager,
+                requireComponents.useCases.sessionUseCases,
                 engineView,
                 sessionId)
 
         lifecycle.addObserver(ToolbarIntegration(
             requireContext(),
             tabsPanel,
-            requireComponents.placesHistoryStorage,
-            requireComponents.shippedDomainsProvider,
+            requireComponents.core.historyStorage,
+            requireComponents.toolbar.shippedDomainsProvider,
             sessionId))
 
-        lifecycle.addObserver(requireComponents.firefoxAccountsIntegration)
+        lifecycle.addObserver(requireComponents.services.accounts)
 
         lifecycle.addObserver(ContextMenuIntegration(
             requireContext(),
             requireFragmentManager(),
-            requireComponents.sessionManager,
-            requireComponents.tabsUseCases,
+            requireComponents.core.sessionManager,
+            requireComponents.useCases.tabsUseCases,
             view))
 
         awesomeBarFeature = AwesomeBarFeature(awesomeBar, tabsPanel, engineView)
             .addSearchProvider(
-                requireComponents.searchEngineManager.getDefaultSearchEngine(requireContext()),
-                requireComponents.searchUseCases.defaultSearch)
+                requireComponents.search.searchEngineManager.getDefaultSearchEngine(requireContext()),
+                requireComponents.useCases.searchUseCases.defaultSearch)
             .addSessionProvider(
-                requireComponents.sessionManager,
-                requireComponents.tabsUseCases.selectTab)
+                requireComponents.core.sessionManager,
+                requireComponents.useCases.tabsUseCases.selectTab)
             .addHistoryProvider(
-                requireComponents.placesHistoryStorage,
-                requireComponents.sessionUseCases.loadUrl)
+                requireComponents.core.historyStorage,
+                requireComponents.useCases.sessionUseCases.loadUrl)
 
-        tabsToolbarFeature = TabsToolbarFeature(tabsPanel, requireComponents.sessionManager, ::showTabs)
+        tabsToolbarFeature = TabsToolbarFeature(tabsPanel, requireComponents.core.sessionManager, ::showTabs)
 
         downloadsFeature = DownloadsFeature(
                 requireContext(),
-                sessionManager = requireComponents.sessionManager,
+                sessionManager = requireComponents.core.sessionManager,
                 fragmentManager = childFragmentManager
         )
 
@@ -84,7 +84,7 @@ class BrowserFragment : Fragment(), BackHandler {
             requestPermissions(arrayOf(WRITE_EXTERNAL_STORAGE), PERMISSION_WRITE_STORAGE_REQUEST)
         }
 
-        promptsFeature = PromptFeature(requireComponents.sessionManager, requireFragmentManager())
+        promptsFeature = PromptFeature(requireComponents.core.sessionManager, requireFragmentManager())
     }
 
     private fun showTabs() {

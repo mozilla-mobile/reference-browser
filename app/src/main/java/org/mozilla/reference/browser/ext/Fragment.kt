@@ -4,7 +4,6 @@
 
 package org.mozilla.reference.browser.ext
 
-import androidx.fragment.app.Fragment
 import org.mozilla.reference.browser.Components
 
 /**

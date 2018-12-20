@@ -20,7 +20,7 @@ class AppRequestInterceptor(private val context: Context) : RequestInterceptor {
                 return RequestInterceptor.InterceptionResponse.Content(page, encoding = "base64")
             }
 
-            else -> context.components.firefoxAccountsIntegration.interceptor.onLoadRequest(session, uri)
+            else -> context.components.services.accounts.interceptor.onLoadRequest(session, uri)
         }
     }
 

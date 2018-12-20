@@ -37,23 +37,17 @@ class TabsPanel @JvmOverloads constructor(
         }
         inflateMenu(R.menu.tabstray_menu)
         setOnMenuItemClickListener {
+            val tabsUseCases = components.useCases.tabsUseCases
             when (it.itemId) {
                 R.id.newTab -> {
-                    with(components.tabsUseCases) {
-                        when (isPrivateTray) {
-                            true -> addPrivateTab.invoke("about:privatebrowsing", selectTab = true)
-                            false -> addTab.invoke("about:blank", selectTab = true)
-                        }
+                    when (isPrivateTray) {
+                        true -> tabsUseCases.addPrivateTab.invoke("about:privatebrowsing", selectTab = true)
+                        false -> tabsUseCases.addTab.invoke("about:blank", selectTab = true)
                     }
                     closeTabsTray?.invoke()
                 }
                 R.id.closeTab -> {
-                    with(components) {
-                        when (isPrivateTray) {
-                            true -> removePrivateSessions.invoke()
-                            false -> removeSessions.invoke()
-                        }
-                    }
+                    tabsUseCases.removeAllTabsOfType.invoke(private = isPrivateTray)
                 }
             }
             true
