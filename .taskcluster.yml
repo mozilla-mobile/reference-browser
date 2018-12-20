@@ -99,13 +99,13 @@ tasks:
                 - queue:create-task:highest:scriptworker-prov-v1/mobile-signing-v1
                 - queue:create-task:highest:scriptworker-prov-v1/mobile-pushapk-v1
                 - project:mobile:reference-browser:releng:signing:cert:release-signing
-                - project:mobile:focus:releng:googleplay:product:reference-browser
+                - project:mobile:reference-browser:releng:googleplay:product:reference-browser
                 - queue:route:index.project.mobile.reference-browser.nightly.latest
               else:
                 - queue:create-task:highest:scriptworker-prov-v1/mobile-signing-dep-v1
                 - queue:create-task:highest:scriptworker-prov-v1/mobile-pushapk-dep-v1
                 - project:mobile:reference-browser:releng:signing:cert:dep-signing
-                - project:mobile:focus:releng:googleplay:product:reference-browser:dep
+                - project:mobile:reference-browser:releng:googleplay:product:reference-browser:dep
                 - queue:route:index.project.mobile.reference-browser.staging-nightly.latest
         payload:
           maxRunTime: 600   # Decision should remain fast enough to schedule a handful of tasks
