@@ -12,6 +12,9 @@ apply plugin: 'org.mozilla.appservices'
 appservices {
     defaultConfig {
         megazord = 'reference-browser'
+        // Necessary to allow for local dependency substitutions.
+        // See https://github.com/mozilla-mobile/reference-browser/pull/356#issuecomment-449190236
+        unitTestingEnabled = false
     }
 }
 
