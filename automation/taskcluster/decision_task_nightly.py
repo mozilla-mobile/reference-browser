@@ -88,7 +88,7 @@ def generate_push_task(signing_task_id, apks, commit, is_staging):
         description="Upload signed release builds of Reference Browser to Google Play",
         apks=artifacts,
         scopes=[
-            "project:mobile:focus:releng:googleplay:product:reference-browser{}".format(':dep' if is_staging else '')
+            "project:mobile:reference-browser:releng:googleplay:product:reference-browser{}".format(':dep' if is_staging else '')
         ],
         commit=commit,
         is_staging=is_staging
