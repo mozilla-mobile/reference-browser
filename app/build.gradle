@@ -175,6 +175,33 @@ dependencies {
     implementation Deps.androidx_constraintlayout
     implementation Deps.androidx_preference
     implementation Deps.google_material
+
+    androidTestImplementation Deps.tools_uiautomator
+
+    androidTestImplementation Deps.tools_espresso_core, {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    }
+
+    androidTestImplementation(Deps.tools_espresso_contrib) {
+        exclude module: 'appcompat-v7'
+        exclude module: 'support-v4'
+        exclude module: 'support-annotations'
+        exclude module: 'recyclerview-v7'
+        exclude module: 'design'
+        exclude module: 'espresso-core'
+    }
+
+    androidTestImplementation Deps.tools_espresso_idling_resources
+    androidTestImplementation Deps.tools_espresso_web, {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    }
+
+    androidTestImplementation Deps.tools_test_runner
+    androidTestImplementation Deps.tools_test_rules
+    androidTestUtil Deps.tools_test_orchestrator
+    androidTestImplementation Deps.tools_espresso_core, {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    }
 }
 
 // -------------------------------------------------------------------------------------------------
