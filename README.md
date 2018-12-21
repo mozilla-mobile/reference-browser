@@ -8,8 +8,8 @@ A full-featured browser reference implementation using [Mozilla Android Componen
 
 Signed Nightly builds can be downloaded from:
 
-* [⬇️ ARM devices (Android 5+)](https://index.taskcluster.net/v1/task/project.mobile.reference-browser.nightly.latest/artifacts/public/reference-browser-arm.apk)
-* [⬇️ x86  devices (Android 5+)](https://index.taskcluster.net/v1/task/project.mobile.reference-browser.nightly.latest/artifacts/public/reference-browser-x86.apk)
+* [⬇️ ARM devices (Android 5+)](https://index.taskcluster.net/v1/task/project.mobile.reference-browser.nightly.latest/artifacts/public/app-geckoNightly-arm-armeabi-v7a-release-unsigned.apk)
+* [⬇️ x86  devices (Android 5+)](https://index.taskcluster.net/v1/task/project.mobile.reference-browser.nightly.latest/artifacts/public/app-geckoNightly-x86-x86-release-unsigned.apk)
 
 Note that all builds are signed with a non-production / throw-away key. The latest Nightly build task can be found [here](https://tools.taskcluster.net/index/project.mobile.reference-browser.nightly/latest).
 
