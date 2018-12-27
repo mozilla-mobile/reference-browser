@@ -5,6 +5,7 @@
 package org.mozilla.reference.browser.browser
 
 import android.Manifest.permission.WRITE_EXTERNAL_STORAGE
+import android.content.Intent
 import android.os.Bundle
 import androidx.core.content.PermissionChecker.PERMISSION_GRANTED
 import android.view.LayoutInflater
@@ -84,7 +85,11 @@ class BrowserFragment : Fragment(), BackHandler {
             requestPermissions(arrayOf(WRITE_EXTERNAL_STORAGE), PERMISSION_WRITE_STORAGE_REQUEST)
         }
 
-        promptsFeature = PromptFeature(requireComponents.core.sessionManager, requireFragmentManager())
+        promptsFeature = PromptFeature(
+            fragment = this,
+            sessionManager = requireComponents.core.sessionManager,
+            fragmentManager = requireFragmentManager()
+        ) { _, _, _ -> /* TODO handle this in the future when needed. */ }
     }
 
     private fun showTabs() {
@@ -145,6 +150,10 @@ class BrowserFragment : Fragment(), BackHandler {
                 putString(SESSION_ID, sessionId)
             }
         }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        promptsFeature.onActivityResult(requestCode, resultCode, data)
     }
 
     private fun isStoragePermissionAvailable() = requireContext().isPermissionGranted(WRITE_EXTERNAL_STORAGE)
