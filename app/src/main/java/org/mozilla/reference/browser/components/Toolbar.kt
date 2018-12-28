@@ -76,7 +76,9 @@ class Toolbar(
             SimpleBrowserMenuItem("Clear Data") {
                 sessionUseCases.clearData.invoke()
             },
-            SimpleBrowserMenuCheckbox("Request desktop site") { checked ->
+            SimpleBrowserMenuCheckbox("Request desktop site", {
+                sessionManager.selectedSessionOrThrow.desktopMode
+            }) { checked ->
                 sessionUseCases.requestDesktopSite.invoke(checked)
             }
         )
