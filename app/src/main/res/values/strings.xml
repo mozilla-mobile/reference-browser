@@ -27,6 +27,9 @@
     <!-- Preference enabling remote debugging -->
     <string name="preferences_remote_debugging">Remote debugging via USB</string>
 
+    <!-- Preference about page -->
+    <string name="preferences_about_page">About Reference Browser</string>
+
     <!-- Preference for signing in -->
     <string name="sign_in">Sign in</string>
 
@@ -56,6 +59,9 @@
 
     <!-- Preference for settings related turn on telemetry data-->
     <string name="use_telemetry">Use Telemetry</string>
+
+    <!-- Preference category for Mozilla about/legal etc. -->
+    <string name="mozilla_category">Mozilla</string>
 
     <!-- Menu option on the toolbar that takes you to settings page-->
     <string name="settings">Settings</string>
@@ -92,4 +98,16 @@
     
     <string name="default_notification_channel">Browser</string>
 
+    <!-- About content -->
+    <string name="about_content"><![CDATA[
+<p>%1$s puts you in control.</p>
+<p>Use it as a reference browser:
+  <ul>
+    <li>Learn how to build your own browser.</li>
+    <li>Contribute to making it easier to build browsers.</li>
+    <li>File bug reports!</li>
+  </ul>
+</p>
+<p>%1$s is produced by Mozilla. Our mission is to foster a healthy, open Internet.<br/>
+    ]]></string>
 </resources>
