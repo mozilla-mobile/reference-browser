@@ -9,6 +9,7 @@ Decision task for nightly releases.
 from __future__ import print_function
 
 import argparse
+import arrow
 import json
 import lib.tasks
 import os
@@ -27,7 +28,7 @@ BUILDER = lib.tasks.TaskBuilder(
 )
 
 
-def generate_build_task(apks):
+def generate_build_task(apks, date, is_staging):
     artifacts = {'public/{}'.format(os.path.basename(apk)): {
         "type": 'file',
         "path": "/build/reference-browser/{}".format(apk),
@@ -35,6 +36,7 @@ def generate_build_task(apks):
     } for apk in apks}
 
     checkout = 'git clone {} && cd reference-browser && git checkout {}'.format(GITHUB_HTTP_REPOSITORY, HEAD_REV)
+    index_release = 'staging-nightly' if is_staging else 'nightly'
 
     return taskcluster.slugId(), BUILDER.build_task(
         name="(Reference Browser) Build task",
@@ -43,6 +45,12 @@ def generate_build_task(apks):
                  ' && python automation/taskcluster/helper/get-secret.py'
                  ' -s project/mobile/reference-browser/sentry -k dsn -f .sentry_token'
                  ' && ./gradlew --no-daemon -PcrashReportEnabled=true -Ptelemetry=true clean test assembleRelease'),
+        routes=[
+            "index.project.mobile.reference-browser.{}.date.{}.{}.{}.latest.unsigned".format(index_release, date.year, date.month, date.day),
+            "index.project.mobile.reference-browser.{}.date.{}.{}.{}.revision.{}.unsigned".format(index_release, date.year, date.month, date.day, HEAD_REV),
+            "index.project.mobile.reference-browser.{}.revision.{}.unsigned".format(index_release, HEAD_REV),
+            "index.project.mobile.reference-browser.{}.latest.unsigned".format(index_release),
+        ],
         features={
             "chainOfTrust": True,
             "taskClusterProxy": True
@@ -54,17 +62,20 @@ def generate_build_task(apks):
     )
 
 
-def generate_signing_task(build_task_id, apks, is_staging):
+def generate_signing_task(build_task_id, apks, date, is_staging):
     artifacts = ["public/{}".format(os.path.basename(apk)) for apk in apks]
 
-    index = "index.project.mobile.reference-browser.{}.latest".format(
-        'staging-nightly' if is_staging else 'nightly')
-    routes = [index]
+    index_release = 'staging-nightly' if is_staging else 'nightly'
+    routes = [
+        "index.project.mobile.reference-browser.{}.date.{}.{}.{}.latest.signed".format(index_release, date.year, date.month, date.day),
+        "index.project.mobile.reference-browser.{}.date.{}.{}.{}.revision.{}.signed".format(index_release, date.year, date.month, date.day, HEAD_REV),
+        "index.project.mobile.reference-browser.{}.revision.{}.signed".format(index_release, HEAD_REV),
+        "index.project.mobile.reference-browser.{}.latest.signed".format(index_release),
+    ]
     scopes = [
         "project:mobile:reference-browser:releng:signing:format:autograph_apk_reference_browser",
         "project:mobile:reference-browser:releng:signing:cert:{}".format(
-            'dep-signing' if is_staging else 'release-signing'),
-        "queue:route:{}".format(index),
+            'dep-signing' if is_staging else 'release-signing')
     ]
 
     return taskcluster.slugId(), BUILDER.build_signing_task(
@@ -104,18 +115,19 @@ def populate_chain_of_trust_required_but_unused_files():
             json.dump({}, f)
 
 
-def nightly(apks, commit, is_staging):
+def nightly(apks, commit, date_string, is_staging):
     queue = taskcluster.Queue({'baseUrl': 'http://taskcluster/queue/v1'})
+    date = arrow.get(date_string)
 
     task_graph = {}
 
-    build_task_id, build_task = generate_build_task(apks)
+    build_task_id, build_task = generate_build_task(apks, date, is_staging)
     lib.tasks.schedule_task(queue, build_task_id, build_task)
 
     task_graph[build_task_id] = {}
     task_graph[build_task_id]['task'] = queue.task(build_task_id)
 
-    sign_task_id, sign_task = generate_signing_task(build_task_id, apks, is_staging)
+    sign_task_id, sign_task = generate_signing_task(build_task_id, apks, date, is_staging)
     lib.tasks.schedule_task(queue, sign_task_id, sign_task)
 
     task_graph[sign_task_id] = {}
@@ -144,9 +156,10 @@ if __name__ == "__main__":
                         required=True)
     parser.add_argument('--output', dest="track", metavar="path", action="store", help="Path to the build output",
                         required=True)
+    parser.add_argument('--date', dest="date", action="store", help="ISO8601 timestamp for build")
     parser.add_argument('--staging', action="store_true", help="Perform a staging build (use dep workers, "
                                                                "don't communicate with Google Play) ")
 
     result = parser.parse_args()
     apks = ["{}/{}".format(result.track, apk) for apk in result.apks]
-    nightly(apks, result.commit, result.staging)
+    nightly(apks, result.commit, result.date, result.staging)
