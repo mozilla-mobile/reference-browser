@@ -8,8 +8,8 @@ A full-featured browser reference implementation using [Mozilla Android Componen
 
 Signed Nightly builds can be downloaded from:
 
-* [⬇️ ARM devices (Android 5+)](https://index.taskcluster.net/v1/task/project.mobile.reference-browser.nightly.latest/artifacts/public/reference-browser-arm.apk)
-* [⬇️ x86  devices (Android 5+)](https://index.taskcluster.net/v1/task/project.mobile.reference-browser.nightly.latest/artifacts/public/reference-browser-x86.apk)
+* [⬇️ ARM devices (Android 5+)](https://index.taskcluster.net/v1/task/project.mobile.reference-browser.nightly.latest/artifacts/public/app-geckoNightly-arm-armeabi-v7a-release-unsigned.apk)
+* [⬇️ x86  devices (Android 5+)](https://index.taskcluster.net/v1/task/project.mobile.reference-browser.nightly.latest/artifacts/public/app-geckoNightly-x86-x86-release-unsigned.apk)
 
 Note that all builds are signed with a non-production / throw-away key. The latest Nightly build task can be found [here](https://tools.taskcluster.net/index/project.mobile.reference-browser.nightly/latest).
 
@@ -26,6 +26,19 @@ Before you attempt to make a contribution please read the [Community Participati
 * IRC: [#android-components (irc.mozilla.org)](https://wiki.mozilla.org/IRC) | [view logs](https://mozilla.logbot.info/android-components/)
 
 * Subscribe to our mailing list [android-components@](https://lists.mozilla.org/listinfo/android-components) to keep up to date ([Archives](https://lists.mozilla.org/pipermail/android-components/)).
+
+# Local Development
+
+## Dependency substitutions
+
+You might be interested in building this project against local versions of some of the dependencies.
+This could be done either by using a [local maven repository](https://mozilla-mobile.github.io/android-components/contributing/testing-components-inside-app) (quite cumbersome), or via Gradle's [dependency substitutions](https://docs.gradle.org/current/userguide/customizing_dependency_resolution_behavior.html) (not at all cumbersome!).
+
+Currently, the substitution flow is streamlined for some of the core dependencies via configuration flags in `local.properties`. You can build against a local checkout of the following dependencies by specifying their local paths:
+- [application-services](https://github.com/mozilla/application-services), specifying its path via `substitutions.application-services.dir=../application-services`
+  - This assumes that you have an `application-services` project at the same level in the directory hierarchy as the `reference-browser`.
+
+Do not forget to run a Gradle sync in Android Studio after changing `local.properties`. If you specified any substitutions, they will be reflected in the modules list, and you'll be able to modify them from a single Android Studio window.
 
 # License
 
