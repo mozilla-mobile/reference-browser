@@ -100,13 +100,13 @@ tasks:
                 - queue:create-task:highest:scriptworker-prov-v1/mobile-pushapk-v1
                 - project:mobile:reference-browser:releng:signing:cert:release-signing
                 - project:mobile:reference-browser:releng:googleplay:product:reference-browser
-                - queue:route:index.project.mobile.reference-browser.nightly.latest
+                - queue:route:index.project.mobile.reference-browser.nightly.*
               else:
                 - queue:create-task:highest:scriptworker-prov-v1/mobile-signing-dep-v1
                 - queue:create-task:highest:scriptworker-prov-v1/mobile-pushapk-dep-v1
                 - project:mobile:reference-browser:releng:signing:cert:dep-signing
                 - project:mobile:reference-browser:releng:googleplay:product:reference-browser:dep
-                - queue:route:index.project.mobile.reference-browser.staging-nightly.latest
+                - queue:route:index.project.mobile.reference-browser.staging-nightly.*
         routes:
           - statuses  # Automatically added by taskcluster-github. It must be explicit because of Chain of Trust
         payload:
@@ -136,6 +136,7 @@ tasks:
                 --output app/build/outputs/apk \
                 --apk geckoNightlyX86/release/app-geckoNightly-x86-release-unsigned.apk \
                 --apk geckoNightlyArm/release/app-geckoNightly-arm-release-unsigned.apk \
+                --date ${now} \
                 ${command_staging_flag}
           artifacts:
             public/task-graph.json:
