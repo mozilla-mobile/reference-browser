@@ -34,4 +34,13 @@
 
     </PreferenceCategory>
 
+    <PreferenceCategory
+        android:title="@string/mozilla_category">
+
+        <androidx.preference.Preference
+            android:key="@string/pref_key_about_page"
+            android:title="@string/preferences_about_page" />
+
+    </PreferenceCategory>
+
 </androidx.preference.PreferenceScreen>

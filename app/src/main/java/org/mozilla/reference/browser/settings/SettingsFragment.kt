@@ -12,12 +12,14 @@ import androidx.preference.Preference.OnPreferenceClickListener
 import androidx.preference.PreferenceFragmentCompat
 import android.widget.Toast
 import android.widget.Toast.LENGTH_SHORT
+import mozilla.components.browser.session.Session
 import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.R.string.pref_key_firefox_account
 import org.mozilla.reference.browser.ext.getPreferenceKey
 import org.mozilla.reference.browser.R.string.pref_key_sign_in
 import org.mozilla.reference.browser.R.string.pref_key_make_default_browser
 import org.mozilla.reference.browser.R.string.pref_key_remote_debugging
+import org.mozilla.reference.browser.R.string.pref_key_about_page
 import org.mozilla.reference.browser.ext.requireComponents
 
 class SettingsFragment : PreferenceFragmentCompat() {
@@ -49,10 +51,12 @@ class SettingsFragment : PreferenceFragmentCompat() {
         val firefoxAccountKey = context?.getPreferenceKey(pref_key_firefox_account)
         val makeDefaultBrowserKey = context?.getPreferenceKey(pref_key_make_default_browser)
         val remoteDebuggingKey = context?.getPreferenceKey(pref_key_remote_debugging)
+        val aboutPageKey = context?.getPreferenceKey(pref_key_about_page)
         val preferenceSignIn = findPreference(signInKey)
         val preferenceFirefoxAccount = findPreference(firefoxAccountKey)
         val preferenceMakeDefaultBrowser = findPreference(makeDefaultBrowserKey)
         val preferenceRemoteDebugging = findPreference(remoteDebuggingKey)
+        val preferenceAboutPage = findPreference(aboutPageKey)
         val fxaIntegration = requireComponents.services.accounts
 
         preferenceSignIn.onPreferenceClickListener = getClickListenerForSignIn()
@@ -65,11 +69,13 @@ class SettingsFragment : PreferenceFragmentCompat() {
         preferenceMakeDefaultBrowser.onPreferenceClickListener = getClickListenerForMakeDefaultBrowser()
 
         preferenceRemoteDebugging.onPreferenceChangeListener = getChangeListenerForRemoteDebugging()
+
+        preferenceAboutPage.onPreferenceClickListener = getAboutPageListener()
     }
 
     private fun getClickListenerForMakeDefaultBrowser(): OnPreferenceClickListener {
         return if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
-            OnPreferenceClickListener { _ ->
+            OnPreferenceClickListener {
                 val intent = Intent(
                     Settings.ACTION_MANAGE_DEFAULT_APPS_SETTINGS
                 )
@@ -82,7 +88,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
     }
 
     private fun getClickListenerForSignIn(): OnPreferenceClickListener {
-        return OnPreferenceClickListener { _ ->
+        return OnPreferenceClickListener {
             activity?.finish()
             requireComponents.services.accounts.authenticate()
             true
@@ -90,7 +96,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
     }
 
     private fun getClickListenerForFirefoxAccount(): OnPreferenceClickListener {
-        return OnPreferenceClickListener { _ ->
+        return OnPreferenceClickListener {
             fragmentManager?.beginTransaction()
                     ?.replace(android.R.id.content, AccountSettingsFragment())
                     ?.addToBackStack(null)
@@ -105,6 +111,14 @@ class SettingsFragment : PreferenceFragmentCompat() {
     private fun getChangeListenerForRemoteDebugging(): OnPreferenceChangeListener {
         return OnPreferenceChangeListener { _, newValue ->
             requireComponents.core.engine.settings.remoteDebuggingEnabled = newValue as Boolean
+            true
+        }
+    }
+
+    private fun getAboutPageListener(): OnPreferenceClickListener {
+        return OnPreferenceClickListener {
+            activity?.finish()
+            requireComponents.core.sessionManager.add(Session("about:version"), true)
             true
         }
     }

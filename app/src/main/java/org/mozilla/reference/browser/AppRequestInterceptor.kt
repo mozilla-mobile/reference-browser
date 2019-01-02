@@ -10,6 +10,7 @@ import mozilla.components.browser.errorpages.ErrorType
 import mozilla.components.concept.engine.EngineSession
 import mozilla.components.concept.engine.request.RequestInterceptor
 import org.mozilla.reference.browser.ext.components
+import org.mozilla.reference.browser.settings.AboutPage
 import org.mozilla.reference.browser.tabs.PrivatePage
 
 class AppRequestInterceptor(private val context: Context) : RequestInterceptor {
@@ -17,6 +18,11 @@ class AppRequestInterceptor(private val context: Context) : RequestInterceptor {
         return when (uri) {
             "about:privatebrowsing" -> {
                 val page = PrivatePage.createPrivateBrowsingPage(context, uri)
+                return RequestInterceptor.InterceptionResponse.Content(page, encoding = "base64")
+            }
+
+            "about:version" -> {
+                val page = AboutPage.createAboutPage(context)
                 return RequestInterceptor.InterceptionResponse.Content(page, encoding = "base64")
             }
 

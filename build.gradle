@@ -1,19 +1,6 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
 buildscript {
-    // Synchronized versions numbers of GeckoView (Beta) artifacts.
-    ext.geckoBeta = [
-        // mozilla-beta: FENNEC_63_0b3
-        revision: '0269319281578bff4e01d77a21350bf91ba08620',
-        version: '63.0.20180904170936'
-    ]
-
-    ext.geckoRelease = [
-        // mozilla-release: FENNEC_62_0_RELEASE
-        revision: '9cbae12a3fff404ed2c12070ad475424d0ae869f',
-        version: '62.0.20180830143136'
-    ]
-
     repositories {
         google()
         jcenter()
