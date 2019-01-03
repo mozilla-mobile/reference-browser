@@ -83,4 +83,13 @@
 <p>Private Browsing <strong>doesn\'t make you anonymous</strong> on the Internet. Your employer or Internet service provider can still know what page you visit.</p>
 <p class="about-info">Learn more about <a id="learnMore">Private Browsing</a>.</p>
      ]]></string>
+
+    <!-- Title of the notification shown on app startup informing about the data policy -->
+    <string name="datareporting_notification_title">Reference Browser</string>
+
+    <!-- Summary of the notification shown on app startup informing about the data policy -->
+    <string name="datareporting_notification_summary">To improve your experience, Reference Browser automatically sends some information to Mozilla.</string>
+    
+    <string name="default_notification_channel">Browser</string>
+
 </resources>
