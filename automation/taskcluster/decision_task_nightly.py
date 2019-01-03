@@ -28,7 +28,7 @@ BUILDER = lib.tasks.TaskBuilder(
 )
 
 
-def generate_build_task(apks, date, is_staging):
+def generate_build_task(apks):
     artifacts = {'public/{}'.format(os.path.basename(apk)): {
         "type": 'file',
         "path": "/build/reference-browser/{}".format(apk),
@@ -36,7 +36,6 @@ def generate_build_task(apks, date, is_staging):
     } for apk in apks}
 
     checkout = 'git clone {} && cd reference-browser && git checkout {}'.format(GITHUB_HTTP_REPOSITORY, HEAD_REV)
-    index_release = 'staging-nightly' if is_staging else 'nightly'
 
     return taskcluster.slugId(), BUILDER.build_task(
         name="(Reference Browser) Build task",
@@ -45,12 +44,6 @@ def generate_build_task(apks, date, is_staging):
                  ' && python automation/taskcluster/helper/get-secret.py'
                  ' -s project/mobile/reference-browser/sentry -k dsn -f .sentry_token'
                  ' && ./gradlew --no-daemon -PcrashReportEnabled=true -Ptelemetry=true clean test assembleRelease'),
-        routes=[
-            "index.project.mobile.reference-browser.{}.date.{}.{}.{}.latest.unsigned".format(index_release, date.year, date.month, date.day),
-            "index.project.mobile.reference-browser.{}.date.{}.{}.{}.revision.{}.unsigned".format(index_release, date.year, date.month, date.day, HEAD_REV),
-            "index.project.mobile.reference-browser.{}.revision.{}.unsigned".format(index_release, HEAD_REV),
-            "index.project.mobile.reference-browser.{}.latest.unsigned".format(index_release),
-        ],
         features={
             "chainOfTrust": True,
             "taskClusterProxy": True
@@ -65,12 +58,11 @@ def generate_build_task(apks, date, is_staging):
 def generate_signing_task(build_task_id, apks, date, is_staging):
     artifacts = ["public/{}".format(os.path.basename(apk)) for apk in apks]
 
-    index_release = 'staging-nightly' if is_staging else 'nightly'
+    index_release = 'staging-signed-nightly' if is_staging else 'signed-nightly'
     routes = [
-        "index.project.mobile.reference-browser.{}.date.{}.{}.{}.latest.signed".format(index_release, date.year, date.month, date.day),
-        "index.project.mobile.reference-browser.{}.date.{}.{}.{}.revision.{}.signed".format(index_release, date.year, date.month, date.day, HEAD_REV),
-        "index.project.mobile.reference-browser.{}.revision.{}.signed".format(index_release, HEAD_REV),
-        "index.project.mobile.reference-browser.{}.latest.signed".format(index_release),
+        "index.project.mobile.reference-browser.{}.nightly.{}.{}.{}.latest".format(index_release, date.year, date.month, date.day),
+        "index.project.mobile.reference-browser.{}.nightly.{}.{}.{}.revision.{}".format(index_release, date.year, date.month, date.day, HEAD_REV),
+        "index.project.mobile.reference-browser.{}.nightly.latest".format(index_release),
     ]
     scopes = [
         "project:mobile:reference-browser:releng:signing:format:autograph_apk_reference_browser",
@@ -121,7 +113,7 @@ def nightly(apks, commit, date_string, is_staging):
 
     task_graph = {}
 
-    build_task_id, build_task = generate_build_task(apks, date, is_staging)
+    build_task_id, build_task = generate_build_task(apks)
     lib.tasks.schedule_task(queue, build_task_id, build_task)
 
     task_graph[build_task_id] = {}
