@@ -14,8 +14,7 @@ class TaskBuilder(object):
         self.source = source
         self.scheduler_id = scheduler_id
 
-    def build_task(self, name, description, command,
-                   routes=[], artifacts={}, scopes=[], features={}):
+    def build_task(self, name, description, command, artifacts={}, scopes=[], features={}):
         created = datetime.datetime.now()
         expires = taskcluster.fromNow('1 year')
         deadline = taskcluster.fromNow('1 day')
@@ -36,7 +35,7 @@ class TaskBuilder(object):
             "priority": "lowest",
             "deadline": taskcluster.stringDate(deadline),
             "dependencies": [self.task_id],
-            "routes": routes,
+            "routes": [],
             "scopes": scopes,
             "requires": "all-completed",
             "payload": {
