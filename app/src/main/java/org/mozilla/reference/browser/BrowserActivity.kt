@@ -24,6 +24,7 @@ import org.mozilla.reference.browser.browser.BrowserFragment
 import org.mozilla.reference.browser.browser.CrashIntegration
 import org.mozilla.reference.browser.ext.components
 import org.mozilla.reference.browser.ext.isCrashReportActive
+import org.mozilla.reference.browser.telemetry.DataReportingNotification
 
 open class BrowserActivity : AppCompatActivity(), ComponentCallbacks2 {
 
@@ -47,6 +48,8 @@ open class BrowserActivity : AppCompatActivity(), ComponentCallbacks2 {
             }
             lifecycle.addObserver(crashIntegration)
         }
+
+        DataReportingNotification.checkAndNotifyPolicy(this)
     }
 
     override fun onBackPressed() {
