@@ -16,6 +16,7 @@ import mozilla.components.support.base.log.Log.Priority.WARN
 import mozilla.components.support.base.log.Log
 import org.mozilla.reference.browser.BrowserApplication
 import org.mozilla.reference.browser.Components
+import org.mozilla.reference.browser.R
 
 /**
  * Get the BrowserApplication object from a context.
@@ -47,7 +48,12 @@ fun Context.share(text: String, subject: String = ""): Boolean {
             putExtra(EXTRA_TEXT, text)
             flags = FLAG_ACTIVITY_NEW_TASK
         }
-        startActivity(intent)
+
+        val shareIntent = Intent.createChooser(intent, getString(R.string.menu_share_with)).apply {
+            flags = FLAG_ACTIVITY_NEW_TASK
+        }
+
+        startActivity(shareIntent)
         true
     } catch (e: ActivityNotFoundException) {
         Log.log(WARN, message = "No activity to share to found", throwable = e, tag = "Reference-Browser")
