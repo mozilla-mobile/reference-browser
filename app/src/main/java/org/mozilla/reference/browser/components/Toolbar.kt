@@ -13,6 +13,7 @@ import mozilla.components.browser.menu.item.SimpleBrowserMenuCheckbox
 import mozilla.components.browser.menu.item.SimpleBrowserMenuItem
 import mozilla.components.browser.session.SessionManager
 import mozilla.components.feature.session.SessionUseCases
+import mozilla.components.feature.tabs.TabsUseCases
 import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.ext.share
 import org.mozilla.reference.browser.settings.SettingsActivity
@@ -23,6 +24,7 @@ import org.mozilla.reference.browser.settings.SettingsActivity
 class Toolbar(
     private val context: Context,
     private val sessionUseCases: SessionUseCases,
+    private val tabsUseCases: TabsUseCases,
     private val sessionManager: SessionManager
 ) {
 
@@ -70,13 +72,20 @@ class Toolbar(
                 val url = sessionManager.selectedSession?.url ?: ""
                 context.share(url)
             },
-            SimpleBrowserMenuItem("Settings") {
-                openSettingsActivity()
-            },
+
             SimpleBrowserMenuCheckbox("Request desktop site", {
                 sessionManager.selectedSessionOrThrow.desktopMode
             }) { checked ->
                 sessionUseCases.requestDesktopSite.invoke(checked)
+            },
+
+            SimpleBrowserMenuItem("Report issue") {
+                tabsUseCases.addTab.invoke(
+                    "https://github.com/mozilla-mobile/reference-browser/issues/new")
+            },
+
+            SimpleBrowserMenuItem("Settings") {
+                openSettingsActivity()
             }
         )
     }
