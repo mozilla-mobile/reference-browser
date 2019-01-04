@@ -29,6 +29,8 @@ tasks:
         scopes:
           - queue:create-task:aws-provisioner-v1/github-worker
           - queue:scheduler-id:${scheduler_id}
+        routes:
+          - statuses  # Automatically added by taskcluster-github. It must be explicit because of Chain of Trust
         payload:
           maxRunTime: 7200
           image: mozillamobile/android-components:1.10
