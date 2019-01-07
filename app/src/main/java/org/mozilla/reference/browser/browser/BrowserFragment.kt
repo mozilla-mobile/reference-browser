@@ -93,7 +93,9 @@ class BrowserFragment : Fragment(), BackHandler {
             fragment = this,
             sessionManager = requireComponents.core.sessionManager,
             fragmentManager = requireFragmentManager()
-        ) { _, _, _ -> /* TODO handle this in the future when needed. */ }
+        ) { _, permissions, requestCode ->
+            requestPermissions(permissions, requestCode)
+        }
 
         fullScreenFeature = FullScreenFeature(
             requireComponents.core.sessionManager,
@@ -166,6 +168,7 @@ class BrowserFragment : Fragment(), BackHandler {
                 }
             }
         }
+        promptsFeature.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 
     companion object {
