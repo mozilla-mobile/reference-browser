@@ -15,7 +15,7 @@
         android:title="@string/firefox_account" />
 
     <androidx.preference.SwitchPreferenceCompat
-            android:defaultValue="false"
+            android:defaultValue="true"
             android:title="@string/use_telemetry"
             android:key="@string/pref_key_telemetry"
             android:summary="@string/preferences_use_telemetry_summary"/>
