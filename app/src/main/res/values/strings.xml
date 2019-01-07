@@ -110,4 +110,7 @@
 </p>
 <p>%1$s is produced by Mozilla. Our mission is to foster a healthy, open Internet.<br/>
     ]]></string>
+
+    <string name="menu_share_with">Share with…</string>
+
 </resources>
