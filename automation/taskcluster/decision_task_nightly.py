@@ -42,7 +42,7 @@ def generate_build_task(apks):
         command=('cd .. && ' + checkout +
                  ' && python automation/taskcluster/helper/get-secret.py'
                  ' -s project/mobile/reference-browser/sentry -k dsn -f .sentry_token'
-                 ' && ./gradlew --no-daemon -PcrashReportingEnabled clean test assembleRelease'),
+                 ' && ./gradlew --no-daemon -PcrashReportEnabled=true -Ptelemetry=true clean test assembleRelease'),
         features={
             "chainOfTrust": True,
             "taskClusterProxy": True
