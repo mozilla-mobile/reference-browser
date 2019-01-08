@@ -12,6 +12,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleObserver
 import kotlinx.android.synthetic.main.fragment_browser.*
 import mozilla.components.feature.awesomebar.AwesomeBarFeature
 import mozilla.components.feature.downloads.DownloadsFeature
@@ -27,6 +29,7 @@ import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.ext.requireComponents
 import org.mozilla.reference.browser.tabs.TabsTrayFragment
 
+@Suppress("TooManyFunctions")
 class BrowserFragment : Fragment(), BackHandler {
     private lateinit var sessionFeature: SessionFeature
     private lateinit var tabsToolbarFeature: TabsToolbarFeature
@@ -102,6 +105,11 @@ class BrowserFragment : Fragment(), BackHandler {
             requireComponents.useCases.sessionUseCases,
             sessionId, ::fullScreenChanged
         )
+
+        lifecycle.addObservers(
+            sessionFeature,
+            downloadsFeature,
+            promptsFeature)
     }
 
     private fun showTabs() {
@@ -126,19 +134,13 @@ class BrowserFragment : Fragment(), BackHandler {
     override fun onStart() {
         super.onStart()
 
-        sessionFeature.start()
-        downloadsFeature.start()
-        promptsFeature.start()
-        fullScreenFeature.start()
+        fullScreenFeature.start() // TODO Remove this with AC 0.38.0 when the feature is lifecycle aware.
     }
 
     override fun onStop() {
         super.onStop()
 
-        sessionFeature.stop()
-        downloadsFeature.stop()
-        promptsFeature.stop()
-        fullScreenFeature.stop()
+        fullScreenFeature.stop() // TODO Remove this with AC 0.38.0 when the feature is lifecycle aware.
     }
 
     @Suppress("ReturnCount")
@@ -187,4 +189,6 @@ class BrowserFragment : Fragment(), BackHandler {
     }
 
     private fun isStoragePermissionAvailable() = requireContext().isPermissionGranted(WRITE_EXTERNAL_STORAGE)
+
+    private fun Lifecycle.addObservers(vararg observers: LifecycleObserver) = observers.forEach { addObserver(it) }
 }

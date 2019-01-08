@@ -9,7 +9,7 @@ import android.content.Intent
 import mozilla.components.browser.domains.autocomplete.ShippedDomainsProvider
 import mozilla.components.browser.menu.BrowserMenuBuilder
 import mozilla.components.browser.menu.item.BrowserMenuItemToolbar
-import mozilla.components.browser.menu.item.SimpleBrowserMenuCheckbox
+import mozilla.components.browser.menu.item.BrowserMenuSwitch
 import mozilla.components.browser.menu.item.SimpleBrowserMenuItem
 import mozilla.components.browser.session.SessionManager
 import mozilla.components.feature.session.SessionUseCases
@@ -73,7 +73,7 @@ class Toolbar(
                 context.share(url)
             },
 
-            SimpleBrowserMenuCheckbox("Request desktop site", {
+            BrowserMenuSwitch("Request desktop site", {
                 sessionManager.selectedSessionOrThrow.desktopMode
             }) { checked ->
                 sessionUseCases.requestDesktopSite.invoke(checked)
