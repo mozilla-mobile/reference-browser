@@ -52,15 +52,23 @@ android {
         geckoNightly { dimension "engine" }
 
         // Processor architectures
-        arm       { dimension "abi" }
-        x86       { dimension "abi" }
-    }
-
-    splits {
-        abi {
-            enable true
-            reset()
-            include 'x86', 'armeabi-v7a'
+        arm {
+            dimension "abi"
+            ndk {
+                abiFilter "armeabi-v7a"
+            }
+        }
+        x86 {
+            dimension "abi"
+            ndk {
+                abiFilter "x86"
+            }
+        }
+        aarch64 {
+            dimension "abi"
+            ndk {
+                abiFilter "arm64-v8a"
+            }
         }
     }
 
@@ -138,6 +146,7 @@ if (project.hasProperty("telemetry") && project.property("telemetry") == "true")
 configurations {
     geckoNightlyArmImplementation {}
     geckoNightlyX86Implementation {}
+    geckoNightlyAarch64Implementation {}
 }
 
 dependencies {
@@ -182,6 +191,7 @@ dependencies {
     geckoNightlyImplementation Deps.mozilla_browser_engine_gecko_nightly
     geckoNightlyArmImplementation Gecko.geckoview_nightly_arm
     geckoNightlyX86Implementation Gecko.geckoview_nightly_x86
+    geckoNightlyAarch64Implementation Gecko.geckoview_nightly_aarch64
 
     implementation Deps.kotlin_stdlib
     implementation Deps.kotlin_coroutines
