@@ -16,7 +16,7 @@ private object Versions {
     const val android_gradle_plugin = "3.2.1"
     const val appservices_gradle_plugin = "0.2.0"
 
-    const val mozilla_android_components = "0.37.0"
+    const val mozilla_android_components = "0.38.0-SNAPSHOT"
 
     const val thirdparty_sentry = "1.7.10"
 
@@ -68,6 +68,7 @@ object Deps {
     const val mozilla_ui_colors = "org.mozilla.components:ui-colors:${Versions.mozilla_android_components}"
 
     const val mozilla_service_firefox_accounts = "org.mozilla.components:service-firefox-accounts:${Versions.mozilla_android_components}"
+    const val mozilla_service_glean = "org.mozilla.components:service-glean:${Versions.mozilla_android_components}"
 
     const val mozilla_support_utils = "org.mozilla.components:support-utils:${Versions.mozilla_android_components}"
     const val mozilla_support_ktx= "org.mozilla.components:support-ktx:${Versions.mozilla_android_components}"

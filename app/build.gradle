@@ -2,6 +2,10 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
+plugins {
+    id "com.jetbrains.python.envs" version "0.0.26"
+}
+
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
@@ -103,6 +107,16 @@ android.applicationVariants.all { variant ->
     }
 
 // -------------------------------------------------------------------------------------------------
+// Activating telemetry  with command line paramter.
+// -------------------------------------------------------------------------------------------------
+
+if (project.hasProperty("telemetry") && project.property("telemetry") == "true") {
+    buildConfigField 'boolean', 'TELEMETRY_ENABLED', 'true'
+} else {
+    buildConfigField 'boolean', 'TELEMETRY_ENABLED', 'false'
+}
+
+// -------------------------------------------------------------------------------------------------
 // Generating version codes for Google Play
 // -------------------------------------------------------------------------------------------------
     def buildType = variant.buildType.name
@@ -167,6 +181,7 @@ dependencies {
     implementation Deps.mozilla_ui_colors
 
     implementation Deps.mozilla_service_firefox_accounts
+    implementation Deps.mozilla_service_glean
 
     implementation Deps.mozilla_support_utils
     implementation Deps.mozilla_support_ktx
@@ -225,3 +240,7 @@ task printBuildVariants {
         println "variants: " + groovy.json.JsonOutput.toJson(buildVariants)
     }
 }
+
+// Normally this should use the same version as the dependency. But since we are using snapshots we can't reference a
+// git tag. So we are just using "master" and hoping for the best.
+apply from: 'https://github.com/mozilla-mobile/android-components/raw/master/components/service/glean/scripts/sdk_generator.gradle'
