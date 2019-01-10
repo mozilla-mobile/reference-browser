@@ -31,7 +31,7 @@ tasks:
           - queue:scheduler-id:${scheduler_id}
         payload:
           maxRunTime: 7200
-          image: mozillamobile/android-components:1.10
+          image: mozillamobile/android-components:1.15
           env:
             TASK_ID: ${decision_task_id}
             SCHEDULER_ID: ${scheduler_id}
@@ -111,7 +111,7 @@ tasks:
           - statuses  # Automatically added by taskcluster-github. It must be explicit because of Chain of Trust
         payload:
           maxRunTime: 600   # Decision should remain fast enough to schedule a handful of tasks
-          image: mozillamobile/android-components:1.10
+          image: mozillamobile/android-components:1.15
           features:
             taskclusterProxy: true
             chainOfTrust: true
