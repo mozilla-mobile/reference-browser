@@ -12,7 +12,9 @@ import androidx.preference.Preference.OnPreferenceClickListener
 import androidx.preference.PreferenceFragmentCompat
 import android.widget.Toast
 import android.widget.Toast.LENGTH_SHORT
+import androidx.preference.SwitchPreferenceCompat
 import mozilla.components.browser.session.Session
+import mozilla.components.service.glean.Glean
 import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.R.string.pref_key_firefox_account
 import org.mozilla.reference.browser.ext.getPreferenceKey
@@ -57,6 +59,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
         val preferenceMakeDefaultBrowser = findPreference(makeDefaultBrowserKey)
         val preferenceRemoteDebugging = findPreference(remoteDebuggingKey)
         val preferenceAboutPage = findPreference(aboutPageKey)
+
         val fxaIntegration = requireComponents.services.accounts
 
         preferenceSignIn.onPreferenceClickListener = getClickListenerForSignIn()
@@ -71,6 +74,8 @@ class SettingsFragment : PreferenceFragmentCompat() {
         preferenceRemoteDebugging.onPreferenceChangeListener = getChangeListenerForRemoteDebugging()
 
         preferenceAboutPage.onPreferenceClickListener = getAboutPageListener()
+
+        setupTelemetryPreference()
     }
 
     private fun getClickListenerForMakeDefaultBrowser(): OnPreferenceClickListener {
@@ -119,6 +124,15 @@ class SettingsFragment : PreferenceFragmentCompat() {
         return OnPreferenceClickListener {
             activity?.finish()
             requireComponents.core.sessionManager.add(Session("about:version"), true)
+            true
+        }
+    }
+
+    private fun setupTelemetryPreference() {
+        (findPreference(requireContext().getPreferenceKey(R.string.pref_key_telemetry)) as SwitchPreferenceCompat)
+            .onPreferenceChangeListener = OnPreferenceChangeListener { _, value ->
+            val enabled = value as Boolean
+            Glean.setMetricsEnabled(enabled)
             true
         }
     }
