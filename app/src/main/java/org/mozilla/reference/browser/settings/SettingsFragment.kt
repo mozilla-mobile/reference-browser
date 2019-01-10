@@ -48,6 +48,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
         }
     }
 
+    @Suppress("LongMethod") // Yep, this should be refactored.
     private fun setupPreferences() {
         val signInKey = context?.getPreferenceKey(pref_key_sign_in)
         val firefoxAccountKey = context?.getPreferenceKey(pref_key_firefox_account)
