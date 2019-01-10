@@ -6,9 +6,9 @@ package org.mozilla.reference.browser
 
 import org.junit.Rule
 import org.junit.Test
-// import org.mozilla.tv.firefox.ext.toUri
 import org.mozilla.reference.browser.helpers.BrowserActivityTestRule
 import org.mozilla.reference.browser.ui.robots.mainMenu
+import org.mozilla.reference.browser.ui.robots.navigationToolbar
 
 /**
  * A test for verifying three dot menu options:
@@ -23,6 +23,12 @@ class ThreeDotMenuTest {
     /* ktlint-disable no-blank-line-before-rbrace */ // This imposes unreadable grouping.
     @Test
     fun threeDotMenuTest() {
-        {}.sharePage
+
+        navigationToolbar {
+            openMainMenu()
+        }
+        mainMenu {
+            sharePage()
+        }
     }
 }

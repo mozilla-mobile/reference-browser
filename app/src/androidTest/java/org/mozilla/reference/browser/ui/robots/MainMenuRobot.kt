@@ -11,12 +11,19 @@ import org.mozilla.reference.browser.helpers.click
 
 
 class MainMenuRobot {
+
+    private val device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
+
     // open app layover
     fun sharePage() = shareButton().click()
     fun toggleRequestDesktopSite() = requestDesktopSiteToggle().click()
     // sends you to github
     fun reportIssue() = reportIssueButton().click()
     fun openSettings() = settingsButton().click()
+}
+
+fun mainMenu(interact: MainMenuRobot.() -> Unit) {
+    MainMenuRobot().interact()
 }
 
 private fun shareButton() = onView(ViewMatchers.withText("Share"))
