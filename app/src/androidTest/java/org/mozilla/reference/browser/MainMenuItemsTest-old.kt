@@ -25,7 +25,7 @@ import androidx.test.espresso.matcher.ViewMatchers.withText
 
 @LargeTest
 @RunWith(AndroidJUnit4::class)
-class SettingsMenuItemsTest {
+class `MainMenuItemsTest-old` {
 
     @get:Rule
     var mActivityTestRule = ActivityTestRule(BrowserActivity::class.java)
