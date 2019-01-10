@@ -134,8 +134,8 @@ tasks:
               && python automation/taskcluster/decision_task_nightly.py \
                 --commit \
                 --output app/build/outputs/apk \
-                --apk geckoNightlyX86/release/app-geckoNightly-x86-x86-release-unsigned.apk \
-                --apk geckoNightlyArm/release/app-geckoNightly-arm-armeabi-v7a-release-unsigned.apk \
+                --apk geckoNightlyX86/release/app-geckoNightly-x86-release-unsigned.apk.apk \
+                --apk geckoNightlyArm/release/app-geckoNightly-arm-release-unsigned.apk \
                 ${command_staging_flag}
           artifacts:
             public/task-graph.json:
