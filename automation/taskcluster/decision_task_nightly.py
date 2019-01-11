@@ -70,7 +70,7 @@ def generate_signing_task(build_task_id, apks, date, is_staging):
             'dep-signing' if is_staging else 'release-signing')
     ]
 
-    return taskcluster.slugId(), BUILDER.build_signing_task(
+    return taskcluster.slugId(), BUILDER.craft_signing_task(
         build_task_id,
         name="(Reference Browser) Signing task",
         description="Sign release builds of Reference Browser",
@@ -85,7 +85,7 @@ def generate_signing_task(build_task_id, apks, date, is_staging):
 def generate_push_task(signing_task_id, apks, commit, is_staging):
     artifacts = ["public/{}".format(os.path.basename(apk)) for apk in apks]
 
-    return taskcluster.slugId(), BUILDER.build_push_task(
+    return taskcluster.slugId(), BUILDER.craft_push_task(
         signing_task_id,
         name="(Reference Browser) Push task",
         description="Upload signed release builds of Reference Browser to Google Play",
