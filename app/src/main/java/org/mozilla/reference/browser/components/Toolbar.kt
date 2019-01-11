@@ -71,12 +71,16 @@ class Toolbar(
             SimpleBrowserMenuItem("Share") {
                 val url = sessionManager.selectedSession?.url ?: ""
                 context.share(url)
+            }.apply {
+                visible = { sessionManager.selectedSession != null }
             },
 
             BrowserMenuSwitch("Request desktop site", {
                 sessionManager.selectedSessionOrThrow.desktopMode
             }) { checked ->
                 sessionUseCases.requestDesktopSite.invoke(checked)
+            }.apply {
+                visible = { sessionManager.selectedSession != null }
             },
 
             SimpleBrowserMenuItem("Report issue") {
