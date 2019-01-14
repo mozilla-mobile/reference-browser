@@ -109,7 +109,8 @@ class BrowserFragment : Fragment(), BackHandler {
         lifecycle.addObservers(
             sessionFeature,
             downloadsFeature,
-            promptsFeature)
+            promptsFeature,
+            fullScreenFeature)
     }
 
     private fun showTabs() {
@@ -129,18 +130,6 @@ class BrowserFragment : Fragment(), BackHandler {
             activity?.exitImmersiveModeIfNeeded()
             toolbar.visibility = View.VISIBLE
         }
-    }
-
-    override fun onStart() {
-        super.onStart()
-
-        fullScreenFeature.start() // TODO Remove this with AC 0.38.0 when the feature is lifecycle aware.
-    }
-
-    override fun onStop() {
-        super.onStop()
-
-        fullScreenFeature.stop() // TODO Remove this with AC 0.38.0 when the feature is lifecycle aware.
     }
 
     @Suppress("ReturnCount")
