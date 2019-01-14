@@ -67,12 +67,12 @@ tasks:
       $let:
         decision_task_id: {$eval: as_slugid('decision_task')}
         expires_in: {$fromNow: '1 year'}
-        repository: ${event.repository.clone_url}
+        repository: ${event.repository.html_url}
         scheduler_id: focus-nightly-sched
         is_mozilla_mobile_repo:
-          $eval: event.repository.clone_url == 'https://github.com/mozilla-mobile/reference-browser'
+          $eval: event.repository.html_url == 'https://github.com/mozilla-mobile/reference-browser'
         command_staging_flag:
-          $if: event.repository.clone_url == 'https://github.com/mozilla-mobile/reference-browser'
+          $if: event.repository.html_url == 'https://github.com/mozilla-mobile/reference-browser'
           then: ''
           else: '--staging'
       in:
