@@ -5,6 +5,7 @@
 package org.mozilla.reference.browser.components
 
 import android.content.Context
+import android.content.SharedPreferences
 import android.preference.PreferenceManager
 import mozilla.components.browser.session.Session
 import mozilla.components.browser.session.SessionManager
@@ -12,12 +13,15 @@ import mozilla.components.browser.session.storage.SessionStorage
 import mozilla.components.browser.storage.sync.PlacesHistoryStorage
 import mozilla.components.concept.engine.DefaultSettings
 import mozilla.components.concept.engine.Engine
+import mozilla.components.concept.engine.EngineSession.TrackingProtectionPolicy
 import mozilla.components.feature.session.HistoryDelegate
 import org.mozilla.reference.browser.AppRequestInterceptor
 import org.mozilla.reference.browser.EngineProvider
 import org.mozilla.reference.browser.ext.getPreferenceKey
 import org.mozilla.reference.browser.R.string.pref_key_remote_debugging
 import org.mozilla.reference.browser.R.string.pref_key_testing_mode
+import org.mozilla.reference.browser.R.string.pref_key_tracking_protection_normal
+import org.mozilla.reference.browser.R.string.pref_key_tracking_protection_private
 import java.util.concurrent.TimeUnit
 
 /**
@@ -36,6 +40,7 @@ class Core(private val context: Context) {
             requestInterceptor = AppRequestInterceptor(context),
             remoteDebuggingEnabled = prefs.getBoolean(context.getPreferenceKey(pref_key_remote_debugging), false),
             testingModeEnabled = prefs.getBoolean(context.getPreferenceKey(pref_key_testing_mode), false),
+            trackingProtectionPolicy = createTrackingProtectionPolicy(prefs),
             historyTrackingDelegate = HistoryDelegate(historyStorage)
         )
         EngineProvider.getEngine(context, defaultSettings)
@@ -70,4 +75,29 @@ class Core(private val context: Context) {
      * private sessions).
      */
     val historyStorage by lazy { PlacesHistoryStorage(context) }
+
+    /**
+     * Constructs a [TrackingProtectionPolicy] based on current preferences.
+     *
+     * @param prefs the shared preferences to use when reading tracking
+     * protection settings.
+     * @param normalMode whether or not tracking protection should be enabled
+     * in normal browsing mode, defaults to the current preference value.
+     * @param privateMode whether or not tracking protection should be enabled
+     * in private browsing mode, default to the current preference value.
+     * @return the constructed tracking protection policy based on preferences.
+     */
+    fun createTrackingProtectionPolicy(
+        prefs: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(context),
+        normalMode: Boolean = prefs.getBoolean(context.getPreferenceKey(pref_key_tracking_protection_normal), true),
+        privateMode: Boolean = prefs.getBoolean(context.getPreferenceKey(pref_key_tracking_protection_private), true)
+    ): TrackingProtectionPolicy {
+
+        return when {
+            normalMode && privateMode -> TrackingProtectionPolicy.all()
+            normalMode && !privateMode -> TrackingProtectionPolicy.all().forRegularSessionsOnly()
+            !normalMode && privateMode -> TrackingProtectionPolicy.all().forPrivateSessionsOnly()
+            else -> TrackingProtectionPolicy.none()
+        }
+    }
 }
