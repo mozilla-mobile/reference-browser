@@ -14,11 +14,10 @@
         android:key="@string/pref_key_firefox_account"
         android:title="@string/firefox_account" />
 
-    <androidx.preference.SwitchPreferenceCompat
-            android:defaultValue="true"
-            android:title="@string/use_telemetry"
-            android:key="@string/pref_key_telemetry"
-            android:summary="@string/preferences_use_telemetry_summary"/>
+    <androidx.preference.Preference
+        android:key="@string/pref_key_privacy"
+        android:title="@string/privacy"
+        android:summary="@string/preferences_privacy_summary"/>
 
     <androidx.preference.Preference
             android:key="@string/pref_key_make_default_browser"

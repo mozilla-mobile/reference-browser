@@ -12,9 +12,7 @@ import androidx.preference.Preference.OnPreferenceClickListener
 import androidx.preference.PreferenceFragmentCompat
 import android.widget.Toast
 import android.widget.Toast.LENGTH_SHORT
-import androidx.preference.SwitchPreferenceCompat
 import mozilla.components.browser.session.Session
-import mozilla.components.service.glean.Glean
 import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.R.string.pref_key_firefox_account
 import org.mozilla.reference.browser.ext.getPreferenceKey
@@ -22,6 +20,7 @@ import org.mozilla.reference.browser.R.string.pref_key_sign_in
 import org.mozilla.reference.browser.R.string.pref_key_make_default_browser
 import org.mozilla.reference.browser.R.string.pref_key_remote_debugging
 import org.mozilla.reference.browser.R.string.pref_key_about_page
+import org.mozilla.reference.browser.R.string.pref_key_privacy
 import org.mozilla.reference.browser.ext.requireComponents
 
 class SettingsFragment : PreferenceFragmentCompat() {
@@ -55,28 +54,25 @@ class SettingsFragment : PreferenceFragmentCompat() {
         val makeDefaultBrowserKey = context?.getPreferenceKey(pref_key_make_default_browser)
         val remoteDebuggingKey = context?.getPreferenceKey(pref_key_remote_debugging)
         val aboutPageKey = context?.getPreferenceKey(pref_key_about_page)
+        val privacyKey = context?.getPreferenceKey(pref_key_privacy)
+
         val preferenceSignIn = findPreference(signInKey)
         val preferenceFirefoxAccount = findPreference(firefoxAccountKey)
         val preferenceMakeDefaultBrowser = findPreference(makeDefaultBrowserKey)
         val preferenceRemoteDebugging = findPreference(remoteDebuggingKey)
         val preferenceAboutPage = findPreference(aboutPageKey)
+        val preferencePrivacy = findPreference(privacyKey)
 
         val fxaIntegration = requireComponents.services.accounts
-
         preferenceSignIn.onPreferenceClickListener = getClickListenerForSignIn()
         preferenceSignIn.isVisible = fxaIntegration.profile == null
-
         preferenceFirefoxAccount.onPreferenceClickListener = getClickListenerForFirefoxAccount()
         preferenceFirefoxAccount.isVisible = fxaIntegration.profile != null
         preferenceFirefoxAccount.summary = fxaIntegration.profile?.email
-
         preferenceMakeDefaultBrowser.onPreferenceClickListener = getClickListenerForMakeDefaultBrowser()
-
         preferenceRemoteDebugging.onPreferenceChangeListener = getChangeListenerForRemoteDebugging()
-
         preferenceAboutPage.onPreferenceClickListener = getAboutPageListener()
-
-        setupTelemetryPreference()
+        preferencePrivacy.onPreferenceClickListener = getClickListenerForPrivacy()
     }
 
     private fun getClickListenerForMakeDefaultBrowser(): OnPreferenceClickListener {
@@ -114,6 +110,19 @@ class SettingsFragment : PreferenceFragmentCompat() {
         }
     }
 
+    private fun getClickListenerForPrivacy(): OnPreferenceClickListener {
+        return OnPreferenceClickListener {
+            fragmentManager?.beginTransaction()
+                    ?.replace(android.R.id.content, PrivacySettingsFragment())
+                    ?.addToBackStack(null)
+                    ?.commit()
+            getActionBarUpdater().apply {
+                updateTitle(R.string.privacy_settings)
+            }
+            true
+        }
+    }
+
     private fun getChangeListenerForRemoteDebugging(): OnPreferenceChangeListener {
         return OnPreferenceChangeListener { _, newValue ->
             requireComponents.core.engine.settings.remoteDebuggingEnabled = newValue as Boolean
@@ -125,15 +134,6 @@ class SettingsFragment : PreferenceFragmentCompat() {
         return OnPreferenceClickListener {
             activity?.finish()
             requireComponents.core.sessionManager.add(Session("about:version"), true)
-            true
-        }
-    }
-
-    private fun setupTelemetryPreference() {
-        (findPreference(requireContext().getPreferenceKey(R.string.pref_key_telemetry)) as SwitchPreferenceCompat)
-            .onPreferenceChangeListener = OnPreferenceChangeListener { _, value ->
-            val enabled = value as Boolean
-            Glean.setMetricsEnabled(enabled)
             true
         }
     }
