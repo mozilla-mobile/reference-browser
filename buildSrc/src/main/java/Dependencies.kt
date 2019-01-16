@@ -11,6 +11,7 @@ private object Versions {
     const val androidx_constraintlayout = "1.1.3"
     const val androidx_preference = "1.0.0"
 
+    const val workmanager = "1.0.0-beta01"
     const val google_material = "1.0.0"
 
     const val android_gradle_plugin = "3.2.1"
@@ -51,6 +52,7 @@ object Deps {
     const val mozilla_browser_errorpages = "org.mozilla.components:browser-errorpages:${Versions.mozilla_android_components}"
     const val mozilla_browser_storage_sync = "org.mozilla.components:browser-storage-sync:${Versions.mozilla_android_components}"
 
+    const val mozilla_feature_accounts = "org.mozilla.components:feature-accounts:${Versions.mozilla_android_components}"
     const val mozilla_feature_awesomebar = "org.mozilla.components:feature-awesomebar:${Versions.mozilla_android_components}"
     const val mozilla_feature_contextmenu = "org.mozilla.components:feature-contextmenu:${Versions.mozilla_android_components}"
     const val mozilla_feature_customtabs = "org.mozilla.components:feature-customtabs:${Versions.mozilla_android_components}"
@@ -80,6 +82,7 @@ object Deps {
     const val androidx_appcompat = "androidx.appcompat:appcompat:${Versions.androidx_appcompat}"
     const val androidx_constraintlayout = "androidx.constraintlayout:constraintlayout:${Versions.androidx_constraintlayout}"
     const val androidx_preference = "androidx.preference:preference-ktx:${Versions.androidx_preference}"
+    const val arch_workmanager = "android.arch.work:work-runtime-ktx:${Versions.workmanager}"
     const val google_material = "com.google.android.material:material:${Versions.google_material}"
 
     const val tools_androidgradle = "com.android.tools.build:gradle:${Versions.android_gradle_plugin}"

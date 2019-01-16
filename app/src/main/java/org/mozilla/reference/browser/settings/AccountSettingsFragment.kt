@@ -19,28 +19,39 @@ import org.mozilla.reference.browser.ext.getPreferenceKey
 import org.mozilla.reference.browser.ext.requireComponents
 import org.mozilla.reference.browser.R.string.pref_key_sign_out
 import org.mozilla.reference.browser.R.string.pref_key_sync_now
-import org.mozilla.reference.browser.browser.FirefoxAccountsIntegration
-import org.mozilla.reference.browser.ext.components
+import org.mozilla.reference.browser.services.getLastSynced
+import java.lang.Exception
 
 class AccountSettingsFragment : PreferenceFragmentCompat() {
     private val syncStatusObserver = object : SyncStatusObserver {
+        override fun onStarted() {
+            CoroutineScope(Dispatchers.Main).launch {
+                val pref = findPreference(context?.getPreferenceKey(pref_key_sync_now))
+
+                pref.title = getString(R.string.syncing)
+                pref.isEnabled = false
+            }
+        }
+
+        // Sync stopped successfully.
         override fun onIdle() {
             CoroutineScope(Dispatchers.Main).launch {
                 val pref = findPreference(context?.getPreferenceKey(pref_key_sync_now))
                 pref.title = getString(R.string.sync_now)
                 pref.isEnabled = true
-                updateLastSyncedTimePref(context!!, pref)
+                updateLastSyncedTimePref(context!!, pref, failed = false)
             }
         }
 
-        override fun onStarted() {
+        // Sync stopped after encountering a problem.
+        override fun onError(error: Exception?) {
             CoroutineScope(Dispatchers.Main).launch {
                 val pref = findPreference(context?.getPreferenceKey(pref_key_sync_now))
-                pref.title = getString(R.string.syncing)
-                pref.isEnabled = false
+                pref.title = getString(R.string.sync_now)
+                pref.isEnabled = true
+                updateLastSyncedTimePref(context!!, pref, failed = true)
             }
         }
-        override fun onError(error: Exception?) {}
     }
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
@@ -59,7 +70,7 @@ class AccountSettingsFragment : PreferenceFragmentCompat() {
 
         preferenceSyncNow.onPreferenceClickListener = getClickListenerForSyncNow()
 
-        if (requireComponents.services.sync.syncRunning()) {
+        if (requireComponents.backgroundServices.syncManager.syncRunning()) {
             preferenceSyncNow.title = getString(R.string.syncing)
             preferenceSyncNow.isEnabled = false
         } else {
@@ -68,17 +79,28 @@ class AccountSettingsFragment : PreferenceFragmentCompat() {
 
         // NB: ObserverRegistry will take care of cleaning up internal references to 'observer' and
         // 'owner' when appropriate.
-        requireComponents.services.sync.register(syncStatusObserver, owner = this, autoPause = true)
+        requireComponents.backgroundServices.syncManager.register(syncStatusObserver, owner = this, autoPause = true)
     }
 
-    fun updateLastSyncedTimePref(context: Context, pref: Preference) {
-        val lastSyncTime = context.components.services.accounts.getLastSynced()
+    fun updateLastSyncedTimePref(context: Context, pref: Preference, failed: Boolean = false) {
+        val lastSyncTime = getLastSynced(context)
 
-        if (lastSyncTime == FirefoxAccountsIntegration.FXA_NEVER_SYNCED_TS) {
-            pref.summary = getString(R.string.preferences_sync_never_synced_summary)
-        } else {
-            pref.summary = getString(
+        pref.summary = if (!failed && lastSyncTime == 0L) {
+            // Never tried to sync.
+            getString(R.string.preferences_sync_never_synced_summary)
+        } else if (failed && lastSyncTime == 0L) {
+            // Failed to sync, never succeeded before.
+            getString(R.string.preferences_sync_failed_never_synced_summary)
+        } else if (!failed && lastSyncTime != 0L) {
+            // Successfully synced.
+            getString(
                 R.string.preferences_sync_last_synced_summary,
+                DateUtils.getRelativeTimeSpanString(lastSyncTime)
+            )
+        } else {
+            // Failed to sync, succeeded before.
+            getString(
+                R.string.preferences_sync_failed_summary,
                 DateUtils.getRelativeTimeSpanString(lastSyncTime)
             )
         }
@@ -86,17 +108,17 @@ class AccountSettingsFragment : PreferenceFragmentCompat() {
 
     private fun getClickListenerForSignOut(): OnPreferenceClickListener {
         return OnPreferenceClickListener {
-            requireComponents.services.accounts.logout()
-            activity?.onBackPressed()
+            CoroutineScope(Dispatchers.Main).launch {
+                requireComponents.backgroundServices.accountManager.logout().await()
+                activity?.onBackPressed()
+            }
             true
         }
     }
 
     private fun getClickListenerForSyncNow(): OnPreferenceClickListener {
         return OnPreferenceClickListener {
-            CoroutineScope(Dispatchers.IO).launch {
-                requireComponents.services.accounts.syncNow()
-            }
+            requireComponents.backgroundServices.syncManager.syncNow()
             true
         }
     }

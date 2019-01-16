@@ -4,34 +4,23 @@
 
 package org.mozilla.reference.browser.components
 
-import android.content.Context
-import mozilla.components.browser.storage.sync.PlacesHistoryStorage
-import mozilla.components.browser.storage.sync.SyncAuthInfo
-import mozilla.components.feature.sync.FirefoxSyncFeature
+import mozilla.components.feature.accounts.FirefoxAccountsAuthFeature
 import mozilla.components.feature.tabs.TabsUseCases
-import org.mozilla.reference.browser.browser.FirefoxAccountsIntegration
+import mozilla.components.service.fxa.FxaAccountManager
 
 /**
- * Component group for all application services.
+ * Component group which encapsulates foreground-friendly services.
  */
 class Services(
-    private val context: Context,
-    private val tabsUseCases: TabsUseCases,
-    private val placesHistoryStorage: PlacesHistoryStorage
+    private val accountManager: FxaAccountManager,
+    private val tabsUseCases: TabsUseCases
 ) {
-    /**
-     * Feature component to integrate with Firefox Sync.
-     */
-    val sync by lazy {
-        FirefoxSyncFeature(mapOf("history" to placesHistoryStorage)) {
-            SyncAuthInfo(it.kid, it.fxaAccessToken, it.syncKey, it.tokenServerUrl)
-        }
-    }
-
-    /**
-     * Integration component for Firefox Accounts.
-     */
-    val accounts: FirefoxAccountsIntegration by lazy {
-        FirefoxAccountsIntegration(context, tabsUseCases, sync)
+    val accountsAuthFeature by lazy {
+        FirefoxAccountsAuthFeature(
+            accountManager,
+            tabsUseCases,
+            redirectUrl = BackgroundServices.REDIRECT_URL,
+            successPath = BackgroundServices.SUCCESS_PATH
+        )
     }
 }

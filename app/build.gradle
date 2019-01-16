@@ -165,6 +165,7 @@ dependencies {
     implementation Deps.mozilla_browser_session
     implementation Deps.mozilla_browser_storage_sync
 
+    implementation Deps.mozilla_feature_accounts
     implementation Deps.mozilla_feature_awesomebar
     implementation Deps.mozilla_feature_contextmenu
     implementation Deps.mozilla_feature_customtabs
@@ -199,6 +200,7 @@ dependencies {
     implementation Deps.androidx_appcompat
     implementation Deps.androidx_constraintlayout
     implementation Deps.androidx_preference
+    implementation Deps.arch_workmanager
     implementation Deps.google_material
 
     androidTestImplementation Deps.tools_uiautomator

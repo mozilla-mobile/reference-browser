@@ -51,6 +51,12 @@
     <!-- Preference for syncing immediately -->
     <string name="syncing">Syncing</string>
 
+    <!-- Preference summary indicating that sync failed along with last time it succeeded -->
+    <string name="preferences_sync_failed_summary">Sync failed. Last success: %s</string>
+
+    <!-- Preference summary showing never synced -->
+    <string name="preferences_sync_failed_never_synced_summary">Sync failed. Last synced: never</string>
+
     <!-- Preference summary showing last time synced -->
     <string name="preferences_sync_last_synced_summary">Last synced: %s</string>
 

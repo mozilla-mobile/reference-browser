@@ -63,12 +63,18 @@ class SettingsFragment : PreferenceFragmentCompat() {
         val preferenceAboutPage = findPreference(aboutPageKey)
         val preferencePrivacy = findPreference(privacyKey)
 
-        val fxaIntegration = requireComponents.services.accounts
-        preferenceSignIn.onPreferenceClickListener = getClickListenerForSignIn()
-        preferenceSignIn.isVisible = fxaIntegration.profile == null
-        preferenceFirefoxAccount.onPreferenceClickListener = getClickListenerForFirefoxAccount()
-        preferenceFirefoxAccount.isVisible = fxaIntegration.profile != null
-        preferenceFirefoxAccount.summary = fxaIntegration.profile?.email
+        val accountManager = requireComponents.backgroundServices.accountManager
+        if (accountManager.authenticatedAccount() != null) {
+            preferenceSignIn.isVisible = false
+            preferenceFirefoxAccount.summary = accountManager.accountProfile()?.email.orEmpty()
+            preferenceFirefoxAccount.onPreferenceClickListener = getClickListenerForFirefoxAccount()
+        } else {
+            preferenceSignIn.isVisible = true
+            preferenceFirefoxAccount.isVisible = false
+            preferenceFirefoxAccount.onPreferenceClickListener = null
+            preferenceSignIn.onPreferenceClickListener = getClickListenerForSignIn()
+        }
+
         preferenceMakeDefaultBrowser.onPreferenceClickListener = getClickListenerForMakeDefaultBrowser()
         preferenceRemoteDebugging.onPreferenceChangeListener = getChangeListenerForRemoteDebugging()
         preferenceAboutPage.onPreferenceClickListener = getAboutPageListener()
@@ -91,8 +97,8 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
     private fun getClickListenerForSignIn(): OnPreferenceClickListener {
         return OnPreferenceClickListener {
+            requireComponents.services.accountsAuthFeature.beginAuthentication()
             activity?.finish()
-            requireComponents.services.accounts.authenticate()
             true
         }
     }
