@@ -5,9 +5,10 @@
 package org.mozilla.reference.browser
 
 import android.content.Context
-import org.mozilla.reference.browser.components.Services
 import org.mozilla.reference.browser.components.Core
 import org.mozilla.reference.browser.components.Analytics
+import org.mozilla.reference.browser.components.BackgroundServices
+import org.mozilla.reference.browser.components.Services
 import org.mozilla.reference.browser.components.Search
 import org.mozilla.reference.browser.components.Utilities
 import org.mozilla.reference.browser.components.Toolbar
@@ -20,10 +21,14 @@ class Components(private val context: Context) {
     val core by lazy { Core(context) }
     val search by lazy { Search(context) }
     val useCases by lazy { UseCases(context, core.sessionManager, search.searchEngineManager) }
-    val services by lazy { Services(context, useCases.tabsUseCases, core.historyStorage) }
+
+    // Background services are initiated eagerly; they kick off periodic tasks and setup an accounts system.
+    val backgroundServices = BackgroundServices(context, core.historyStorage)
+
     val toolbar by lazy { Toolbar(context, useCases.sessionUseCases, useCases.tabsUseCases, core.sessionManager) }
     val analytics by lazy { Analytics(context) }
     val utils by lazy {
         Utilities(context, core.sessionManager, useCases.sessionUseCases, useCases.searchUseCases)
     }
+    val services by lazy { Services(backgroundServices.accountManager, useCases.tabsUseCases) }
 }

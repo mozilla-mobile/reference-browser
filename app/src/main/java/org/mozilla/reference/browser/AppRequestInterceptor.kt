@@ -13,6 +13,11 @@ import org.mozilla.reference.browser.ext.components
 import org.mozilla.reference.browser.settings.AboutPage
 import org.mozilla.reference.browser.tabs.PrivatePage
 
+/**
+ * NB, and FIXME: this class is consumed by a 'Core' component group, but itself relies on 'firefoxAccountsFeature'
+ * component; this creates a circular dependency, since firefoxAccountsFeature relies on tabsUseCases
+ * which in turn needs 'core' itself.
+ */
 class AppRequestInterceptor(private val context: Context) : RequestInterceptor {
     override fun onLoadRequest(session: EngineSession, uri: String): RequestInterceptor.InterceptionResponse? {
         return when (uri) {
@@ -26,7 +31,7 @@ class AppRequestInterceptor(private val context: Context) : RequestInterceptor {
                 return RequestInterceptor.InterceptionResponse.Content(page, encoding = "base64")
             }
 
-            else -> context.components.services.accounts.interceptor.onLoadRequest(session, uri)
+            else -> context.components.services.accountsAuthFeature.interceptor.onLoadRequest(session, uri)
         }
     }
 

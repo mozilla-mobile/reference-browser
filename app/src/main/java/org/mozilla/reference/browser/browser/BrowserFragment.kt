@@ -62,8 +62,6 @@ class BrowserFragment : Fragment(), BackHandler, UserInteractionHandler {
             requireComponents.toolbar.shippedDomainsProvider,
             sessionId))
 
-        lifecycle.addObserver(requireComponents.services.accounts)
-
         lifecycle.addObserver(ContextMenuIntegration(
             requireContext(),
             requireFragmentManager(),
