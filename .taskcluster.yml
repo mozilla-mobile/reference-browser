@@ -136,6 +136,7 @@ tasks:
                 --output app/build/outputs/apk \
                 --apk geckoNightlyX86/release/app-geckoNightly-x86-release-unsigned.apk \
                 --apk geckoNightlyArm/release/app-geckoNightly-arm-release-unsigned.apk \
+                --apk geckoNightlyAarch64/release/app-geckoNightly-aarch64-release-unsigned.apk \
                 --date ${now} \
                 ${command_staging_flag}
           artifacts:
