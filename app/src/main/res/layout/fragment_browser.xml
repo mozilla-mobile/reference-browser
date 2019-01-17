@@ -11,23 +11,9 @@
     android:layout_height="match_parent"
     tools:context=".BrowserActivity">
 
-    <com.google.android.material.appbar.AppBarLayout
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent">
-
-        <mozilla.components.browser.toolbar.BrowserToolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="56dp"
-            android:background="@color/primary"
-            app:layout_scrollFlags="scroll|enterAlways|snap|exitUntilCollapsed" />
-
-    </com.google.android.material.appbar.AppBarLayout>
-
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        android:layout_height="match_parent">
 
         <mozilla.components.concept.engine.EngineView
             android:id="@+id/engineView"
@@ -44,7 +30,15 @@
             mozac:awesomeBarDescriptionTextColor="#dddddd"
             mozac:awesomeBarChipTextColor="#ffffff"
             mozac:awesomeBarChipBackgroundColor="#444444" />
-
     </FrameLayout>
+
+    <mozilla.components.browser.toolbar.BrowserToolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:layout_gravity="bottom"
+        android:background="@color/primary"
+        app:layout_behavior="mozilla.components.browser.toolbar.behavior.BrowserToolbarBottomBehavior"
+        app:layout_scrollFlags="scroll|enterAlways|snap|exitUntilCollapsed" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
