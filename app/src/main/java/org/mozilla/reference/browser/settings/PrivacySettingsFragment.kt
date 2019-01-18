@@ -7,6 +7,7 @@ package org.mozilla.reference.browser.settings
 import android.os.Bundle
 import androidx.preference.Preference.OnPreferenceChangeListener
 import androidx.preference.PreferenceFragmentCompat
+import mozilla.components.concept.engine.EngineSession.TrackingProtectionPolicy
 import mozilla.components.service.glean.Glean
 import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.ext.getPreferenceKey
@@ -27,14 +28,10 @@ class PrivacySettingsFragment : PreferenceFragmentCompat() {
 
         prefTelemetry.onPreferenceChangeListener = getChangeListenerForTelemetry()
         prefTrackingProtectionNormal.onPreferenceChangeListener = getChangeListenerForTrackingProtection { enabled ->
-            with(requireComponents.core) {
-                engine.settings.trackingProtectionPolicy = createTrackingProtectionPolicy(normalMode = enabled)
-            }
+            requireComponents.core.createTrackingProtectionPolicy(normalMode = enabled)
         }
         prefTrackingProtectionPrivate.onPreferenceChangeListener = getChangeListenerForTrackingProtection { enabled ->
-            with(requireComponents.core) {
-                engine.settings.trackingProtectionPolicy = createTrackingProtectionPolicy(privateMode = enabled)
-            }
+            requireComponents.core.createTrackingProtectionPolicy(privateMode = enabled)
         }
     }
 
@@ -46,9 +43,18 @@ class PrivacySettingsFragment : PreferenceFragmentCompat() {
         }
     }
 
-    private fun getChangeListenerForTrackingProtection(callback: (Boolean) -> Unit): OnPreferenceChangeListener {
+    private fun getChangeListenerForTrackingProtection(
+        createTrackingProtectionPolicy: (Boolean) -> TrackingProtectionPolicy
+    ): OnPreferenceChangeListener {
         return OnPreferenceChangeListener { _, value ->
-            callback(value as Boolean)
+            val policy = createTrackingProtectionPolicy(value as Boolean)
+            with(requireComponents.core) {
+                engine.settings.trackingProtectionPolicy = policy
+
+                with(sessionManager) {
+                    sessions.forEach { getEngineSession(it)?.enableTrackingProtection(policy) }
+                }
+            }
             true
         }
     }
