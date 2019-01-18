@@ -27,6 +27,12 @@
     <!-- Preference enabling remote debugging -->
     <string name="preferences_remote_debugging">Remote debugging via USB</string>
 
+    <!-- Preference for enabling tracking protection in normal mode -->
+    <string name="preferences_tracking_protection_normal">Enable in Normal Browsing Mode</string>
+
+    <!-- Preference for enabling tracking protection in private mode -->
+    <string name="preferences_tracking_protection_private">Enable in Private Browsing Mode</string>
+
     <!-- Preference about page -->
     <string name="preferences_about_page">About Reference Browser</string>
 
@@ -51,6 +57,12 @@
     <!-- Preference summary showing never synced -->
     <string name="preferences_sync_never_synced_summary">Last synced: never</string>
 
+    <!-- Preference for privacy -->
+    <string name="privacy">Privacy</string>
+
+    <!-- Preference summary for privacy -->
+    <string name="preferences_privacy_summary">Tracking, cookies, data choices</string>
+
     <!-- Preference category for sync settings -->
     <string name="sync_category">Choose what to sync</string>
 
@@ -63,11 +75,20 @@
     <!-- Preference category for Mozilla about/legal etc. -->
     <string name="mozilla_category">Mozilla</string>
 
+    <!-- Preference category for tracking protection -->
+    <string name="tracker_category">Tracking Protection</string>
+
+    <!-- Preference category for data choices e.g. usage data -->
+    <string name="data_choices_category">Data Choices</string>
+
     <!-- Menu option on the toolbar that takes you to settings page-->
     <string name="settings">Settings</string>
 
     <!-- Menu option on the toolbar that takes you to account settings page-->
     <string name="account_settings">Account Settings</string>
+
+    <!-- Menu option on the toolbar that takes you to privacy settings page-->
+    <string name="privacy_settings">Privacy Settings</string>
 
     <!-- Snackbar message when a non fatal crash happen-->
     <string name="crash_report_non_fatal_message">Sorry. We crashed</string>

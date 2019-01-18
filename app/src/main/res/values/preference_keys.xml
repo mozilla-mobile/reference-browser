@@ -13,4 +13,7 @@
     <string name="pref_key_remote_debugging" translatable="false">pref_key_remote_debugging</string>
     <string name="pref_key_testing_mode" translatable="false">pref_key_testing_mode</string>
     <string name="pref_key_about_page" translatable="false">pref_key_about_page</string>
+    <string name="pref_key_privacy" translatable="false">pref_key_privacy</string>
+    <string name="pref_key_tracking_protection_normal" translatable="false">pref_key_tracking_protection_normal</string>
+    <string name="pref_key_tracking_protection_private" translatable="false">pref_key_tracking_protection_private</string>
 </resources>

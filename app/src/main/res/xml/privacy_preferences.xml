@@ -1,0 +1,36 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<androidx.preference.PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <PreferenceCategory
+        android:title="@string/tracker_category">
+
+        <androidx.preference.SwitchPreferenceCompat
+            android:defaultValue="true"
+            android:title="@string/preferences_tracking_protection_normal"
+            android:key="@string/pref_key_tracking_protection_normal"/>
+
+        <androidx.preference.SwitchPreferenceCompat
+            android:defaultValue="true"
+            android:title="@string/preferences_tracking_protection_private"
+            android:key="@string/pref_key_tracking_protection_private"/>
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="@string/data_choices_category">
+
+        <androidx.preference.SwitchPreferenceCompat
+            android:defaultValue="true"
+            android:title="@string/use_telemetry"
+            android:key="@string/pref_key_telemetry"
+            android:summary="@string/preferences_use_telemetry_summary"/>
+
+    </PreferenceCategory>
+
+
+</androidx.preference.PreferenceScreen>
