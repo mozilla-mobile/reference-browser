@@ -6,12 +6,10 @@ package org.mozilla.reference.browser
 
 import android.app.Application
 import android.content.Context
-import mozilla.components.service.glean.Glean
 import mozilla.components.support.base.log.Log
 import mozilla.components.support.base.log.logger.Logger
 import mozilla.components.support.base.log.sink.AndroidLogSink
 import org.mozilla.reference.browser.ext.isCrashReportActive
-import org.mozilla.reference.browser.settings.Settings
 
 class BrowserApplication : Application() {
     val components by lazy { Components(this) }
@@ -36,8 +34,12 @@ private fun setupLogging() {
 }
 
 private fun setupGlean(context: Context) {
-    Glean.initialize(context)
-    Glean.setMetricsEnabled(BuildConfig.TELEMETRY_ENABLED && Settings.isTelemetryEnabled(context))
+    // Disabled due to startup crash:
+    // https://github.com/mozilla-mobile/reference-browser/issues/442
+    // https://bugzilla.mozilla.org/show_bug.cgi?id=1521276
+
+    // Glean.initialize(context)
+    // Glean.setMetricsEnabled(BuildConfig.TELEMETRY_ENABLED && Settings.isTelemetryEnabled(context))
 }
 
 private fun setupCrashReporting(application: BrowserApplication) {
