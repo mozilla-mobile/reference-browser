@@ -10,6 +10,7 @@ import mozilla.components.service.glean.Glean
 import mozilla.components.support.base.log.Log
 import mozilla.components.support.base.log.logger.Logger
 import mozilla.components.support.base.log.sink.AndroidLogSink
+import mozilla.components.support.rustlog.RustLog
 import org.mozilla.reference.browser.ext.isCrashReportActive
 import org.mozilla.reference.browser.settings.Settings
 
@@ -68,11 +69,19 @@ private fun setupMegazord() {
     // happens during a local substitution of application-services.
     // As a workaround, use reflections to conditionally initialize the megazord in case it's present.
     // See https://github.com/mozilla-mobile/reference-browser/pull/356.
-    try {
+    val is_megazord = try {
         val megazordClass = Class.forName("mozilla.appservices.ReferenceBrowserMegazord")
         val megazordInitMethod = megazordClass.getDeclaredMethod("init")
         megazordInitMethod.invoke(megazordClass)
+        true
     } catch (e: ClassNotFoundException) {
         Logger.info("mozilla.appservices.ReferenceBrowserMegazord not found; skipping megazord init.")
+        false
+    }
+    if (is_megazord) {
+        // We want rust logging to go through the log sinks.
+        // This has to happen after initializing the megazord, and
+        // it's only worth doing in the case that we are a megazord.
+        RustLog.enable()
     }
 }
