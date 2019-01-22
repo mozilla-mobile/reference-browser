@@ -5,6 +5,7 @@
 package org.mozilla.reference.browser
 
 import android.content.Context
+import android.os.Bundle
 import mozilla.components.browser.engine.gecko.GeckoEngine
 import mozilla.components.concept.engine.DefaultSettings
 import mozilla.components.concept.engine.Engine
@@ -14,18 +15,20 @@ import org.mozilla.geckoview.GeckoRuntimeSettings
 import org.mozilla.reference.browser.ext.isCrashReportActive
 
 object EngineProvider {
+
+    var testConfig: Bundle? = null
+
     fun getEngine(context: Context, defaultSettings: DefaultSettings): Engine {
-
-        return if (isCrashReportActive) {
-            val settings = GeckoRuntimeSettings.Builder()
-                    .crashHandler(CrashHandlerService::class.java)
-                    .build()
-            // Crashes of this runtime will be forwarded to the crash reporter component
-            val runtime = GeckoRuntime.create(context, settings)
-
-            GeckoEngine(context, defaultSettings, runtime)
-        } else {
-            GeckoEngine(context, defaultSettings)
+        val builder = GeckoRuntimeSettings.Builder()
+        testConfig?.let {
+            builder.extras(it)
         }
+
+        if (isCrashReportActive) {
+            builder.crashHandler(CrashHandlerService::class.java)
+        }
+
+        val runtime = GeckoRuntime.create(context, builder.build())
+        return GeckoEngine(context, defaultSettings, runtime)
     }
 }
