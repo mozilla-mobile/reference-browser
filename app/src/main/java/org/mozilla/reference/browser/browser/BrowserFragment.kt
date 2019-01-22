@@ -80,7 +80,11 @@ class BrowserFragment : Fragment(), BackHandler {
                 requireComponents.core.historyStorage,
                 requireComponents.useCases.sessionUseCases.loadUrl)
 
-        tabsToolbarFeature = TabsToolbarFeature(toolbar, requireComponents.core.sessionManager, ::showTabs)
+        tabsToolbarFeature = TabsToolbarFeature(
+            toolbar = toolbar,
+            sessionId = sessionId,
+            sessionManager = requireComponents.core.sessionManager,
+            showTabs = ::showTabs)
 
         downloadsFeature = DownloadsFeature(
                 requireContext(),
