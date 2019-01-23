@@ -12,8 +12,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleObserver
 import kotlinx.android.synthetic.main.fragment_browser.*
 import mozilla.components.feature.awesomebar.AwesomeBarFeature
 import mozilla.components.feature.downloads.DownloadsFeature
@@ -22,6 +20,7 @@ import mozilla.components.feature.session.FullScreenFeature
 import mozilla.components.feature.session.SessionFeature
 import mozilla.components.feature.tabs.toolbar.TabsToolbarFeature
 import mozilla.components.support.ktx.android.content.isPermissionGranted
+import mozilla.components.support.ktx.android.arch.lifecycle.addObservers
 import mozilla.components.support.ktx.android.view.enterToImmersiveMode
 import mozilla.components.support.ktx.android.view.exitImmersiveModeIfNeeded
 import org.mozilla.reference.browser.BackHandler
@@ -199,6 +198,4 @@ class BrowserFragment : Fragment(), BackHandler, UserInteractionHandler {
     }
 
     private fun isStoragePermissionAvailable() = requireContext().isPermissionGranted(WRITE_EXTERNAL_STORAGE)
-
-    private fun Lifecycle.addObservers(vararg observers: LifecycleObserver) = observers.forEach { addObserver(it) }
 }
