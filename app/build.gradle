@@ -147,6 +147,10 @@ configurations {
     geckoNightlyArmImplementation {}
     geckoNightlyX86Implementation {}
     geckoNightlyAarch64Implementation {}
+
+    all {
+        resolutionStrategy.cacheDynamicVersionsFor 0, 'seconds'
+    }
 }
 
 dependencies {
