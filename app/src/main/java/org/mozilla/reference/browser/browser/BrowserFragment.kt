@@ -25,18 +25,21 @@ import mozilla.components.support.ktx.android.content.isPermissionGranted
 import mozilla.components.support.ktx.android.view.enterToImmersiveMode
 import mozilla.components.support.ktx.android.view.exitImmersiveModeIfNeeded
 import org.mozilla.reference.browser.BackHandler
+import org.mozilla.reference.browser.UserInteractionHandler
 import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.ext.requireComponents
+import org.mozilla.reference.browser.pip.PictureInPictureFeature
 import org.mozilla.reference.browser.tabs.TabsTrayFragment
 
 @Suppress("TooManyFunctions")
-class BrowserFragment : Fragment(), BackHandler {
+class BrowserFragment : Fragment(), BackHandler, UserInteractionHandler {
     private lateinit var sessionFeature: SessionFeature
     private lateinit var tabsToolbarFeature: TabsToolbarFeature
     private lateinit var downloadsFeature: DownloadsFeature
     private lateinit var awesomeBarFeature: AwesomeBarFeature
     private lateinit var promptsFeature: PromptFeature
     private lateinit var fullScreenFeature: FullScreenFeature
+    private lateinit var pipFeature: PictureInPictureFeature
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_browser, container, false)
@@ -80,7 +83,11 @@ class BrowserFragment : Fragment(), BackHandler {
                 requireComponents.core.historyStorage,
                 requireComponents.useCases.sessionUseCases.loadUrl)
 
-        tabsToolbarFeature = TabsToolbarFeature(toolbar, requireComponents.core.sessionManager, ::showTabs)
+        tabsToolbarFeature = TabsToolbarFeature(
+            toolbar = toolbar,
+            sessionId = sessionId,
+            sessionManager = requireComponents.core.sessionManager,
+            showTabs = ::showTabs)
 
         downloadsFeature = DownloadsFeature(
                 requireContext(),
@@ -105,6 +112,8 @@ class BrowserFragment : Fragment(), BackHandler {
             requireComponents.useCases.sessionUseCases,
             sessionId, ::fullScreenChanged
         )
+
+        pipFeature = PictureInPictureFeature(requireComponents.core.sessionManager, requireActivity(), this)
 
         lifecycle.addObservers(
             sessionFeature,
@@ -147,6 +156,17 @@ class BrowserFragment : Fragment(), BackHandler {
         }
 
         return false
+    }
+
+    override fun onHomePressed(): Boolean {
+        if (pipFeature.onHomePressed()) {
+            return true
+        }
+        return false
+    }
+
+    override fun onPictureInPictureModeChanged(isInPictureInPictureMode: Boolean) {
+        pipFeature.onPictureInPictureModeChanged(isInPictureInPictureMode)
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {

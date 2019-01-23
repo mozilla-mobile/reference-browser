@@ -12,7 +12,7 @@ Signed Nightly builds can be downloaded from:
 * [⬇️ ARM devices (32 bit; Android 5+)](https://index.taskcluster.net/v1/task/project.mobile.reference-browser.signed-nightly.nightly.latest/artifacts/public/app-geckoNightly-arm-release-unsigned.apk)
 * [⬇️ x86  devices (32 bit; Android 5+)](https://index.taskcluster.net/v1/task/project.mobile.reference-browser.signed-nightly.nightly.latest/artifacts/public/app-geckoNightly-x86-release-unsigned.apk)
 
-Note that all builds are signed with a non-production / throw-away key. The latest Nightly build task can be found [here](https://tools.taskcluster.net/index/project.mobile.reference-browser.signed-nightly.nightly/latest).
+The latest Nightly build task can be found [here](https://tools.taskcluster.net/index/project.mobile.reference-browser.signed-nightly.nightly/latest).
 
 # Getting Involved
 

@@ -62,6 +62,16 @@ open class BrowserActivity : AppCompatActivity(), ComponentCallbacks2 {
         super.onBackPressed()
     }
 
+    override fun onUserLeaveHint() {
+        supportFragmentManager.fragments.forEach {
+            if (it is UserInteractionHandler && it.onHomePressed()) {
+                return
+            }
+        }
+
+        super.onUserLeaveHint()
+    }
+
     override fun onCreateView(parent: View?, name: String?, context: Context, attrs: AttributeSet?): View? =
         when (name) {
             EngineView::class.java.name -> components.core.engine.createView(context, attrs).asView()
