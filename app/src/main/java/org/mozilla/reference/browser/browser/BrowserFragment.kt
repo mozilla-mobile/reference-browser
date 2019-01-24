@@ -12,6 +12,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.fragment_browser.*
 import mozilla.components.feature.awesomebar.AwesomeBarFeature
+import mozilla.components.feature.customtabs.CustomTabsToolbarFeature
 import mozilla.components.feature.downloads.DownloadsFeature
 import mozilla.components.feature.prompts.PromptFeature
 import mozilla.components.feature.session.FullScreenFeature
@@ -36,6 +37,7 @@ class BrowserFragment : Fragment(), BackHandler, UserInteractionHandler {
     private lateinit var promptsFeature: PromptFeature
     private lateinit var fullScreenFeature: FullScreenFeature
     private lateinit var pipFeature: PictureInPictureFeature
+    private lateinit var customTabsToolbarFeature: CustomTabsToolbarFeature
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_browser, container, false)
@@ -109,11 +111,19 @@ class BrowserFragment : Fragment(), BackHandler, UserInteractionHandler {
 
         pipFeature = PictureInPictureFeature(requireComponents.core.sessionManager, requireActivity(), ::pipModeChanged)
 
+        customTabsToolbarFeature = CustomTabsToolbarFeature(
+            requireComponents.core.sessionManager,
+            toolbar,
+            sessionId,
+            requireComponents.toolbar.menuBuilder
+        ) { activity?.finish() }
+
         lifecycle.addObservers(
             sessionFeature,
             downloadsFeature,
             promptsFeature,
-            fullScreenFeature)
+            fullScreenFeature,
+            customTabsToolbarFeature)
     }
 
     private fun showTabs() {
@@ -155,6 +165,10 @@ class BrowserFragment : Fragment(), BackHandler, UserInteractionHandler {
         }
 
         if (sessionFeature.handleBackPressed()) {
+            return true
+        }
+
+        if (customTabsToolbarFeature.onBackPressed()) {
             return true
         }
 
