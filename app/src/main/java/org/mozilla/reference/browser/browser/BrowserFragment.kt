@@ -82,6 +82,7 @@ class BrowserFragment : Fragment(), BackHandler, UserInteractionHandler {
             .addHistoryProvider(
                 requireComponents.core.historyStorage,
                 requireComponents.useCases.sessionUseCases.loadUrl)
+            .addClipboardProvider(requireContext(), requireComponents.useCases.sessionUseCases.loadUrl)
 
         tabsToolbarFeature = TabsToolbarFeature(
             toolbar = toolbar,
