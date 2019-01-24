@@ -10,6 +10,8 @@ import android.content.Intent
 import mozilla.components.lib.crash.CrashReporter
 import mozilla.components.lib.crash.service.MozillaSocorroService
 import mozilla.components.lib.crash.service.SentryService
+import org.mozilla.geckoview.BuildConfig.MOZ_APP_BUILDID
+import org.mozilla.geckoview.BuildConfig.MOZ_APP_VERSION
 import org.mozilla.reference.browser.BrowserApplication
 import org.mozilla.reference.browser.BuildConfig
 import org.mozilla.reference.browser.R
@@ -27,6 +29,7 @@ class Analytics(private val context: Context) {
         val sentryService = SentryService(
             context,
             BuildConfig.SENTRY_TOKEN,
+            mapOf("geckoview" to "$MOZ_APP_VERSION-$MOZ_APP_BUILDID"),
             sendEventForNativeCrashes = true
         )
 
