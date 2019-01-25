@@ -30,7 +30,7 @@ android {
         minSdkVersion Config.minSdkVersion
         targetSdkVersion Config.targetSdkVersion
         versionCode Config.versionCode
-        versionName Config.versionName
+        versionName Config.versionName + Config.generateVersionSuffix()
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
