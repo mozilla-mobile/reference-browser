@@ -13,7 +13,7 @@ import mozilla.components.support.base.log.sink.AndroidLogSink
 import org.mozilla.reference.browser.ext.isCrashReportActive
 import org.mozilla.reference.browser.settings.Settings
 
-class BrowserApplication : Application() {
+open class BrowserApplication : Application() {
     val components by lazy { Components(this) }
 
     override fun onCreate() {
