@@ -2,15 +2,45 @@
 
 [![Task Status](https://github.taskcluster.net/v1/repository/mozilla-mobile/reference-browser/master/badge.svg)](https://github.taskcluster.net/v1/repository/mozilla-mobile/reference-browser/master/latest)
 
-A full-featured browser reference implementation using [Mozilla Android Components](https://github.com/mozilla-mobile/android-components).
+A web browser reference implementation using [Mozilla Android Components](https://github.com/mozilla-mobile/android-components).
 
-# Download Nightly builds
+*The Reference Browser is not a product intended to ship to end users. Instead it is a Technology Preview for many new mobile components that multiple teams at Mozilla are currently working on*
+
+It includes the Mozilla Web Platform via GeckoView, a new modern Firefox Accounts and Cloud Sync implementation and the new "Glean" telemetry library. All these components will be foundational for Mozilla's existing and upcoming Android products.
+
+The Reference Browser can also be a starting point for your own new browser-like applications. It depends heavily on the [Android Components](https://github.com/mozilla-mobile/android-components) project where most of the actual implementation lives. That project also includes many smaller sample applications.
+
+# Getting Involved
+
+We encourage you to participate in this open source project. We love pull requests, bug reports, ideas, (security) code reviews or any kind of positive contribution.
+
+Before you attempt to make a contribution please read the [Community Participation Guidelines](https://www.mozilla.org/en-US/about/governance/policies/participation/).
+
+* [View current Issues](https://github.com/mozilla-mobile/reference-browser/issues) or [View current Pull Requests](https://github.com/mozilla-mobile/reference-browser/pulls).
+
+* IRC: [#android-components (irc.mozilla.org)](https://wiki.mozilla.org/IRC) | [view logs](https://mozilla.logbot.info/android-components/)
+
+* Subscribe to our mailing list [android-components@](https://lists.mozilla.org/listinfo/android-components) to keep up to date ([Archives](https://lists.mozilla.org/pipermail/android-components/)).
+
+
+# Test Channel on Google Play Store
+
+To get the Reference Browser on your device, follow these two steps:
+
+1) Visit https://groups.google.com/forum/#!forum/mozilla-reference-browser and join the Google Group
+2) Visit https://play.google.com/apps/testing/org.mozilla.reference.browser on your device to join the test program and to install the app
+
+Make sure you use the same Google Account for both steps.
+
+# Download Nightly Builds Directly
 
 Signed Nightly builds can be downloaded from:
 
 * [⬇️ ARM64/Aarch64 devices (64 bit; Android 5+)](https://index.taskcluster.net/v1/task/project.mobile.reference-browser.signed-nightly.nightly.latest/artifacts/public/app-geckoNightly-aarch64-release-unsigned.apk)
 * [⬇️ ARM devices (32 bit; Android 5+)](https://index.taskcluster.net/v1/task/project.mobile.reference-browser.signed-nightly.nightly.latest/artifacts/public/app-geckoNightly-arm-release-unsigned.apk)
 * [⬇️ x86  devices (32 bit; Android 5+)](https://index.taskcluster.net/v1/task/project.mobile.reference-browser.signed-nightly.nightly.latest/artifacts/public/app-geckoNightly-x86-release-unsigned.apk)
+
+> Please note that these builds do not auto-update, you will have to keep up to date manually.
 
 The latest Nightly build task can be found [here](https://tools.taskcluster.net/index/project.mobile.reference-browser.signed-nightly.nightly/latest).
 
