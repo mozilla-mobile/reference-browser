@@ -113,7 +113,7 @@ class BrowserFragment : Fragment(), BackHandler, UserInteractionHandler {
             sessionId, ::fullScreenChanged
         )
 
-        pipFeature = PictureInPictureFeature(requireComponents.core.sessionManager, requireActivity(), this)
+        pipFeature = PictureInPictureFeature(requireComponents.core.sessionManager, requireActivity(), ::pipModeChanged)
 
         lifecycle.addObservers(
             sessionFeature,
@@ -138,6 +138,15 @@ class BrowserFragment : Fragment(), BackHandler, UserInteractionHandler {
         } else {
             activity?.exitImmersiveModeIfNeeded()
             toolbar.visibility = View.VISIBLE
+        }
+    }
+
+    private fun pipModeChanged(enabled: Boolean) {
+        val fullScreenMode = requireComponents.core.sessionManager.selectedSession?.fullScreenMode ?: false
+        // If we're exiting PIP mode and we're in fullscreen mode, then we should exit fullscreen mode as well.
+        if (!enabled && fullScreenMode) {
+            onBackPressed()
+            fullScreenChanged(false)
         }
     }
 
