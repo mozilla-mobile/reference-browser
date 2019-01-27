@@ -10,9 +10,7 @@ import android.annotation.TargetApi
 import android.app.Activity
 import android.app.PictureInPictureParams
 import android.os.Build
-import androidx.fragment.app.Fragment
 import mozilla.components.browser.session.SessionManager
-import org.mozilla.reference.browser.BackHandler
 
 /**
  * A simple implementation of Picture-in-picture mode support.
@@ -20,12 +18,12 @@ import org.mozilla.reference.browser.BackHandler
  * @param sessionManager Session Manager for observing the selected session's fullscreen mode changes.
  * @param activity the activity with the EngineView for calling PIP mode when required; the AndroidX Fragment
  * doesn't support this.
- * @param fragment the current fragment for back button handling.
+ * @param pipChanged a change listener that allows the calling app to perform changes based on PIP mode.
  */
 class PictureInPictureFeature(
     private val sessionManager: SessionManager,
     private val activity: Activity,
-    private val fragment: Fragment
+    private val pipChanged: (Boolean) -> Unit
 ) {
 
     fun onHomePressed(): Boolean {
@@ -44,11 +42,5 @@ class PictureInPictureFeature(
         else -> false
     }
 
-    fun onPictureInPictureModeChanged(enabled: Boolean) {
-        val fullScreenMode = sessionManager.selectedSession?.fullScreenMode ?: false
-        // If we're exiting PIP mode and we're in fullscreen mode, then we should exit fullscreen mode as well.
-        if (!enabled && fullScreenMode && fragment is BackHandler) {
-            fragment.onBackPressed()
-        }
-    }
+    fun onPictureInPictureModeChanged(enabled: Boolean) = pipChanged(enabled)
 }
