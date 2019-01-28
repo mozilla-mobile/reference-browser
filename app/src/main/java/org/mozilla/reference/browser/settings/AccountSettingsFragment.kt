@@ -40,6 +40,7 @@ class AccountSettingsFragment : PreferenceFragmentCompat() {
                 pref.isEnabled = false
             }
         }
+        override fun onError(error: Exception?) {}
     }
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
