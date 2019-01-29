@@ -4,10 +4,8 @@
 
 package org.mozilla.reference.browser.browser
 
-import android.Manifest.permission.WRITE_EXTERNAL_STORAGE
 import android.content.Intent
 import android.os.Bundle
-import androidx.core.content.PermissionChecker.PERMISSION_GRANTED
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,7 +17,6 @@ import mozilla.components.feature.prompts.PromptFeature
 import mozilla.components.feature.session.FullScreenFeature
 import mozilla.components.feature.session.SessionFeature
 import mozilla.components.feature.tabs.toolbar.TabsToolbarFeature
-import mozilla.components.support.ktx.android.content.isPermissionGranted
 import mozilla.components.support.ktx.android.arch.lifecycle.addObservers
 import mozilla.components.support.ktx.android.view.enterToImmersiveMode
 import mozilla.components.support.ktx.android.view.exitImmersiveModeIfNeeded
@@ -92,12 +89,11 @@ class BrowserFragment : Fragment(), BackHandler, UserInteractionHandler {
         downloadsFeature = DownloadsFeature(
                 requireContext(),
                 sessionManager = requireComponents.core.sessionManager,
-                fragmentManager = childFragmentManager
+                fragmentManager = childFragmentManager,
+                onNeedToRequestPermissions = { permissions ->
+                    requestPermissions(permissions, REQUEST_CODE_DOWNLOAD_PERMISSIONS)
+                }
         )
-
-        downloadsFeature.onNeedToRequestPermissions = { _, _ ->
-            requestPermissions(arrayOf(WRITE_EXTERNAL_STORAGE), PERMISSION_WRITE_STORAGE_REQUEST)
-        }
 
         promptsFeature = PromptFeature(
             fragment = this,
@@ -180,20 +176,14 @@ class BrowserFragment : Fragment(), BackHandler, UserInteractionHandler {
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
         when (requestCode) {
-            PERMISSION_WRITE_STORAGE_REQUEST -> {
-                if ((grantResults.isNotEmpty() && grantResults[0] == PERMISSION_GRANTED) &&
-                        isStoragePermissionAvailable()) {
-                    // permission was granted, yay!
-                    downloadsFeature.onPermissionsGranted()
-                }
-            }
+            REQUEST_CODE_DOWNLOAD_PERMISSIONS -> downloadsFeature.onPermissionsResult(permissions, grantResults)
         }
         promptsFeature.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 
     companion object {
         private const val SESSION_ID = "session_id"
-        private const val PERMISSION_WRITE_STORAGE_REQUEST = 1
+        private const val REQUEST_CODE_DOWNLOAD_PERMISSIONS = 1
 
         fun create(sessionId: String? = null): BrowserFragment = BrowserFragment().apply {
             arguments = Bundle().apply {
@@ -205,6 +195,4 @@ class BrowserFragment : Fragment(), BackHandler, UserInteractionHandler {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         promptsFeature.onActivityResult(requestCode, resultCode, data)
     }
-
-    private fun isStoragePermissionAvailable() = requireContext().isPermissionGranted(WRITE_EXTERNAL_STORAGE)
 }
