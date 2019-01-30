@@ -32,6 +32,19 @@
             mozac:awesomeBarChipBackgroundColor="#444444" />
     </FrameLayout>
 
+    <mozilla.components.feature.findinpage.view.FindInPageBar
+        android:id="@+id/findInPageBar"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:layout_gravity="bottom"
+        android:background="#000000"
+        mozac:findInPageQueryTextColor="#ffffff"
+        mozac:findInPageQueryHintTextColor="#dddddd"
+        mozac:findInPageResultCountTextColor="#ff88ff"
+        mozac:findInPageButtonsTint="#ff88ff"
+        android:visibility="gone"
+        app:layout_behavior="org.mozilla.reference.browser.browser.FindInPageBarBehavior" />
+
     <mozilla.components.browser.toolbar.BrowserToolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"

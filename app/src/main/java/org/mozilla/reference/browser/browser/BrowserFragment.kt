@@ -14,6 +14,7 @@ import kotlinx.android.synthetic.main.fragment_browser.*
 import mozilla.components.feature.awesomebar.AwesomeBarFeature
 import mozilla.components.feature.customtabs.CustomTabsToolbarFeature
 import mozilla.components.feature.downloads.DownloadsFeature
+import mozilla.components.feature.findinpage.view.FindInPageView
 import mozilla.components.feature.prompts.PromptFeature
 import mozilla.components.feature.session.FullScreenFeature
 import mozilla.components.feature.session.SessionFeature
@@ -22,8 +23,8 @@ import mozilla.components.support.ktx.android.arch.lifecycle.addObservers
 import mozilla.components.support.ktx.android.view.enterToImmersiveMode
 import mozilla.components.support.ktx.android.view.exitImmersiveModeIfNeeded
 import org.mozilla.reference.browser.BackHandler
-import org.mozilla.reference.browser.UserInteractionHandler
 import org.mozilla.reference.browser.R
+import org.mozilla.reference.browser.UserInteractionHandler
 import org.mozilla.reference.browser.ext.requireComponents
 import org.mozilla.reference.browser.pip.PictureInPictureFeature
 import org.mozilla.reference.browser.tabs.TabsTrayFragment
@@ -38,6 +39,7 @@ class BrowserFragment : Fragment(), BackHandler, UserInteractionHandler {
     private lateinit var fullScreenFeature: FullScreenFeature
     private lateinit var pipFeature: PictureInPictureFeature
     private lateinit var customTabsToolbarFeature: CustomTabsToolbarFeature
+    private lateinit var findInPageIntegration: FindInPageIntegration
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_browser, container, false)
@@ -49,10 +51,10 @@ class BrowserFragment : Fragment(), BackHandler, UserInteractionHandler {
         val sessionId = arguments?.getString(SESSION_ID)
 
         sessionFeature = SessionFeature(
-                requireComponents.core.sessionManager,
-                requireComponents.useCases.sessionUseCases,
-                engineView,
-                sessionId)
+            requireComponents.core.sessionManager,
+            requireComponents.useCases.sessionUseCases,
+            engineView,
+            sessionId)
 
         lifecycle.addObserver(ToolbarIntegration(
             requireContext(),
@@ -119,12 +121,17 @@ class BrowserFragment : Fragment(), BackHandler, UserInteractionHandler {
             requireComponents.toolbar.menuBuilder
         ) { activity?.finish() }
 
+        findInPageIntegration = FindInPageIntegration(
+            requireComponents.core.sessionManager,
+            findInPageBar as FindInPageView)
+
         lifecycle.addObservers(
             sessionFeature,
             downloadsFeature,
             promptsFeature,
             fullScreenFeature,
-            customTabsToolbarFeature)
+            customTabsToolbarFeature,
+            findInPageIntegration)
     }
 
     private fun showTabs() {
@@ -158,6 +165,10 @@ class BrowserFragment : Fragment(), BackHandler, UserInteractionHandler {
     @Suppress("ReturnCount")
     override fun onBackPressed(): Boolean {
         if (fullScreenFeature.onBackPressed()) {
+            return true
+        }
+
+        if (findInPageIntegration.onBackPressed()) {
             return true
         }
 
