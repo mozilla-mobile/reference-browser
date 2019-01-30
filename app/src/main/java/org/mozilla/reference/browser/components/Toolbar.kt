@@ -17,6 +17,7 @@ import mozilla.components.feature.tabs.TabsUseCases
 import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.ext.share
 import org.mozilla.reference.browser.settings.SettingsActivity
+import org.mozilla.reference.browser.browser.FindInPageIntegration
 
 /**
  * Component group for all functionality related to the browser toolbar.
@@ -79,6 +80,12 @@ class Toolbar(
                 sessionManager.selectedSessionOrThrow.desktopMode
             }) { checked ->
                 sessionUseCases.requestDesktopSite.invoke(checked)
+            }.apply {
+                visible = { sessionManager.selectedSession != null }
+            },
+
+            SimpleBrowserMenuItem("Find in Page") {
+                FindInPageIntegration.launch?.invoke()
             }.apply {
                 visible = { sessionManager.selectedSession != null }
             },
