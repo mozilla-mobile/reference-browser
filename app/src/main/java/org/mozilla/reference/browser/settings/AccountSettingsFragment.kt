@@ -70,7 +70,7 @@ class AccountSettingsFragment : PreferenceFragmentCompat() {
 
         preferenceSyncNow.onPreferenceClickListener = getClickListenerForSyncNow()
 
-        if (requireComponents.backgroundServices.syncManager.syncRunning()) {
+        if (requireComponents.backgroundServices.syncManager.isSyncRunning()) {
             preferenceSyncNow.title = getString(R.string.syncing)
             preferenceSyncNow.isEnabled = false
         } else {
