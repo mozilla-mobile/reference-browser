@@ -98,10 +98,11 @@ class BrowserFragment : Fragment(), BackHandler, UserInteractionHandler {
         promptsFeature = PromptFeature(
             fragment = this,
             sessionManager = requireComponents.core.sessionManager,
-            fragmentManager = requireFragmentManager()
-        ) { _, permissions, requestCode ->
-            requestPermissions(permissions, requestCode)
-        }
+            fragmentManager = requireFragmentManager(),
+            onNeedToRequestPermissions = { permissions ->
+                requestPermissions(permissions, REQUEST_CODE_PROMPT_PERMISSIONS)
+            }
+        )
 
         fullScreenFeature = FullScreenFeature(
             requireComponents.core.sessionManager,
@@ -189,13 +190,14 @@ class BrowserFragment : Fragment(), BackHandler, UserInteractionHandler {
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
         when (requestCode) {
             REQUEST_CODE_DOWNLOAD_PERMISSIONS -> downloadsFeature.onPermissionsResult(permissions, grantResults)
+            REQUEST_CODE_PROMPT_PERMISSIONS -> promptsFeature.onPermissionsResult(permissions, grantResults)
         }
-        promptsFeature.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 
     companion object {
         private const val SESSION_ID = "session_id"
         private const val REQUEST_CODE_DOWNLOAD_PERMISSIONS = 1
+        private const val REQUEST_CODE_PROMPT_PERMISSIONS = 2
 
         fun create(sessionId: String? = null): BrowserFragment = BrowserFragment().apply {
             arguments = Bundle().apply {
