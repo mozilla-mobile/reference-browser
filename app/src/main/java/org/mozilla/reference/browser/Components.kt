@@ -23,7 +23,7 @@ class Components(private val context: Context) {
     val useCases by lazy { UseCases(context, core.sessionManager, search.searchEngineManager) }
 
     // Background services are initiated eagerly; they kick off periodic tasks and setup an accounts system.
-    val backgroundServices = BackgroundServices(context, core.historyStorage)
+    val backgroundServices by lazy { BackgroundServices(context, core.historyStorage) }
 
     val toolbar by lazy { Toolbar(context, useCases.sessionUseCases, useCases.tabsUseCases, core.sessionManager) }
     val analytics by lazy { Analytics(context) }
