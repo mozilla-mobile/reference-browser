@@ -19,11 +19,6 @@ class TaskBuilder(object):
         expires = taskcluster.fromNow('1 year')
         deadline = taskcluster.fromNow('1 day')
 
-        features = features.copy()
-        features.update({
-            "taskclusterProxy": True
-        })
-
         return {
             "workerType": 'gecko-focus',
             "taskGroupId": self.task_id,

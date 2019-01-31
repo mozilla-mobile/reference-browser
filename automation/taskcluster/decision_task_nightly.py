@@ -46,7 +46,7 @@ def generate_build_task(apks):
                  ' && ./gradlew --no-daemon -PcrashReportEnabled=true -Ptelemetry=true clean test assembleRelease'),
         features={
             "chainOfTrust": True,
-            "taskClusterProxy": True
+            "taskclusterProxy": True
         },
         artifacts=artifacts,
         scopes=[
