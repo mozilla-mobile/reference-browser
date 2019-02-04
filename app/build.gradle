@@ -187,6 +187,7 @@ dependencies {
 
     implementation Deps.mozilla_support_utils
     implementation Deps.mozilla_support_ktx
+    implementation Deps.mozilla_support_rustlog
     implementation Deps.mozilla_lib_crash
     implementation Deps.thirdparty_sentry
 
