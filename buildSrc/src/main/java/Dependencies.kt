@@ -15,7 +15,7 @@ private object Versions {
     const val google_material = "1.0.0"
 
     const val android_gradle_plugin = "3.2.1"
-    const val appservices_gradle_plugin = "0.2.0"
+    const val appservices_gradle_plugin = "0.3.1"
 
     const val mozilla_android_components = "0.42.0-SNAPSHOT"
 
@@ -75,6 +75,7 @@ object Deps {
 
     const val mozilla_support_utils = "org.mozilla.components:support-utils:${Versions.mozilla_android_components}"
     const val mozilla_support_ktx= "org.mozilla.components:support-ktx:${Versions.mozilla_android_components}"
+    const val mozilla_support_rustlog = "org.mozilla.components:support-rustlog:${Versions.mozilla_android_components}"
 
     const val mozilla_lib_crash = "org.mozilla.components:lib-crash:${Versions.mozilla_android_components}"
 

@@ -10,6 +10,7 @@ import mozilla.components.service.glean.Glean
 import mozilla.components.support.base.log.Log
 import mozilla.components.support.base.log.logger.Logger
 import mozilla.components.support.base.log.sink.AndroidLogSink
+import mozilla.components.support.rustlog.RustLog
 import org.mozilla.reference.browser.ext.isCrashReportActive
 import org.mozilla.reference.browser.settings.Settings
 
@@ -19,10 +20,10 @@ open class BrowserApplication : Application() {
     override fun onCreate() {
         super.onCreate()
 
-        setupLogging()
         setupCrashReporting(this)
         setupGlean(this)
-        setupMegazord()
+        val megazordEnabled = setupMegazord()
+        setupLogging(megazordEnabled)
     }
 
     companion object {
@@ -30,9 +31,16 @@ open class BrowserApplication : Application() {
     }
 }
 
-private fun setupLogging() {
+private fun setupLogging(megazordEnabled: Boolean) {
     // We want the log messages of all builds to go to Android logcat
     Log.addSink(AndroidLogSink())
+
+    if (megazordEnabled) {
+        // We want rust logging to go through the log sinks.
+        // This has to happen after initializing the megazord, and
+        // it's only worth doing in the case that we are a megazord.
+        RustLog.enable()
+    }
 }
 
 private fun setupGlean(context: Context) {
@@ -59,8 +67,10 @@ private fun setupCrashReporting(application: BrowserApplication) {
  * space and allow cross-component native-code Link Time Optimization (LTO, i.e., inlining, dead code elimination, etc)
  * Application Services also publishes composite libraries -- so called megazord libraries or just megazords -- that
  * compose multiple Rust components into a single optimized .so library file.
+ *
+ * @return Boolean indicating if we're in a megazord.
  */
-private fun setupMegazord() {
+private fun setupMegazord(): Boolean {
     // mozilla.appservices.ReferenceBrowserMegazord will be missing if we're doing an application-services
     // dependency substitution locally. That class is supplied dynamically by the org.mozilla.appservices
     // gradle plugin, and that won't happen if we're not megazording. We won't megazord if we're
@@ -68,11 +78,13 @@ private fun setupMegazord() {
     // happens during a local substitution of application-services.
     // As a workaround, use reflections to conditionally initialize the megazord in case it's present.
     // See https://github.com/mozilla-mobile/reference-browser/pull/356.
-    try {
+    return try {
         val megazordClass = Class.forName("mozilla.appservices.ReferenceBrowserMegazord")
         val megazordInitMethod = megazordClass.getDeclaredMethod("init")
         megazordInitMethod.invoke(megazordClass)
+        true
     } catch (e: ClassNotFoundException) {
         Logger.info("mozilla.appservices.ReferenceBrowserMegazord not found; skipping megazord init.")
+        false
     }
 }
