@@ -68,7 +68,8 @@ class BrowserFragment : Fragment(), BackHandler, UserInteractionHandler {
             requireFragmentManager(),
             requireComponents.core.sessionManager,
             requireComponents.useCases.tabsUseCases,
-            view))
+            view,
+            sessionId))
 
         awesomeBarFeature = AwesomeBarFeature(awesomeBar, toolbar, engineView)
             .addSearchProvider(
@@ -89,12 +90,13 @@ class BrowserFragment : Fragment(), BackHandler, UserInteractionHandler {
             showTabs = ::showTabs)
 
         downloadsFeature = DownloadsFeature(
-                requireContext(),
-                sessionManager = requireComponents.core.sessionManager,
-                fragmentManager = childFragmentManager,
-                onNeedToRequestPermissions = { permissions ->
-                    requestPermissions(permissions, REQUEST_CODE_DOWNLOAD_PERMISSIONS)
-                }
+            requireContext(),
+            sessionManager = requireComponents.core.sessionManager,
+            sessionId = sessionId,
+            fragmentManager = childFragmentManager,
+            onNeedToRequestPermissions = { permissions ->
+                requestPermissions(permissions, REQUEST_CODE_DOWNLOAD_PERMISSIONS)
+            }
         )
 
         promptsFeature = PromptFeature(

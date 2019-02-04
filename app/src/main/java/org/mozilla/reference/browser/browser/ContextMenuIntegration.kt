@@ -21,10 +21,11 @@ class ContextMenuIntegration(
     fragmentManager: FragmentManager,
     sessionManager: SessionManager,
     tabsUseCases: TabsUseCases,
-    parentView: View
+    parentView: View,
+    sessionId: String? = null
 ) : LifecycleObserver {
     private val feature = ContextMenuFeature(fragmentManager, sessionManager,
-        ContextMenuCandidate.defaultCandidates(context, tabsUseCases, parentView), parentView.engineView)
+        ContextMenuCandidate.defaultCandidates(context, tabsUseCases, parentView), parentView.engineView, sessionId)
 
     @OnLifecycleEvent(Lifecycle.Event.ON_START)
     fun start() {
