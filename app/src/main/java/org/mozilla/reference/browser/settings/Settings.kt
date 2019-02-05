@@ -12,4 +12,8 @@ object Settings {
     fun isTelemetryEnabled(context: Context): Boolean =
         PreferenceManager.getDefaultSharedPreferences(context).getBoolean(
             context.getString(R.string.pref_key_telemetry), true)
+
+    fun isLeakDetectionEnabled(context: Context): Boolean =
+        PreferenceManager.getDefaultSharedPreferences(context).getBoolean(
+            context.getString(R.string.pref_key_telemetry), false)
 }
