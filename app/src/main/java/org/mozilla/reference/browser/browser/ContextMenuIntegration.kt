@@ -10,6 +10,7 @@ import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.OnLifecycleEvent
+import kotlinx.android.synthetic.main.fragment_browser.view.*
 import mozilla.components.browser.session.SessionManager
 import mozilla.components.feature.contextmenu.ContextMenuCandidate
 import mozilla.components.feature.contextmenu.ContextMenuFeature
@@ -20,10 +21,10 @@ class ContextMenuIntegration(
     fragmentManager: FragmentManager,
     sessionManager: SessionManager,
     tabsUseCases: TabsUseCases,
-    snackbarParentView: View
+    parentView: View
 ) : LifecycleObserver {
     private val feature = ContextMenuFeature(fragmentManager, sessionManager,
-        ContextMenuCandidate.defaultCandidates(context, tabsUseCases, snackbarParentView))
+        ContextMenuCandidate.defaultCandidates(context, tabsUseCases, parentView), parentView.engineView)
 
     @OnLifecycleEvent(Lifecycle.Event.ON_START)
     fun start() {
