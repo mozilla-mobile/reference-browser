@@ -6,6 +6,7 @@ package org.mozilla.reference.browser
 
 import android.app.Application
 import android.content.Context
+import com.squareup.leakcanary.LeakCanary
 import mozilla.components.service.glean.Glean
 import mozilla.components.support.base.log.Log
 import mozilla.components.support.base.log.logger.Logger
@@ -23,6 +24,7 @@ open class BrowserApplication : Application() {
         setupCrashReporting(this)
         setupGlean(this)
         setupMegazord()
+        setupLeakDetection(this)
     }
 
     companion object {
@@ -75,4 +77,16 @@ private fun setupMegazord() {
     } catch (e: ClassNotFoundException) {
         Logger.info("mozilla.appservices.ReferenceBrowserMegazord not found; skipping megazord init.")
     }
+}
+
+private fun setupLeakDetection(application: BrowserApplication) {
+    if (!Settings.isLeakDetectionEnabled(application)) {
+        return
+    }
+
+    if (LeakCanary.isInAnalyzerProcess(application)) {
+        return
+    }
+
+    LeakCanary.install(application)
 }

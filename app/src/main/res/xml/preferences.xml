@@ -31,6 +31,11 @@
             android:defaultValue="false"
             android:title="@string/preferences_remote_debugging" />
 
+        <androidx.preference.SwitchPreferenceCompat
+            android:key="@string/pref_key_leak_detection"
+            android:defaultValue="false"
+            android:title="@string/preferences_leak_detection" />
+
     </PreferenceCategory>
 
     <PreferenceCategory

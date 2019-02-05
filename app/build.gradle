@@ -187,8 +187,11 @@ dependencies {
 
     implementation Deps.mozilla_support_utils
     implementation Deps.mozilla_support_ktx
+
     implementation Deps.mozilla_lib_crash
+
     implementation Deps.thirdparty_sentry
+    implementation Deps.thirdparty_leakcanary
 
     geckoNightlyImplementation Deps.mozilla_browser_engine_gecko_nightly
     geckoNightlyArmImplementation Gecko.geckoview_nightly_arm
