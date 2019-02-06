@@ -6,6 +6,7 @@ package org.mozilla.reference.browser.ui.robots
 
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.matcher.ViewMatchers
+import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.helpers.click
 
 /**
@@ -19,6 +20,12 @@ class NavigationToolbarRobot {
             ThreeDotMenuRobot().interact()
             return ThreeDotMenuRobot.Transition()
         }
+
+        fun openTabTrayMenu(interact: TabTrayMenuRobot.() -> Unit): TabTrayMenuRobot.Transition {
+            openTabTray().click()
+            TabTrayMenuRobot().interact()
+            return TabTrayMenuRobot.Transition()
+        }
     }
 }
 
@@ -28,3 +35,4 @@ fun navigationToolbar(interact: NavigationToolbarRobot.() -> Unit): NavigationTo
 }
 
 private fun threeDotButton() = onView(ViewMatchers.withContentDescription("Menu"))
+private fun openTabTray() = onView(ViewMatchers.withId(R.id.counter_box))
