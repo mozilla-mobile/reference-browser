@@ -27,9 +27,6 @@
     <!-- Preference enabling remote debugging -->
     <string name="preferences_remote_debugging">Remote debugging via USB</string>
 
-    <!-- Preference enabling leak detection via leak canary -->
-    <string name="preferences_leak_detection">Detect memory leaks</string>
-
     <!-- Preference for enabling tracking protection in normal mode -->
     <string name="preferences_tracking_protection_normal">Enable in Normal Browsing Mode</string>
 

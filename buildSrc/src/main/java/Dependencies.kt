@@ -20,7 +20,6 @@ private object Versions {
     const val mozilla_android_components = "0.42.0-SNAPSHOT"
 
     const val thirdparty_sentry = "1.7.10"
-    const val thirdparty_leakcanary = "1.6.3"
 
     const val tools_espresso_core = "2.2.2"
     const val tools_espresso_version = "3.0.2"
@@ -80,7 +79,6 @@ object Deps {
     const val mozilla_lib_crash = "org.mozilla.components:lib-crash:${Versions.mozilla_android_components}"
 
     const val thirdparty_sentry = "io.sentry:sentry-android:${Versions.thirdparty_sentry}"
-    const val thirdparty_leakcanary = "com.squareup.leakcanary:leakcanary-android:${Versions.thirdparty_leakcanary}"
 
     const val androidx_appcompat = "androidx.appcompat:appcompat:${Versions.androidx_appcompat}"
     const val androidx_constraintlayout = "androidx.constraintlayout:constraintlayout:${Versions.androidx_constraintlayout}"
