@@ -31,6 +31,7 @@ class TabsPanel @JvmOverloads constructor(
     private var closeTabsTray: (() -> Unit)? = null
 
     init {
+        navigationContentDescription = "back"
         setNavigationIcon(R.drawable.mozac_ic_back)
         setNavigationOnClickListener {
             closeTabsTray?.invoke()
@@ -54,6 +55,8 @@ class TabsPanel @JvmOverloads constructor(
         }
 
         button = ToggleImageButton(context).apply {
+            id = R.id.button_tabs
+            contentDescription = "Tabs"
             setImageDrawable(resources.getThemedDrawable(R.drawable.mozac_ic_tab))
             setOnCheckedChangeListener { _, checked ->
                 if (checked) {
@@ -62,6 +65,8 @@ class TabsPanel @JvmOverloads constructor(
             }
         }
         privateButton = ToggleImageButton(context).apply {
+            id = R.id.button_private_tabs
+            contentDescription = "Private tabs"
             setImageDrawable(resources.getThemedDrawable(R.drawable.mozac_ic_private_browsing))
             setOnCheckedChangeListener { _, checked ->
                 if (checked) {
