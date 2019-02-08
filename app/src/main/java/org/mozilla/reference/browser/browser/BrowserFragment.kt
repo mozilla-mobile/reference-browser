@@ -4,6 +4,7 @@
 
 package org.mozilla.reference.browser.browser
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -19,10 +20,10 @@ import mozilla.components.feature.prompts.PromptFeature
 import mozilla.components.feature.session.FullScreenFeature
 import mozilla.components.feature.session.SessionFeature
 import mozilla.components.feature.tabs.toolbar.TabsToolbarFeature
-import mozilla.components.support.ktx.android.arch.lifecycle.addObservers
+import mozilla.components.support.base.feature.BackHandler
+import mozilla.components.support.base.feature.ViewBoundFeatureWrapper
 import mozilla.components.support.ktx.android.view.enterToImmersiveMode
 import mozilla.components.support.ktx.android.view.exitImmersiveModeIfNeeded
-import org.mozilla.reference.browser.BackHandler
 import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.UserInteractionHandler
 import org.mozilla.reference.browser.ext.requireComponents
@@ -31,47 +32,70 @@ import org.mozilla.reference.browser.tabs.TabsTrayFragment
 
 @Suppress("TooManyFunctions")
 class BrowserFragment : Fragment(), BackHandler, UserInteractionHandler {
-    private lateinit var sessionFeature: SessionFeature
-    private lateinit var tabsToolbarFeature: TabsToolbarFeature
-    private lateinit var downloadsFeature: DownloadsFeature
-    private lateinit var awesomeBarFeature: AwesomeBarFeature
-    private lateinit var promptsFeature: PromptFeature
-    private lateinit var fullScreenFeature: FullScreenFeature
+    private val sessionFeature = ViewBoundFeatureWrapper<SessionFeature>()
+    private val toolbarIntegration = ViewBoundFeatureWrapper<ToolbarIntegration>()
+    private val contextMenuIntegration = ViewBoundFeatureWrapper<ContextMenuIntegration>()
+    private val downloadsFeature = ViewBoundFeatureWrapper<DownloadsFeature>()
+    private val promptsFeature = ViewBoundFeatureWrapper<PromptFeature>()
+    private val fullScreenFeature = ViewBoundFeatureWrapper<FullScreenFeature>()
+    private val customTabsToolbarFeature = ViewBoundFeatureWrapper<CustomTabsToolbarFeature>()
+    private val findInPageIntegration = ViewBoundFeatureWrapper<FindInPageIntegration>()
+
+    private val backButtonHandler: List<ViewBoundFeatureWrapper<*>> = listOf(
+        fullScreenFeature,
+        findInPageIntegration,
+        toolbarIntegration,
+        sessionFeature,
+        customTabsToolbarFeature
+    )
+
     private lateinit var pipFeature: PictureInPictureFeature
-    private lateinit var customTabsToolbarFeature: CustomTabsToolbarFeature
-    private lateinit var findInPageIntegration: FindInPageIntegration
+
+    override fun onAttach(context: Context?) {
+        super.onAttach(context)
+
+        pipFeature = PictureInPictureFeature(requireComponents.core.sessionManager, requireActivity(), ::pipModeChanged)
+    }
+
+    private val sessionId: String?
+        get() = arguments?.getString(SESSION_ID)
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_browser, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+        sessionFeature.set(
+            feature = SessionFeature(
+                requireComponents.core.sessionManager,
+                requireComponents.useCases.sessionUseCases,
+                engineView,
+                sessionId),
+            owner = this,
+            view = view)
 
-        val sessionId = arguments?.getString(SESSION_ID)
+        toolbarIntegration.set(
+            feature = ToolbarIntegration(
+                requireContext(),
+                toolbar,
+                requireComponents.core.historyStorage,
+                requireComponents.toolbar.shippedDomainsProvider,
+                sessionId),
+            owner = this,
+            view = view)
 
-        sessionFeature = SessionFeature(
-            requireComponents.core.sessionManager,
-            requireComponents.useCases.sessionUseCases,
-            engineView,
-            sessionId)
+        contextMenuIntegration.set(
+            feature = ContextMenuIntegration(
+                requireContext(),
+                requireFragmentManager(),
+                requireComponents.core.sessionManager,
+                requireComponents.useCases.tabsUseCases,
+                view,
+                sessionId),
+            owner = this,
+            view = view)
 
-        lifecycle.addObserver(ToolbarIntegration(
-            requireContext(),
-            toolbar,
-            requireComponents.core.historyStorage,
-            requireComponents.toolbar.shippedDomainsProvider,
-            sessionId))
-
-        lifecycle.addObserver(ContextMenuIntegration(
-            requireContext(),
-            requireFragmentManager(),
-            requireComponents.core.sessionManager,
-            requireComponents.useCases.tabsUseCases,
-            view,
-            sessionId))
-
-        awesomeBarFeature = AwesomeBarFeature(awesomeBar, toolbar, engineView)
+        AwesomeBarFeature(awesomeBar, toolbar, engineView)
             .addSearchProvider(
                 requireComponents.search.searchEngineManager.getDefaultSearchEngine(requireContext()),
                 requireComponents.useCases.searchUseCases.defaultSearch)
@@ -83,57 +107,59 @@ class BrowserFragment : Fragment(), BackHandler, UserInteractionHandler {
                 requireComponents.useCases.sessionUseCases.loadUrl)
             .addClipboardProvider(requireContext(), requireComponents.useCases.sessionUseCases.loadUrl)
 
-        tabsToolbarFeature = TabsToolbarFeature(
+        TabsToolbarFeature(
             toolbar = toolbar,
             sessionId = sessionId,
             sessionManager = requireComponents.core.sessionManager,
             showTabs = ::showTabs)
 
-        downloadsFeature = DownloadsFeature(
-            requireContext(),
-            sessionManager = requireComponents.core.sessionManager,
-            sessionId = sessionId,
-            fragmentManager = childFragmentManager,
-            onNeedToRequestPermissions = { permissions ->
-                requestPermissions(permissions, REQUEST_CODE_DOWNLOAD_PERMISSIONS)
-            }
-        )
+        downloadsFeature.set(
+            feature = DownloadsFeature(
+                requireContext(),
+                sessionManager = requireComponents.core.sessionManager,
+                sessionId = sessionId,
+                fragmentManager = childFragmentManager,
+                onNeedToRequestPermissions = { permissions ->
+                    requestPermissions(permissions, REQUEST_CODE_DOWNLOAD_PERMISSIONS)
+                }),
+            owner = this,
+            view = view)
 
-        promptsFeature = PromptFeature(
-            fragment = this,
-            sessionManager = requireComponents.core.sessionManager,
-            fragmentManager = requireFragmentManager(),
-            onNeedToRequestPermissions = { permissions ->
-                requestPermissions(permissions, REQUEST_CODE_PROMPT_PERMISSIONS)
-            }
-        )
+        promptsFeature.set(
+            feature = PromptFeature(
+                fragment = this,
+                sessionManager = requireComponents.core.sessionManager,
+                fragmentManager = requireFragmentManager(),
+                onNeedToRequestPermissions = { permissions ->
+                    requestPermissions(permissions, REQUEST_CODE_PROMPT_PERMISSIONS)
+                }),
+            owner = this,
+            view = view)
 
-        fullScreenFeature = FullScreenFeature(
-            requireComponents.core.sessionManager,
-            requireComponents.useCases.sessionUseCases,
-            sessionId, ::fullScreenChanged
-        )
+        fullScreenFeature.set(
+            feature = FullScreenFeature(
+                requireComponents.core.sessionManager,
+                requireComponents.useCases.sessionUseCases,
+                sessionId, ::fullScreenChanged),
+            owner = this,
+            view = view)
 
-        pipFeature = PictureInPictureFeature(requireComponents.core.sessionManager, requireActivity(), ::pipModeChanged)
+        customTabsToolbarFeature.set(
+            feature = CustomTabsToolbarFeature(
+                requireComponents.core.sessionManager,
+                toolbar,
+                sessionId,
+                requireComponents.toolbar.menuBuilder,
+                closeListener = { activity?.finish() }),
+            owner = this,
+            view = view)
 
-        customTabsToolbarFeature = CustomTabsToolbarFeature(
-            requireComponents.core.sessionManager,
-            toolbar,
-            sessionId,
-            requireComponents.toolbar.menuBuilder
-        ) { activity?.finish() }
-
-        findInPageIntegration = FindInPageIntegration(
-            requireComponents.core.sessionManager,
-            findInPageBar as FindInPageView)
-
-        lifecycle.addObservers(
-            sessionFeature,
-            downloadsFeature,
-            promptsFeature,
-            fullScreenFeature,
-            customTabsToolbarFeature,
-            findInPageIntegration)
+        findInPageIntegration.set(
+            feature = FindInPageIntegration(
+                requireComponents.core.sessionManager,
+                findInPageBar as FindInPageView),
+            owner = this,
+            view = view)
     }
 
     private fun showTabs() {
@@ -166,27 +192,7 @@ class BrowserFragment : Fragment(), BackHandler, UserInteractionHandler {
 
     @Suppress("ReturnCount")
     override fun onBackPressed(): Boolean {
-        if (fullScreenFeature.onBackPressed()) {
-            return true
-        }
-
-        if (findInPageIntegration.onBackPressed()) {
-            return true
-        }
-
-        if (toolbar.onBackPressed()) {
-            return true
-        }
-
-        if (sessionFeature.onBackPressed()) {
-            return true
-        }
-
-        if (customTabsToolbarFeature.onBackPressed()) {
-            return true
-        }
-
-        return false
+        return backButtonHandler.firstOrNull { it.onBackPressed() } != null
     }
 
     override fun onHomePressed(): Boolean {
@@ -202,8 +208,12 @@ class BrowserFragment : Fragment(), BackHandler, UserInteractionHandler {
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
         when (requestCode) {
-            REQUEST_CODE_DOWNLOAD_PERMISSIONS -> downloadsFeature.onPermissionsResult(permissions, grantResults)
-            REQUEST_CODE_PROMPT_PERMISSIONS -> promptsFeature.onPermissionsResult(permissions, grantResults)
+            REQUEST_CODE_DOWNLOAD_PERMISSIONS -> downloadsFeature.withFeature {
+                it.onPermissionsResult(permissions, grantResults)
+            }
+            REQUEST_CODE_PROMPT_PERMISSIONS -> promptsFeature.withFeature {
+                it.onPermissionsResult(permissions, grantResults)
+            }
         }
     }
 
@@ -220,6 +230,6 @@ class BrowserFragment : Fragment(), BackHandler, UserInteractionHandler {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        promptsFeature.onActivityResult(requestCode, resultCode, data)
+        promptsFeature.withFeature { it.onActivityResult(requestCode, resultCode, data) }
     }
 }

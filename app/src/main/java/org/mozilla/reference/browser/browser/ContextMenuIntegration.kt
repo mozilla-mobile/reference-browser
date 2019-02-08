@@ -7,14 +7,12 @@ package org.mozilla.reference.browser.browser
 import android.content.Context
 import android.view.View
 import androidx.fragment.app.FragmentManager
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleObserver
-import androidx.lifecycle.OnLifecycleEvent
 import kotlinx.android.synthetic.main.fragment_browser.view.*
 import mozilla.components.browser.session.SessionManager
 import mozilla.components.feature.contextmenu.ContextMenuCandidate
 import mozilla.components.feature.contextmenu.ContextMenuFeature
 import mozilla.components.feature.tabs.TabsUseCases
+import mozilla.components.support.base.feature.LifecycleAwareFeature
 
 class ContextMenuIntegration(
     context: Context,
@@ -23,17 +21,15 @@ class ContextMenuIntegration(
     tabsUseCases: TabsUseCases,
     parentView: View,
     sessionId: String? = null
-) : LifecycleObserver {
+) : LifecycleAwareFeature {
     private val feature = ContextMenuFeature(fragmentManager, sessionManager,
         ContextMenuCandidate.defaultCandidates(context, tabsUseCases, parentView), parentView.engineView, sessionId)
 
-    @OnLifecycleEvent(Lifecycle.Event.ON_START)
-    fun start() {
+    override fun start() {
         feature.start()
     }
 
-    @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
-    fun stop() {
+    override fun stop() {
         feature.stop()
     }
 }
