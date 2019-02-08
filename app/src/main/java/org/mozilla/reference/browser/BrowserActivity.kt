@@ -17,6 +17,7 @@ import mozilla.components.concept.engine.EngineView
 import mozilla.components.concept.tabstray.TabsTray
 import mozilla.components.feature.intent.IntentProcessor
 import mozilla.components.lib.crash.Crash
+import mozilla.components.support.base.feature.BackHandler
 import mozilla.components.support.utils.SafeIntent
 import org.mozilla.reference.browser.R.string.crash_report_non_fatal_action
 import org.mozilla.reference.browser.R.string.crash_report_non_fatal_message

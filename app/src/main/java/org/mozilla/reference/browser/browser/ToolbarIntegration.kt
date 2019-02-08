@@ -5,14 +5,13 @@
 package org.mozilla.reference.browser.browser
 
 import android.content.Context
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleObserver
-import androidx.lifecycle.OnLifecycleEvent
 import mozilla.components.browser.domains.autocomplete.DomainAutocompleteProvider
 import mozilla.components.browser.toolbar.BrowserToolbar
 import mozilla.components.concept.storage.HistoryStorage
 import mozilla.components.feature.toolbar.ToolbarAutocompleteFeature
 import mozilla.components.feature.toolbar.ToolbarFeature
+import mozilla.components.support.base.feature.BackHandler
+import mozilla.components.support.base.feature.LifecycleAwareFeature
 import org.mozilla.reference.browser.ext.components
 
 class ToolbarIntegration(
@@ -21,7 +20,7 @@ class ToolbarIntegration(
     historyStorage: HistoryStorage,
     domainAutocompleteProvider: DomainAutocompleteProvider,
     sessionId: String? = null
-) : LifecycleObserver {
+) : LifecycleAwareFeature, BackHandler {
     init {
         toolbar.setMenuBuilder(context.components.toolbar.menuBuilder)
 
@@ -39,13 +38,15 @@ class ToolbarIntegration(
         sessionId
     )
 
-    @OnLifecycleEvent(Lifecycle.Event.ON_START)
-    fun start() {
+    override fun start() {
         toolbarFeature.start()
     }
 
-    @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
-    fun stop() {
+    override fun stop() {
         toolbarFeature.stop()
+    }
+
+    override fun onBackPressed(): Boolean {
+        return toolbarFeature.onBackPressed()
     }
 }
