@@ -45,7 +45,7 @@ private fun setupLogging(megazordEnabled: Boolean) {
 
 private fun setupGlean(context: Context) {
     Glean.initialize(context)
-    Glean.setMetricsEnabled(BuildConfig.TELEMETRY_ENABLED && Settings.isTelemetryEnabled(context))
+    Glean.setUploadEnabled(BuildConfig.TELEMETRY_ENABLED && Settings.isTelemetryEnabled(context))
 }
 
 private fun setupCrashReporting(application: BrowserApplication) {

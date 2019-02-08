@@ -38,7 +38,7 @@ class PrivacySettingsFragment : PreferenceFragmentCompat() {
     private fun getChangeListenerForTelemetry(): OnPreferenceChangeListener {
         return OnPreferenceChangeListener { _, value ->
             val enabled = value as Boolean
-            Glean.setMetricsEnabled(enabled)
+            Glean.setUploadEnabled(enabled)
             true
         }
     }

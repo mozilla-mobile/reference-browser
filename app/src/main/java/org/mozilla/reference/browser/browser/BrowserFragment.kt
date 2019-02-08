@@ -178,7 +178,7 @@ class BrowserFragment : Fragment(), BackHandler, UserInteractionHandler {
             return true
         }
 
-        if (sessionFeature.handleBackPressed()) {
+        if (sessionFeature.onBackPressed()) {
             return true
         }
 
