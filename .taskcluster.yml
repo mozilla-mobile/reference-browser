@@ -41,13 +41,13 @@ tasks:
     $let:
       decision_worker_type:
         $if: 'is_repo_trusted'
-        then: gecko-focus
-        else: github-worker
+        then: mobile-3-decision
+        else: mobile-1-decision
 
       build_worker_type:
         $if: 'is_repo_trusted'
-        then: gecko-focus
-        else: github-worker
+        then: mobile-3-b-ref-browser
+        else: mobile-1-b-ref-browser
 
       tasks_priority:
           $if: 'is_repo_trusted'

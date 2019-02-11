@@ -8,11 +8,12 @@ import taskcluster
 
 
 class TaskBuilder(object):
-    def __init__(self, task_id, owner, source, scheduler_id):
+    def __init__(self, task_id, owner, source, scheduler_id, build_worker_type):
         self.task_id = task_id
         self.owner = owner
         self.source = source
         self.scheduler_id = scheduler_id
+        self.build_worker_type = build_worker_type
 
     def build_task(self, name, description, command, artifacts={}, scopes=[], features={}):
         created = datetime.datetime.now()
@@ -20,7 +21,7 @@ class TaskBuilder(object):
         deadline = taskcluster.fromNow('1 day')
 
         return {
-            "workerType": 'gecko-focus',
+            "workerType": self.build_worker_type,
             "taskGroupId": self.task_id,
             "schedulerId": self.scheduler_id,
             "expires": taskcluster.stringDate(expires),
