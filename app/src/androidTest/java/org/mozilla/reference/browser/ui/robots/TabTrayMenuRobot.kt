@@ -7,7 +7,7 @@ package org.mozilla.reference.browser.ui.robots
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.InstrumentationRegistry
-import androidx.test.espresso.matcher.ViewMatchers.*
+import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.uiautomator.UiDevice
 import org.mozilla.reference.browser.helpers.click
 import org.mozilla.reference.browser.R
