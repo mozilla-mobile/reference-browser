@@ -25,7 +25,7 @@ BUILDER = lib.tasks.TaskBuilder(
     owner="android-components-team@mozilla.com",
     source='{}/raw/{}/.taskcluster.yml'.format(GITHUB_HTTP_REPOSITORY, HEAD_REV),
     scheduler_id=SCHEDULER_ID,
-    build_worker_type=BUILD_WORKER_TYPE,
+    build_worker_type=os.environ.get('BUILD_WORKER_TYPE'),
 )
 
 
