@@ -98,7 +98,8 @@ class BrowserFragment : Fragment(), BackHandler, UserInteractionHandler {
         AwesomeBarFeature(awesomeBar, toolbar, engineView)
             .addSearchProvider(
                 requireComponents.search.searchEngineManager.getDefaultSearchEngine(requireContext()),
-                requireComponents.useCases.searchUseCases.defaultSearch)
+                requireComponents.useCases.searchUseCases.defaultSearch,
+                requireComponents.core.client)
             .addSessionProvider(
                 requireComponents.core.sessionManager,
                 requireComponents.useCases.tabsUseCases.selectTab)
