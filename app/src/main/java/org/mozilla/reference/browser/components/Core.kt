@@ -62,13 +62,8 @@ class Core(private val context: Context) {
     val sessionManager by lazy {
         val sessionStorage = SessionStorage(context, engine)
 
-        SessionManager(engine, defaultSession = { Session("about:blank") }).apply {
+        SessionManager(engine).apply {
             sessionStorage.restore()?.let { snapshot -> restore(snapshot) }
-
-            if (size == 0) {
-                val initialSession = Session("https://www.mozilla.org")
-                add(initialSession)
-            }
 
             sessionStorage.autoSave(this)
                 .periodicallyInForeground(interval = 30, unit = TimeUnit.SECONDS)
