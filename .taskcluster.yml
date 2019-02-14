@@ -15,12 +15,18 @@ tasks:
     head_branch:
       $if: 'tasks_for == "github-pull-request"'
       then: ${event.pull_request.head.ref}
-      else: ${event.release.target_commitish}
+      else:
+        $if: 'tasks_for == "github-push"'
+        then: ${event.ref}
+        else: ${event.release.target_commitish}
 
     head_rev:
       $if: 'tasks_for == "github-pull-request"'
       then: ${event.pull_request.head.sha}
-      else: ${event.release.tag_name}
+      else:
+        $if: 'tasks_for == "github-push"'
+        then: ${event.after}
+        else: ${event.release.tag_name}
 
     repository:
       $if: 'tasks_for == "github-pull-request"'
