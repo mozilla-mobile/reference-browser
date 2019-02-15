@@ -18,5 +18,5 @@
 # By default the Android Components team will be the owner for everything in
 # the repo. Unless a later match takes precedence.
 * @mozilla-mobile/act
-/automation @mozilla-mobile/releng
-/CODEOWNERS @mozilla-mobile/releng
+/automation/ @mozilla-mobile/releng @mozilla-mobile/act
+/CODEOWNERS @mozilla-mobile/releng @mozilla-mobile/act
