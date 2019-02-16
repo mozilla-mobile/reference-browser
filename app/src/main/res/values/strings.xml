@@ -5,6 +5,9 @@
 <resources>
     <string name="app_name">Reference Browser</string>
 
+    <!-- Text shown in the toolbar if it is empty -->
+    <string name="toolbar_hint">Search or enter address</string>
+
     <!-- Menu option on the toolbar to open a new tab-->
     <string name="menu_action_add_tab">Add New Tab</string>
 
