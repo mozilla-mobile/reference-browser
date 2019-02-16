@@ -19,6 +19,7 @@ import mozilla.components.feature.findinpage.view.FindInPageView
 import mozilla.components.feature.prompts.PromptFeature
 import mozilla.components.feature.session.FullScreenFeature
 import mozilla.components.feature.session.SessionFeature
+import mozilla.components.feature.sitepermissions.SitePermissionsFeature
 import mozilla.components.feature.tabs.toolbar.TabsToolbarFeature
 import mozilla.components.support.base.feature.BackHandler
 import mozilla.components.support.base.feature.ViewBoundFeatureWrapper
@@ -40,6 +41,7 @@ class BrowserFragment : Fragment(), BackHandler, UserInteractionHandler {
     private val fullScreenFeature = ViewBoundFeatureWrapper<FullScreenFeature>()
     private val customTabsToolbarFeature = ViewBoundFeatureWrapper<CustomTabsToolbarFeature>()
     private val findInPageIntegration = ViewBoundFeatureWrapper<FindInPageIntegration>()
+    private val sitePermissionFeature = ViewBoundFeatureWrapper<SitePermissionsFeature>()
 
     private val backButtonHandler: List<ViewBoundFeatureWrapper<*>> = listOf(
         fullScreenFeature,
@@ -161,6 +163,17 @@ class BrowserFragment : Fragment(), BackHandler, UserInteractionHandler {
                 findInPageBar as FindInPageView),
             owner = this,
             view = view)
+
+        sitePermissionFeature.set(
+            feature = SitePermissionsFeature(
+                anchorView = awesomeBar,
+                sessionManager = requireComponents.core.sessionManager
+            ) { permissions ->
+                requestPermissions(permissions, REQUEST_CODE_APP_PERMISSIONS)
+            },
+            owner = this,
+            view = view
+        )
     }
 
     private fun showTabs() {
@@ -215,6 +228,9 @@ class BrowserFragment : Fragment(), BackHandler, UserInteractionHandler {
             REQUEST_CODE_PROMPT_PERMISSIONS -> promptsFeature.withFeature {
                 it.onPermissionsResult(permissions, grantResults)
             }
+            REQUEST_CODE_APP_PERMISSIONS -> sitePermissionFeature.withFeature {
+                it.onPermissionsResult(grantResults)
+            }
         }
     }
 
@@ -222,6 +238,7 @@ class BrowserFragment : Fragment(), BackHandler, UserInteractionHandler {
         private const val SESSION_ID = "session_id"
         private const val REQUEST_CODE_DOWNLOAD_PERMISSIONS = 1
         private const val REQUEST_CODE_PROMPT_PERMISSIONS = 2
+        private const val REQUEST_CODE_APP_PERMISSIONS = 3
 
         fun create(sessionId: String? = null): BrowserFragment = BrowserFragment().apply {
             arguments = Bundle().apply {
