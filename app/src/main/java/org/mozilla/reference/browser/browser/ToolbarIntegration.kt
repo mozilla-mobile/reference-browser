@@ -12,6 +12,7 @@ import mozilla.components.feature.toolbar.ToolbarAutocompleteFeature
 import mozilla.components.feature.toolbar.ToolbarFeature
 import mozilla.components.support.base.feature.BackHandler
 import mozilla.components.support.base.feature.LifecycleAwareFeature
+import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.ext.components
 
 class ToolbarIntegration(
@@ -23,6 +24,8 @@ class ToolbarIntegration(
 ) : LifecycleAwareFeature, BackHandler {
     init {
         toolbar.setMenuBuilder(context.components.toolbar.menuBuilder)
+
+        toolbar.hint = context.getString(R.string.toolbar_hint)
 
         ToolbarAutocompleteFeature(toolbar).apply {
             addHistoryStorageProvider(historyStorage)
