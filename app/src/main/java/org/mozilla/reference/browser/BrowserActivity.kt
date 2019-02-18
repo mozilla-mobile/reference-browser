@@ -12,6 +12,8 @@ import com.google.android.material.snackbar.Snackbar.LENGTH_LONG
 import androidx.appcompat.app.AppCompatActivity
 import android.util.AttributeSet
 import android.view.View
+import mozilla.components.browser.session.Session
+import mozilla.components.browser.session.runWithSession
 import mozilla.components.browser.tabstray.BrowserTabsTray
 import mozilla.components.concept.engine.EngineView
 import mozilla.components.concept.tabstray.TabsTray
@@ -31,12 +33,14 @@ open class BrowserActivity : AppCompatActivity(), ComponentCallbacks2 {
 
     private lateinit var crashIntegration: CrashIntegration
 
+    private val sessionId: String?
+        get() = SafeIntent(intent).getStringExtra(IntentProcessor.ACTIVE_SESSION_ID)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         if (savedInstanceState == null) {
-            val sessionId = SafeIntent(intent).getStringExtra(IntentProcessor.ACTIVE_SESSION_ID)
             supportFragmentManager?.beginTransaction()?.apply {
                 replace(R.id.container, BrowserFragment.create(sessionId))
                 commit()
@@ -61,6 +65,31 @@ open class BrowserActivity : AppCompatActivity(), ComponentCallbacks2 {
         }
 
         super.onBackPressed()
+
+        removeSessionIfNeeded()
+    }
+
+    /**
+     * If needed remove the current session.
+     *
+     * If a session is a custom tab or was opened from an external app then the session gets removed once you go back
+     * to the third-party app.
+     *
+     * Eventually we may want to move this functionality into one of our feature components.
+     */
+    private fun removeSessionIfNeeded() {
+        val sessionManager = components.core.sessionManager
+        val sessionId = sessionId
+
+        val session = (if (sessionId != null) {
+            sessionManager.findSessionById(sessionId)
+        } else {
+            sessionManager.selectedSession
+        }) ?: return
+
+        if (session.source == Session.Source.ACTION_VIEW || session.source == Session.Source.CUSTOM_TAB) {
+            sessionManager.remove(session)
+        }
     }
 
     override fun onUserLeaveHint() {
