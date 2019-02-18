@@ -12,7 +12,7 @@ import org.mozilla.reference.browser.ui.robots.navigationToolbar
  *  Tests for verifying tab tray menu:
  * - Appears when counter tabs is clicked
  * - Expected options are displayed as listed below
- * - TBD add missing options to verify
+ * - Options/Buttons in this menu work as expected
  */
 
 class TabTrayMenuTest {
@@ -41,11 +41,70 @@ class TabTrayMenuTest {
     fun closeAllTabsTest() {
         navigationToolbar {
         }.openTabTrayMenu {
+        }.openNewTab {
+        }.openTabTrayMenu {
+            // This check will be enabled once there is a set up/tear down defined
+            // verifyThereIsOneTabsOpen()
         }.openMoreOptionsMenu {
             verifyCloseAllTabsButton()
         }.closeAllTabs {
-            verifyNewTabView()
+            verifyNewTabAddressView()
+            checkNumberOfTabsTabCounter("0")
+        }
+    }
+
+    @Test
+    // This test verifies that close all tabs option works as expected
+    fun closeAllPrivateTabsTest() {
+        navigationToolbar {
+        }.openTabTrayMenu {
+            openPrivateBrowsing()
+        }.openNewTab {
+        }.openTabTrayMenu {
+            openPrivateBrowsing()
+            verifyThereIsOnePrivateTabOpen()
+        }.openMoreOptionsMenu {
+            verifyCloseAllPrivateTabsButton()
+        }.closeAllPrivateTabs {
+        }.openTabTrayMenu {
+            openPrivateBrowsing()
+            verifyThereAreNotPrivateTabsOpen()
+        }
+    }
+
+    @Test
+    // This test verifies the change between regular-private browsing works
+    fun privateRegularModeChangeTest() {
+        navigationToolbar {
+        }.openTabTrayMenu {
+            openPrivateBrowsing()
+            verifyPrivateBrowsingButton(true)
+            verifyRegularBrowsingButton(false)
+            openRegularBrowsing()
+            verifyPrivateBrowsingButton(false)
+            verifyRegularBrowsingButton(true)
+        }
+    }
+
+    @Test
+    // This test verifies the new tab is open and that its items are all in place
+    fun openNewTabTest() {
+        navigationToolbar {
+        }.openTabTrayMenu {
+        }.openNewTab {
+            verifyNewTabAddressView()
             checkNumberOfTabsTabCounter("1")
+        }
+    }
+
+    @Test
+    // This test verifies the back button functionality
+    fun goBackFromTabTrayTest() {
+        navigationToolbar {
+        }.openTabTrayMenu {
+        }.goBack {
+            // For now checking new tab is valid, this will change when browsing to/from different places
+            verifyNewTabAddressView()
         }
     }
 }

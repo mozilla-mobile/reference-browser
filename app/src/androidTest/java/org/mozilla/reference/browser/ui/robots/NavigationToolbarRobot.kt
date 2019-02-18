@@ -5,7 +5,11 @@
 package org.mozilla.reference.browser.ui.robots
 
 import androidx.test.espresso.Espresso.onView
+import org.mozilla.reference.browser.R.id.withText
+import java.util.regex.Pattern.matches
 import androidx.test.espresso.matcher.ViewMatchers
+import androidx.test.espresso.matcher.ViewMatchers.withText
+import androidx.test.espresso.assertion.ViewAssertions.matches
 import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.helpers.click
 
@@ -13,6 +17,9 @@ import org.mozilla.reference.browser.helpers.click
  * Implementation of Robot Pattern for the navigation toolbar  menu.
  */
 class NavigationToolbarRobot {
+
+    fun verifyNewTabAddressView() = newTabAddressText()
+    fun checkNumberOfTabsTabCounter(numTabs: String) = numberOfOpenTabsTabCounter.check(matches(withText(numTabs)))
 
     class Transition {
         fun openThreeDotMenu(interact: ThreeDotMenuRobot.() -> Unit): ThreeDotMenuRobot.Transition {
@@ -36,3 +43,5 @@ fun navigationToolbar(interact: NavigationToolbarRobot.() -> Unit): NavigationTo
 
 private fun threeDotButton() = onView(ViewMatchers.withContentDescription("Menu"))
 private fun openTabTray() = onView(ViewMatchers.withId(R.id.counter_box))
+private fun newTabAddressText() = onView(ViewMatchers.withText("about:blank"))
+private var numberOfOpenTabsTabCounter = onView(ViewMatchers.withId(R.id.counter_text))
