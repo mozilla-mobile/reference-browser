@@ -11,7 +11,6 @@ import org.mozilla.reference.browser.components.BackgroundServices
 import org.mozilla.reference.browser.components.Services
 import org.mozilla.reference.browser.components.Search
 import org.mozilla.reference.browser.components.Utilities
-import org.mozilla.reference.browser.components.Toolbar
 import org.mozilla.reference.browser.components.UseCases
 
 /**
@@ -25,7 +24,6 @@ class Components(private val context: Context) {
     // Background services are initiated eagerly; they kick off periodic tasks and setup an accounts system.
     val backgroundServices by lazy { BackgroundServices(context, core.historyStorage) }
 
-    val toolbar by lazy { Toolbar(context, useCases.sessionUseCases, useCases.tabsUseCases, core.sessionManager) }
     val analytics by lazy { Analytics(context) }
     val utils by lazy {
         Utilities(context, core.sessionManager, useCases.sessionUseCases, useCases.searchUseCases)
