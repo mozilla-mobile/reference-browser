@@ -15,7 +15,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:elevation="4dp"
-        android:background="@color/primary"/>
+        android:background="@color/toolbarBackgroundColor" />
 
     <mozilla.components.concept.tabstray.TabsTray
         android:id="@+id/tabsTray"

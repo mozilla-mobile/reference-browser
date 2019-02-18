@@ -7,7 +7,6 @@ package org.mozilla.reference.browser.components
 import android.content.Context
 import android.content.SharedPreferences
 import android.preference.PreferenceManager
-import mozilla.components.browser.session.Session
 import mozilla.components.browser.session.SessionManager
 import mozilla.components.browser.session.storage.SessionStorage
 import mozilla.components.browser.storage.sync.PlacesHistoryStorage
