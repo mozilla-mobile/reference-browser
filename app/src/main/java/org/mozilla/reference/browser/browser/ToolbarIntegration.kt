@@ -6,6 +6,7 @@ package org.mozilla.reference.browser.browser
 
 import android.content.Context
 import android.content.Intent
+import android.view.View
 import mozilla.components.browser.domains.autocomplete.ShippedDomainsProvider
 import mozilla.components.browser.menu.BrowserMenuBuilder
 import mozilla.components.browser.menu.item.BrowserMenuItemToolbar
@@ -108,6 +109,10 @@ class ToolbarIntegration(
         ToolbarAutocompleteFeature(toolbar).apply {
             addHistoryStorageProvider(historyStorage)
             addDomainProvider(shippedDomainsProvider)
+        }
+
+        toolbar.urlBoxView = View(context).apply {
+            background = context.resources.getDrawable(R.drawable.url_background, context.theme)
         }
     }
 

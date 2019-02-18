@@ -5,8 +5,14 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <color name="placeholder_grey">#777777</color>
 
-    <color name="primaryDark">#ff333333</color>
-    <color name="primary">#ff333333</color>
+    <color name="dark">#ff212121</color>
+    <color name="evenDarker">#ff1a1a1a</color>
+    <color name="accent">#ff00BCD4</color>
+
+    <color name="toolbarBackgroundColor">@color/evenDarker</color>
+    <color name="toolbarUrlBoxColor">#333333</color>
+    <color name="toolbarSuggestionForeground">@color/dark</color>
+    <color name="toolbarSuggestionBackground">@color/accent</color>
 
     <color name="icons">#ffffffff</color>
 
