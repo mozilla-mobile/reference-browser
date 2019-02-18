@@ -13,7 +13,6 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.fragment_browser.*
 import mozilla.components.feature.awesomebar.AwesomeBarFeature
-import mozilla.components.feature.customtabs.CustomTabsToolbarFeature
 import mozilla.components.feature.downloads.DownloadsFeature
 import mozilla.components.feature.findinpage.view.FindInPageView
 import mozilla.components.feature.prompts.PromptFeature
@@ -39,7 +38,7 @@ class BrowserFragment : Fragment(), BackHandler, UserInteractionHandler {
     private val downloadsFeature = ViewBoundFeatureWrapper<DownloadsFeature>()
     private val promptsFeature = ViewBoundFeatureWrapper<PromptFeature>()
     private val fullScreenFeature = ViewBoundFeatureWrapper<FullScreenFeature>()
-    private val customTabsToolbarFeature = ViewBoundFeatureWrapper<CustomTabsToolbarFeature>()
+    private val customTabsIntegration = ViewBoundFeatureWrapper<CustomTabsIntegration>()
     private val findInPageIntegration = ViewBoundFeatureWrapper<FindInPageIntegration>()
     private val sitePermissionFeature = ViewBoundFeatureWrapper<SitePermissionsFeature>()
 
@@ -48,7 +47,7 @@ class BrowserFragment : Fragment(), BackHandler, UserInteractionHandler {
         findInPageIntegration,
         toolbarIntegration,
         sessionFeature,
-        customTabsToolbarFeature
+        customTabsIntegration
     )
 
     private lateinit var pipFeature: PictureInPictureFeature
@@ -81,7 +80,9 @@ class BrowserFragment : Fragment(), BackHandler, UserInteractionHandler {
                 requireContext(),
                 toolbar,
                 requireComponents.core.historyStorage,
-                requireComponents.toolbar.shippedDomainsProvider,
+                requireComponents.core.sessionManager,
+                requireComponents.useCases.sessionUseCases,
+                requireComponents.useCases.tabsUseCases,
                 sessionId),
             owner = this,
             view = view)
@@ -147,15 +148,20 @@ class BrowserFragment : Fragment(), BackHandler, UserInteractionHandler {
             owner = this,
             view = view)
 
-        customTabsToolbarFeature.set(
-            feature = CustomTabsToolbarFeature(
-                requireComponents.core.sessionManager,
-                toolbar,
-                sessionId,
-                requireComponents.toolbar.menuBuilder,
-                closeListener = { activity?.finish() }),
-            owner = this,
-            view = view)
+        sessionId?.let { id ->
+            customTabsIntegration.set(
+                feature = CustomTabsIntegration(
+                    requireContext(),
+                    requireComponents.core.sessionManager,
+                    toolbar,
+                    requireComponents.useCases.sessionUseCases,
+                    id,
+                    activity
+                ),
+                owner = this,
+                view = view
+            )
+        }
 
         findInPageIntegration.set(
             feature = FindInPageIntegration(
