@@ -5,10 +5,14 @@
 package org.mozilla.reference.browser.components
 
 import android.content.Context
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import mozilla.components.browser.storage.sync.PlacesHistoryStorage
 import mozilla.components.service.fxa.Config
 import mozilla.components.service.fxa.FxaAccountManager
-import org.mozilla.reference.browser.services.SyncManager
+import mozilla.components.feature.sync.BackgroundSyncManager
+import mozilla.components.feature.sync.GlobalSyncableStoreProvider
 
 /**
  * Component group for background services. These are components that need to be accessed from
@@ -31,7 +35,16 @@ class BackgroundServices(
     private val scopes: Array<String> = arrayOf("profile", "https://identity.mozilla.com/apps/oldsync")
     private val config = Config.release(CLIENT_ID, REDIRECT_URL)
 
-    val accountManager = FxaAccountManager(context, config, scopes).also { it.init() }
+    init {
+        // Make the "history" store accessible to workers spawned by the sync manager.
+        GlobalSyncableStoreProvider.configureStore("history" to placesHistoryStorage)
+    }
 
-    val syncManager = SyncManager(context, accountManager, placesHistoryStorage)
+    val syncManager = BackgroundSyncManager("https://identity.mozilla.com/apps/oldsync").also {
+        it.addStore("history")
+    }
+
+    val accountManager = FxaAccountManager(context, config, scopes, syncManager).also {
+        CoroutineScope(Dispatchers.Main).launch { it.initAsync().await() }
+    }
 }
