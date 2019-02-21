@@ -2,6 +2,16 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
+buildscript {
+    repositories {
+        jcenter()
+    }
+
+    dependencies {
+        classpath 'org.yaml:snakeyaml:1.23'
+    }
+}
+
 plugins {
     id "com.jetbrains.python.envs" version "0.0.26"
 }
@@ -12,6 +22,7 @@ apply plugin: 'kotlin-android-extensions'
 apply from: "$project.rootDir/automation/gradle/versionCode.gradle"
 
 apply plugin: 'org.mozilla.appservices'
+import org.yaml.snakeyaml.Yaml
 
 appservices {
     defaultConfig {
@@ -149,6 +160,9 @@ configurations {
     geckoNightlyAarch64Implementation {}
 }
 
+def buildconfig = new Yaml().load(new File(rootDir, '.buildconfig.yml').newInputStream())
+def gecko = new Gecko(buildconfig.geckoNightlyVersion)
+
 dependencies {
     implementation Deps.mozilla_concept_engine
     implementation Deps.mozilla_concept_tabstray
@@ -193,9 +207,9 @@ dependencies {
     implementation Deps.thirdparty_sentry
 
     geckoNightlyImplementation Deps.mozilla_browser_engine_gecko_nightly
-    geckoNightlyArmImplementation Gecko.geckoview_nightly_arm
-    geckoNightlyX86Implementation Gecko.geckoview_nightly_x86
-    geckoNightlyAarch64Implementation Gecko.geckoview_nightly_aarch64
+    geckoNightlyArmImplementation gecko.geckoview_nightly_arm
+    geckoNightlyX86Implementation gecko.geckoview_nightly_x86
+    geckoNightlyAarch64Implementation gecko.geckoview_nightly_aarch64
 
     implementation Deps.kotlin_stdlib
     implementation Deps.kotlin_coroutines
