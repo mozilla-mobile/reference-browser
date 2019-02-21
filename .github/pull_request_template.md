@@ -2,7 +2,6 @@
 
 ### Pull Request checklist
 <!-- Before submitting the PR, please address each item -->
-- [ ] **Quality**: This PR builds and passes detekt/ktlint checks (A pre-push hook is recommended)
 - [ ] **Accessibility**: The code in this PR follows [accessibility best practices](https://github.com/mozilla-mobile/shared-docs/blob/master/android/accessibility_guide.md) or does not include any user facing features
 
 ### Before merging checklist
