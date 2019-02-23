@@ -10,7 +10,7 @@ import org.mozilla.reference.browser.helpers.BrowserActivityTestRule
 import org.mozilla.reference.browser.ui.robots.navigationToolbar
 
 /**
- *  Tests for verifying the settings view options:
+ *  Tests for verifying the settings view options exist as expected:
  * - Appears when the settings submenu is tapped
  * - Expected options are displayed as listed below
  */

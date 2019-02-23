@@ -12,6 +12,7 @@ import org.mozilla.reference.browser.BrowserApplication
  * An IdlingResource implementation that waits until the current session is not loading anymore.
  * Only after loading has completed further actions will be performed.
  */
+
 class SessionLoadedIdlingResource : IdlingResource {
     private var resourceCallback: IdlingResource.ResourceCallback? = null
 
