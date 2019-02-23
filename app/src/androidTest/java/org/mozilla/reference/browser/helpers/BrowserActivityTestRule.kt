@@ -4,6 +4,7 @@
 
 package org.mozilla.reference.browser.helpers
 
+import androidx.test.espresso.IdlingRegistry
 import androidx.test.rule.ActivityTestRule
 import org.mozilla.reference.browser.BrowserActivity
 
@@ -29,9 +30,16 @@ class BrowserActivityTestRule(
      * broken because it's not used, and thus tested, at present.
      */
 
+    private lateinit var loadingIdlingResource: SessionLoadedIdlingResource
+
     override fun beforeActivityLaunched() {
+
+        loadingIdlingResource = SessionLoadedIdlingResource().also {
+            IdlingRegistry.getInstance().register(it)
+        }
     }
 
     override fun afterActivityFinished() {
+        IdlingRegistry.getInstance().unregister(loadingIdlingResource)
     }
 }
