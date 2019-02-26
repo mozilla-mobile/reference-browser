@@ -4,7 +4,6 @@
 
 package org.mozilla.reference.browser.browser
 
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -27,7 +26,7 @@ import mozilla.components.support.ktx.android.view.exitImmersiveModeIfNeeded
 import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.UserInteractionHandler
 import org.mozilla.reference.browser.ext.requireComponents
-import org.mozilla.reference.browser.pip.PictureInPictureFeature
+import org.mozilla.reference.browser.pip.PictureInPictureIntegration
 import org.mozilla.reference.browser.tabs.TabsTrayFragment
 
 @Suppress("TooManyFunctions")
@@ -41,6 +40,7 @@ class BrowserFragment : Fragment(), BackHandler, UserInteractionHandler {
     private val customTabsIntegration = ViewBoundFeatureWrapper<CustomTabsIntegration>()
     private val findInPageIntegration = ViewBoundFeatureWrapper<FindInPageIntegration>()
     private val sitePermissionFeature = ViewBoundFeatureWrapper<SitePermissionsFeature>()
+    private val pictureInPictureIntegration = ViewBoundFeatureWrapper<PictureInPictureIntegration>()
 
     private val backButtonHandler: List<ViewBoundFeatureWrapper<*>> = listOf(
         fullScreenFeature,
@@ -49,14 +49,6 @@ class BrowserFragment : Fragment(), BackHandler, UserInteractionHandler {
         sessionFeature,
         customTabsIntegration
     )
-
-    private lateinit var pipFeature: PictureInPictureFeature
-
-    override fun onAttach(context: Context?) {
-        super.onAttach(context)
-
-        pipFeature = PictureInPictureFeature(requireComponents.core.sessionManager, requireActivity(), ::pipModeChanged)
-    }
 
     private val sessionId: String?
         get() = arguments?.getString(SESSION_ID)
@@ -180,6 +172,15 @@ class BrowserFragment : Fragment(), BackHandler, UserInteractionHandler {
             owner = this,
             view = view
         )
+
+        pictureInPictureIntegration.set(
+            feature = PictureInPictureIntegration(
+                requireComponents.core.sessionManager,
+                requireActivity()
+            ),
+            owner = this,
+            view = view
+        )
     }
 
     private fun showTabs() {
@@ -201,29 +202,28 @@ class BrowserFragment : Fragment(), BackHandler, UserInteractionHandler {
         }
     }
 
-    private fun pipModeChanged(enabled: Boolean) {
-        val fullScreenMode = requireComponents.core.sessionManager.selectedSession?.fullScreenMode ?: false
-        // If we're exiting PIP mode and we're in fullscreen mode, then we should exit fullscreen mode as well.
-        if (!enabled && fullScreenMode) {
-            onBackPressed()
-            fullScreenChanged(false)
-        }
-    }
-
     @Suppress("ReturnCount")
     override fun onBackPressed(): Boolean {
         return backButtonHandler.firstOrNull { it.onBackPressed() } != null
     }
 
     override fun onHomePressed(): Boolean {
-        if (pipFeature.onHomePressed()) {
-            return true
+        var handled = false
+
+        pictureInPictureIntegration.withFeature {
+            handled = it.onHomePressed()
         }
-        return false
+
+        return handled
     }
 
-    override fun onPictureInPictureModeChanged(isInPictureInPictureMode: Boolean) {
-        pipFeature.onPictureInPictureModeChanged(isInPictureInPictureMode)
+    override fun onPictureInPictureModeChanged(enabled: Boolean) {
+        val fullScreenMode = requireComponents.core.sessionManager.selectedSession?.fullScreenMode ?: false
+        // If we're exiting PIP mode and we're in fullscreen mode, then we should exit fullscreen mode as well.
+        if (!enabled && fullScreenMode) {
+            onBackPressed()
+            fullScreenChanged(false)
+        }
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
