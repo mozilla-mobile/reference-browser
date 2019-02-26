@@ -5,12 +5,15 @@
 package org.mozilla.reference.browser.ui.robots
 
 import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.assertion.ViewAssertions.doesNotExist
+import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers
-import androidx.test.InstrumentationRegistry
+import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withId
-import androidx.test.uiautomator.UiDevice
-import org.mozilla.reference.browser.helpers.click
 import org.mozilla.reference.browser.R
+import org.mozilla.reference.browser.helpers.assertIsChecked
+import org.mozilla.reference.browser.helpers.click
+import java.util.regex.Pattern.matches
 
 /**
  * Implementation of Robot Pattern for the tab tray  menu.
@@ -26,24 +29,39 @@ class TabTrayMenuRobot {
     fun verifyCloseButtonInTabPreview() = closeTabButtonTabTray()
     fun verifyDefaultOpenTabTitle() = openTabTabTrayTitle()
     fun verifyDefaultOpenTabThumbnail() = openTabTabTrayThumbnail()
+    fun verifyRegularBrowsingButton(regularBrowsingButtonChecked: Boolean) = regularBrowsingButton().assertIsChecked(regularBrowsingButtonChecked)
+    fun verifyPrivateBrowsingButton(privateButtonChecked: Boolean) = privateBrowsingButton().assertIsChecked(privateButtonChecked)
+
+    fun verifyThereIsOnePrivateTabOpen() = atLeastOnePrivateTab()
+    fun verifyThereAreNotPrivateTabsOpen() = noPrivateTabs()
+    fun verifyThereIsOneTabsOpen() = atLeastOneRegularTab()
+
+    fun openRegularBrowsing() {
+        regularBrowsingButton().click()
+    }
+
+    fun openPrivateBrowsing() {
+        privateBrowsingButton().click()
+    }
 
     class Transition {
-        private val device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
 
-        fun exitToHomeScreen() {
-            device.pressBack()
-        }
-
-        fun openNewTab(interact: NewTabRobot.() -> Unit): NewTabRobot {
+        fun openNewTab(interact: NavigationToolbarRobot.() -> Unit): NavigationToolbarRobot.Transition {
             newTabButton().click()
-            NewTabRobot().interact()
-            return NewTabRobot()
+            NavigationToolbarRobot().interact()
+            return NavigationToolbarRobot.Transition()
         }
 
         fun openMoreOptionsMenu(interact: TabTrayMoreOptionsMenuRobot.() -> Unit): TabTrayMoreOptionsMenuRobot.Transition {
             menuButton().click()
             TabTrayMoreOptionsMenuRobot().interact()
             return TabTrayMoreOptionsMenuRobot.Transition()
+        }
+
+        fun goBack(interact: NavigationToolbarRobot.() -> Unit): NavigationToolbarRobot {
+            newTabButton().click()
+            NavigationToolbarRobot().interact()
+            return NavigationToolbarRobot()
         }
     }
 }
@@ -60,3 +78,6 @@ private fun menuButton() = onView(ViewMatchers.withContentDescription("More opti
 private fun closeTabButtonTabTray() = onView(withId(R.id.mozac_browser_tabstray_close))
 private fun openTabTabTrayTitle() = onView(withId(R.id.mozac_browser_tabstray_url))
 private fun openTabTabTrayThumbnail() = onView(withId(R.id.mozac_browser_tabstray_thumbnail))
+private fun noPrivateTabs() = onView(ViewMatchers.withText("Private Browsing")).check(doesNotExist())
+private fun atLeastOnePrivateTab() = onView((ViewMatchers.withText("Private Browsing"))).check(matches(isDisplayed()))
+private fun atLeastOneRegularTab() = onView((ViewMatchers.withText("about:blank"))).check(matches(isDisplayed()))

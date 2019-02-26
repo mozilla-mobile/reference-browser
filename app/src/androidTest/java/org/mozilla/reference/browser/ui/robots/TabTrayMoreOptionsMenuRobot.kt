@@ -16,13 +16,20 @@ import org.mozilla.reference.browser.helpers.click
 class TabTrayMoreOptionsMenuRobot {
 
     fun verifyCloseAllTabsButton() = closeAllTabsButton()
+    fun verifyCloseAllPrivateTabsButton() = closeAllPrivateTabsButton()
 
     class Transition {
 
-        fun closeAllTabs(interact: NewTabRobot.() -> Unit): NewTabRobot {
+        fun closeAllTabs(interact: NavigationToolbarRobot.() -> Unit): NavigationToolbarRobot {
             closeAllTabsButton().click()
-            NewTabRobot().interact()
-            return NewTabRobot()
+            NavigationToolbarRobot().interact()
+            return NavigationToolbarRobot()
+        }
+
+        fun closeAllPrivateTabs(interact: NavigationToolbarRobot.() -> Unit): NavigationToolbarRobot.Transition {
+            closeAllPrivateTabsButton().click()
+            NavigationToolbarRobot().interact()
+            return NavigationToolbarRobot.Transition()
         }
     }
 }
@@ -32,3 +39,4 @@ fun tabTrayMoreOptionsMenu(interact: TabTrayMoreOptionsMenuRobot.() -> Unit) {
 }
 
 private fun closeAllTabsButton() = onView(ViewMatchers.withText("Close All Tabs"))
+private fun closeAllPrivateTabsButton() = onView(ViewMatchers.withText("Close Private Tabs"))
