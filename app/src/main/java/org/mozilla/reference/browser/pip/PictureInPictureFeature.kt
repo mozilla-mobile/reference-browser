@@ -9,11 +9,12 @@ package org.mozilla.reference.browser.pip
 import android.annotation.TargetApi
 import android.app.Activity
 import android.app.PictureInPictureParams
+import android.content.pm.PackageManager
 import android.os.Build
 import mozilla.components.browser.session.SessionManager
 
 /**
- * A simple implementation of Picture-in-picture mode support.
+ * A simple implementation of Picture-in-picture mode if on a supported platform.
  *
  * @param sessionManager Session Manager for observing the selected session's fullscreen mode changes.
  * @param activity the activity with the EngineView for calling PIP mode when required; the AndroidX Fragment
@@ -23,16 +24,23 @@ import mozilla.components.browser.session.SessionManager
 class PictureInPictureFeature(
     private val sessionManager: SessionManager,
     private val activity: Activity,
-    private val pipChanged: (Boolean) -> Unit
+    private val pipChanged: ((Boolean) -> Unit?)? = null
 ) {
+    private val hasSystemFeature = Build.VERSION.SDK_INT >= Build.VERSION_CODES.N &&
+            activity.packageManager.hasSystemFeature(PackageManager.FEATURE_PICTURE_IN_PICTURE)
 
     fun onHomePressed(): Boolean {
+        if (!hasSystemFeature) {
+            return false
+        }
+
         val fullScreenMode = sessionManager.selectedSession?.fullScreenMode ?: false
         return fullScreenMode && enterPipModeCompat()
     }
 
     @TargetApi(Build.VERSION_CODES.O)
     fun enterPipModeCompat() = when {
+        !hasSystemFeature -> false
         Build.VERSION.SDK_INT >= Build.VERSION_CODES.O ->
             activity.enterPictureInPictureMode(PictureInPictureParams.Builder().build())
         Build.VERSION.SDK_INT >= Build.VERSION_CODES.N -> {
@@ -42,5 +50,5 @@ class PictureInPictureFeature(
         else -> false
     }
 
-    fun onPictureInPictureModeChanged(enabled: Boolean) = pipChanged(enabled)
+    fun onPictureInPictureModeChanged(enabled: Boolean) = pipChanged?.invoke(enabled)
 }
