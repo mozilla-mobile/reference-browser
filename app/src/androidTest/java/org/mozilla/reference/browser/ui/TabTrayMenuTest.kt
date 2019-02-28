@@ -7,6 +7,13 @@ import org.junit.Rule
 import org.junit.Test
 import org.mozilla.reference.browser.helpers.BrowserActivityTestRule
 import org.mozilla.reference.browser.ui.robots.navigationToolbar
+import androidx.test.InstrumentationRegistry
+import androidx.test.uiautomator.UiDevice
+import androidx.test.uiautomator.UiSelector
+import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.matcher.ViewMatchers
+import org.mozilla.reference.browser.helpers.click
+import org.junit.Before
 
 /**
  *  Tests for verifying tab tray menu:
@@ -18,6 +25,27 @@ import org.mozilla.reference.browser.ui.robots.navigationToolbar
 class TabTrayMenuTest {
 
     @get:Rule val activityTestRule = BrowserActivityTestRule()
+
+    @Before
+    // SetUp to close all tabs before starting each test
+    fun setUp() {
+        fun optionsButton() = onView(ViewMatchers.withContentDescription("More options"))
+        fun closeAllTabsButton() = onView(ViewMatchers.withText("Close All Tabs"))
+        fun goBackButton() = onView(ViewMatchers.withContentDescription("back"))
+
+        val mDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
+        val tabCounterButton = mDevice.findObject(UiSelector().descriptionContains("Tab Counter"))
+        tabCounterButton.click()
+
+        val thereAreTabsOpenInTabTray = mDevice.findObject(UiSelector().text("about:blank")).exists()
+
+        if (thereAreTabsOpenInTabTray) {
+            optionsButton().click()
+            closeAllTabsButton().click()
+        } else {
+            goBackButton().click()
+        }
+    }
 
     /* ktlint-disable no-blank-line-before-rbrace */ // This imposes unreadable grouping.
     @Test
@@ -33,6 +61,7 @@ class TabTrayMenuTest {
             verifyDefaultOpenTabTitle()
             verifyCloseButtonInTabPreview()
             verifyDefaultOpenTabThumbnail()
+            goBackFromTabTrayTest()
         }
     }
 
@@ -43,8 +72,7 @@ class TabTrayMenuTest {
         }.openTabTrayMenu {
         }.openNewTab {
         }.openTabTrayMenu {
-            // This check will be enabled once there is a set up/tear down defined
-            // verifyThereIsOneTabsOpen()
+            verifyThereIsOneTabOpen()
         }.openMoreOptionsMenu {
             verifyCloseAllTabsButton()
         }.closeAllTabs {
@@ -69,6 +97,19 @@ class TabTrayMenuTest {
         }.openTabTrayMenu {
             openPrivateBrowsing()
             verifyThereAreNotPrivateTabsOpen()
+            goBackFromTabTrayTest()
+        }
+    }
+
+    @Test
+    fun closeOneTabXButtonTest() {
+        navigationToolbar {
+        }.openTabTrayMenu {
+        }.openNewTab {
+            checkNumberOfTabsTabCounter("1")
+        }.openTabTrayMenu {
+        }.closeTabXButton {
+            checkNumberOfTabsTabCounter("0")
         }
     }
 
@@ -83,6 +124,7 @@ class TabTrayMenuTest {
             openRegularBrowsing()
             verifyPrivateBrowsingButton(false)
             verifyRegularBrowsingButton(true)
+            goBackFromTabTrayTest()
         }
     }
 
@@ -102,7 +144,7 @@ class TabTrayMenuTest {
     fun goBackFromTabTrayTest() {
         navigationToolbar {
         }.openTabTrayMenu {
-        }.goBack {
+        }.goBackFromTabTray {
             // For now checking new tab is valid, this will change when browsing to/from different places
             verifyNewTabAddressView()
         }
