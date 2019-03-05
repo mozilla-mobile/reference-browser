@@ -130,6 +130,90 @@ class TaskBuilder(object):
             }
         }
 
+    def craft_unit_test_task(self, build_task_id, name, description, command, dependencies):
+        created = datetime.datetime.now()
+        expires = taskcluster.fromNow('1 year')
+        deadline = taskcluster.fromNow('1 day')
+
+        return {
+            "workerType": 'github-worker',
+            "taskGroupId": self.task_id,
+            "schedulerId": self.scheduler_id,
+            "expires": taskcluster.stringDate(expires),
+            "retries": 5,
+            "created": taskcluster.stringDate(created),
+            "tags": {},
+            "priority": 'lowest',
+            "deadline": taskcluster.stringDate(deadline),
+            "dependencies": [self.task_id, build_task_id],
+            "routes": [],
+            "scopes": [],
+            "requires": 'all-completed',
+            "payload": {
+                "features": {},
+                "maxRunTime": 7200,
+                "image": "mozillamobile/android-components:1.15",
+                "command": [
+                    "/bin/bash",
+                    "--login",
+                    "-cx",
+                    command
+                ],
+                "artifacts": {},
+                "deadline": taskcluster.stringDate(deadline)
+            },
+            "provisionerId": 'aws-provisioner-v1',
+            "metadata": {
+                "name": name,
+                "description": description,
+                "owner": self.owner,
+                "source": self.source
+            }
+        }
+
+    def craft_upload_apk_nimbledroid_task(self, build_task_id, name, description, command, dependencies, scopes):
+        created = datetime.datetime.now()
+        expires = taskcluster.fromNow('1 year')
+        deadline = taskcluster.fromNow('1 day')
+
+        return {
+            "workerType":  self.build_worker_type,
+            "taskGroupId": self.task_id,
+            "schedulerId": self.scheduler_id,
+            "expires": taskcluster.stringDate(expires),
+            "retries": 5,
+            "created": taskcluster.stringDate(created),
+            "tags": {},
+            "priority": 'lowest',
+            "deadline": taskcluster.stringDate(deadline),
+            "dependencies": [self.task_id, build_task_id],
+            "routes": [],
+            "scopes": scopes,
+            "requires": 'all-completed',
+            "payload": {
+                "features": {
+                "taskclusterProxy": True
+                },
+                "maxRunTime": 7200,
+                "image": "mozillamobile/android-components:1.15",
+                "command": [
+                    "/bin/bash",
+                    "--login",
+                    "-cx",
+                    command
+                ],
+                "artifacts": {},
+                "deadline": taskcluster.stringDate(deadline)
+            },
+            "provisionerId": 'aws-provisioner-v1',
+            "metadata": {
+                "name": name,
+                "description": description,
+                "owner": self.owner,
+                "source": self.source
+            }
+        }
+
 
 def schedule_task(queue, taskId, task):
     print "TASK", taskId

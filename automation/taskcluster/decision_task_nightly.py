@@ -22,7 +22,7 @@ HEAD_REV = os.environ.get('MOBILE_HEAD_REV')
 
 BUILDER = lib.tasks.TaskBuilder(
     task_id=TASK_ID,
-    owner="android-components-team@mozilla.com",
+    owner="kglazko@mozilla.com",
     source='{}/raw/{}/.taskcluster.yml'.format(GITHUB_HTTP_REPOSITORY, HEAD_REV),
     scheduler_id=SCHEDULER_ID,
     build_worker_type=os.environ.get('BUILD_WORKER_TYPE'),
@@ -37,66 +37,39 @@ def generate_build_task(apks):
     } for apk in apks}
 
     checkout = 'git clone {} && cd reference-browser && git checkout {}'.format(GITHUB_HTTP_REPOSITORY, HEAD_REV)
-
     return taskcluster.slugId(), BUILDER.build_task(
         name="(Reference Browser) Build task",
         description="Build Reference Browser from source code.",
-        command=('cd .. && ' + checkout +
-                 ' && python automation/taskcluster/helper/get-secret.py'
-                 ' -s project/mobile/reference-browser/sentry -k dsn -f .sentry_token'
-                 ' && ./gradlew --no-daemon -PcrashReportEnabled=true -Ptelemetry=true clean test assembleRelease'),
-        features={
-            "chainOfTrust": True,
-            "taskclusterProxy": True
-        },
-        artifacts=artifacts,
+        command=('echo "--" > .adjust_token'
+                 #' && python automation/taskcluster/helper/get-secret.py'
+                 ' && ./gradlew --no-daemon -PcrashReportEnabled=true -Ptelemetry=true clean assembleDebug'),
         scopes=[
-            "secrets:get:project/mobile/reference-browser/sentry"
         ]
     )
 
-
-def generate_signing_task(build_task_id, apks, date, is_staging):
-    artifacts = ["public/{}".format(os.path.basename(apk)) for apk in apks]
-
-    index_release = 'staging-signed-nightly' if is_staging else 'signed-nightly'
-    routes = [
-        "index.project.mobile.reference-browser.{}.nightly.{}.{}.{}.latest".format(index_release, date.year, date.month, date.day),
-        "index.project.mobile.reference-browser.{}.nightly.{}.{}.{}.revision.{}".format(index_release, date.year, date.month, date.day, HEAD_REV),
-        "index.project.mobile.reference-browser.{}.nightly.latest".format(index_release),
-    ]
-    scopes = [
-        "project:mobile:reference-browser:releng:signing:format:autograph_apk_reference_browser",
-        "project:mobile:reference-browser:releng:signing:cert:{}".format(
-            'dep-signing' if is_staging else 'release-signing')
-    ]
-
-    return taskcluster.slugId(), BUILDER.craft_signing_task(
+def generate_unit_test_task(build_task_id):
+    return taskcluster.slugId(), BUILDER.craft_unit_test_task(
         build_task_id,
-        name="(Reference Browser) Signing task",
-        description="Sign release builds of Reference Browser",
-        apks=artifacts,
-        scopes=scopes,
-        routes=routes,
-        signing_format='autograph_apk_reference_browser',
-        is_staging=is_staging
+        name="(RB) Unit tests",
+        description="Run unit tests for RB for Android.",
+        command='echo "--" > .adjust_token && ./gradlew --no-daemon clean test',
+        dependencies=[build_task_id]
     )
 
-
-def generate_push_task(signing_task_id, apks, commit, is_staging):
-    artifacts = ["public/{}".format(os.path.basename(apk)) for apk in apks]
-
-    return taskcluster.slugId(), BUILDER.craft_push_task(
-        signing_task_id,
-        name="(Reference Browser) Push task",
-        description="Upload signed release builds of Reference Browser to Google Play",
-        apks=artifacts,
-        scopes=[
-            "project:mobile:reference-browser:releng:googleplay:product:reference-browser{}".format(':dep' if is_staging else '')
-        ],
-        commit=commit,
-        is_staging=is_staging
-    )
+# For GeckoView, upload nightly (it has release config) by default, all Release builds have WV
+def generate_upload_apk_nimbledroid_task(build_task_id):
+    checkout = 'git clone {} && cd reference-browser && git checkout {}'.format(GITHUB_HTTP_REPOSITORY, HEAD_REV)
+    return taskcluster.slugId(), BUILDER.craft_upload_apk_nimbledroid_task(
+        build_task_id,
+        name="(RB for Android) Upload Debug APK to Nimbledroid",
+        description="Upload APKs to Nimbledroid for performance measurement and tracking.",
+        command=(#'echo "--" > .adjust_token'
+                 'cd .. && ' + checkout +
+                 ' && ./gradlew --no-daemon clean assembleDebug'
+                 ' && python automation/taskcluster/upload_apk_nimbledroid.py'),
+        dependencies= [build_task_id],
+        scopes=["secrets:get:project/mobile/reference-browser/nimbledroid"],
+)
 
 
 def populate_chain_of_trust_required_but_unused_files():
@@ -108,9 +81,8 @@ def populate_chain_of_trust_required_but_unused_files():
             json.dump({}, f)
 
 
-def nightly(apks, commit, date_string, is_staging):
+def nightly(apks, commit, date_string):
     queue = taskcluster.Queue({'baseUrl': 'http://taskcluster/queue/v1'})
-    date = arrow.get(date_string)
 
     task_graph = {}
 
@@ -120,17 +92,17 @@ def nightly(apks, commit, date_string, is_staging):
     task_graph[build_task_id] = {}
     task_graph[build_task_id]['task'] = queue.task(build_task_id)
 
-    sign_task_id, sign_task = generate_signing_task(build_task_id, apks, date, is_staging)
-    lib.tasks.schedule_task(queue, sign_task_id, sign_task)
+    #unit_test_task_id, unit_test_task = generate_unit_test_task(build_task_id)
+    #lib.tasks.schedule_task(queue, unit_test_task_id, unit_test_task)
 
-    task_graph[sign_task_id] = {}
-    task_graph[sign_task_id]['task'] = queue.task(sign_task_id)
+    #task_graph[unit_test_task_id] = {}
+    #task_graph[unit_test_task_id]['task'] = queue.task(unit_test_task_id)
 
-    push_task_id, push_task = generate_push_task(sign_task_id, apks, commit, is_staging)
-    lib.tasks.schedule_task(queue, push_task_id, push_task)
+    upload_nd_task_id, upload_nd_task = generate_upload_apk_nimbledroid_task(build_task_id)
+    lib.tasks.schedule_task(queue, upload_nd_task_id, upload_nd_task)
 
-    task_graph[push_task_id] = {}
-    task_graph[push_task_id]['task'] = queue.task(push_task_id)
+    task_graph[upload_nd_task_id] = {}
+    task_graph[upload_nd_task_id]['task'] = queue.task(upload_nd_task_id)
 
     print(json.dumps(task_graph, indent=4, separators=(',', ': ')))
 
@@ -150,9 +122,7 @@ if __name__ == "__main__":
     parser.add_argument('--output', dest="track", metavar="path", action="store", help="Path to the build output",
                         required=True)
     parser.add_argument('--date', dest="date", action="store", help="ISO8601 timestamp for build")
-    parser.add_argument('--staging', action="store_true", help="Perform a staging build (use dep workers, "
-                                                               "don't communicate with Google Play) ")
 
     result = parser.parse_args()
     apks = ["{}/{}".format(result.track, apk) for apk in result.apks]
-    nightly(apks, result.commit, result.date, result.staging)
+    nightly(apks, result.commit, result.date)
