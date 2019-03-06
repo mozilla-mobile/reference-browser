@@ -5,8 +5,6 @@
 package org.mozilla.reference.browser.ui.robots
 
 import androidx.test.espresso.Espresso.onView
-import org.mozilla.reference.browser.R.id.withText
-import java.util.regex.Pattern.matches
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.espresso.assertion.ViewAssertions.matches
