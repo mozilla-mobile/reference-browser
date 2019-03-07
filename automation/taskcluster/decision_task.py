@@ -26,10 +26,14 @@ BUILD_WORKER_TYPE = os.environ.get('BUILD_WORKER_TYPE', '')
 # If we see this text inside a pull request title then we will not execute any tasks for this PR.
 SKIP_TASKS_TRIGGER = '[ci skip]'
 
-def create_task(name, description, command, scopes = []):
-    return create_raw_task(name, description, "./gradlew --no-daemon clean %s" % command, scopes)
+def create_task(name, description, command, scopes=None, treeherder=None):
+    return create_raw_task(name, description, "./gradlew --no-daemon clean %s" % command, scopes, treeherder)
 
-def create_raw_task(name, description, full_command, scopes = []):
+
+def create_raw_task(name, description, full_command, scopes=None, treeherder=None):
+    scopes = [] if scopes is None else scopes
+    treeherder = {} if treeherder is None else treeherder
+
     created = datetime.datetime.now()
     expires = taskcluster.fromNow('1 year')
     deadline = taskcluster.fromNow('1 day')
@@ -43,9 +47,12 @@ def create_raw_task(name, description, full_command, scopes = []):
         "tags": {},
         "priority": "lowest",
         "schedulerId": "taskcluster-github",
+        "provisionerId": "aws-provisioner-v1",
         "deadline": taskcluster.stringDate(deadline),
         "dependencies": [ TASK_ID ],
-        "routes": [],
+        "routes": [
+            "tc-treeherder.v2.reference-browser.{}".format(COMMIT)
+        ],
         "scopes": scopes,
         "requires": "all-completed",
         "payload": {
@@ -65,7 +72,9 @@ def create_raw_task(name, description, full_command, scopes = []):
                 "TASK_GROUP_ID": TASK_ID
             }
         },
-        "provisionerId": "aws-provisioner-v1",
+        "extra": {
+            "treeherder": treeherder,
+        },
         "metadata": {
             "name": name,
             "description": description,
@@ -79,37 +88,122 @@ def create_variant_assemble_task(variant):
     return create_task(
         name="assemble: %s" % variant,
         description='Building and testing variant ' + variant,
-        command="assemble" + variant.capitalize())
+        command="assemble" + variant.capitalize(),
+        treeherder={
+            'jobKind': 'build',
+            'machine': {
+              'platform': _craft_treeherder_platform_from_variant(variant),
+            },
+            'symbol': 'A',
+            'tier': 1,
+        },
+    )
+
 
 def create_variant_test_task(variant):
     return create_task(
         name="test: %s" % variant,
         description='Building and testing variant ' + variant,
-        command="test" + variant.capitalize() + "UnitTest")
+        command="test" + variant.capitalize() + "UnitTest",
+        treeherder={
+            'jobKind': 'test',
+            'machine': {
+              'platform': _craft_treeherder_platform_from_variant(variant),
+            },
+            'symbol': 'T',
+            'tier': 1,
+        },
+    )
+
+def _craft_treeherder_platform_from_variant(variant):
+    variant = variant.lower()
+
+    architecture = None
+    if 'aarch64' in variant:
+        architecture = 'aarch64'
+    elif 'x86' in variant:
+        architecture = 'x86'
+    elif 'arm' in variant:
+        architecture = 'arm'
+
+    build_type = None
+    if variant.endswith('debug'):
+        build_type = 'debug'
+    elif variant.endswith('release'):
+        build_type = 'release'
+
+    if not architecture or not build_type:
+        raise ValueError(
+            'Unsupported variant "{}". Found architecture, build_type: '.format(
+                variant, (architecture, build_type)
+            )
+        )
+
+    return 'android-{}-{}'.format(architecture, build_type)
+
 
 def create_detekt_task():
     return create_task(
         name='detekt',
         description='Running detekt over all modules',
-        command='detekt')
+        command='detekt',
+        treeherder={
+            'jobKind': 'test',
+            'machine': {
+              'platform': 'lint',
+            },
+            'symbol': 'detekt',
+            'tier': 1,
+        }
+    )
+
 
 def create_ktlint_task():
     return create_task(
         name='ktlint',
         description='Running ktlint over all modules',
-        command='ktlint')
+        command='ktlint',
+        treeherder={
+            'jobKind': 'test',
+            'machine': {
+              'platform': 'lint',
+            },
+            'symbol': 'ktlint',
+            'tier': 1,
+        }
+    )
+
 
 def create_lint_task():
     return create_task(
         name='lint',
         description='Running tlint over all modules',
-        command='lint')
+        command='lint',
+        treeherder={
+            'jobKind': 'test',
+            'machine': {
+              'platform': 'lint',
+            },
+            'symbol': 'lint',
+            'tier': 1,
+        }
+    )
+
 
 def create_compare_locales_task():
     return create_raw_task(
         name='compare-locales',
         description='Validate strings.xml with compare-locales',
-        full_command='pip install "compare-locales>=4.0.1,<5.0" && compare-locales --validate l10n.toml .')
+        full_command='pip install "compare-locales>=4.0.1,<5.0" && compare-locales --validate l10n.toml .',
+        treeherder={
+            'jobKind': 'test',
+            'machine': {
+              'platform': 'lint',
+            },
+            'symbol': 'compare-locale',
+            'tier': 2,
+        }
+    )
 
 
 if __name__ == "__main__":
