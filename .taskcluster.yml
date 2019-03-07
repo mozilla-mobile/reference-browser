@@ -74,9 +74,11 @@ tasks:
           scopes:
             - queue:create-task:${tasks_priority}:aws-provisioner-v1/${build_worker_type}
             - queue:route:statuses
+            - queue:route:tc-treeherder.v2.reference-browser.*
             - queue:scheduler-id:${scheduler_id}
           routes:
             - statuses  # Automatically added by taskcluster-github. It must be explicit because of Chain of Trust
+            - tc-treeherder.v2.reference-browser.${head_rev}
           payload:
             maxRunTime: 600   # Decision should remain fast enough to schedule a handful of tasks
             image: mozillamobile/android-components:1.15
@@ -98,99 +100,124 @@ tasks:
               taskclusterProxy: true
           extra:
             tasks_for: ${tasks_for}
+            treeherder:
+              machine:
+                platform: mobile-decision
           metadata:
             owner: ${user}@users.noreply.github.com
             source: ${repository}/raw/${head_rev}/.taskcluster.yml
       in:
-        - $if: 'tasks_for == "github-pull-request" && event["action"] in ["opened", "reopened", "synchronize"]'
-          then:
-            $let:
-              pull_request_title: ${event.pull_request.title}
-              pull_request_number: ${event.pull_request.number}
-              pull_request_url: ${event.pull_request.html_url}
-            in:
-              $mergeDeep:
-                - {$eval: 'default_task_definition'}
-                - payload:
-                    env:
-                      GITHUB_PULL_TITLE: ${pull_request_title}
-                    command:
-                      - >-
-                        cd ..
-                        && git clone ${repository}
-                        && cd reference-browser
-                        && git config advice.detachedHead false
-                        && git checkout ${head_rev}
-                        && python automation/taskcluster/decision_task.py
-                    artifacts:
-                      public/reports:
-                        type: directory
-                        path: /build/reference-browser/app/build/reports
-                        expires: {$fromNow: '1 week'}
-                  metadata:
-                    name: Decision task
-                    description: Building reference browser - triggered by a pull request.
-        - $if: 'tasks_for == "cron"'
-          then:
-            $let:
-              command_staging_flag:
-                $if: 'is_repo_trusted'
-                then: ''
-                else: '--staging'
-            in:
-              $mergeDeep:
-                - {$eval: 'default_task_definition'}
-                - scopes:
-                    $flatten:
-                      - project:mobile:reference-browser:releng:signing:format:autograph_apk_reference_browser
-                      - secrets:get:project/mobile/reference-browser/sentry
-                      - $if: 'is_repo_trusted'
-                        then:
-                          - queue:create-task:highest:scriptworker-prov-v1/mobile-signing-v1
-                          - queue:create-task:highest:scriptworker-prov-v1/mobile-pushapk-v1
-                          - project:mobile:reference-browser:releng:signing:cert:release-signing
-                          - project:mobile:reference-browser:releng:googleplay:product:reference-browser
-                          - queue:route:index.project.mobile.reference-browser.signed-nightly.*
-                        else:
-                          - queue:create-task:highest:scriptworker-prov-v1/mobile-signing-dep-v1
-                          - queue:create-task:highest:scriptworker-prov-v1/mobile-pushapk-dep-v1
-                          - project:mobile:reference-browser:releng:signing:cert:dep-signing
-                          - project:mobile:reference-browser:releng:googleplay:product:reference-browser:dep
-                          - queue:route:index.project.mobile.reference-browser.staging-signed-nightly.*
-                  payload:
-                    features:
-                      chainOfTrust: true
-                    command:
-                      - >-
-                        cd ..
-                        && git clone ${repository}
-                        && cd reference-browser
-                        && git checkout ${event.release.tag_name}
-                        && python automation/taskcluster/decision_task_nightly.py \
-                          --commit \
-                          --output app/build/outputs/apk \
-                          --apk geckoNightlyX86/release/app-geckoNightly-x86-release-unsigned.apk \
-                          --apk geckoNightlyArm/release/app-geckoNightly-arm-release-unsigned.apk \
-                          --apk geckoNightlyAarch64/release/app-geckoNightly-aarch64-release-unsigned.apk \
-                          --date ${now} \
-                          ${command_staging_flag}
-                    artifacts:
-                      public/task-graph.json:
-                        type: file
-                        path: /build/reference-browser/task-graph.json
-                        expires: ${expires_in}
-                      public/actions.json:
-                        type: file
-                        path: /build/reference-browser/actions.json
-                        expires: ${expires_in}
-                      public/parameters.yml:
-                        type: file
-                        path: /build/reference-browser/parameters.yml
-                        expires: ${expires_in}
-                  extra:
-                    cron: {$json: {$eval: 'cron'}}
-                    tasks_for: ${tasks_for}
-                  metadata:
-                    name: Decision task (nightly)
-                    description: Scheduling tasks for nightly release of reference browser
-                    owner: android-components-team@mozilla.com
+        $if: 'tasks_for in ["github-pull-request", "github-push"]'
+        then:
+          $let:
+            pr_or_push_parameters:
+              scopes:
+                - secrets:get:project/mobile/android-components/public-tokens
+              payload:
+                command:
+                  # TODO Stop using the android-components docker image.
+                  - >-
+                    cd ..
+                    && git clone ${repository}
+                    && cd reference-browser
+                    && git config advice.detachedHead false
+                    && git checkout ${head_rev}
+                    && python automation/taskcluster/decision_task.py
+          in:
+            - $if: 'tasks_for == "github-pull-request" && event["action"] in ["opened", "reopened", "synchronize"]'
+              then:
+                $let:
+                  pull_request_title: ${event.pull_request.title}
+                  pull_request_number: ${event.pull_request.number}
+                  pull_request_url: ${event.pull_request.html_url}
+                in:
+                  $mergeDeep:
+                    - {$eval: 'default_task_definition'}
+                    - {$eval: 'pr_or_push_parameters'}
+                    - payload:
+                        env:
+                          GITHUB_PULL_TITLE: ${pull_request_title}
+                      extra:
+                        treeherder:
+                          symbol: D-PR
+                      metadata:
+                        name: 'Reference-Browser - Decision task (Pull Request #${pull_request_number})'
+                        description: 'Building and testing the Reference Browser - triggered by [#${pull_request_number}](${pull_request_url})'
+            - $if: 'tasks_for == "github-push" && head_branch[:10] != "refs/tags/"'
+              then:
+                $mergeDeep:
+                  - {$eval: 'default_task_definition'}
+                  - {$eval: 'pr_or_push_parameters'}
+                  - extra:
+                      treeherder:
+                        symbol: D
+                    metadata:
+                      name: Android Components - Decision task
+                      description: Schedules the build and test tasks for Android components.
+        else:
+          - $if: 'tasks_for == "cron"'
+            then:
+              $let:
+                command_staging_flag:
+                  $if: 'is_repo_trusted'
+                  then: ''
+                  else: '--staging'
+              in:
+                $mergeDeep:
+                  - {$eval: 'default_task_definition'}
+                  - scopes:
+                      $flatten:
+                        - project:mobile:reference-browser:releng:signing:format:autograph_apk_reference_browser
+                        - secrets:get:project/mobile/reference-browser/sentry
+                        - $if: 'is_repo_trusted'
+                          then:
+                            - queue:create-task:highest:scriptworker-prov-v1/mobile-signing-v1
+                            - queue:create-task:highest:scriptworker-prov-v1/mobile-pushapk-v1
+                            - project:mobile:reference-browser:releng:signing:cert:release-signing
+                            - project:mobile:reference-browser:releng:googleplay:product:reference-browser
+                            - queue:route:index.project.mobile.reference-browser.signed-nightly.*
+                          else:
+                            - queue:create-task:highest:scriptworker-prov-v1/mobile-signing-dep-v1
+                            - queue:create-task:highest:scriptworker-prov-v1/mobile-pushapk-dep-v1
+                            - project:mobile:reference-browser:releng:signing:cert:dep-signing
+                            - project:mobile:reference-browser:releng:googleplay:product:reference-browser:dep
+                            - queue:route:index.project.mobile.reference-browser.staging-signed-nightly.*
+                    payload:
+                      features:
+                        chainOfTrust: true
+                      command:
+                        - >-
+                          cd ..
+                          && git clone ${repository}
+                          && cd reference-browser
+                          && git checkout ${event.release.tag_name}
+                          && python automation/taskcluster/decision_task_nightly.py \
+                            --commit \
+                            --output app/build/outputs/apk \
+                            --apk geckoNightlyX86/release/app-geckoNightly-x86-release-unsigned.apk \
+                            --apk geckoNightlyArm/release/app-geckoNightly-arm-release-unsigned.apk \
+                            --apk geckoNightlyAarch64/release/app-geckoNightly-aarch64-release-unsigned.apk \
+                            --date ${now} \
+                            ${command_staging_flag}
+                      artifacts:
+                        public/task-graph.json:
+                          type: file
+                          path: /build/reference-browser/task-graph.json
+                          expires: ${expires_in}
+                        public/actions.json:
+                          type: file
+                          path: /build/reference-browser/actions.json
+                          expires: ${expires_in}
+                        public/parameters.yml:
+                          type: file
+                          path: /build/reference-browser/parameters.yml
+                          expires: ${expires_in}
+                    extra:
+                      cron: {$json: {$eval: 'cron'}}
+                      tasks_for: ${tasks_for}
+                      treeherder:
+                        symbol: N
+                    metadata:
+                      name: Decision task (nightly)
+                      description: Scheduling tasks for nightly release of reference browser
+                      owner: android-components-team@mozilla.com
