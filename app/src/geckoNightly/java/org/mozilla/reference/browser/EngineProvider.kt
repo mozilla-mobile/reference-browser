@@ -7,28 +7,44 @@ package org.mozilla.reference.browser
 import android.content.Context
 import android.os.Bundle
 import mozilla.components.browser.engine.gecko.GeckoEngine
+import mozilla.components.browser.engine.gecko.fetch.GeckoViewFetchClient
 import mozilla.components.concept.engine.DefaultSettings
 import mozilla.components.concept.engine.Engine
+import mozilla.components.concept.fetch.Client
 import mozilla.components.lib.crash.handler.CrashHandlerService
 import org.mozilla.geckoview.GeckoRuntime
 import org.mozilla.geckoview.GeckoRuntimeSettings
 import org.mozilla.reference.browser.ext.isCrashReportActive
 
 object EngineProvider {
-
     var testConfig: Bundle? = null
 
-    fun getEngine(context: Context, defaultSettings: DefaultSettings): Engine {
-        val builder = GeckoRuntimeSettings.Builder()
-        testConfig?.let {
-            builder.extras(it)
+    private var runtime: GeckoRuntime? = null
+
+    @Synchronized
+    private fun getOrCreateRuntime(context: Context): GeckoRuntime {
+        if (runtime == null) {
+            val builder = GeckoRuntimeSettings.Builder()
+
+            testConfig?.let { builder.extras(it) }
+
+            if (isCrashReportActive) {
+                builder.crashHandler(CrashHandlerService::class.java)
+            }
+
+            runtime = GeckoRuntime.create(context, builder.build())
         }
 
-        if (isCrashReportActive) {
-            builder.crashHandler(CrashHandlerService::class.java)
-        }
+        return runtime!!
+    }
 
-        val runtime = GeckoRuntime.create(context, builder.build())
+    fun createEngine(context: Context, defaultSettings: DefaultSettings): Engine {
+        val runtime = getOrCreateRuntime(context)
         return GeckoEngine(context, defaultSettings, runtime)
+    }
+
+    fun createClient(context: Context): Client {
+        val runtime = getOrCreateRuntime(context)
+        return GeckoViewFetchClient(context, runtime)
     }
 }

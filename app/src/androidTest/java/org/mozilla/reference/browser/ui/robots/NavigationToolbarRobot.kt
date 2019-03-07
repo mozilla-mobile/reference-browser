@@ -6,6 +6,9 @@ package org.mozilla.reference.browser.ui.robots
 
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.matcher.ViewMatchers
+import androidx.test.espresso.matcher.ViewMatchers.withText
+import androidx.test.espresso.assertion.ViewAssertions.matches
+import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.helpers.click
 
 /**
@@ -13,11 +16,20 @@ import org.mozilla.reference.browser.helpers.click
  */
 class NavigationToolbarRobot {
 
+    fun verifyNewTabAddressView() = newTabAddressText()
+    fun checkNumberOfTabsTabCounter(numTabs: String) = numberOfOpenTabsTabCounter.check(matches(withText(numTabs)))
+
     class Transition {
         fun openThreeDotMenu(interact: ThreeDotMenuRobot.() -> Unit): ThreeDotMenuRobot.Transition {
             threeDotButton().click()
             ThreeDotMenuRobot().interact()
             return ThreeDotMenuRobot.Transition()
+        }
+
+        fun openTabTrayMenu(interact: TabTrayMenuRobot.() -> Unit): TabTrayMenuRobot.Transition {
+            openTabTray().click()
+            TabTrayMenuRobot().interact()
+            return TabTrayMenuRobot.Transition()
         }
     }
 }
@@ -28,3 +40,6 @@ fun navigationToolbar(interact: NavigationToolbarRobot.() -> Unit): NavigationTo
 }
 
 private fun threeDotButton() = onView(ViewMatchers.withContentDescription("Menu"))
+private fun openTabTray() = onView(ViewMatchers.withId(R.id.counter_box))
+private fun newTabAddressText() = onView(ViewMatchers.withText("about:blank"))
+private var numberOfOpenTabsTabCounter = onView(ViewMatchers.withId(R.id.counter_text))

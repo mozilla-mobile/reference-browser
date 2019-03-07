@@ -50,8 +50,10 @@
         android:layout_width="match_parent"
         android:layout_height="56dp"
         android:layout_gravity="bottom"
-        android:background="@color/primary"
+        android:background="@color/toolbarBackgroundColor"
         app:layout_behavior="mozilla.components.browser.toolbar.behavior.BrowserToolbarBottomBehavior"
-        app:layout_scrollFlags="scroll|enterAlways|snap|exitUntilCollapsed" />
+        app:layout_scrollFlags="scroll|enterAlways|snap|exitUntilCollapsed"
+        mozac:browserToolbarSuggestionForegroundColor="@color/toolbarSuggestionForeground"
+        mozac:browserToolbarSuggestionBackgroundColor="@color/toolbarSuggestionBackground" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

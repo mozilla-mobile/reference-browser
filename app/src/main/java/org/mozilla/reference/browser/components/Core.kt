@@ -7,13 +7,13 @@ package org.mozilla.reference.browser.components
 import android.content.Context
 import android.content.SharedPreferences
 import android.preference.PreferenceManager
-import mozilla.components.browser.session.Session
 import mozilla.components.browser.session.SessionManager
 import mozilla.components.browser.session.storage.SessionStorage
 import mozilla.components.browser.storage.sync.PlacesHistoryStorage
 import mozilla.components.concept.engine.DefaultSettings
 import mozilla.components.concept.engine.Engine
 import mozilla.components.concept.engine.EngineSession.TrackingProtectionPolicy
+import mozilla.components.concept.fetch.Client
 import mozilla.components.feature.session.HistoryDelegate
 import org.mozilla.reference.browser.AppRequestInterceptor
 import org.mozilla.reference.browser.EngineProvider
@@ -28,7 +28,6 @@ import java.util.concurrent.TimeUnit
  * Component group for all core browser functionality.
  */
 class Core(private val context: Context) {
-
     /**
      * The browser engine component initialized based on the build
      * configuration (see build variants).
@@ -43,7 +42,14 @@ class Core(private val context: Context) {
             trackingProtectionPolicy = createTrackingProtectionPolicy(prefs),
             historyTrackingDelegate = HistoryDelegate(historyStorage)
         )
-        EngineProvider.getEngine(context, defaultSettings)
+        EngineProvider.createEngine(context, defaultSettings)
+    }
+
+    /**
+     * The [Client] implementation (`concept-fetch`) used for HTTP requests.
+     */
+    val client: Client by lazy {
+        EngineProvider.createClient(context)
     }
 
     /**
@@ -55,13 +61,8 @@ class Core(private val context: Context) {
     val sessionManager by lazy {
         val sessionStorage = SessionStorage(context, engine)
 
-        SessionManager(engine, defaultSession = { Session("about:blank") }).apply {
+        SessionManager(engine).apply {
             sessionStorage.restore()?.let { snapshot -> restore(snapshot) }
-
-            if (size == 0) {
-                val initialSession = Session("https://www.mozilla.org")
-                add(initialSession)
-            }
 
             sessionStorage.autoSave(this)
                 .periodicallyInForeground(interval = 30, unit = TimeUnit.SECONDS)

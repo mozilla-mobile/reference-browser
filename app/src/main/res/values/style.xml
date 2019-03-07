@@ -6,11 +6,22 @@
     <style name="AppThemeNotActionBar" parent="Theme.AppCompat.NoActionBar">
         <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
 
-        <item name="colorPrimary">@color/primary</item>
-        <item name="colorPrimaryDark">@color/primaryDark</item>
+        <item name="colorPrimary">@color/dark</item>
+        <item name="colorPrimaryDark">@color/evenDarker</item>
+        <item name="colorAccent">@color/accent</item>
+
+        <item name="android:navigationBarColor">@color/evenDarker</item>
+        <item name="android:windowBackground">@color/dark</item>
     </style>
 
     <style name="AppTheme" parent="Theme.AppCompat">
         <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
+
+        <item name="colorPrimary">@color/dark</item>
+        <item name="colorPrimaryDark">@color/evenDarker</item>
+        <item name="colorAccent">@color/accent</item>
+
+        <item name="android:navigationBarColor">@color/evenDarker</item>
+        <item name="android:windowBackground">@color/dark</item>
     </style>
 </resources>
