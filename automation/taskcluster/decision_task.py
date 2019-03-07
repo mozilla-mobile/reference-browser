@@ -41,7 +41,7 @@ def create_raw_task(name, description, full_command, scopes = []):
         "retries": 5,
         "created": taskcluster.stringDate(created),
         "tags": {},
-        "priority": "highest",
+        "priority": "lowest",
         "schedulerId": "taskcluster-github",
         "deadline": taskcluster.stringDate(deadline),
         "dependencies": [ TASK_ID ],

@@ -28,7 +28,7 @@ class TaskBuilder(object):
             "retries": 5,
             "created": taskcluster.stringDate(created),
             "tags": {},
-            "priority": "highest",
+            "priority": "lowest",
             "deadline": taskcluster.stringDate(deadline),
             "dependencies": [self.task_id],
             "routes": [],
