@@ -22,7 +22,7 @@ class TaskBuilder(object):
         return self._craft_default_task_definition(
             worker_type=self.build_worker_type,
             provisioner_id='aws-provisioner-v1',
-            dependencies=[self.task_id],
+            dependencies=[],
             routes=[],
             scopes=scopes,
             name=name,
@@ -53,7 +53,7 @@ class TaskBuilder(object):
         return self._craft_default_task_definition(
             worker_type='mobile-signing-dep-v1' if is_staging else 'mobile-signing-v1',
             provisioner_id='scriptworker-prov-v1',
-            dependencies=[self.task_id, build_task_id],
+            dependencies=[build_task_id],
             routes=routes,
             scopes=scopes,
             name=name,
@@ -81,7 +81,7 @@ class TaskBuilder(object):
         return self._craft_default_task_definition(
             worker_type='mobile-pushapk-dep-v1' if is_staging else 'mobile-pushapk-v1',
             provisioner_id='scriptworker-prov-v1',
-            dependencies=[self.task_id, signing_task_id],
+            dependencies=[signing_task_id],
             routes=[],
             scopes=scopes,
             name=name,
