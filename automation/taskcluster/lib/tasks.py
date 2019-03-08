@@ -6,6 +6,8 @@ import datetime
 import json
 import taskcluster
 
+DEFAULT_EXPIRES_IN = '1 year'
+
 
 class TaskBuilder(object):
     def __init__(self, task_id, owner, source, scheduler_id, build_worker_type):
@@ -14,27 +16,18 @@ class TaskBuilder(object):
         self.source = source
         self.scheduler_id = scheduler_id
         self.build_worker_type = build_worker_type
+        self.tasks_priority = 'lowest'  # TODO Parametrize
 
     def build_task(self, name, description, command, artifacts={}, scopes=[], features={}):
-        created = datetime.datetime.now()
-        expires = taskcluster.fromNow('1 year')
-        deadline = taskcluster.fromNow('1 day')
-
-        return {
-            "workerType": self.build_worker_type,
-            "taskGroupId": self.task_id,
-            "schedulerId": self.scheduler_id,
-            "expires": taskcluster.stringDate(expires),
-            "retries": 5,
-            "created": taskcluster.stringDate(created),
-            "tags": {},
-            "priority": "lowest",
-            "deadline": taskcluster.stringDate(deadline),
-            "dependencies": [self.task_id],
-            "routes": [],
-            "scopes": scopes,
-            "requires": "all-completed",
-            "payload": {
+        return self._craft_default_task_definition(
+            worker_type=self.build_worker_type,
+            provisioner_id='aws-provisioner-v1',
+            dependencies=[self.task_id],
+            routes=[],
+            scopes=scopes,
+            name=name,
+            description=description,
+            payload={
                 "features": features,
                 "maxRunTime": 7200,
                 "image": "mozillamobile/android-components:1.15",
@@ -45,37 +38,27 @@ class TaskBuilder(object):
                     command
                 ],
                 "artifacts": artifacts,
-                "deadline": taskcluster.stringDate(deadline)
             },
-            "provisionerId": "aws-provisioner-v1",
-            "metadata": {
-                "name": name,
-                "description": description,
-                "owner": self.owner,
-                "source": self.source
-            }
-        }
+            treeherder={
+                'jobKind': 'build',
+                'machine': {
+                  'platform': 'android-all',
+                },
+                'symbol': 'NA',
+                'tier': 1,
+            },
+        )
 
     def craft_signing_task(self, build_task_id, name, description, signing_format, is_staging, apks=[], scopes=[], routes=[]):
-        created = datetime.datetime.now()
-        expires = taskcluster.fromNow('1 year')
-        deadline = taskcluster.fromNow('1 day')
-
-        return {
-            "workerType": 'mobile-signing-dep-v1' if is_staging else 'mobile-signing-v1',
-            "taskGroupId": self.task_id,
-            "schedulerId": self.scheduler_id,
-            "expires": taskcluster.stringDate(expires),
-            "retries": 5,
-            "created": taskcluster.stringDate(created),
-            "tags": {},
-            "priority": "lowest",
-            "deadline": taskcluster.stringDate(deadline),
-            "dependencies": [self.task_id, build_task_id],
-            "routes": routes,
-            "scopes": scopes,
-            "requires": "all-completed",
-            "payload": {
+        return self._craft_default_task_definition(
+            worker_type='mobile-signing-dep-v1' if is_staging else 'mobile-signing-v1',
+            provisioner_id='scriptworker-prov-v1',
+            dependencies=[self.task_id, build_task_id],
+            routes=routes,
+            scopes=scopes,
+            name=name,
+            description=description,
+            payload={
                 "maxRunTime": 3600,
                 "upstreamArtifacts": [{
                     "paths": apks,
@@ -84,50 +67,77 @@ class TaskBuilder(object):
                     "taskType": "build"
                 }]
             },
-            "provisionerId": "scriptworker-prov-v1",
-            "metadata": {
-                "name": name,
-                "description": description,
-                "owner": self.owner,
-                "source": self.source
-            }
-        }
+            treeherder={
+                'jobKind': 'other',
+                'machine': {
+                  'platform': 'android-all',
+                },
+                'symbol': 'Ns',
+                'tier': 1,
+            },
+        )
 
     def craft_push_task(self, signing_task_id, name, description, commit, is_staging, apks=[], scopes=[]):
-        created = datetime.datetime.now()
-        expires = taskcluster.fromNow('1 year')
-        deadline = taskcluster.fromNow('1 day')
-
-        return {
-            "workerType": 'mobile-pushapk-dep-v1' if is_staging else 'mobile-pushapk-v1',
-            "taskGroupId": self.task_id,
-            "schedulerId": self.scheduler_id,
-            "expires": taskcluster.stringDate(expires),
-            "retries": 5,
-            "created": taskcluster.stringDate(created),
-            "tags": {},
-            "priority": 'lowest',
-            "deadline": taskcluster.stringDate(deadline),
-            "dependencies": [self.task_id, signing_task_id],
-            "routes": [],
-            "scopes": scopes,
-            "requires": 'all-completed',
-            "payload": {
+        return self._craft_default_task_definition(
+            worker_type='mobile-pushapk-dep-v1' if is_staging else 'mobile-pushapk-v1',
+            provisioner_id='scriptworker-prov-v1',
+            dependencies=[self.task_id, signing_task_id],
+            routes=[],
+            scopes=scopes,
+            name=name,
+            description=description,
+            payload={
                 "commit": commit,
                 "google_play_track": 'nightly',
                 "upstreamArtifacts": [{
                     "paths": apks,
                     "taskId": signing_task_id,
                     "taskType": 'signing'
-                }]
+                }],
             },
-            "provisionerId": 'scriptworker-prov-v1',
+            treeherder={
+                'jobKind': 'other',
+                'machine': {
+                  'platform': 'android-all',
+                },
+                'symbol': 'gp',
+                'tier': 1,
+            },
+        )
+
+    def _craft_default_task_definition(
+        self, worker_type, provisioner_id, dependencies, routes, scopes, name, description,
+        payload, treeherder
+    ):
+        created = datetime.datetime.now()
+        deadline = taskcluster.fromNow('1 day')
+        expires = taskcluster.fromNow(DEFAULT_EXPIRES_IN)
+
+        return {
+            "provisionerId": provisioner_id,
+            "workerType": worker_type,
+            "taskGroupId": self.task_id,
+            "schedulerId": self.scheduler_id,
+            "created": taskcluster.stringDate(created),
+            "deadline": taskcluster.stringDate(deadline),
+            "expires": taskcluster.stringDate(expires),
+            "retries": 5,
+            "tags": {},
+            "priority": self.tasks_priority,
+            "dependencies": [self.task_id] + dependencies,
+            "requires": "all-completed",
+            "routes": routes,
+            "scopes": scopes,
+            "payload": payload,
+            "extra": {
+                "treeherder": treeherder,
+            },
             "metadata": {
                 "name": name,
                 "description": description,
                 "owner": self.owner,
-                "source": self.source
-            }
+                "source": self.source,
+            },
         }
 
 
