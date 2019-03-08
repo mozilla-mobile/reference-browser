@@ -10,8 +10,9 @@ DEFAULT_EXPIRES_IN = '1 year'
 
 
 class TaskBuilder(object):
-    def __init__(self, task_id, owner, source, scheduler_id, build_worker_type):
+    def __init__(self, task_id, commit, owner, source, scheduler_id, build_worker_type):
         self.task_id = task_id
+        self.commit = commit
         self.owner = owner
         self.source = source
         self.scheduler_id = scheduler_id
@@ -126,7 +127,9 @@ class TaskBuilder(object):
             "priority": self.tasks_priority,
             "dependencies": [self.task_id] + dependencies,
             "requires": "all-completed",
-            "routes": routes,
+            "routes": [
+                "tc-treeherder.v2.reference-browser.{}".format(self.commit)
+            ] + routes,
             "scopes": scopes,
             "payload": payload,
             "extra": {

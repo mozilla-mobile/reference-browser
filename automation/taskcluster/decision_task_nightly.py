@@ -22,6 +22,7 @@ HEAD_REV = os.environ.get('MOBILE_HEAD_REV')
 
 BUILDER = lib.tasks.TaskBuilder(
     task_id=TASK_ID,
+    commit=HEAD_REV,
     owner="android-components-team@mozilla.com",
     source='{}/raw/{}/.taskcluster.yml'.format(GITHUB_HTTP_REPOSITORY, HEAD_REV),
     scheduler_id=SCHEDULER_ID,
