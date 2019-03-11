@@ -13,7 +13,7 @@ import java.util.concurrent.TimeUnit
  * Helper for hosting web pages locally for testing purposes.
  */
 object TestAssetHelper {
-
+    @Suppress("MagicNumber")
     val waitingTime: Long = TimeUnit.SECONDS.toMillis(15)
     data class TestAsset(val url: Uri, val content: String)
 
@@ -26,6 +26,7 @@ object TestAssetHelper {
      * content implementation details.
      */
     fun getGenericAssets(server: MockWebServer): List<TestAsset> {
+        @Suppress("MagicNumber")
         return (1..3).map {
             TestAsset(
                     server.url("pages/generic$it.html").toString().toUri()!!,

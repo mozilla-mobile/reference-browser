@@ -43,19 +43,10 @@ class FindInPagePanelRobot {
     }
 
     class Transition {
-        private val device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
-
-        fun exitToNavigationToolbar(interact: NavigationToolbarRobot.() -> Unit): NavigationToolbarRobot.Transition {
-            device.pressBack()
-
-            NavigationToolbarRobot().interact()
-            return NavigationToolbarRobot.Transition()
+        fun findInPage(interact: FindInPagePanelRobot.() -> Unit): FindInPagePanelRobot.Transition {
+            return FindInPagePanelRobot.Transition()
         }
     }
-}
-
-fun findInPagePanel(interact: FindInPagePanelRobot.() -> Unit) {
-    FindInPagePanelRobot().interact()
 }
 
 private fun findInPageQuery() = onView(withId(R.id.find_in_page_query_text))

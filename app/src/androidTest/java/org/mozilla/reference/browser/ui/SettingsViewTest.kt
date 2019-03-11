@@ -4,24 +4,29 @@
 
 package org.mozilla.reference.browser.ui
 
+import androidx.test.rule.GrantPermissionRule
+import org.junit.Ignore
 import org.junit.Rule
 import org.junit.Test
 import org.mozilla.reference.browser.helpers.BrowserActivityTestRule
 import org.mozilla.reference.browser.ui.robots.navigationToolbar
 
 /**
- *  Tests for verifying the settings view options exist as expected:
+ *   Tests for verifying the settings view options exist as expected:
  * - Appears when the settings submenu is tapped
  * - Expected options are displayed as listed below
  */
 
 class SettingsViewTest {
+    /* ktlint-disable no-blank-line-before-rbrace */ // This imposes unrgeadable grouping.
+
+    // Grant the app access to the camera so that we can test the Firefox Accounts QR code reader
+    @Rule @JvmField
+    val grantPermissionRule: GrantPermissionRule = GrantPermissionRule.grant(android.Manifest.permission.CAMERA)
 
     @get:Rule val browserActivityTestRule = BrowserActivityTestRule()
-
-    /* ktlint-disable no-blank-line-before-rbrace */ // This imposes unreadable grouping.
-    @Test
     // This test verifies settings view items are all in place
+    @Test
     fun settingsItemsTest() {
         navigationToolbar {
         }.openThreeDotMenu {
@@ -30,15 +35,42 @@ class SettingsViewTest {
             verifyNavigateUp()
             verifySyncSigninButton()
             verifySyncHistorySummary()
+            verifySyncQrCodeButton()
+            verifySyncQrSummary()
             verifyPrivacyButton()
             verifyPrivacySummary()
             verifyMakeDefaultBrowserButton()
             verifyDeveloperToolsHeading()
+            verifyRemoteDebuggingText()
             verifyRemoteDebuggingToggle()
             verifyMozillaHeading()
             verifyAboutReferenceBrowserButton()
         }
     }
+
+    @Test
+    fun openFXATest() {
+        navigationToolbar {
+        }.openThreeDotMenu {
+        }.openSettings {
+        }.openFXASignin {
+            verifyFXAUrl()
+        }
+    }
+
+    // openFXAQrCodeTest tests that we get to the camera
+    // Additional tests are needed to verify that the QR code reader works
+    @Test
+    fun openFXAQrCodeTest() {
+        navigationToolbar {
+        }.openThreeDotMenu {
+        }.openSettings {
+        }.openFXAQrCode {
+            verifyFxAQrCode()
+        }
+
+    }
+
     @Test
     fun privacySettingsItemsTest() {
         navigationToolbar {
@@ -54,7 +86,36 @@ class SettingsViewTest {
             verifyUseTelemetryToggle()
             verifyUseTelemetryToggle()
             verifyTelemetrySummary()
+        }
+    }
 
+    @Test
+    fun setDefaultBrowserTest() {
+        navigationToolbar {
+        }.openThreeDotMenu {
+        }.openSettings {
+        }.makeDefaultBrowser {
+            verifyAndroidDefaultApps()
+        }
+    }
+
+    @Test
+    fun remoteDebuggingViaUSB() {
+        navigationToolbar {
+        }.openThreeDotMenu {
+        }.openSettings {
+            toggleRemoteDebuggingOn()
+            toggleRemoteDebuggingOff()
+            toggleRemoteDebuggingOn()
+        }
+    }
+    @Ignore // https://github.com/mozilla-mobile/reference-browser/issues/680
+    fun aboutReferenceBrowserTest() {
+        navigationToolbar {
+        }.openThreeDotMenu {
+        }.openSettings {
+        }.openAboutReferenceBrowser {
+            verifyAboutBrowser()
         }
     }
 }

@@ -39,8 +39,10 @@ object MockWebServerHelper {
  *
  * @sample [org.mozilla.tv.firefox.ui.BasicNavigationTest.basicNavigationTest]
  */
-class AndroidAssetDispatcher : Dispatcher() {
+const val HTTP_OK = 200
+const val HTTP_NOT_FOUND = 404
 
+class AndroidAssetDispatcher : Dispatcher() {
     private val mainThreadHandler = Handler(Looper.getMainLooper())
 
     override fun dispatch(request: RecordedRequest): MockResponse {
@@ -53,9 +55,8 @@ class AndroidAssetDispatcher : Dispatcher() {
         } catch (e: IOException) { // e.g. file not found.
             // We're on a background thread so we need to forward the exception to the main thread.
             mainThreadHandler.postAtFrontOfQueue { throw e }
-            return MockResponse().setResponseCode(404)
+            return MockResponse().setResponseCode(HTTP_NOT_FOUND)
         }
-
-        return MockResponse().setResponseCode(200).setBody(assetContents)
+        return MockResponse().setResponseCode(HTTP_OK).setBody(assetContents)
     }
 }

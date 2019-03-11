@@ -34,9 +34,5 @@ class TabTrayMoreOptionsMenuRobot {
     }
 }
 
-fun tabTrayMoreOptionsMenu(interact: TabTrayMoreOptionsMenuRobot.() -> Unit) {
-    TabTrayMoreOptionsMenuRobot().interact()
-}
-
 private fun closeAllTabsButton() = onView(ViewMatchers.withText("Close All Tabs"))
 private fun closeAllPrivateTabsButton() = onView(ViewMatchers.withText("Close Private Tabs"))
