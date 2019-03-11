@@ -2,6 +2,8 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
+@file:Suppress("TooManyFunctions")
+
 package org.mozilla.reference.browser.ui.robots
 
 import androidx.test.espresso.Espresso.onView
@@ -101,5 +103,6 @@ private fun findInPageButton() = onView(ViewMatchers.withText("Find in Page"))
 private fun reportIssueButton() = onView(ViewMatchers.withText("Report issue"))
 private fun settingsButton() = onView(ViewMatchers.withText("Settings"))
 private fun assertShareButtonDoesntExist() = shareButton().check(ViewAssertions.doesNotExist())
-private fun assertRequestDesktopSiteToggleDoesntExist() = requestDesktopSiteToggle().check(ViewAssertions.doesNotExist())
+private fun assertRequestDesktopSiteToggleDoesntExist() =
+        requestDesktopSiteToggle().check(ViewAssertions.doesNotExist())
 private fun assertFindInPageButtonDoesntExist() = findInPageButton().check(ViewAssertions.doesNotExist())

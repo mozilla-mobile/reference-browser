@@ -6,7 +6,6 @@ package org.mozilla.reference.browser.ui.robots
 
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.matcher.ViewMatchers
-import org.mozilla.reference.browser.helpers.click
 
 /**
  * Implementation of Robot Pattern for the settings privacy menu.
@@ -19,14 +18,13 @@ class SettingsViewPrivacyRobot {
     fun verifyTPEnableInNormalBrowsing() = tpEnableInNormalBrowsing()
     fun verifyTPEnableinPrivateBrowsing() = tpEnableInPrivateBrowsing()
     fun verifyDataChoicesHeading() = dataChoicesHeading()
+    // verifyUseTelemetryToggle does not yet check that the client telemetry is disabled/enabled
     fun verifyUseTelemetryToggle() = useTelemetryToggle()
     fun verifyTelemetrySummary() = telemetrySummary()
 
     class Transition {
-        fun openSettingsRobot(interact: SettingsViewRobot.() -> Unit): SettingsViewRobot.Transition {
-            privacyUpButton().click()
-            SettingsViewRobot().interact()
-            return SettingsViewRobot.Transition()
+        fun settingsViewPrivacy(interact: SettingsViewPrivacyRobot.() -> Unit): SettingsViewPrivacyRobot.Transition {
+            return SettingsViewPrivacyRobot.Transition()
         }
     }
 }

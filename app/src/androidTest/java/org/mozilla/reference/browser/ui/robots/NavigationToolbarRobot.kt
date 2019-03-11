@@ -26,7 +26,6 @@ class NavigationToolbarRobot {
 
     fun verifyNewTabAddressView() = newTabAddressText()
     fun checkNumberOfTabsTabCounter(numTabs: String) = numberOfOpenTabsTabCounter.check(matches(withText(numTabs)))
-    fun verifyThreeDotMenuDoesNotExist() = threeDotMenuRecyclerViewDoesNotExist()
 
     class Transition {
 
