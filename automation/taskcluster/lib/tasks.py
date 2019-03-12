@@ -106,7 +106,7 @@ class TaskBuilder(object):
             },
         )
 
-    def _craft_default_task_definition(
+    def craft_default_task_definition(
         self, worker_type, provisioner_id, dependencies, routes, scopes, name, description,
         payload, treeherder
     ):

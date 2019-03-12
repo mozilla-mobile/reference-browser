@@ -26,13 +26,22 @@ BUILD_WORKER_TYPE = os.environ.get('BUILD_WORKER_TYPE', '')
 # If we see this text inside a pull request title then we will not execute any tasks for this PR.
 SKIP_TASKS_TRIGGER = '[ci skip]'
 
-def create_task(name, description, command, scopes=None, treeherder=None):
-    return create_raw_task(name, description, "./gradlew --no-daemon clean %s" % command, scopes, treeherder)
+
+def create_task(name, description, command, scopes=None, treeherder=None, artifacts=None):
+    return create_raw_task(
+        name,
+        description,
+        full_command='./gradlew --no-daemon clean {}'.format(command),
+        scopes=scopes,
+        treeherder=treeherder,
+        artifacts=artifacts,
+    )
 
 
-def create_raw_task(name, description, full_command, scopes=None, treeherder=None):
+def create_raw_task(name, description, full_command, scopes=None, treeherder=None, artifacts=None):
     scopes = [] if scopes is None else scopes
     treeherder = {} if treeherder is None else treeherder
+    artifacts = {} if artifacts is None else artifacts
 
     created = datetime.datetime.now()
     expires = taskcluster.fromNow('1 year')
@@ -67,7 +76,7 @@ def create_raw_task(name, description, full_command, scopes=None, treeherder=Non
                 "-cx",
                 "cd .. && git clone %s && cd reference-browser && git config advice.detachedHead false && git checkout %s && %s" % (REPO_URL, COMMIT, full_command)
             ],
-            "artifacts": {},
+            "artifacts": artifacts,
             "env": {
                 "TASK_GROUP_ID": TASK_ID
             }
@@ -88,7 +97,7 @@ def create_variant_assemble_task(variant):
     return create_task(
         name="assemble: %s" % variant,
         description='Building and testing variant ' + variant,
-        command="assemble" + variant.capitalize(),
+        command='assemble{} && ls -R /build/reference-browser/'.format(variant.capitalize()),
         treeherder={
             'jobKind': 'build',
             'machine': {
@@ -97,6 +106,7 @@ def create_variant_assemble_task(variant):
             'symbol': 'A',
             'tier': 1,
         },
+        artifacts=_craft_artifacts_from_variant(variant),
     )
 
 
@@ -104,7 +114,7 @@ def create_variant_test_task(variant):
     return create_task(
         name="test: %s" % variant,
         description='Building and testing variant ' + variant,
-        command="test" + variant.capitalize() + "UnitTest",
+        command='test{}UnitTest && ls -R /build/reference-browser/'.format(variant.capitalize()),
         treeherder={
             'jobKind': 'test',
             'machine': {
@@ -116,6 +126,37 @@ def create_variant_test_task(variant):
     )
 
 def _craft_treeherder_platform_from_variant(variant):
+    architecture, build_type = _get_architecture_and_build_type_from_variant(variant)
+    return 'android-{}-{}'.format(architecture, build_type)
+
+
+def _craft_artifacts_from_variant(variant):
+    return {
+        'public/target.apk': {
+            'type': 'file',
+            'path': _craft_apk_full_path_from_variant(variant),
+            'expires': taskcluster.stringDate(taskcluster.fromNow(lib.tasks.DEFAULT_EXPIRES_IN)),
+        }
+    }
+
+
+def _craft_apk_full_path_from_variant(variant):
+    architecture, build_type = _get_architecture_and_build_type_from_variant(variant)
+
+    short_variant = variant[:-len(build_type)]
+    shorter_variant = short_variant[:-len(architecture)]
+    postfix = '-unsigned' if build_type == 'release' else ''
+
+    return '/build/reference-browser/app/build/outputs/apk/{short_variant}/{build_type}/app-{shorter_variant}-{architecture}-{build_type}{postfix}.apk'.format(
+        architecture=architecture,
+        build_type=build_type,
+        short_variant=short_variant,
+        shorter_variant=shorter_variant,
+        postfix=postfix
+    )
+
+
+def _get_architecture_and_build_type_from_variant(variant):
     variant = variant.lower()
 
     architecture = None
@@ -134,13 +175,12 @@ def _craft_treeherder_platform_from_variant(variant):
 
     if not architecture or not build_type:
         raise ValueError(
-            'Unsupported variant "{}". Found architecture, build_type: '.format(
+            'Unsupported variant "{}". Found architecture, build_type: {}'.format(
                 variant, (architecture, build_type)
             )
         )
 
-    return 'android-{}-{}'.format(architecture, build_type)
-
+    return architecture, build_type
 
 def create_detekt_task():
     return create_task(
