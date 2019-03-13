@@ -17,6 +17,7 @@ import mozilla.components.feature.findinpage.view.FindInPageView
 import mozilla.components.feature.prompts.PromptFeature
 import mozilla.components.feature.session.FullScreenFeature
 import mozilla.components.feature.session.SessionFeature
+import mozilla.components.feature.session.ThumbnailsFeature
 import mozilla.components.feature.sitepermissions.SitePermissionsFeature
 import mozilla.components.feature.tabs.toolbar.TabsToolbarFeature
 import mozilla.components.support.base.feature.BackHandler
@@ -41,6 +42,7 @@ class BrowserFragment : Fragment(), BackHandler, UserInteractionHandler {
     private val findInPageIntegration = ViewBoundFeatureWrapper<FindInPageIntegration>()
     private val sitePermissionFeature = ViewBoundFeatureWrapper<SitePermissionsFeature>()
     private val pictureInPictureIntegration = ViewBoundFeatureWrapper<PictureInPictureIntegration>()
+    private val thumbnailsFeature = ViewBoundFeatureWrapper<ThumbnailsFeature>()
 
     private val backButtonHandler: List<ViewBoundFeatureWrapper<*>> = listOf(
         fullScreenFeature,
@@ -180,6 +182,14 @@ class BrowserFragment : Fragment(), BackHandler, UserInteractionHandler {
             ),
             owner = this,
             view = view
+        )
+
+        thumbnailsFeature.set(
+                feature = ThumbnailsFeature(requireContext(),
+                        engineView,
+                        requireComponents.core.sessionManager),
+                owner = this,
+                view = view
         )
     }
 
