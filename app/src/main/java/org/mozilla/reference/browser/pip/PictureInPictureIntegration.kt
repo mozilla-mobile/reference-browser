@@ -10,6 +10,7 @@ import android.app.Activity
 import mozilla.components.browser.session.SelectionAwareSessionObserver
 import mozilla.components.browser.session.Session
 import mozilla.components.browser.session.SessionManager
+import mozilla.components.feature.session.PictureInPictureFeature
 import mozilla.components.support.base.feature.LifecycleAwareFeature
 
 class PictureInPictureIntegration(
