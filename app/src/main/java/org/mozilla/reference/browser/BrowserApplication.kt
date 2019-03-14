@@ -7,10 +7,12 @@ package org.mozilla.reference.browser
 import android.app.Application
 import android.content.Context
 import mozilla.components.service.glean.Glean
+import mozilla.components.service.glean.config.Configuration
 import mozilla.components.support.base.log.Log
 import mozilla.components.support.base.log.logger.Logger
 import mozilla.components.support.base.log.sink.AndroidLogSink
 import mozilla.components.support.rustlog.RustLog
+import org.mozilla.reference.browser.ext.components
 import org.mozilla.reference.browser.ext.isCrashReportActive
 import org.mozilla.reference.browser.settings.Settings
 
@@ -44,7 +46,7 @@ private fun setupLogging(megazordEnabled: Boolean) {
 }
 
 private fun setupGlean(context: Context) {
-    Glean.initialize(context)
+    Glean.initialize(context, Configuration(httpClient = context.components.core.client))
     Glean.setUploadEnabled(BuildConfig.TELEMETRY_ENABLED && Settings.isTelemetryEnabled(context))
 }
 
