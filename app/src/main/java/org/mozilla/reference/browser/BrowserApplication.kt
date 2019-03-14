@@ -4,15 +4,15 @@
 
 package org.mozilla.reference.browser
 
-import android.app.ActivityManager
 import android.app.Application
 import android.content.Context
-import android.os.Process
 import mozilla.components.service.glean.Glean
 import mozilla.components.service.glean.config.Configuration
 import mozilla.components.support.base.log.Log
 import mozilla.components.support.base.log.logger.Logger
 import mozilla.components.support.base.log.sink.AndroidLogSink
+import mozilla.components.support.ktx.android.content.isMainProcess
+import mozilla.components.support.ktx.android.content.runOnlyInMainProcess
 import mozilla.components.support.rustlog.RustLog
 import org.mozilla.reference.browser.ext.components
 import org.mozilla.reference.browser.ext.isCrashReportActive
@@ -29,7 +29,7 @@ open class BrowserApplication : Application() {
         val megazordEnabled = setupMegazord()
         setupLogging(megazordEnabled)
 
-        if (!isMainProcess(this)) {
+        if (!isMainProcess()) {
             // If this is not the main process then do not continue with the initialization here. Everything that
             // follows only needs to be done in our app's main process and should not be done in other processes like
             // a GeckoView child process or the crash handling process. Most importantly we never want to end up in a
@@ -38,6 +38,13 @@ open class BrowserApplication : Application() {
         }
 
         setupGlean(this)
+    }
+
+    override fun onTrimMemory(level: Int) {
+        super.onTrimMemory(level)
+        runOnlyInMainProcess {
+            components.core.sessionManager.onLowMemory()
+        }
     }
 
     companion object {
@@ -101,22 +108,4 @@ private fun setupMegazord(): Boolean {
         Logger.info("mozilla.appservices.ReferenceBrowserMegazord not found; skipping megazord init.")
         false
     }
-}
-
-/**
- * Are we running in the main process?
- *
- * Let's move this code to Android Components:
- * https://github.com/mozilla-mobile/android-components/issues/2207
- */
-private fun isMainProcess(context: Context): Boolean {
-    val pid = Process.myPid()
-    val activityManager = context.getSystemService(Context.ACTIVITY_SERVICE)
-        as ActivityManager
-    activityManager.runningAppProcesses?.forEach { processInfo ->
-        if (processInfo.pid == pid) {
-            return processInfo.processName == context.packageName
-        }
-    }
-    return false
 }
