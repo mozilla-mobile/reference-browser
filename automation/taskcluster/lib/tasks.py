@@ -20,7 +20,7 @@ class TaskBuilder(object):
         self.tasks_priority = 'lowest'  # TODO Parametrize
 
     def build_task(self, name, description, command, artifacts={}, scopes=[], features={}):
-        return self._craft_default_task_definition(
+        return self.craft_default_task_definition(
             worker_type=self.build_worker_type,
             provisioner_id='aws-provisioner-v1',
             dependencies=[],
@@ -51,7 +51,7 @@ class TaskBuilder(object):
         )
 
     def craft_signing_task(self, build_task_id, name, description, signing_format, is_staging, apks=[], scopes=[], routes=[]):
-        return self._craft_default_task_definition(
+        return self.craft_default_task_definition(
             worker_type='mobile-signing-dep-v1' if is_staging else 'mobile-signing-v1',
             provisioner_id='scriptworker-prov-v1',
             dependencies=[build_task_id],
@@ -79,7 +79,7 @@ class TaskBuilder(object):
         )
 
     def craft_push_task(self, signing_task_id, name, description, commit, is_staging, apks=[], scopes=[]):
-        return self._craft_default_task_definition(
+        return self.craft_default_task_definition(
             worker_type='mobile-pushapk-dep-v1' if is_staging else 'mobile-pushapk-v1',
             provisioner_id='scriptworker-prov-v1',
             dependencies=[signing_task_id],
