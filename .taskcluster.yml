@@ -38,6 +38,11 @@ tasks:
       then: focus-nightly-sched  # TODO: Rename to mobile-nightly-sched
       else: taskcluster-github
 
+    github_repository_full_name:
+      $if: 'tasks_for == "github-pull-request"'
+      then: ${event.pull_request.base.repo.full_name}
+      else: ${event.repository.full_name}
+
     is_repo_trusted:
       # Pull requests on main repository can't be trusted because anybody can open a PR on it, without a review
       $if: 'tasks_for in ["github-push", "github-release", "cron"] && event.repository.html_url == "https://github.com/mozilla-mobile/reference-browser"'
@@ -57,6 +62,8 @@ tasks:
 
       # TODO: revisit once bug 1533314 is done to possibly infer better priorities
       tasks_priority: highest
+
+      assume_scope_prefix: assume:repo:github.com/${github_repository_full_name}
     in:
       $let:
         default_task_definition:
@@ -71,11 +78,6 @@ tasks:
           priority: ${tasks_priority}
           requires: all-completed   # Must be explicit because of Chain of Trust
           retries: 5
-          scopes:
-            - queue:create-task:${tasks_priority}:aws-provisioner-v1/${build_worker_type}
-            - queue:route:statuses
-            - queue:route:tc-treeherder.v2.reference-browser.*
-            - queue:scheduler-id:${scheduler_id}
           routes:
             - statuses  # Automatically added by taskcluster-github. It must be explicit because of Chain of Trust
             - tc-treeherder.v2.reference-browser.${head_rev}
@@ -111,8 +113,6 @@ tasks:
         then:
           $let:
             pr_or_push_parameters:
-              scopes:
-                - secrets:get:project/mobile/android-components/public-tokens
               payload:
                 command:
                   # TODO Stop using the android-components docker image.
@@ -134,7 +134,9 @@ tasks:
                   $mergeDeep:
                     - {$eval: 'default_task_definition'}
                     - {$eval: 'pr_or_push_parameters'}
-                    - payload:
+                    - scopes:
+                        - ${assume_scope_prefix}:pull-request
+                      payload:
                         env:
                           GITHUB_PULL_TITLE: ${pull_request_title}
                       extra:
@@ -148,7 +150,9 @@ tasks:
                 $mergeDeep:
                   - {$eval: 'default_task_definition'}
                   - {$eval: 'pr_or_push_parameters'}
-                  - extra:
+                  - scopes:
+                      - ${assume_scope_prefix}:branch:${head_branch}
+                    extra:
                       treeherder:
                         symbol: D
                     metadata:
@@ -162,26 +166,16 @@ tasks:
                   $if: 'is_repo_trusted'
                   then: ''
                   else: '--staging'
+
+                assume_scope:
+                  $if: 'is_repo_trusted'
+                  then: assume:hook-id:project-mobile/reference-browser-nightly
+                  else: assume:hook-id:project-mobile/reference-browser-nightly-staging
               in:
                 $mergeDeep:
                   - {$eval: 'default_task_definition'}
                   - scopes:
-                      $flatten:
-                        - project:mobile:reference-browser:releng:signing:format:autograph_apk_reference_browser
-                        - secrets:get:project/mobile/reference-browser/sentry
-                        - $if: 'is_repo_trusted'
-                          then:
-                            - queue:create-task:highest:scriptworker-prov-v1/mobile-signing-v1
-                            - queue:create-task:highest:scriptworker-prov-v1/mobile-pushapk-v1
-                            - project:mobile:reference-browser:releng:signing:cert:release-signing
-                            - project:mobile:reference-browser:releng:googleplay:product:reference-browser
-                            - queue:route:index.project.mobile.reference-browser.signed-nightly.*
-                          else:
-                            - queue:create-task:highest:scriptworker-prov-v1/mobile-signing-dep-v1
-                            - queue:create-task:highest:scriptworker-prov-v1/mobile-pushapk-dep-v1
-                            - project:mobile:reference-browser:releng:signing:cert:dep-signing
-                            - project:mobile:reference-browser:releng:googleplay:product:reference-browser:dep
-                            - queue:route:index.project.mobile.reference-browser.staging-signed-nightly.*
+                      - ${assume_scope}
                     payload:
                       features:
                         chainOfTrust: true
