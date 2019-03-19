@@ -11,6 +11,11 @@
             android:summary="@string/preferences_sign_in_summary"/>
 
     <androidx.preference.Preference
+        android:key="@string/pref_key_pair_sign_in"
+        android:title="@string/pair_sign_in"
+        android:summary="@string/preferences_pair_sign_in_summary"/>
+
+    <androidx.preference.Preference
         android:key="@string/pref_key_firefox_account"
         android:title="@string/firefox_account" />
 

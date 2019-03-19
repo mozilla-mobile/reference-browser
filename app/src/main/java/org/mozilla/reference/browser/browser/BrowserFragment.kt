@@ -24,6 +24,9 @@ import mozilla.components.support.base.feature.BackHandler
 import mozilla.components.support.base.feature.ViewBoundFeatureWrapper
 import mozilla.components.support.ktx.android.view.enterToImmersiveMode
 import mozilla.components.support.ktx.android.view.exitImmersiveModeIfNeeded
+import org.mozilla.reference.browser.AppPermissionCodes.REQUEST_CODE_APP_PERMISSIONS
+import org.mozilla.reference.browser.AppPermissionCodes.REQUEST_CODE_DOWNLOAD_PERMISSIONS
+import org.mozilla.reference.browser.AppPermissionCodes.REQUEST_CODE_PROMPT_PERMISSIONS
 import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.UserInteractionHandler
 import org.mozilla.reference.browser.ext.requireComponents
@@ -253,9 +256,6 @@ class BrowserFragment : Fragment(), BackHandler, UserInteractionHandler {
 
     companion object {
         private const val SESSION_ID = "session_id"
-        private const val REQUEST_CODE_DOWNLOAD_PERMISSIONS = 1
-        private const val REQUEST_CODE_PROMPT_PERMISSIONS = 2
-        private const val REQUEST_CODE_APP_PERMISSIONS = 3
 
         fun create(sessionId: String? = null): BrowserFragment = BrowserFragment().apply {
             arguments = Bundle().apply {
