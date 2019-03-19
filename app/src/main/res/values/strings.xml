@@ -18,6 +18,9 @@
     <!-- Preference summary for settings related sign in -->
     <string name="preferences_sign_in_summary">Sync your history</string>
 
+    <!-- Preference summary for pairing sign in -->
+    <string name="preferences_pair_sign_in_summary">Pair with Firefox Desktop</string>
+
     <!-- Preference summary for settings related to send telemetry data -->
     <string name="preferences_use_telemetry_summary">Send usage data</string>
 
@@ -41,6 +44,9 @@
 
     <!-- Preference for signing in -->
     <string name="sign_in">Sign in</string>
+
+    <!-- Preference for signing in -->
+    <string name="pair_sign_in">Sign in with a QR code</string>
 
     <!-- Preference for settings related to the signed in Firefox Account -->
     <string name="firefox_account">Firefox Account</string>
@@ -98,6 +104,10 @@
 
     <!-- Menu option on the toolbar that takes you to privacy settings page-->
     <string name="privacy_settings">Privacy Settings</string>
+
+    <!-- Menu option on the toolbar that takes you to pairing QR code page-->
+    <string name="pair_preferences">Pairing</string>
+    <string name="pair_instructions">Open accounts.firefox.com/pair in Firefox Desktop for your pairing code</string>
 
     <!-- Snackbar message when a non fatal crash happen-->
     <string name="crash_report_non_fatal_message">Sorry. We crashed</string>

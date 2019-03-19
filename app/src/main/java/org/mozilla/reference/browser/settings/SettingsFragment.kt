@@ -17,12 +17,14 @@ import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.R.string.pref_key_firefox_account
 import org.mozilla.reference.browser.ext.getPreferenceKey
 import org.mozilla.reference.browser.R.string.pref_key_sign_in
+import org.mozilla.reference.browser.R.string.pref_key_pair_sign_in
 import org.mozilla.reference.browser.R.string.pref_key_make_default_browser
 import org.mozilla.reference.browser.R.string.pref_key_remote_debugging
 import org.mozilla.reference.browser.R.string.pref_key_about_page
 import org.mozilla.reference.browser.R.string.pref_key_privacy
 import org.mozilla.reference.browser.ext.requireComponents
 
+@Suppress("TooManyFunctions")
 class SettingsFragment : PreferenceFragmentCompat() {
 
     interface ActionBarUpdater {
@@ -50,6 +52,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
     @Suppress("LongMethod") // Yep, this should be refactored.
     private fun setupPreferences() {
         val signInKey = context?.getPreferenceKey(pref_key_sign_in)
+        val signInPairKey = context?.getPreferenceKey(pref_key_pair_sign_in)
         val firefoxAccountKey = context?.getPreferenceKey(pref_key_firefox_account)
         val makeDefaultBrowserKey = context?.getPreferenceKey(pref_key_make_default_browser)
         val remoteDebuggingKey = context?.getPreferenceKey(pref_key_remote_debugging)
@@ -57,6 +60,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
         val privacyKey = context?.getPreferenceKey(pref_key_privacy)
 
         val preferenceSignIn = findPreference(signInKey)
+        val preferencePairSignIn = findPreference(signInPairKey)
         val preferenceFirefoxAccount = findPreference(firefoxAccountKey)
         val preferenceMakeDefaultBrowser = findPreference(makeDefaultBrowserKey)
         val preferenceRemoteDebugging = findPreference(remoteDebuggingKey)
@@ -66,6 +70,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
         val accountManager = requireComponents.backgroundServices.accountManager
         if (accountManager.authenticatedAccount() != null) {
             preferenceSignIn.isVisible = false
+            preferencePairSignIn.isVisible = false
             preferenceFirefoxAccount.summary = accountManager.accountProfile()?.email.orEmpty()
             preferenceFirefoxAccount.onPreferenceClickListener = getClickListenerForFirefoxAccount()
         } else {
@@ -73,6 +78,8 @@ class SettingsFragment : PreferenceFragmentCompat() {
             preferenceFirefoxAccount.isVisible = false
             preferenceFirefoxAccount.onPreferenceClickListener = null
             preferenceSignIn.onPreferenceClickListener = getClickListenerForSignIn()
+            preferencePairSignIn.isVisible = true
+            preferencePairSignIn.onPreferenceClickListener = getClickListenerForPairingSignIn()
         }
 
         preferenceMakeDefaultBrowser.onPreferenceClickListener = getClickListenerForMakeDefaultBrowser()
@@ -99,6 +106,19 @@ class SettingsFragment : PreferenceFragmentCompat() {
         return OnPreferenceClickListener {
             requireComponents.services.accountsAuthFeature.beginAuthentication()
             activity?.finish()
+            true
+        }
+    }
+
+    private fun getClickListenerForPairingSignIn(): OnPreferenceClickListener {
+        return OnPreferenceClickListener {
+            fragmentManager?.beginTransaction()
+                    ?.replace(android.R.id.content, PairSettingsFragment())
+                    ?.addToBackStack(null)
+                    ?.commit()
+            getActionBarUpdater().apply {
+                updateTitle(R.string.pair_preferences)
+            }
             true
         }
     }

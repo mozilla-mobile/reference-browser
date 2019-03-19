@@ -8,6 +8,7 @@ import android.R.id.content
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MenuItem
+import mozilla.components.support.base.feature.BackHandler
 
 class SettingsActivity : AppCompatActivity(), SettingsFragment.ActionBarUpdater {
 
@@ -32,5 +33,15 @@ class SettingsActivity : AppCompatActivity(), SettingsFragment.ActionBarUpdater 
 
     override fun updateTitle(titleResId: Int) {
         setTitle(titleResId)
+    }
+
+    override fun onBackPressed() {
+        supportFragmentManager.fragments.forEach {
+            if (it is BackHandler && it.onBackPressed()) {
+                return
+            } else {
+                super.onBackPressed()
+            }
+        }
     }
 }
