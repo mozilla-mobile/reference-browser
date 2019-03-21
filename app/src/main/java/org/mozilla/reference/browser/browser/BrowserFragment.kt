@@ -160,7 +160,8 @@ class BrowserFragment : Fragment(), BackHandler, UserInteractionHandler {
         findInPageIntegration.set(
             feature = FindInPageIntegration(
                 requireComponents.core.sessionManager,
-                findInPageBar as FindInPageView),
+                findInPageBar as FindInPageView,
+                engineView),
             owner = this,
             view = view)
 
