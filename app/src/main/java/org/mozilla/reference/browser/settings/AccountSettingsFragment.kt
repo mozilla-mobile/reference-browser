@@ -14,12 +14,15 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import mozilla.components.concept.sync.SyncStatusObserver
+import mozilla.components.concept.sync.DeviceConstellationObserver
+import mozilla.components.concept.sync.Device
 import mozilla.components.feature.sync.getLastSynced
 import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.ext.getPreferenceKey
 import org.mozilla.reference.browser.ext.requireComponents
 import org.mozilla.reference.browser.R.string.pref_key_sign_out
 import org.mozilla.reference.browser.R.string.pref_key_sync_now
+import org.mozilla.reference.browser.R.string.pref_key_fxa_device_name
 import java.lang.Exception
 
 class AccountSettingsFragment : PreferenceFragmentCompat() {
@@ -54,11 +57,24 @@ class AccountSettingsFragment : PreferenceFragmentCompat() {
         }
     }
 
+    private val deviceConstellationObserver = object : DeviceConstellationObserver {
+        override fun onCurrentDevice(device: Device) {
+            val deviceNameKey = context?.getPreferenceKey(pref_key_fxa_device_name)
+            val preferenceDeviceName = findPreference(deviceNameKey)
+            preferenceDeviceName.title = device.displayName
+        }
+
+        override fun onOtherDevices(devices: List<Device>) {
+            // Ignore this for now; but, we could display the device list in the UI if we care to!
+        }
+    }
+
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.account_preferences, rootKey)
 
         val signOutKey = context?.getPreferenceKey(pref_key_sign_out)
         val syncNowKey = context?.getPreferenceKey(pref_key_sync_now)
+        val deviceNameKey = context?.getPreferenceKey(pref_key_fxa_device_name)
 
         // Sign Out
         val preferenceSignOut = findPreference(signOutKey)
@@ -76,6 +92,16 @@ class AccountSettingsFragment : PreferenceFragmentCompat() {
         } else {
             preferenceSyncNow.isEnabled = true
         }
+
+        val preferenceDeviceName = findPreference(deviceNameKey)
+        preferenceDeviceName.onPreferenceChangeListener = getChangeListenerForDeviceName()
+        val device = requireComponents.backgroundServices.accountManager.authenticatedAccount()?.currentDevice()
+        val deviceName = device?.displayName ?: "unknown device"
+        preferenceDeviceName.title = deviceName
+
+        requireComponents.backgroundServices.accountManager.authenticatedAccount()?.registerDeviceObserver(
+            deviceConstellationObserver, owner = this, autoPause = true
+        )
 
         // NB: ObserverRegistry will take care of cleaning up internal references to 'observer' and
         // 'owner' when appropriate.
@@ -118,7 +144,24 @@ class AccountSettingsFragment : PreferenceFragmentCompat() {
 
     private fun getClickListenerForSyncNow(): OnPreferenceClickListener {
         return OnPreferenceClickListener {
+            requireComponents.backgroundServices.accountManager.authenticatedAccount()?.refreshDeviceStateAsync()
             requireComponents.backgroundServices.syncManager.syncNow()
+            true
+        }
+    }
+
+    private fun getChangeListenerForDeviceName(): Preference.OnPreferenceChangeListener {
+        return Preference.OnPreferenceChangeListener { _, newValue ->
+            // Optimistically set the device name to what user requested.
+            val deviceNameKey = context?.getPreferenceKey(pref_key_fxa_device_name)
+            val preferenceDeviceName = findPreference(deviceNameKey)
+            preferenceDeviceName.title = newValue as String
+
+            // This may fail, and we'll have a disparity in the UI until `updateDeviceName` is called.
+            CoroutineScope(Dispatchers.IO).launch {
+                requireComponents.backgroundServices.accountManager.authenticatedAccount()?.setDeviceNameAsync(newValue)?.await()
+            }
+
             true
         }
     }

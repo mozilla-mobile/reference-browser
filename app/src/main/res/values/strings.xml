@@ -30,6 +30,9 @@
     <!-- Preference enables sync for history -->
     <string name="preferences_sync_history">History</string>
 
+    <!-- Preference displays and allows changing current FxA device name -->
+    <string name="preferences_fxa_device_name">Device name</string>
+
     <!-- Preference enabling remote debugging -->
     <string name="preferences_remote_debugging">Remote debugging via USB</string>
 
@@ -41,6 +44,12 @@
 
     <!-- Preference about page -->
     <string name="preferences_about_page">About Reference Browser</string>
+
+    <!-- User visible Send Tab notification channel name-->
+    <string name="fxa_send_tab_channel_name">Reference Browser Received Tabs</string>
+
+    <!-- User visible Send Tab notification channel description -->
+    <string name="fxa_send_tab_channel_description">Incoming tabs from other FxA devices</string>
 
     <!-- Preference for signing in -->
     <string name="sign_in">Sign in</string>
@@ -80,6 +89,9 @@
 
     <!-- Preference category for sync settings -->
     <string name="sync_category">Choose what to sync</string>
+
+    <!-- Preference category for FxA device name -->
+    <string name="fxa_device_name_category">Device name</string>
 
     <!-- Preference category for developer tools -->
     <string name="developer_tools_category">Developer tools</string>

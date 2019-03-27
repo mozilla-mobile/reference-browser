@@ -4,15 +4,27 @@
 
 package org.mozilla.reference.browser.components
 
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.Context
+import android.content.Intent
+import android.net.Uri
+import android.os.Build
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import mozilla.components.browser.storage.sync.PlacesHistoryStorage
+import mozilla.components.concept.sync.Device
+import mozilla.components.concept.sync.EventsProcessor
+import mozilla.components.concept.sync.TabData
 import mozilla.components.service.fxa.Config
 import mozilla.components.service.fxa.FxaAccountManager
 import mozilla.components.feature.sync.BackgroundSyncManager
 import mozilla.components.feature.sync.GlobalSyncableStoreProvider
+import org.mozilla.reference.browser.R
 
 /**
  * Component group for background services. These are components that need to be accessed from
@@ -34,6 +46,7 @@ class BackgroundServices(
     // at runtime.
     private val scopes: Array<String> = arrayOf("profile", "https://identity.mozilla.com/apps/oldsync")
     private val config = Config.release(CLIENT_ID, REDIRECT_URL)
+    private val sendTabReceiver = SendTabReceiver(context)
 
     init {
         // Make the "history" store accessible to workers spawned by the sync manager.
@@ -44,7 +57,60 @@ class BackgroundServices(
         it.addStore("history")
     }
 
-    val accountManager = FxaAccountManager(context, config, scopes, syncManager).also {
+    val accountManager = FxaAccountManager(
+        context,
+        config,
+        scopes,
+        syncManager,
+        "Reference Browser",
+        sendTabReceiver
+    ).also {
         CoroutineScope(Dispatchers.Main).launch { it.initAsync().await() }
+    }
+}
+
+private class SendTabReceiver(val context: Context) : EventsProcessor {
+    companion object {
+        const val NOTIFICATION_ID = 1
+        const val CHANNEL_ID = "SendTabChannel"
+    }
+
+    init {
+        createNotificationChannel()
+    }
+
+    override fun onTabsReceived(tabs: List<TabData>, from: Device?) {
+        tabs.forEach { tabData ->
+            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(tabData.url))
+            val pendingIntent: PendingIntent = PendingIntent.getActivity(context, 0, intent, 0)
+
+            val builder = NotificationCompat.Builder(context, CHANNEL_ID)
+                    .setSmallIcon(R.drawable.ic_notification)
+                    .setContentTitle(tabData.title)
+                    .setContentText(tabData.url)
+                    .setContentIntent(pendingIntent)
+                    .setPriority(NotificationCompat.PRIORITY_HIGH)
+
+            with(NotificationManagerCompat.from(context)) {
+                notify(NOTIFICATION_ID, builder.build())
+            }
+        }
+    }
+
+    private fun createNotificationChannel() {
+        // Create the NotificationChannel, but only on API 26+ because
+        // the NotificationChannel class is new and not in the support library
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val name = context.getString(R.string.fxa_send_tab_channel_name)
+            val descriptionText = context.getString(R.string.fxa_send_tab_channel_description)
+            val importance = NotificationManager.IMPORTANCE_HIGH
+            val channel = NotificationChannel(CHANNEL_ID, name, importance).apply {
+                description = descriptionText
+            }
+            // Register the channel with the system
+            val notificationManager: NotificationManager =
+                    context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            notificationManager.createNotificationChannel(channel)
+        }
     }
 }

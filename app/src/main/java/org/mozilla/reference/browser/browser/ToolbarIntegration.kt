@@ -74,6 +74,14 @@ class ToolbarIntegration(
                 visible = { sessionManager.selectedSession != null }
             },
 
+            SimpleBrowserMenuItem("Send to Device") {
+                val url = sessionManager.selectedSession?.url ?: ""
+                val title = sessionManager.selectedSession?.title ?: ""
+                openSendTabActivity(url, title)
+            }.apply {
+                visible = { sessionManager.selectedSession != null && context.components.backgroundServices.accountManager.authenticatedAccount() != null }
+            },
+
             BrowserMenuSwitch("Request desktop site", {
                 sessionManager.selectedSessionOrThrow.desktopMode
             }) { checked ->
@@ -139,5 +147,9 @@ class ToolbarIntegration(
     private fun openSettingsActivity(context: Context) {
         val intent = Intent(context, SettingsActivity::class.java)
         context.startActivity(intent)
+    }
+
+    private fun openSendTabActivity(url: String, title: String?) {
+
     }
 }

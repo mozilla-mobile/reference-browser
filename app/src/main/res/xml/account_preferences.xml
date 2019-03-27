@@ -20,6 +20,14 @@
             android:title="@string/preferences_sync_history" />
     </PreferenceCategory>
 
+    <PreferenceCategory
+        android:title="@string/fxa_device_name_category">
+
+        <androidx.preference.EditTextPreference
+            android:key="@string/pref_key_fxa_device_name"
+            android:title="@string/preferences_fxa_device_name" />
+    </PreferenceCategory>
+
     <org.mozilla.reference.browser.settings.CustomColorPreference
             android:key="@string/pref_key_sign_out"
             android:title="@string/sign_out"
