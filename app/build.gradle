@@ -41,6 +41,11 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+        releaseRaptor {
+            initWith release
+            manifestPlaceholders.isRaptorEnabled = "true"
+            matchingFallbacks = ['release']
+        }
         debug {
             applicationIdSuffix ".debug"
         }
