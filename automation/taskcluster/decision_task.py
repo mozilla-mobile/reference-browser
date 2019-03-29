@@ -131,8 +131,9 @@ def _craft_treeherder_platform_from_variant(variant):
 
 
 def _craft_artifacts_from_variant(variant):
+    arch, _ = _get_architecture_and_build_type_from_variant(variant)
     return {
-        'public/target.apk': {
+        'public/target.{}.apk'.format(arch): {
             'type': 'file',
             'path': _craft_apk_full_path_from_variant(variant),
             'expires': taskcluster.stringDate(taskcluster.fromNow(lib.tasks.DEFAULT_EXPIRES_IN)),

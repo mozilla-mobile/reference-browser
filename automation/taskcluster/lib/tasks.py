@@ -78,7 +78,7 @@ class TaskBuilder(object):
             },
         )
 
-    def craft_push_task(self, signing_task_id, name, description, commit, is_staging, apks=[], scopes=[]):
+    def craft_push_task(self, signing_task_id, name, description, is_staging, apks=[], scopes=[]):
         return self.craft_default_task_definition(
             worker_type='mobile-pushapk-dep-v1' if is_staging else 'mobile-pushapk-v1',
             provisioner_id='scriptworker-prov-v1',
@@ -88,7 +88,7 @@ class TaskBuilder(object):
             name=name,
             description=description,
             payload={
-                "commit": commit,
+                "commit": True,
                 "google_play_track": 'nightly',
                 "upstreamArtifacts": [{
                     "paths": apks,
