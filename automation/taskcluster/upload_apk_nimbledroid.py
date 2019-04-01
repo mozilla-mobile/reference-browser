@@ -33,7 +33,7 @@ def uploadApk(apk,key):
 
 
 def uploadGeckoViewExampleApk(key):
-		apk_url = 'https://index.taskcluster.net/v1/task/gecko.v2.mozilla-central.latest.mobile.android-api-16-opt/artifacts/public/build/geckoview_example.apk'
+	apk_url = 'https://index.taskcluster.net/v1/task/gecko.v2.mozilla-central.latest.mobile.android-api-16-opt/artifacts/public/build/geckoview_example.apk'
 	apk_data = urllib2.urlopen(apk_url).read()
 	with open('./geckoview_example_nd.apk', 'wb') as f:
     		f.write(apk_data)
@@ -45,7 +45,7 @@ def uploadGeckoViewExampleApk(key):
 secrets = taskcluster.Secrets({'baseUrl': 'http://taskcluster/secrets/v1'})
 data = secrets.get('project/mobile/reference-browser/nimbledroid')
 
-rb_file_arm = {'apk': open('app/build/outputs/apk/geckoNightlyArm/debug/app-geckoNightly-arm-debug.apk')}
+rb_file_arm = {'apk': open('app/build/outputs/apk/geckoNightlyArm/release/app-geckoNightly-arm-release-unsigned.apk')}
 
 # upload 32 bit apk
 uploadApk(rb_file_arm, data['secret']['api_key'])
