@@ -15,6 +15,7 @@ import mozilla.components.feature.awesomebar.AwesomeBarFeature
 import mozilla.components.feature.downloads.DownloadsFeature
 import mozilla.components.feature.findinpage.view.FindInPageView
 import mozilla.components.feature.prompts.PromptFeature
+import mozilla.components.feature.qr.QrFeature
 import mozilla.components.feature.session.FullScreenFeature
 import mozilla.components.feature.session.SessionFeature
 import mozilla.components.feature.session.ThumbnailsFeature
@@ -25,6 +26,7 @@ import mozilla.components.support.base.feature.ViewBoundFeatureWrapper
 import mozilla.components.support.ktx.android.view.enterToImmersiveMode
 import mozilla.components.support.ktx.android.view.exitImmersiveModeIfNeeded
 import org.mozilla.reference.browser.AppPermissionCodes.REQUEST_CODE_APP_PERMISSIONS
+import org.mozilla.reference.browser.AppPermissionCodes.REQUEST_CODE_CAMERA_PERMISSIONS
 import org.mozilla.reference.browser.AppPermissionCodes.REQUEST_CODE_DOWNLOAD_PERMISSIONS
 import org.mozilla.reference.browser.AppPermissionCodes.REQUEST_CODE_PROMPT_PERMISSIONS
 import org.mozilla.reference.browser.R
@@ -45,9 +47,11 @@ class BrowserFragment : Fragment(), BackHandler, UserInteractionHandler {
     private val findInPageIntegration = ViewBoundFeatureWrapper<FindInPageIntegration>()
     private val sitePermissionFeature = ViewBoundFeatureWrapper<SitePermissionsFeature>()
     private val pictureInPictureIntegration = ViewBoundFeatureWrapper<PictureInPictureIntegration>()
+    private val qrFeature = ViewBoundFeatureWrapper<QrFeature>()
     private val thumbnailsFeature = ViewBoundFeatureWrapper<ThumbnailsFeature>()
 
     private val backButtonHandler: List<ViewBoundFeatureWrapper<*>> = listOf(
+        qrFeature,
         fullScreenFeature,
         findInPageIntegration,
         toolbarIntegration,
@@ -63,6 +67,21 @@ class BrowserFragment : Fragment(), BackHandler, UserInteractionHandler {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        qrFeature.set(
+            feature = QrFeature(
+                requireContext(),
+                fragmentManager = fragmentManager!!,
+                onNeedToRequestPermissions = { permissions ->
+                    requestPermissions(permissions, REQUEST_CODE_CAMERA_PERMISSIONS)
+                },
+                onScanResult = { pairingUrl ->
+                    requireComponents.useCases.sessionUseCases.loadUrl.invoke(pairingUrl)
+                }
+            ),
+            owner = this,
+            view = view
+        )
+
         sessionFeature.set(
             feature = SessionFeature(
                 requireComponents.core.sessionManager,
@@ -76,6 +95,7 @@ class BrowserFragment : Fragment(), BackHandler, UserInteractionHandler {
             feature = ToolbarIntegration(
                 requireContext(),
                 toolbar,
+                qrFeature.get()!!,
                 requireComponents.core.historyStorage,
                 requireComponents.core.sessionManager,
                 requireComponents.useCases.sessionUseCases,
@@ -248,8 +268,9 @@ class BrowserFragment : Fragment(), BackHandler, UserInteractionHandler {
             REQUEST_CODE_PROMPT_PERMISSIONS -> promptsFeature.withFeature {
                 it.onPermissionsResult(permissions, grantResults)
             }
-            REQUEST_CODE_APP_PERMISSIONS -> sitePermissionFeature.withFeature {
-                it.onPermissionsResult(grantResults)
+            REQUEST_CODE_APP_PERMISSIONS -> {
+                qrFeature.withFeature { it.onPermissionsResult(permissions, grantResults) }
+                sitePermissionFeature.withFeature { it.onPermissionsResult(grantResults) }
             }
         }
     }

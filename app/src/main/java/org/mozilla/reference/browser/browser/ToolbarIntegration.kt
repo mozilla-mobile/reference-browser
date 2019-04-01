@@ -7,6 +7,7 @@ package org.mozilla.reference.browser.browser
 import android.content.Context
 import android.content.Intent
 import android.view.View
+import androidx.core.content.ContextCompat
 import mozilla.components.browser.domains.autocomplete.ShippedDomainsProvider
 import mozilla.components.browser.menu.BrowserMenuBuilder
 import mozilla.components.browser.menu.item.BrowserMenuItemToolbar
@@ -15,6 +16,7 @@ import mozilla.components.browser.menu.item.SimpleBrowserMenuItem
 import mozilla.components.browser.session.SessionManager
 import mozilla.components.browser.toolbar.BrowserToolbar
 import mozilla.components.concept.storage.HistoryStorage
+import mozilla.components.feature.qr.QrFeature
 import mozilla.components.feature.session.SessionUseCases
 import mozilla.components.feature.tabs.TabsUseCases
 import mozilla.components.feature.toolbar.ToolbarAutocompleteFeature
@@ -29,6 +31,7 @@ import org.mozilla.reference.browser.settings.SettingsActivity
 class ToolbarIntegration(
     context: Context,
     toolbar: BrowserToolbar,
+    qrFeature: QrFeature,
     historyStorage: HistoryStorage,
     sessionManager: SessionManager,
     sessionUseCases: SessionUseCases,
@@ -103,6 +106,14 @@ class ToolbarIntegration(
 
     init {
         toolbar.setMenuBuilder(menuBuilder)
+
+        toolbar.addEditAction(BrowserToolbar.Button(
+            ContextCompat.getDrawable(context, R.drawable.ic_qr)!!,
+            "QR code scanner"
+        ) {
+            qrFeature.scan()
+            toolbar.displayMode()
+        })
 
         toolbar.hint = context.getString(R.string.toolbar_hint)
 
