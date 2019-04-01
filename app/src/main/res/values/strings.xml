@@ -107,7 +107,7 @@
 
     <!-- Menu option on the toolbar that takes you to pairing QR code page-->
     <string name="pair_preferences">Pairing</string>
-    <string name="pair_instructions">Open accounts.firefox.com/pair in Firefox Desktop for your pairing code</string>
+    <string name="pair_instructions">Open firefox.com/pair in Firefox Desktop for your pairing code</string>
 
     <!-- Snackbar message when a non fatal crash happen-->
     <string name="crash_report_non_fatal_message">Sorry. We crashed</string>
