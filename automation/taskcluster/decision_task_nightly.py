@@ -105,11 +105,11 @@ def generate_upload_apk_nimbledroid_task(build_task_id):
     checkout = 'git clone {} && cd reference-browser && git checkout {}'.format(GITHUB_HTTP_REPOSITORY, HEAD_REV)
     return taskcluster.slugId(), BUILDER.craft_upload_apk_nimbledroid_task(
         build_task_id,
-        name="(RB for Android) Upload Debug APK to Nimbledroid",
+        name="(RB for Android) Upload Release APK to Nimbledroid",
         description="Upload APKs to Nimbledroid for performance measurement and tracking.",
         command=(#'echo "--" > .adjust_token'
                  'cd .. && ' + checkout +
-                 ' && ./gradlew --no-daemon clean assembleDebug'
+                 ' && ./gradlew --no-daemon clean assembleRelease'
                  ' && python automation/taskcluster/upload_apk_nimbledroid.py'),
         dependencies= [build_task_id],
         scopes=["secrets:get:project/mobile/reference-browser/nimbledroid"],
