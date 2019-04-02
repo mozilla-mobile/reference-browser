@@ -4,7 +4,6 @@
 
 package org.mozilla.reference.browser
 
-import android.content.ComponentCallbacks2
 import android.content.Context
 import android.os.Bundle
 import com.google.android.material.snackbar.Snackbar
@@ -28,7 +27,7 @@ import org.mozilla.reference.browser.ext.components
 import org.mozilla.reference.browser.ext.isCrashReportActive
 import org.mozilla.reference.browser.telemetry.DataReportingNotification
 
-open class BrowserActivity : AppCompatActivity(), ComponentCallbacks2 {
+open class BrowserActivity : AppCompatActivity() {
 
     private lateinit var crashIntegration: CrashIntegration
 
@@ -107,10 +106,6 @@ open class BrowserActivity : AppCompatActivity(), ComponentCallbacks2 {
             TabsTray::class.java.name -> BrowserTabsTray(context, attrs)
             else -> super.onCreateView(parent, name, context, attrs)
         }
-
-    override fun onTrimMemory(level: Int) {
-        components.core.sessionManager.onLowMemory()
-    }
 
     private fun onNonFatalCrash(crash: Crash) {
         Snackbar.make(findViewById(android.R.id.content), crash_report_non_fatal_message, LENGTH_LONG)

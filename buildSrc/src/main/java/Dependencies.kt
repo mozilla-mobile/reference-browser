@@ -15,18 +15,19 @@ private object Versions {
     const val google_material = "1.0.0"
 
     const val android_gradle_plugin = "3.2.1"
-    const val appservices_gradle_plugin = "0.3.1"
+    const val appservices_gradle_plugin = "0.4.2"
 
-    const val mozilla_android_components = "0.45.0-SNAPSHOT"
+    const val mozilla_android_components = "0.49.0-SNAPSHOT"
 
     const val thirdparty_sentry = "1.7.10"
 
-    const val tools_espresso_core = "2.2.2"
-    const val tools_espresso_version = "3.0.2"
-    const val tools_test_orchestrator = "1.0.2"
-    const val tools_test_rules = "1.0.2"
-    const val tools_test_runner = "1.0.2"
-    const val tools_uiautomator = "2.1.3"
+    const val espresso_core = "2.2.2"
+    const val espresso_version = "3.0.2"
+    const val mockwebserver = "3.10.0"
+    const val orchestrator = "1.1.1"
+    const val tools_test_rules = "1.1.1"
+    const val tools_test_runner = "1.1.1"
+    const val uiautomator = "2.1.3"
 }
 
 // Synchronized dependencies used by (some) modules
@@ -38,6 +39,7 @@ object Deps {
     const val mozilla_concept_tabstray = "org.mozilla.components:concept-tabstray:${Versions.mozilla_android_components}"
     const val mozilla_concept_toolbar = "org.mozilla.components:concept-toolbar:${Versions.mozilla_android_components}"
     const val mozilla_concept_storage = "org.mozilla.components:concept-storage:${Versions.mozilla_android_components}"
+    const val mozilla_concept_sync = "org.mozilla.components:concept-sync:${Versions.mozilla_android_components}"
 
     const val mozilla_browser_awesomebar = "org.mozilla.components:browser-awesomebar:${Versions.mozilla_android_components}"
     const val mozilla_browser_engine_gecko = "org.mozilla.components:browser-engine-gecko:${Versions.mozilla_android_components}"
@@ -67,6 +69,7 @@ object Deps {
     const val mozilla_feature_downloads = "org.mozilla.components:feature-downloads:${Versions.mozilla_android_components}"
     const val mozilla_feature_storage = "org.mozilla.components:feature-storage:${Versions.mozilla_android_components}"
     const val mozilla_feature_prompts = "org.mozilla.components:feature-prompts:${Versions.mozilla_android_components}"
+    const val mozilla_feature_qr = "org.mozilla.components:feature-qr:${Versions.mozilla_android_components}"
 
     const val mozilla_ui_autocomplete = "org.mozilla.components:ui-autocomplete:${Versions.mozilla_android_components}"
     const val mozilla_ui_colors = "org.mozilla.components:ui-colors:${Versions.mozilla_android_components}"
@@ -92,12 +95,13 @@ object Deps {
     const val tools_kotlingradle = "org.jetbrains.kotlin:kotlin-gradle-plugin:${Versions.kotlin}"
     const val tools_appservicesgradle = "org.mozilla.appservices:gradle-plugin:${Versions.appservices_gradle_plugin}"
 
-    const val tools_espresso_contrib = "com.android.support.test.espresso:espresso-contrib:${Versions.tools_espresso_version}"
-    const val tools_espresso_core = "com.android.support.test.espresso:espresso-core:${Versions.tools_espresso_core}"
-    const val tools_espresso_idling_resources = "com.android.support.test.espresso:espresso-idling-resource:${Versions.tools_espresso_version}"
-    const val tools_espresso_web = "com.android.support.test.espresso:espresso-web:${Versions.tools_espresso_version}"
-    const val tools_test_orchestrator =  "com.android.support.test:orchestrator:${Versions.tools_test_orchestrator}"
+    const val espresso_contrib = "com.android.support.test.espresso:espresso-contrib:${Versions.espresso_version}"
+    const val espresso_core = "com.android.support.test.espresso:espresso-core:${Versions.espresso_core}"
+    const val espresso_idling_resources = "com.android.support.test.espresso:espresso-idling-resource:${Versions.espresso_version}"
+    const val espresso_web = "com.android.support.test.espresso:espresso-web:${Versions.espresso_version}"
+    const val mockwebserver = "com.squareup.okhttp3:mockwebserver:${Versions.mockwebserver}"
+    const val orchestrator =  "androidx.test:orchestrator:${Versions.orchestrator}"
     const val tools_test_rules = "com.android.support.test:rules:${Versions.tools_test_rules}"
     const val tools_test_runner = "com.android.support.test:runner:${Versions.tools_test_runner}"
-    const val tools_uiautomator = "com.android.support.test.uiautomator:uiautomator-v18:${Versions.tools_uiautomator}"
+    const val uiautomator = "com.android.support.test.uiautomator:uiautomator-v18:${Versions.uiautomator}"
 }

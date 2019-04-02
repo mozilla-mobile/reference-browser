@@ -32,9 +32,12 @@ class TabTrayMenuRobot {
     fun verifyRegularBrowsingButton(regularBrowsingButtonChecked: Boolean) = regularBrowsingButton().assertIsChecked(regularBrowsingButtonChecked)
     fun verifyPrivateBrowsingButton(privateButtonChecked: Boolean) = privateBrowsingButton().assertIsChecked(privateButtonChecked)
 
-    fun verifyThereIsOnePrivateTabOpen() = atLeastOnePrivateTab()
-    fun verifyThereAreNotPrivateTabsOpen() = noPrivateTabs()
-    fun verifyThereIsOneTabsOpen() = atLeastOneRegularTab()
+    fun verifyThereAreNotPrivateTabsOpen() = privateTabs().check(doesNotExist())
+    fun verifyThereAreNoRegularTabsOpen() = regularTabs().check(doesNotExist())
+    fun verifyThereIsOnePrivateTabOpen() = privateTabs().check(matches(isDisplayed()))
+    fun verifyThereIsOneTabOpen() = regularTabs().check(matches(isDisplayed()))
+
+    fun goBackFromTabTrayTest() = goBackButton().click()
 
     fun openRegularBrowsing() {
         regularBrowsingButton().click()
@@ -58,10 +61,16 @@ class TabTrayMenuRobot {
             return TabTrayMoreOptionsMenuRobot.Transition()
         }
 
-        fun goBack(interact: NavigationToolbarRobot.() -> Unit): NavigationToolbarRobot {
-            newTabButton().click()
+        fun goBackFromTabTray(interact: NavigationToolbarRobot.() -> Unit): NavigationToolbarRobot {
+            goBackButton().click()
             NavigationToolbarRobot().interact()
             return NavigationToolbarRobot()
+        }
+
+        fun closeTabXButton(interact: NavigationToolbarRobot.() -> Unit): NavigationToolbarRobot.Transition {
+            closeTabButtonTabTray().click()
+            NavigationToolbarRobot().interact()
+            return NavigationToolbarRobot.Transition()
         }
     }
 }
@@ -78,6 +87,5 @@ private fun menuButton() = onView(ViewMatchers.withContentDescription("More opti
 private fun closeTabButtonTabTray() = onView(withId(R.id.mozac_browser_tabstray_close))
 private fun openTabTabTrayTitle() = onView(withId(R.id.mozac_browser_tabstray_url))
 private fun openTabTabTrayThumbnail() = onView(withId(R.id.mozac_browser_tabstray_thumbnail))
-private fun noPrivateTabs() = onView(ViewMatchers.withText("Private Browsing")).check(doesNotExist())
-private fun atLeastOnePrivateTab() = onView((ViewMatchers.withText("Private Browsing"))).check(matches(isDisplayed()))
-private fun atLeastOneRegularTab() = onView((ViewMatchers.withText("about:blank"))).check(matches(isDisplayed()))
+private fun privateTabs() = onView(ViewMatchers.withText("Private Browsing"))
+private fun regularTabs() = onView((ViewMatchers.withText("about:blank")))

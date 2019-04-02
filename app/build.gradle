@@ -33,6 +33,7 @@ android {
         versionName Config.versionName + Config.generateVersionSuffix()
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunnerArguments clearPackageData: 'true'
     }
 
     buildTypes {
@@ -43,6 +44,10 @@ android {
         debug {
             applicationIdSuffix ".debug"
         }
+    }
+
+    testOptions {
+        execution 'ANDROIDX_TEST_ORCHESTRATOR'
     }
 
     flavorDimensions "engine", "abi"
@@ -154,6 +159,7 @@ dependencies {
     implementation Deps.mozilla_concept_tabstray
     implementation Deps.mozilla_concept_toolbar
     implementation Deps.mozilla_concept_storage
+    implementation Deps.mozilla_concept_sync
 
     implementation Deps.mozilla_browser_awesomebar
     implementation Deps.mozilla_browser_domains
@@ -179,6 +185,7 @@ dependencies {
     implementation Deps.mozilla_feature_tabs
     implementation Deps.mozilla_feature_downloads
     implementation Deps.mozilla_feature_prompts
+    implementation Deps.mozilla_feature_qr
 
     implementation Deps.mozilla_ui_autocomplete
     implementation Deps.mozilla_ui_colors
@@ -206,13 +213,13 @@ dependencies {
     implementation Deps.arch_workmanager
     implementation Deps.google_material
 
-    androidTestImplementation Deps.tools_uiautomator
+    androidTestImplementation Deps.uiautomator
 
-    androidTestImplementation Deps.tools_espresso_core, {
+    androidTestImplementation Deps.espresso_core, {
         exclude group: 'com.android.support', module: 'support-annotations'
     }
 
-    androidTestImplementation(Deps.tools_espresso_contrib) {
+    androidTestImplementation(Deps.espresso_contrib) {
         exclude module: 'appcompat-v7'
         exclude module: 'support-v4'
         exclude module: 'support-annotations'
@@ -221,15 +228,16 @@ dependencies {
         exclude module: 'espresso-core'
     }
 
-    androidTestImplementation Deps.tools_espresso_idling_resources
-    androidTestImplementation Deps.tools_espresso_web, {
+    androidTestImplementation Deps.espresso_idling_resources
+    androidTestImplementation Deps.espresso_web, {
         exclude group: 'com.android.support', module: 'support-annotations'
     }
 
+    androidTestImplementation Deps.mockwebserver
     androidTestImplementation Deps.tools_test_runner
     androidTestImplementation Deps.tools_test_rules
-    androidTestUtil Deps.tools_test_orchestrator
-    androidTestImplementation Deps.tools_espresso_core, {
+    androidTestUtil Deps.orchestrator
+    androidTestImplementation Deps.espresso_core, {
         exclude group: 'com.android.support', module: 'support-annotations'
     }
 }

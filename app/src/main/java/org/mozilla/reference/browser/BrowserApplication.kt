@@ -7,10 +7,14 @@ package org.mozilla.reference.browser
 import android.app.Application
 import android.content.Context
 import mozilla.components.service.glean.Glean
+import mozilla.components.service.glean.config.Configuration
 import mozilla.components.support.base.log.Log
 import mozilla.components.support.base.log.logger.Logger
 import mozilla.components.support.base.log.sink.AndroidLogSink
+import mozilla.components.support.ktx.android.content.isMainProcess
+import mozilla.components.support.ktx.android.content.runOnlyInMainProcess
 import mozilla.components.support.rustlog.RustLog
+import org.mozilla.reference.browser.ext.components
 import org.mozilla.reference.browser.ext.isCrashReportActive
 import org.mozilla.reference.browser.settings.Settings
 
@@ -21,9 +25,26 @@ open class BrowserApplication : Application() {
         super.onCreate()
 
         setupCrashReporting(this)
-        setupGlean(this)
+
         val megazordEnabled = setupMegazord()
         setupLogging(megazordEnabled)
+
+        if (!isMainProcess()) {
+            // If this is not the main process then do not continue with the initialization here. Everything that
+            // follows only needs to be done in our app's main process and should not be done in other processes like
+            // a GeckoView child process or the crash handling process. Most importantly we never want to end up in a
+            // situation where we create a GeckoRuntime from the Gecko child process (
+            return
+        }
+
+        setupGlean(this)
+    }
+
+    override fun onTrimMemory(level: Int) {
+        super.onTrimMemory(level)
+        runOnlyInMainProcess {
+            components.core.sessionManager.onLowMemory()
+        }
     }
 
     companion object {
@@ -44,7 +65,7 @@ private fun setupLogging(megazordEnabled: Boolean) {
 }
 
 private fun setupGlean(context: Context) {
-    Glean.initialize(context)
+    Glean.initialize(context, Configuration(httpClient = lazy { context.components.core.client }))
     Glean.setUploadEnabled(BuildConfig.TELEMETRY_ENABLED && Settings.isTelemetryEnabled(context))
 }
 

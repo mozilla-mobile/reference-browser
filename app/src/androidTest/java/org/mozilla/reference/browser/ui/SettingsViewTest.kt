@@ -10,7 +10,7 @@ import org.mozilla.reference.browser.helpers.BrowserActivityTestRule
 import org.mozilla.reference.browser.ui.robots.navigationToolbar
 
 /**
- *  Tests for verifying the settings view options:
+ *  Tests for verifying the settings view options exist as expected:
  * - Appears when the settings submenu is tapped
  * - Expected options are displayed as listed below
  */
@@ -22,21 +22,39 @@ class SettingsViewTest {
     /* ktlint-disable no-blank-line-before-rbrace */ // This imposes unreadable grouping.
     @Test
     // This test verifies settings view items are all in place
-    fun basicSettingsTest() {
+    fun settingsItemsTest() {
         navigationToolbar {
         }.openThreeDotMenu {
         }.openSettings {
-            assertSettingsView()
-            assertNavigateUp()
-            assertSyncSigninButton()
-            assertSyncHistorySummary()
-            assertUseTelemetryToggle()
-            assertTelemetrySummary()
-            assertMakeDefaultBrowserButton()
-            assertDeveloperToolsHeading()
-            assertRemoteDebuggingToggle()
-            assertMozillaHeading()
-            assertAboutReferenceBrowserButton()
+            verifySettingsViewExists()
+            verifyNavigateUp()
+            verifySyncSigninButton()
+            verifySyncHistorySummary()
+            verifyPrivacyButton()
+            verifyPrivacySummary()
+            verifyMakeDefaultBrowserButton()
+            verifyDeveloperToolsHeading()
+            verifyRemoteDebuggingToggle()
+            verifyMozillaHeading()
+            verifyAboutReferenceBrowserButton()
+        }
+    }
+    @Test
+    fun privacySettingsItemsTest() {
+        navigationToolbar {
+        }.openThreeDotMenu {
+        }.openSettings {
+        }.openSettingsViewPrivacy {
+            verifyPrivacyUpButton()
+            verifyPrivacySettings()
+            verifyTrackingProtectionHeading()
+            verifyTPEnableInNormalBrowsing()
+            verifyTPEnableinPrivateBrowsing()
+            verifyDataChoicesHeading()
+            verifyUseTelemetryToggle()
+            verifyUseTelemetryToggle()
+            verifyTelemetrySummary()
+
         }
     }
 }
