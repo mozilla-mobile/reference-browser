@@ -8,6 +8,7 @@ import android.app.Application
 import android.content.Context
 import mozilla.components.service.glean.Glean
 import mozilla.components.service.glean.config.Configuration
+import mozilla.components.support.base.facts.register
 import mozilla.components.support.base.log.Log
 import mozilla.components.support.base.log.logger.Logger
 import mozilla.components.support.base.log.sink.AndroidLogSink
@@ -17,6 +18,7 @@ import mozilla.components.support.rustlog.RustLog
 import org.mozilla.reference.browser.ext.components
 import org.mozilla.reference.browser.ext.isCrashReportActive
 import org.mozilla.reference.browser.settings.Settings
+import org.mozilla.reference.browser.telemetry.GleanFactProcessor
 
 open class BrowserApplication : Application() {
     val components by lazy { Components(this) }
@@ -67,6 +69,7 @@ private fun setupLogging(megazordEnabled: Boolean) {
 private fun setupGlean(context: Context) {
     Glean.initialize(context, Configuration(httpClient = lazy { context.components.core.client }))
     Glean.setUploadEnabled(BuildConfig.TELEMETRY_ENABLED && Settings.isTelemetryEnabled(context))
+    GleanFactProcessor().register()
 }
 
 private fun setupCrashReporting(application: BrowserApplication) {
