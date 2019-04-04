@@ -14,7 +14,7 @@ private object Versions {
     const val workmanager = "1.0.0-beta01"
     const val google_material = "1.0.0"
 
-    const val android_gradle_plugin = "3.2.1"
+    const val android_gradle_plugin = "3.3.2"
     const val appservices_gradle_plugin = "0.4.2"
 
     const val mozilla_android_components = "0.50.0-SNAPSHOT"
