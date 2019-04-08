@@ -7,7 +7,9 @@ package org.mozilla.reference.browser
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import mozilla.components.browser.session.Session
 import mozilla.components.support.utils.SafeIntent
+import org.mozilla.reference.browser.ext.components
 
 /**
  * This activity is used for performance testing with Raptor/tp6:
@@ -19,6 +21,12 @@ class BrowserTestActivity : Activity() {
         super.onCreate(savedInstanceState)
 
         EngineProvider.testConfig = SafeIntent(intent).extras
+
+        // We're creating a default session here so that we don't end up
+        // with a gecko session that we don't manage. We want to receive
+        // callbacks to update the UI (toolbar) which might have an impact
+        // on performance as well (e.g. progress bar animations).
+        components.core.sessionManager.add(Session("about:blank"))
 
         startActivity(Intent(this, BrowserActivity::class.java))
     }
