@@ -75,7 +75,7 @@ def pr_or_push(is_push=False):
         if (
             is_push and
             architecture in ('aarch64', 'arm') and
-            build_type == 'releaseraptor' and
+            build_type == 'releaseRaptor' and
             SHORT_HEAD_BRANCH == 'master'
         ):
             signing_tasks[taskcluster.slugId()] = BUILDER.craft_signing_task(assemble_task_id, variant)

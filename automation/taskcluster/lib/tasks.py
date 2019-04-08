@@ -10,7 +10,10 @@ import json
 import os
 import taskcluster
 
-from lib.util import convert_camel_case_into_kebab_case
+from lib.util import (
+    convert_camel_case_into_kebab_case,
+    lower_case_first_letter,
+)
 
 DEFAULT_EXPIRES_IN = '1 year'
 _OFFICIAL_REPO_URL = 'https://github.com/mozilla-mobile/reference-browser'
@@ -468,8 +471,8 @@ def _craft_apk_full_path_from_variant(variant):
     )
 
     short_variant = variant[:-len(build_type)]
-    postfix = '-unsigned' if build_type == 'release' else ''
-    product = '{}{}'.format(product[0].lower(), product[1:])
+    postfix = '-unsigned' if build_type.startswith('release') else ''
+    product = lower_case_first_letter(product)
 
     return '/build/reference-browser/app/build/outputs/apk/{short_variant}/{build_type}/app-{product}-{architecture}-{build_type}{postfix}.apk'.format(
         architecture=architecture,
@@ -501,7 +504,7 @@ def get_architecture_and_build_type_and_product_from_variant(variant):
 
     for supported_build_type in _SUPPORTED_BUILD_TYPES:
         if variant.endswith(supported_build_type):
-            build_type = supported_build_type.lower()
+            build_type = lower_case_first_letter(supported_build_type)
             break
     else:
         raise ValueError(
