@@ -16,7 +16,9 @@ from lib.util import (
 )
 
 DEFAULT_EXPIRES_IN = '1 year'
+DEFAULT_APK_ARTIFACT_LOCATION = 'public/target.apk'
 _OFFICIAL_REPO_URL = 'https://github.com/mozilla-mobile/reference-browser'
+_DEFAULT_TASK_URL = 'https://queue.taskcluster.net/v1/task'
 
 
 class TaskBuilder(object):
@@ -279,21 +281,32 @@ class TaskBuilder(object):
         }
 
         return self._craft_default_task_definition(
-            'mobile-{}-b-ref-browser'.format(self.trust_level),
-            'aws-provisioner-v1',
-            dependencies,
-            routes,
-            scopes,
-            name,
-            description,
-            payload,
+            worker_type='mobile-{}-b-ref-browser'.format(self.trust_level),
+            provisioner_id='aws-provisioner-v1',
+            name=name,
+            description=description,
+            payload=payload,
+            dependencies=dependencies,
+            routes=routes,
+            scopes=scopes,
             treeherder=treeherder,
         )
 
     def _craft_default_task_definition(
-        self, worker_type, provisioner_id, dependencies, routes, scopes, name, description,
-        payload, treeherder=None
+        self,
+        worker_type,
+        provisioner_id,
+        name,
+        description,
+        payload,
+        dependencies=None,
+        routes=None,
+        scopes=None,
+        treeherder=None,
     ):
+        dependencies = [] if dependencies is None else dependencies
+        scopes = [] if scopes is None else scopes
+        routes = [] if routes is None else routes
         treeherder = {} if treeherder is None else treeherder
 
         created = datetime.datetime.now()
@@ -336,7 +349,7 @@ class TaskBuilder(object):
         signing_format = 'autograph_apk_reference_browser'
         payload = {
             "upstreamArtifacts": [{
-                "paths": _APKS_PATHS if is_nightly else ['public/target.apk'],
+                "paths": _APKS_PATHS if is_nightly else [DEFAULT_APK_ARTIFACT_LOCATION],
                 "formats": [signing_format],
                 "taskId": assemble_task_id,
                 "taskType": "build",
@@ -346,6 +359,9 @@ class TaskBuilder(object):
         return self._craft_default_task_definition(
             worker_type='mobile-signing-dep-v1' if is_staging else 'mobile-signing-v1',
             provisioner_id='scriptworker-prov-v1',
+            name="sign: {}".format(variant if variant else 'all'),
+            description="Sign builds",
+            payload=payload,
             dependencies=[assemble_task_id],
             routes=self._craft_nightly_routes(is_nightly, is_staging),
             scopes=[
@@ -354,9 +370,6 @@ class TaskBuilder(object):
                     'dep-signing' if is_staging or not is_nightly else 'release-signing'
                 )
             ],
-            name="sign: {}".format(variant if variant else 'all'),
-            description="Sign builds",
-            payload=payload,
             treeherder={
                 'groupSymbol': _craft_treeherder_group_symbol_from_variant(variant) if variant else None,
                 'jobKind': 'other',
@@ -401,16 +414,15 @@ class TaskBuilder(object):
         return self._craft_default_task_definition(
             worker_type='mobile-pushapk-dep-v1' if is_staging else 'mobile-pushapk-v1',
             provisioner_id='scriptworker-prov-v1',
+            name="Push task",
+            description="Upload signed release builds of Reference-Browser to Google Play",
+            payload=payload,
             dependencies=[signing_task_id],
-            routes=[],
             scopes=[
                 "project:mobile:reference-browser:releng:googleplay:product:reference-browser{}".format(
                     ':dep' if is_staging else ''
                 )
             ],
-            name="Push task",
-            description="Upload signed release builds of Reference-Browser to Google Play",
-            payload=payload,
             treeherder={
                 'jobKind': 'other',
                 'machine': {
@@ -427,7 +439,7 @@ class TaskBuilder(object):
             name="Upload Release APK to Nimbledroid",
             description='Upload APKs to Nimbledroid for performance measurement and tracking.',
             command=' && '.join([
-                'curl --location https://queue.taskcluster.net/v1/task/{}/artifacts/public/target.arm.apk > target.arm.apk'.format(assemble_task_id),
+                'curl --location "{}/{}/artifacts/public/target.arm.apk" > target.arm.apk'.format(_DEFAULT_TASK_URL, assemble_task_id),
                 'python automation/taskcluster/upload_apk_nimbledroid.py',
             ]),
             treeherder={
@@ -440,6 +452,70 @@ class TaskBuilder(object):
             },
             scopes=["secrets:get:project/mobile/reference-browser/nimbledroid"],
             dependencies=[assemble_task_id],
+        )
+
+    def craft_raptor_task(self, signing_task_id, mozharness_task_id, variant):
+        apk_location = '{}/{}/artifacts/{}'.format(
+            _DEFAULT_TASK_URL, signing_task_id, DEFAULT_APK_ARTIFACT_LOCATION
+        )
+        architecture, _, __ = get_architecture_and_build_type_and_product_from_variant(variant)
+        worker_type = 'gecko-t-ap-perf-g5' if architecture == 'arm' else 'gecko-t-ap-perf-p2'
+
+        gecko_revision = taskcluster.Queue().task(mozharness_task_id)['payload']['env']['GECKO_HEAD_REV']
+
+        return self._craft_default_task_definition(
+            worker_type=worker_type,
+            provisioner_id='proj-autophone',
+            dependencies=[signing_task_id],
+            name='raptor speedometer: {}'.format(variant),
+            description='Raptor Speedometer on the Reference Browser',
+            payload={
+                "artifacts": [{
+                    'path': '/builds/worker/{}'.format(worker_path),
+                    'expires': taskcluster.stringDate(taskcluster.fromNow(DEFAULT_EXPIRES_IN)),
+                    'type': 'directory',
+                    'name': 'public/{}/'.format(public_folder)
+                } for worker_path, public_folder in (
+                    ('artifacts', 'test'),
+                    ('workspace/build/logs', 'logs'),
+                    ('workspace/build/blobber_upload_dir', 'test_info')
+                )],
+                "command": [
+                    "./test-linux.sh",
+                    '--installer-url={}'.format(apk_location),
+                    "--test-packages-url={}/{}/artifacts/public/build/target.test_packages.json".format(_DEFAULT_TASK_URL, mozharness_task_id),
+                    "--test=raptor-speedometer",
+                    "--app=refbrow",
+                    "--binary=org.mozilla.reference.browser",
+                    "--activity=GeckoViewActivity",
+                    "--download-symbols=ondemand"
+                ],
+                "env": {
+                    "XPCOM_DEBUG_BREAK": "warn",
+                    "MOZ_NO_REMOTE": "1",
+                    "MOZ_HIDE_RESULTS_TABLE": "1",
+                    "TASKCLUSTER_WORKER_TYPE": 'proj-autophone/{}'.format(worker_type),
+                    "MOZHARNESS_URL": "{}/{}/artifacts/public/build/mozharness.zip".format(_DEFAULT_TASK_URL, mozharness_task_id),
+                    "MOZHARNESS_SCRIPT": "raptor_script.py",
+                    "NEED_XVFB": "false",
+                    "WORKING_DIR": "/builds/worker",
+                    "WORKSPACE": "/builds/worker/workspace",
+                    "MOZ_NODE_PATH": "/usr/local/bin/node",
+                    "NO_FAIL_ON_TEST_ERRORS": "1",
+                    "MOZHARNESS_CONFIG": "raptor/android_hw_config.py",
+                    "MOZ_AUTOMATION": "1",
+                    "MOZILLA_BUILD_URL": apk_location,
+                },
+                "context": "https://hg.mozilla.org/mozilla-central/raw-file/{}/taskcluster/scripts/tester/test-linux.sh".format(gecko_revision)
+            },
+            treeherder={
+                'jobKind': 'test',
+                'machine': {
+                  'platform': _craft_treeherder_platform_from_variant(variant),
+                },
+                'symbol': 'sp',
+                'tier': 2,
+            }
         )
 
 
@@ -457,7 +533,7 @@ def _craft_treeherder_group_symbol_from_variant(variant):
 
 def _craft_artifacts_from_variant(variant):
     return {
-        'public/target.apk': {
+        DEFAULT_APK_ARTIFACT_LOCATION: {
             'type': 'file',
             'path': _craft_apk_full_path_from_variant(variant),
             'expires': taskcluster.stringDate(taskcluster.fromNow(DEFAULT_EXPIRES_IN)),
@@ -557,3 +633,13 @@ def schedule_task_graph(ordered_groups_of_tasks):
             }
 
     return full_task_graph
+
+
+def fetch_mozharness_task_id(geckoview_nightly_version):
+    nightly_build_id = geckoview_nightly_version.split('.')[-1]
+    nightly_date = arrow.get(nightly_build_id, 'YYYYMMDDHHmmss')
+
+    raptor_index = 'gecko.v2.mozilla-central.pushdate.{}.{:02}.{:02}.{}.firefox.linux64-debug'.format(
+        nightly_date.year, nightly_date.month, nightly_date.day, nightly_build_id
+    )
+    return taskcluster.Index().findTask(raptor_index)['taskId']
