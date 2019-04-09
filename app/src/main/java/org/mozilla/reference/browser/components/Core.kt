@@ -13,6 +13,7 @@ import mozilla.components.browser.storage.sync.PlacesHistoryStorage
 import mozilla.components.concept.engine.DefaultSettings
 import mozilla.components.concept.engine.Engine
 import mozilla.components.concept.engine.EngineSession.TrackingProtectionPolicy
+import mozilla.components.concept.engine.webextension.WebExtension
 import mozilla.components.concept.fetch.Client
 import mozilla.components.feature.session.HistoryDelegate
 import org.mozilla.reference.browser.AppRequestInterceptor
@@ -42,7 +43,15 @@ class Core(private val context: Context) {
             trackingProtectionPolicy = createTrackingProtectionPolicy(prefs),
             historyTrackingDelegate = HistoryDelegate(historyStorage)
         )
-        EngineProvider.createEngine(context, defaultSettings)
+        val engine = EngineProvider.createEngine(context, defaultSettings)
+        engine.installWebExtension(
+                WebExtension("firefox@ghostery.com", "resource://android/assets/firefox@ghostery.com/"),
+                { w -> println(w) },
+                { _, e ->
+                    println(e.message)
+                }
+        )
+        engine
     }
 
     /**
