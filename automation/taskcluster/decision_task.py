@@ -9,14 +9,16 @@ Decision task
 from __future__ import print_function
 
 import argparse
+import arrow
 import os
 import taskcluster
 
-from lib import build_variants
+from lib.gradle import get_build_variants, get_geckoview_versions
 from lib.tasks import (
     TaskBuilder,
     schedule_task_graph,
     get_architecture_and_build_type_and_product_from_variant,
+    fetch_mozharness_task_id,
 )
 from lib.chain_of_trust import (
     populate_chain_of_trust_task_graph,
@@ -53,13 +55,9 @@ def pr_or_push(is_push=False):
         print("Exit")
         return {}
 
-    print("Fetching build variants from gradle")
-    variants = build_variants.from_gradle()
-
-    if len(variants) == 0:
-        raise ValueError("Could not get build variants from gradle")
-
-    print("Got variants: {}".format(' '.join(variants)))
+    variants = get_build_variants()
+    geckoview_nightly_version = get_geckoview_versions()
+    mozharness_task_id = fetch_mozharness_task_id(geckoview_nightly_version)
 
     build_tasks = {}
     signing_tasks = {}
@@ -78,7 +76,9 @@ def pr_or_push(is_push=False):
             build_type == 'releaseRaptor' and
             SHORT_HEAD_BRANCH == 'master'
         ):
-            signing_tasks[taskcluster.slugId()] = BUILDER.craft_signing_task(assemble_task_id, variant)
+            signing_task_id = taskcluster.slugId()
+            signing_tasks[signing_task_id] = BUILDER.craft_signing_task(assemble_task_id, variant)
+            other_tasks[taskcluster.slugId()] = BUILDER.craft_raptor_task(signing_task_id, mozharness_task_id, variant)
 
         build_tasks[taskcluster.slugId()] = BUILDER.craft_test_task(variant)
 
