@@ -10,7 +10,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import com.cliqz.jsengine.Search
 import kotlinx.android.synthetic.main.fragment_browser.*
+import mozilla.components.concept.awesomebar.AwesomeBar
 import mozilla.components.feature.awesomebar.AwesomeBarFeature
 import mozilla.components.feature.downloads.DownloadsFeature
 import mozilla.components.feature.findinpage.view.FindInPageView
@@ -95,7 +97,8 @@ class BrowserFragment : Fragment(), BackHandler, UserInteractionHandler {
             owner = this,
             view = view)
 
-        AwesomeBarFeature(awesomeBar, toolbar, engineView)
+        val nawesomeBar = requireComponents.cliqzSearch
+        AwesomeBarFeature(nawesomeBar, toolbar, engineView)
             .addSearchProvider(
                 requireComponents.search.searchEngineManager.getDefaultSearchEngine(requireContext()),
                 requireComponents.useCases.searchUseCases.defaultSearch,
@@ -170,7 +173,7 @@ class BrowserFragment : Fragment(), BackHandler, UserInteractionHandler {
 
         sitePermissionFeature.set(
             feature = SitePermissionsFeature(
-                anchorView = awesomeBar,
+                anchorView = nawesomeBar,
                 sessionManager = requireComponents.core.sessionManager
             ) { permissions ->
                 requestPermissions(permissions, REQUEST_CODE_APP_PERMISSIONS)

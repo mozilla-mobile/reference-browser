@@ -20,12 +20,12 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
-        <mozilla.components.browser.awesomebar.BrowserAwesomeBar
+        <com.cliqz.jsengine.Search
             android:id="@+id/awesomeBar"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:padding="4dp"
-            android:visibility="gone"
+            android:visibility="visible"
             mozac:awesomeBarTitleTextColor="#ffffff"
             mozac:awesomeBarDescriptionTextColor="#dddddd"
             mozac:awesomeBarChipTextColor="#ffffff"

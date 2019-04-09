@@ -245,6 +245,9 @@ dependencies {
     androidTestImplementation Deps.espresso_core, {
         exclude group: 'com.android.support', module: 'support-annotations'
     }
+
+    // React-Native
+    implementation 'com.facebook.react:react-native:+'
 }
 
 // -------------------------------------------------------------------------------------------------
@@ -261,4 +264,4 @@ task printBuildVariants {
 
 // Normally this should use the same version as the dependency. But since we are using snapshots we can't reference a
 // git tag. So we are just using "master" and hoping for the best.
-apply from: 'https://github.com/mozilla-mobile/android-components/raw/master/components/service/glean/scripts/sdk_generator.gradle'
+apply from: 'https://raw.githubusercontent.com/mozilla-mobile/android-components/65a6248d2747fe417606fce33e8c8bdc3d29103f/components/service/glean/scripts/sdk_generator.gradle'

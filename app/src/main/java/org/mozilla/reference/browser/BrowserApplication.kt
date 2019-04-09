@@ -6,6 +6,14 @@ package org.mozilla.reference.browser
 
 import android.app.Application
 import android.content.Context
+import android.os.Debug
+import android.os.Trace
+import androidx.core.os.TraceCompat
+import com.cliqz.jsengine.CliqzReactNativeHost
+import com.cliqz.jsengine.Search
+import com.facebook.react.ReactApplication
+import com.facebook.react.ReactNativeHost
+import com.facebook.soloader.SoLoader
 import mozilla.components.service.glean.Glean
 import mozilla.components.service.glean.config.Configuration
 import mozilla.components.support.base.facts.register
@@ -52,6 +60,7 @@ open class BrowserApplication : Application() {
     companion object {
         const val NON_FATAL_CRASH_BROADCAST = "org.mozilla.reference.browser"
     }
+
 }
 
 private fun setupLogging(megazordEnabled: Boolean) {

@@ -53,3 +53,5 @@ jacoco.exec
 
 # Sentry token file
 .sentry_token
+
+node_modules/

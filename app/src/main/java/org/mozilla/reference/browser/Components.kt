@@ -4,6 +4,7 @@
 
 package org.mozilla.reference.browser
 
+import android.app.Application
 import android.content.Context
 import org.mozilla.reference.browser.components.Core
 import org.mozilla.reference.browser.components.Analytics
@@ -19,6 +20,8 @@ import org.mozilla.reference.browser.components.UseCases
 class Components(private val context: Context) {
     val core by lazy { Core(context) }
     val search by lazy { Search(context) }
+    val cliqzSearch by lazy { com.cliqz.jsengine.Search(context) }
+
     val useCases by lazy { UseCases(context, core.sessionManager, search.searchEngineManager) }
 
     // Background services are initiated eagerly; they kick off periodic tasks and setup an accounts system.

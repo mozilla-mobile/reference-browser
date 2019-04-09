@@ -1,0 +1,28 @@
+{
+  "name": "cliqzMobile",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "start": "node node_modules/react-native/local-cli/cli.js start --reset-cache",
+    "test": "jest"
+  },
+  "dependencies": {
+    "browser-core": "https://s3.amazonaws.com/cdncliqz/update/edge/rn-ghostery-android/cliqz-mobile/1.36.0.9fcac3a.tgz",
+    "react": "16.8.3",
+    "react-native": "0.59.1",
+    "react-native-gesture-handler": "^1.0.12",
+    "react-native-snap-carousel": "^3.7.5",
+    "react-native-view-shot": "^2.2.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.4.0",
+    "@babel/runtime": "^7.4.2",
+    "babel-jest": "^24.5.0",
+    "jest": "^24.5.0",
+    "metro-react-native-babel-preset": "^0.53.1",
+    "react-test-renderer": "16.8.3"
+  },
+  "jest": {
+    "preset": "react-native"
+  }
+}
