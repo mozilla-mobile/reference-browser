@@ -109,7 +109,6 @@ class TaskBuilder(object):
             description='Building and testing variant {}'.format(variant),
             gradle_task='assemble{}'.format(variant.capitalize()),
             artifacts=_craft_artifacts_from_variant(variant),
-            routes=self._craft_branch_routes(variant),
             treeherder={
                 'groupSymbol': _craft_treeherder_group_symbol_from_variant(variant),
                 'jobKind': 'build',
@@ -136,33 +135,6 @@ class TaskBuilder(object):
                 'tier': 1,
             },
         )
-
-    def _craft_branch_routes(self, variant):
-        routes = []
-
-        if self.repo_url == _OFFICIAL_REPO_URL and self.short_head_branch == 'master':
-            architecture, build_type, product = \
-                get_architecture_and_build_type_and_product_from_variant(variant)
-            product = convert_camel_case_into_kebab_case(product)
-            postfix = convert_camel_case_into_kebab_case('{}-{}'.format(architecture, build_type))
-
-            routes = [
-                'index.project.mobile.reference-browser.branch.{}.revision.{}.{}.{}'.format(
-                    self.short_head_branch, self.commit, product, postfix
-                ),
-                'index.project.mobile.reference-browser.branch.{}.latest.{}.{}'.format(
-                    self.short_head_branch, product, postfix
-                ),
-                'index.project.mobile.reference-browser.branch.{}.pushdate.{}.{}.{}.revision.{}.{}.{}'.format(
-                    self.short_head_branch, self.date.year, self.date.month, self.date.day,
-                    self.commit, product, postfix
-                ),
-                'index.project.mobile.reference-browser.branch.{}.pushdate.{}.{}.{}.latest.{}.{}'.format(
-                    self.short_head_branch, self.date.year, self.date.month, self.date.day,
-                    product, postfix
-                ),
-            ]
-        return routes
 
     def craft_detekt_task(self):
         return self._craft_clean_gradle_task(
@@ -342,61 +314,105 @@ class TaskBuilder(object):
             },
         }
 
-    def craft_signing_task(
-        self, assemble_task_id, variant=None, is_staging=True,
-    ):
-        is_nightly = variant is None    # We currently build all variants in nightly
-        signing_format = 'autograph_apk_reference_browser'
-        payload = {
-            "upstreamArtifacts": [{
-                "paths": _APKS_PATHS if is_nightly else [DEFAULT_APK_ARTIFACT_LOCATION],
-                "formats": [signing_format],
-                "taskId": assemble_task_id,
-                "taskType": "build",
-            }],
-        }
+    def craft_master_commit_signing_task(self, assemble_task_id, variant):
+        architecture, build_type, product = \
+            get_architecture_and_build_type_and_product_from_variant(variant)
+        product = convert_camel_case_into_kebab_case(product)
+        postfix = convert_camel_case_into_kebab_case('{}-{}'.format(architecture, build_type))
 
-        return self._craft_default_task_definition(
-            worker_type='mobile-signing-dep-v1' if is_staging else 'mobile-signing-v1',
-            provisioner_id='scriptworker-prov-v1',
-            name="sign: {}".format(variant if variant else 'all'),
-            description="Sign builds",
-            payload=payload,
-            dependencies=[assemble_task_id],
-            routes=self._craft_nightly_routes(is_nightly, is_staging),
-            scopes=[
-                "project:mobile:reference-browser:releng:signing:format:{}".format(signing_format),
-                "project:mobile:reference-browser:releng:signing:cert:{}".format(
-                    'dep-signing' if is_staging or not is_nightly else 'release-signing'
-                )
-            ],
+        routes = []
+        if self.repo_url == _OFFICIAL_REPO_URL:
+            routes = [
+                'index.project.mobile.reference-browser.branch.{}.revision.{}.{}.{}'.format(
+                    self.short_head_branch, self.commit, product, postfix
+                ),
+                'index.project.mobile.reference-browser.branch.{}.latest.{}.{}'.format(
+                    self.short_head_branch, product, postfix
+                ),
+                'index.project.mobile.reference-browser.branch.{}.pushdate.{}.{}.{}.revision.{}.{}.{}'.format(
+                    self.short_head_branch, self.date.year, self.date.month, self.date.day,
+                    self.commit, product, postfix
+                ),
+                'index.project.mobile.reference-browser.branch.{}.pushdate.{}.{}.{}.latest.{}.{}'.format(
+                    self.short_head_branch, self.date.year, self.date.month, self.date.day,
+                    product, postfix
+                ),
+            ]
+
+        return self._craft_signing_task(
+            name='sign: {}'.format(variant),
+            description='Dep-signing variant {}'.format(variant),
+            signing_type='dep-signing',
+            assemble_task_id=assemble_task_id,
+            apk_paths=[DEFAULT_APK_ARTIFACT_LOCATION],
+            routes=routes,
             treeherder={
-                'groupSymbol': _craft_treeherder_group_symbol_from_variant(variant) if variant else None,
+                'groupSymbol': _craft_treeherder_group_symbol_from_variant(variant),
                 'jobKind': 'other',
                 'machine': {
-                  'platform': 'android-all' if is_nightly else _craft_treeherder_platform_from_variant(variant),
+                    'platform': _craft_treeherder_platform_from_variant(variant),
                 },
-                'symbol': 'Ns' if is_nightly else 'As',
+                'symbol': 'As',
                 'tier': 1,
             },
         )
 
-    def _craft_nightly_routes(self, is_nightly, is_staging):
-        routes = []
+    def craft_nightly_signing_task(self, build_task_id, apk_paths, is_staging=True):
+        index_release = 'staging-signed-nightly' if is_staging else 'signed-nightly'
+        routes = [
+            'index.project.mobile.reference-browser.{}.nightly.{}.{}.{}.latest'.format(
+                index_release, self.date.year, self.date.month, self.date.day
+            ),
+            'index.project.mobile.reference-browser.{}.nightly.{}.{}.{}.revision.{}'.format(
+                index_release, self.date.year, self.date.month, self.date.day, self.commit
+            ),
+            'index.project.mobile.reference-browser.{}.nightly.latest'.format(index_release),
+        ]
 
-        if is_nightly:
-            index_release = 'staging-signed-nightly' if is_staging else 'signed-nightly'
-            routes = [
-                "index.project.mobile.reference-browser.{}.nightly.{}.{}.{}.latest".format(
-                    index_release, self.date.year, self.date.month, self.date.day
-                ),
-                "index.project.mobile.reference-browser.{}.nightly.{}.{}.{}.revision.{}".format(
-                    index_release, self.date.year, self.date.month, self.date.day, self.commit
-                ),
-                "index.project.mobile.reference-browser.{}.nightly.latest".format(index_release),
-            ]
+        return self._craft_signing_task(
+            name='Signing task',
+            description='Sign release builds of reference-browser',
+            signing_type='dep-signing' if is_staging else 'release-signing',
+            assemble_task_id=build_task_id,
+            apk_paths=apk_paths,
+            routes=routes,
+            treeherder={
+                'jobKind': 'other',
+                'machine': {
+                  'platform': 'android-all',
+                },
+                'symbol': 'Ns',
+                'tier': 1,
+            },
+        )
 
-        return routes
+    def _craft_signing_task(
+        self, name, description, signing_type, assemble_task_id, apk_paths, routes, treeherder
+    ):
+        signing_format = "autograph_apk"
+        payload = {
+            'upstreamArtifacts': [{
+                'paths': apk_paths,
+                'formats': [signing_format],
+                'taskId': assemble_task_id,
+                'taskType': 'build'
+            }]
+        }
+
+        return self._craft_default_task_definition(
+            worker_type='mobile-signing-dep-v1' if signing_format == 'dep' else 'mobile-signing-v1',
+            provisioner_id='scriptworker-prov-v1',
+            dependencies=[assemble_task_id],
+            routes=routes,
+            scopes=[
+                "project:mobile:reference-browser:releng:signing:format:{}".format(signing_format),
+                "project:mobile:reference-browser:releng:signing:cert:{}".format(signing_type),
+            ],
+            name=name,
+            description=description,
+            payload=payload,
+            treeherder=treeherder,
+        )
 
     def craft_push_task(self, signing_task_id, is_staging=True):
         payload = {

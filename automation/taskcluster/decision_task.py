@@ -77,7 +77,7 @@ def pr_or_push(is_push=False):
             SHORT_HEAD_BRANCH == 'master'
         ):
             signing_task_id = taskcluster.slugId()
-            signing_tasks[signing_task_id] = BUILDER.craft_signing_task(assemble_task_id, variant)
+            signing_tasks[signing_task_id] = BUILDER.craft_master_commit_signing_task(assemble_task_id, variant)
             other_tasks[taskcluster.slugId()] = BUILDER.craft_raptor_task(signing_task_id, mozharness_task_id, variant)
 
         build_tasks[taskcluster.slugId()] = BUILDER.craft_test_task(variant)
@@ -103,9 +103,8 @@ def nightly(is_staging):
     build_tasks[assemble_task_id] = BUILDER.craft_assemble_release_task(is_staging)
 
     signing_task_id = taskcluster.slugId()
-    signing_tasks[signing_task_id] = BUILDER.craft_signing_task(
-        assemble_task_id,
-        is_staging=is_staging
+    signing_tasks[signing_task_id] = BUILDER.craft_nightly_signing_task(
+        assemble_task_id, is_staging=is_staging
     )
 
     push_task_id = taskcluster.slugId()
