@@ -389,7 +389,7 @@ class TaskBuilder(object):
     def _craft_signing_task(
         self, name, description, signing_type, assemble_task_id, apk_paths, routes, treeherder
     ):
-        signing_format = "autograph_apk"
+        signing_format = 'autograph_apk_reference_browser'
         payload = {
             'upstreamArtifacts': [{
                 'paths': apk_paths,
