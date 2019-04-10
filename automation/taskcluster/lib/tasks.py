@@ -475,21 +475,95 @@ class TaskBuilder(object):
             dependencies=[assemble_task_id],
         )
 
-    def craft_raptor_task(self, signing_task_id, mozharness_task_id, variant):
+    def craft_raptor_speedometer_task(self, signing_task_id, mozharness_task_id, variant, gecko_revision, force_run_on_64_bit_device=False):
+        return self._craft_raptor_task(
+            signing_task_id,
+            mozharness_task_id,
+            variant,
+            gecko_revision,
+            name_prefix='raptor speedometer',
+            description='Raptor Speedometer on the Reference Browser',
+            test_name='raptor-speedometer',
+            job_symbol='sp',
+            force_run_on_64_bit_device=force_run_on_64_bit_device,
+        )
+
+    def craft_raptor_speedometer_power_task(self, signing_task_id, mozharness_task_id, variant, gecko_revision, force_run_on_64_bit_device=False):
+        return self._craft_raptor_task(
+            signing_task_id,
+            mozharness_task_id,
+            variant,
+            gecko_revision,
+            name_prefix='raptor speedometer power',
+            description='Raptor Speedometer power on the Reference Browser',
+            test_name='raptor-speedometer',
+            job_symbol='sp',
+            group_symbol='Rap-P',
+            extra_test_args=[
+                "--power-test",
+                "--page-cycles 5",
+                "--host HOST_IP",
+            ],
+            force_run_on_64_bit_device=force_run_on_64_bit_device,
+        )
+
+    def craft_raptor_tp6m_task(self, signing_task_id, mozharness_task_id, variant, gecko_revision, force_run_on_64_bit_device=False):
+        # XXX We are not chunking dynamically, but we have hardcoded jobs that are numbered and
+        # using chunk is a way to loop over and schedule these jobs easier
+        chunk = 1
+
+        return self._craft_raptor_task(
+            signing_task_id,
+            mozharness_task_id,
+            variant,
+            gecko_revision,
+            name_prefix='raptor tp6m-{}'.format(chunk),
+            description='Raptor tp6m on the Reference Browser',
+            test_name='raptor-tp6m-{}'.format(chunk),
+            job_symbol='tp6m-{}'.format(chunk),
+            force_run_on_64_bit_device=force_run_on_64_bit_device,
+        )
+
+    def _craft_raptor_task(
+        self,
+        signing_task_id,
+        mozharness_task_id,
+        variant,
+        gecko_revision,
+        name_prefix,
+        description,
+        test_name,
+        job_symbol,
+        group_symbol=None,
+        extra_test_args=None,
+        force_run_on_64_bit_device=False,
+    ):
+        extra_test_args = [] if extra_test_args is None else extra_test_args
         apk_location = '{}/{}/artifacts/{}'.format(
             _DEFAULT_TASK_URL, signing_task_id, DEFAULT_APK_ARTIFACT_LOCATION
         )
         architecture, _, __ = get_architecture_and_build_type_and_product_from_variant(variant)
-        worker_type = 'gecko-t-ap-perf-g5' if architecture == 'arm' else 'gecko-t-ap-perf-p2'
+        worker_type = 'gecko-t-ap-perf-p2' if force_run_on_64_bit_device or architecture == 'aarch64' else 'gecko-t-ap-perf-g5'
 
-        gecko_revision = taskcluster.Queue().task(mozharness_task_id)['payload']['env']['GECKO_HEAD_REV']
+        if force_run_on_64_bit_device:
+            treeherder_platform = 'android-hw-p2-8-0-arm7-api-16'
+        elif architecture == 'arm':
+            treeherder_platform = 'android-hw-g5-7-0-arm7-api-16'
+        elif architecture == 'aarch64':
+            treeherder_platform = 'android-hw-p2-8-0-aarch64'
+        else:
+            raise ValueError('Unsupported architecture "{}"'.format(architecture))
+
+        task_name = '{}: {} {}'.format(
+            name_prefix, variant, '(on 64-bit-device)' if force_run_on_64_bit_device else ''
+        )
 
         return self._craft_default_task_definition(
             worker_type=worker_type,
             provisioner_id='proj-autophone',
             dependencies=[signing_task_id],
-            name='raptor speedometer: {}'.format(variant),
-            description='Raptor Speedometer on the Reference Browser',
+            name=task_name,
+            description=description,
             payload={
                 "artifacts": [{
                     'path': '/builds/worker/{}'.format(worker_path),
@@ -499,42 +573,45 @@ class TaskBuilder(object):
                 } for worker_path, public_folder in (
                     ('artifacts', 'test'),
                     ('workspace/build/logs', 'logs'),
-                    ('workspace/build/blobber_upload_dir', 'test_info')
+                    ('workspace/build/blobber_upload_dir', 'test_info'),
                 )],
                 "command": [
                     "./test-linux.sh",
                     '--installer-url={}'.format(apk_location),
                     "--test-packages-url={}/{}/artifacts/public/build/target.test_packages.json".format(_DEFAULT_TASK_URL, mozharness_task_id),
-                    "--test=raptor-speedometer",
+                    "--test={}".format(test_name),
                     "--app=refbrow",
                     "--binary=org.mozilla.reference.browser",
                     "--activity=GeckoViewActivity",
                     "--download-symbols=ondemand"
-                ],
+                ] + extra_test_args,
                 "env": {
-                    "XPCOM_DEBUG_BREAK": "warn",
-                    "MOZ_NO_REMOTE": "1",
+                    "GECKO_HEAD_REPOSITORY": "https://hg.mozilla.org/mozilla-central",
+                    "GECKO_HEAD_REV": gecko_revision,
+                    "MOZ_AUTOMATION": "1",
                     "MOZ_HIDE_RESULTS_TABLE": "1",
-                    "TASKCLUSTER_WORKER_TYPE": 'proj-autophone/{}'.format(worker_type),
-                    "MOZHARNESS_URL": "{}/{}/artifacts/public/build/mozharness.zip".format(_DEFAULT_TASK_URL, mozharness_task_id),
+                    "MOZ_NO_REMOTE": "1",
+                    "MOZ_NODE_PATH": "/usr/local/bin/node",
+                    "MOZHARNESS_CONFIG": "raptor/android_hw_config.py",
                     "MOZHARNESS_SCRIPT": "raptor_script.py",
+                    "MOZHARNESS_URL": "{}/{}/artifacts/public/build/mozharness.zip".format(_DEFAULT_TASK_URL, mozharness_task_id),
+                    "MOZILLA_BUILD_URL": apk_location,
                     "NEED_XVFB": "false",
+                    "NO_FAIL_ON_TEST_ERRORS": "1",
+                    "TASKCLUSTER_WORKER_TYPE": 'proj-autophone/{}'.format(worker_type),
                     "WORKING_DIR": "/builds/worker",
                     "WORKSPACE": "/builds/worker/workspace",
-                    "MOZ_NODE_PATH": "/usr/local/bin/node",
-                    "NO_FAIL_ON_TEST_ERRORS": "1",
-                    "MOZHARNESS_CONFIG": "raptor/android_hw_config.py",
-                    "MOZ_AUTOMATION": "1",
-                    "MOZILLA_BUILD_URL": apk_location,
+                    "XPCOM_DEBUG_BREAK": "warn",
                 },
                 "context": "https://hg.mozilla.org/mozilla-central/raw-file/{}/taskcluster/scripts/tester/test-linux.sh".format(gecko_revision)
             },
             treeherder={
                 'jobKind': 'test',
+                'groupSymbol': 'Rap' if group_symbol is None else group_symbol,
                 'machine': {
-                  'platform': _craft_treeherder_platform_from_variant(variant),
+                  'platform': treeherder_platform,
                 },
-                'symbol': 'sp',
+                'symbol': job_symbol,
                 'tier': 2,
             }
         )
