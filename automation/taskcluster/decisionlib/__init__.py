@@ -335,7 +335,7 @@ class SigningType(Enum):
     RELEASE = 'release'
 
 
-def signing_task(
+def sign_task(
         name: str,
         signing_format: str,
         signing_type: SigningType,

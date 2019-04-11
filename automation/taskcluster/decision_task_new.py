@@ -1,4 +1,5 @@
 import argparse
+import datetime
 from enum import Enum
 import json
 import subprocess
@@ -13,12 +14,21 @@ ABIS = ('aarch64', 'arm', 'x86')
 
 
 def project_shell_task(
-    name: str,
-    commands: str,
-    artifacts: List[decisionlib.AndroidArtifact] = (),
+        name: str,
+        commands: str,
+        artifacts: List[decisionlib.AndroidArtifact] = (),
 ):
     image = 'mozillamobile/android-components:1.15'
     return decisionlib.shell_task(name, image, commands, artifacts)
+
+
+def gradle_task(
+        name: str,
+        gradle_command: str,
+        artifacts: List[decisionlib.AndroidArtifact] = (),
+):
+    command = './gradlew --no-daemon -PcrashReports=true clean {}'.format(gradle_command)
+    return project_shell_task(name, command, artifacts)
 
 
 class Track(Enum):
@@ -34,6 +44,9 @@ class Variant:
         self.abi = abi
         self.build_type = build_type
         self.signed_by_default = build_type == 'debug'
+
+    def get_treeherder(self):
+        return 'android-{}-{}'.format(self.abi, self.build_type)
 
     @staticmethod
     def from_gradle_variant_string(raw_variant: str):
@@ -52,7 +65,7 @@ class Variant:
                 break
         else:
             raise ValueError('This variant ("{}") does not match any of our supported '
-                             'architectures ({})'.format(raw_variant, ABIS))
+                             'abis ({})'.format(raw_variant, ABIS))
 
         build_type = raw_variant[len(engine + abi)]
         return Variant(raw_variant, engine + abi, engine, abi, build_type)
@@ -74,6 +87,56 @@ def from_gradle():
     return [Variant.from_gradle_variant_string(raw_variant) for raw_variant in variants]
 
 
+def lint_tasks(scheduler: Scheduler):
+    gradle_task('detekt', 'detekt') \
+        .with_treeherder('test', 'lint', 1, 'detekt') \
+        .schedule(scheduler)
+
+    gradle_task('ktlint', 'ktlint') \
+        .with_treeherder('test', 'lint', 1, 'ktlint') \
+        .schedule(scheduler)
+
+    gradle_task('lint', 'lint') \
+        .with_treeherder('test', 'lint', 1, 'lint') \
+        .schedule(scheduler)
+
+    project_shell_task(
+        'compare-locales',
+        'pip install "compare-locales>5.0.2,<6.0" && '
+        'compare-locales --validate l10n.toml .'
+    ) \
+        .with_treeherder('test', 'lint', 2, 'compare-locale') \
+        .schedule(scheduler)
+
+
+def variant_assemble_task(scheduler: Scheduler, variant: Variant):
+    unsigned = '' if variant.signed_by_default else '-unsigned'
+    output_path = '{flavor}/{build_type}/app-{engine}-{abi}-{build_type}{unsigned}.apk'.format(
+        flavor=variant.flavor,
+        build_type=variant.build_type,
+        engine=variant.engine,
+        abi=variant.abi,
+        unsigned=unsigned,
+    )
+
+    return gradle_task(
+        'assemble: {}'.format(variant.raw),
+        'assemble{}'.format(variant.raw.capitalize()),
+        [decisionlib.AndroidArtifact('public/target.apk', output_path)]
+    ) \
+        .with_treeherder('build', variant.get_treeherder(), 1, 'A', variant.engine) \
+        .schedule(scheduler)
+
+
+def variant_test_task(scheduler: Scheduler, variant: Variant):
+    gradle_task(
+        'test: {}'.format(variant.raw),
+        'test{}UnitTest'.format(variant.raw.capitalize()),
+    ) \
+        .with_treeherder('test', variant.get_treeherder(), 1, 'T', variant.engine) \
+        .schedule(scheduler)
+
+
 def pull_request(scheduler: Scheduler, pr_title):
     if '[ci skip]' in pr_title:
         print('Pull request title contains "[ci skip]"')
@@ -81,78 +144,84 @@ def pull_request(scheduler: Scheduler, pr_title):
         return {}
 
     for variant in from_gradle():
-        unsigned = '' if variant.signed_by_default else '-unsigned'
-        treeherder_platform = 'android-{}-{}'.format(variant.abi, variant.build_type)
-        output_path = '{flavor}/{build_type}/app-{engine}-{abi}-{build_type}{unsigned}.apk'.format(
-            flavor=variant.flavor,
-            build_type=variant.build_type,
-            engine=variant.engine,
-            abi=variant.abi,
-            unsigned=unsigned,
-        )
+        variant_assemble_task(scheduler, variant)
+        variant_test_task(scheduler, variant)
 
-        project_shell_task(
-            'Assemble: {}'.format(variant.raw),
-            './gradlew --no-daemon -PcrashReports=true clean assemble{}'.format(
-                variant.raw.capitalize()),
-            [decisionlib.AndroidArtifact('public/target.apk', output_path)]
-        ) \
-            .with_treeherder('build', treeherder_platform, 1, 'A', variant.engine) \
-            .schedule(scheduler)
-
-        project_shell_task(
-            'Test: {}'.format(variant.raw),
-            './gradlew --no-daemon -PcrashReports=true clean test{}UnitTest'.format(
-                variant.raw.capitalize()),
-        ) \
-            .with_treeherder('test', treeherder_platform, 1, 'T', variant.engine) \
-            .schedule(scheduler)
+    lint_tasks(scheduler)
 
 
 def master_push(scheduler: Scheduler):
-    return scheduler
+    for variant in from_gradle():
+        assemble_task_id = variant_assemble_task(scheduler, variant)
+        variant_test_task(scheduler, variant)
+
+        if variant.abi in ('aarch64', 'arm') and variant.build_type == 'releaseRaptor':
+            decisionlib.sign_task(
+                'sign: {}'.format(variant.raw),
+                'autograph_apk_reference_browser',
+                decisionlib.SigningType.DEP,
+                [(assemble_task_id, ['public/target.{}.apk'.format(abi) for abi in ABIS])],
+            ) \
+                .with_treeherder('other', variant.get_treeherder(), 1, 'As', variant.engine) \
+                .schedule(scheduler)
+
+    lint_tasks(scheduler)
 
 
-def release(scheduler: Scheduler, track: Track):
+def release(scheduler: Scheduler, track: Track, date: datetime.datetime, commit: str):
     prefix_secret = '{}/project/mobile'.format(
         'garbage/staging' if track == Track.STAGING_NIGHTLY else '')
     sentry_secret = '{}/reference-browser/sentry'.format(prefix_secret)
     nimbledroid_secret = '{}/reference-browser/nimbledroid'.format(prefix_secret)
 
-    assemble_task_id = project_shell_task(
-        'Assemble',
-        './gradlew --no-daemon -PcrashReports=true clean test assembleRelease',
+    assemble_task_id = gradle_task(
+        'assemble',
+        'assembleRelease',
         [decisionlib.AndroidArtifact(
-            'public/target.{}.apk'.format(arch),
+            'public/target.{}.apk'.format(abi),
             "geckoNightly{}/release/app-geckoNightly-{}-release-unsigned.apk".format(
-                arch.capitalize(), arch)
-        ) for arch in ABIS],
+                abi.capitalize(), abi)
+        ) for abi in ABIS],
     ) \
         .append_file_secret(sentry_secret, 'dsn', '.sentry_token') \
         .with_treeherder('build', 'android-all', 1, 'NA') \
-        .map(
-        lambda builder, _: builder.with_notify_owner() if track == Track.NIGHTLY else None) \
+        .map(lambda builder, _: builder.with_notify_owner() if track == Track.NIGHTLY else None) \
         .schedule(scheduler)
 
-    signing_task_id = decisionlib.signing_task(
+    index_release = 'signed-nightly' if track == Track.NIGHTLY else 'staging-signed-nightly'
+    sign_routes = [
+        route.format(
+            prefix='index.project.mobile.reference-browser.{}'.format(index_release),
+            year=date.year,
+            month=date.month,
+            day=date.day,
+            commit=commit,
+        ) for route in (
+            '{prefix}.nightly.{year}.{month}.{day}.latest',
+            '{prefix}.nightly.{year}.{month}.{day}.revision.{commit}',
+            '{prefix}.nightly.latest',
+        )
+    ]
+    sign_task_id = decisionlib.sign_task(
         'Sign',
         'autograph_apk',
         decisionlib.SigningType.DEP,
-        [(assemble_task_id, ['public/target.{}.apk'.format(arch) for arch in ABIS])],
+        [(assemble_task_id, ['public/target.{}.apk'.format(abi) for abi in ABIS])],
     ) \
         .with_treeherder('other', 'android-all', 1, 'Ns') \
+        .with_routes(sign_routes) \
         .schedule(scheduler)
 
     decisionlib.google_play_task(
         'Push',
         'nightly',
-        [(signing_task_id, ['public/target.{}.apk'.format(arch) for arch in ABIS])],
+        [(sign_task_id, ['public/target.{}.apk'.format(abi) for abi in ABIS])],
     ) \
         .with_treeherder('other', 'android-all', 1, 'gp') \
         .schedule(scheduler)
 
     project_shell_task(
-        'Nimbledroid',
+        'nimbledroid',
         'curl --location https://queue.taskcluster.net/v1/task/{}/artifacts/public/target.arm.apk'
         ' > target.arm.apk'.format(assemble_task_id) +
         '&& python automation/taskcluster/upload_apk_nimbledroid.py',
@@ -161,8 +230,6 @@ def release(scheduler: Scheduler, track: Track):
         .append_dependency(assemble_task_id) \
         .with_treeherder('test', 'android-all', 2, 'nd') \
         .schedule(scheduler)
-
-    return scheduler
 
 
 def main():
@@ -185,19 +252,19 @@ def main():
                                 choices=['nightly', 'staging-nightly'])
 
     result = parser.parse_args()
+    checkout = decisionlib.Checkout.from_cwd()
     scheduler = Scheduler()
     if result.command == 'pull-request':
-        scheduler = pull_request(scheduler, result.pr_title)
+        pull_request(scheduler, result.pr_title)
         trust_level = decisionlib.TrustLevel.L1
     elif result.command == 'master-push':
-        scheduler = master_push(scheduler)
+        master_push(scheduler)
         trust_level = decisionlib.TrustLevel.L3
     else:
-        scheduler = release(scheduler, Track(result.track))
+        release(scheduler, Track(result.track), datetime.datetime.now(), checkout.commit)
         trust_level = decisionlib.TrustLevel.L3
 
     trigger = decisionlib.Trigger(result.task_group_id, trust_level, result.owner, result.source)
-    checkout = decisionlib.Checkout.from_cwd()
     queue = taskcluster.Queue({'baseUrl': 'http://taskcluster/queue/v1'})
     scheduler.schedule_tasks(queue, trigger, checkout)
 
