@@ -637,7 +637,7 @@ def get_architecture_and_build_type_from_variant(variant):
             )
         )
 
-    build_type = variant[len(architecture):]
+build_type = variant[len(architecture):]
     build_type = lower_case_first_letter(build_type)
 
     return architecture, build_type
