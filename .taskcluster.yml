@@ -8,6 +8,8 @@ tasks:
   $let:
     decision_task_id: {$eval: as_slugid("decision_task")}
     expires_in: {$fromNow: '1 year'}
+
+    # We may need to change the following line because of https://github.com/mozilla-releng/scriptworker/issues/326
     user: ${event.sender.login}
 
     # We define the following variable at the very top, because they are used in the
