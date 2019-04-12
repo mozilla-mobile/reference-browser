@@ -20,6 +20,11 @@ DEFAULT_APK_ARTIFACT_LOCATION = 'public/target.apk'
 _OFFICIAL_REPO_URL = 'https://github.com/mozilla-mobile/reference-browser'
 _DEFAULT_TASK_URL = 'https://queue.taskcluster.net/v1/task'
 
+_ARCH_APK_LOCATION_PATTERN = 'public/target.{}.apk'
+_SUPPORTED_ARCHITECTURES = ('aarch64', 'arm', 'x86')
+_APKS_PATHS = [_ARCH_APK_LOCATION_PATTERN.format(arch) for arch in _SUPPORTED_ARCHITECTURES]
+_SUPPORTED_BUILD_TYPES = ('Debug', 'Release', 'ReleaseRaptor')
+_SUPPORTED_PRODUCTS = ('geckoNightly',)
 
 class TaskBuilder(object):
     def __init__(
@@ -50,7 +55,7 @@ class TaskBuilder(object):
 
     def craft_assemble_release_task(self, is_staging=False):
         artifacts = {
-            'public/target.{}.apk'.format(arch): {
+            _ARCH_APK_LOCATION_PATTERN.format(arch): {
                 "type": 'file',
                 "path": "/build/reference-browser/app/build/outputs/apk/geckoNightly{}/release/"
                         "app-geckoNightly-{}-release-unsigned.apk".format(arch.capitalize(), arch),
@@ -357,7 +362,7 @@ class TaskBuilder(object):
             },
         )
 
-    def craft_nightly_signing_task(self, build_task_id, apk_paths, is_staging=True):
+    def craft_nightly_signing_task(self, build_task_id, is_staging=True):
         index_release = 'staging-signed-nightly' if is_staging else 'signed-nightly'
         routes = [
             'index.project.mobile.reference-browser.{}.nightly.{}.{}.{}.latest'.format(
@@ -374,7 +379,7 @@ class TaskBuilder(object):
             description='Sign release builds of reference-browser',
             signing_type='dep-signing' if is_staging else 'release-signing',
             assemble_task_id=build_task_id,
-            apk_paths=apk_paths,
+            apk_paths=_APKS_PATHS,
             routes=routes,
             treeherder={
                 'jobKind': 'other',
@@ -573,12 +578,6 @@ def _craft_apk_full_path_from_variant(variant):
         product=product,
         postfix=postfix
     )
-
-
-_SUPPORTED_ARCHITECTURES = ('aarch64', 'arm', 'x86')
-_APKS_PATHS = ['public/target.{}.apk'.format(arch) for arch in _SUPPORTED_ARCHITECTURES]
-_SUPPORTED_BUILD_TYPES = ('Debug', 'Release', 'ReleaseRaptor')
-_SUPPORTED_PRODUCTS = ('geckoNightly',)
 
 
 def get_architecture_and_build_type_and_product_from_variant(variant):
