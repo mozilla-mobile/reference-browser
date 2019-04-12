@@ -8,18 +8,18 @@ from typing import List
 import arrow
 import taskcluster
 
-import decisionlib
+from decisionlib import decision as decisionlib
 
 ABIS = ('aarch64', 'arm', 'x86')
 
 
 def project_shell_task(
         name: str,
-        commands: str,
+        script: str,
         artifacts: List[decisionlib.AndroidArtifact] = (),
 ):
     image = 'mozillamobile/android-components:1.15'
-    return decisionlib.shell_task(name, image, commands, artifacts)
+    return decisionlib.shell_task(name, image, script, artifacts)
 
 
 def gradle_task(
@@ -45,7 +45,7 @@ class Variant:
         self.build_type = build_type
         self.signed_by_default = build_type == 'debug'
 
-    def to_treeherder_platform(self):
+    def platform(self):
         return 'android-{}-{}'.format(self.abi, self.build_type)
 
     @staticmethod
@@ -71,20 +71,29 @@ class Variant:
         return Variant(raw_variant, engine + abi, engine, abi, build_type)
 
 
-def from_gradle():
-    process = subprocess.Popen(["./gradlew", "--no-daemon", "--quiet", "printBuildVariants"],
+def gradle_get_variants():
+    variants_json = _run_gradle_process('printBuildVariants', 'variants: ')
+    variants = json.loads(variants_json)
+    return [Variant.from_gradle_variant_string(raw_variant) for raw_variant in variants]
+
+
+def gradle_get_geckoview_nightly_version():
+    nightly_version = _run_gradle_process('printGeckoviewVersions', 'nightly: ')
+    nightly_version = nightly_version.strip('"')
+    return nightly_version
+
+
+def _run_gradle_process(gradle_command, output_prefix):
+    process = subprocess.Popen(["./gradlew", "--no-daemon", "--quiet", gradle_command],
                                stdout=subprocess.PIPE)
-    (output, err) = process.communicate()
+    output, err = process.communicate()
     exit_code = process.wait()
 
     if exit_code is not 0:
         print("Gradle command returned error: {}".format(exit_code))
 
-    variants_line = [line for line in output.split('\n') if line.startswith('variants: ')][0]
-    variants_json = variants_line.split(' ', 1)[1]
-    variants = json.loads(variants_json)
-
-    return [Variant.from_gradle_variant_string(raw_variant) for raw_variant in variants]
+    output_line = [line for line in output.split('\n') if line.startswith(output_prefix)][0]
+    return output_line.split(' ', 1)[1]
 
 
 def lint_tasks():
@@ -94,8 +103,10 @@ def lint_tasks():
         gradle_task('lint', 'lint').with_treeherder('test', 'lint', 1, 'lint'),
         project_shell_task(
             'compare-locales',
-            'pip install "compare-locales>5.0.2,<6.0" && '
-            'compare-locales --validate l10n.toml .'
+            """
+            pip install "compare-locales>5.0.2,<6.0"
+            compare-locales --validate l10n.toml .
+            """
         ).with_treeherder('test', 'lint', 2, 'compare-locale')
     ]
 
@@ -115,7 +126,7 @@ def variant_assemble_task(scheduler: decisionlib.Scheduler, variant: Variant):
         'assemble{}'.format(variant.raw.capitalize()),
         [decisionlib.AndroidArtifact('public/target.apk', output_path)]
     ) \
-        .with_treeherder('build', variant.to_treeherder_platform(), 1, 'A', variant.engine) \
+        .with_treeherder('build', variant.platform(), 1, 'A', variant.engine) \
         .schedule(scheduler)
 
 
@@ -124,7 +135,7 @@ def variant_test_task(scheduler: decisionlib.Scheduler, variant: Variant):
         'test: {}'.format(variant.raw),
         'test{}UnitTest'.format(variant.raw.capitalize()),
     ) \
-        .with_treeherder('test', variant.to_treeherder_platform(), 1, 'T', variant.engine) \
+        .with_treeherder('test', variant.platform(), 1, 'T', variant.engine) \
         .schedule(scheduler)
 
 
@@ -135,7 +146,7 @@ def pull_request(scheduler: decisionlib.Scheduler, pr_title):
         return {}
 
     scheduler.append_all(lint_tasks())
-    for variant in from_gradle():
+    for variant in gradle_get_variants():
         variant_assemble_task(scheduler, variant)
         variant_test_task(scheduler, variant)
 
@@ -146,7 +157,7 @@ def master_push(
         gecko_revision: str
 ):
     scheduler.append_all(lint_tasks())
-    for variant in from_gradle():
+    for variant in gradle_get_variants():
         assemble_task_id = variant_assemble_task(scheduler, variant)
         variant_test_task(scheduler, variant)
 
@@ -157,8 +168,7 @@ def master_push(
                 decisionlib.SigningType.DEP,
                 [(assemble_task_id, ['public/target.apk'])],
             ) \
-                .with_treeherder('other', variant.to_treeherder_platform(), 1, 'As',
-                                 variant.engine) \
+                .with_treeherder('other', variant.platform(), 1, 'As', variant.engine) \
                 .schedule(scheduler)
 
             decisionlib.raptor_task(
@@ -171,7 +181,7 @@ def master_push(
                 'GeckoViewActivity',
                 gecko_revision
             ) \
-                .with_treeherder('test', variant.to_treeherder_platform(), 2, 'sp') \
+                .with_treeherder('test', variant.platform(), 2, 'sp') \
                 .schedule(scheduler)
 
 
@@ -232,22 +242,15 @@ def release(scheduler: decisionlib.Scheduler, track: Track, date: datetime.datet
 
     project_shell_task(
         'nimbledroid',
-        'curl --location https://queue.taskcluster.net/v1/task/{}/artifacts/public/target.arm.apk'
-        ' > target.arm.apk'.format(assemble_task_id) +
-        '&& python automation/taskcluster/upload_apk_nimbledroid.py',
+        """
+        curl --location https://queue.taskcluster.net/v1/task/{task_id}/artifacts/public/target.arm.apk > target.arm.apk
+        python automation/taskcluster/upload_apk_nimbledroid.py
+        """.format(task_id=assemble_task_id)
     ) \
         .append_secret(nimbledroid_secret) \
         .append_dependency(assemble_task_id) \
         .with_treeherder('test', 'android-all', 2, 'nd') \
         .schedule(scheduler)
-
-
-def gradle_get_geckoview_nightly_version():
-    print("Fetching geckoview version from gradle")
-    nightly_version = _run_gradle_process('printGeckoviewVersions', 'nightly: ')
-    nightly_version = nightly_version.strip('"')
-    print('Got nightly version: "{}"'.format(nightly_version))
-    return nightly_version
 
 
 def taskcluster_get_geckoview_task_id(geckoview_nightly_version):
@@ -259,25 +262,12 @@ def taskcluster_get_geckoview_task_id(geckoview_nightly_version):
     return taskcluster.Index().findTask(raptor_index)['taskId']
 
 
-def _run_gradle_process(gradle_command, output_prefix):
-    process = subprocess.Popen(["./gradlew", "--no-daemon", "--quiet", gradle_command],
-                               stdout=subprocess.PIPE)
-    output, err = process.communicate()
-    exit_code = process.wait()
-
-    if exit_code is not 0:
-        print("Gradle command returned error: {}".format(exit_code))
-
-    variants_line = [line for line in output.split('\n') if line.startswith(output_prefix)][0]
-    return variants_line.split(' ', 1)[1]
-
-
 def main():
     parser = argparse.ArgumentParser(
         description='Decides on a graph of tasks to submit to Taskcluster'
     )
 
-    parser.add_argument('--task-group-id', action='store_true', required=True)
+    parser.add_argument('--task-group-id', action='store', required=True)
     parser.add_argument('--owner', action='store', required=True)
     parser.add_argument('--source', action='store', required=True)
 

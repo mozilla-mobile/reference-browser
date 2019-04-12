@@ -50,6 +50,11 @@ tasks:
       $if: 'tasks_for in ["github-push", "github-release", "cron"] && event.repository.html_url == "https://github.com/mozilla-mobile/reference-browser"'
       then: 3
       else: 1
+
+    task_group_id:
+      $if: 'tasks_for == "cron"'
+      then: ${event.cron.task_group_id}
+      else: ${decision_task_id}
   in:
     $let:
       # TODO: revisit once bug 1533314 is done to possibly infer better priorities
@@ -68,7 +73,7 @@ tasks:
       $let:
         default_task_definition:
           taskId: ${decision_task_id}
-          taskGroupId: ${decision_task_id}  # Must be explicit because of Chain of Trust
+          taskGroupId: ${task_group_id}  # Must be explicit because of Chain of Trust
           schedulerId: ${scheduler_id}
           created: {$fromNow: ''}
           deadline: {$fromNow: '2 hours'}

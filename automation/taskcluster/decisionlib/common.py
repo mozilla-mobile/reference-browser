@@ -1,0 +1,1 @@
+SlugId = str

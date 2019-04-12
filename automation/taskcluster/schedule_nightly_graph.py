@@ -32,7 +32,7 @@ def calculate_git_references(root):
     return html_url, str(branch), str(branch.commit)
 
 
-def make_decision_task(params):
+def make_decision_task(html_url, commit, ref, task_id):
     """Generate a basic decision task, based on the root .taskcluster.yml"""
     with open(os.path.join(ROOT, '.taskcluster.yml'), 'rb') as f:
         taskcluster_yml = yaml.safe_load(f)
@@ -44,7 +44,7 @@ def make_decision_task(params):
             slugids[name] = slugid.nice()
         return slugids[name]
 
-    repository_parts = params['html_url'].split('/')
+    repository_parts = html_url.split('/')
     repository_full_name = '/'.join((repository_parts[-2], repository_parts[-1]))
 
     # provide a similar JSON-e context to what taskcluster-github provides
@@ -58,12 +58,12 @@ def make_decision_task(params):
         'as_slugid': as_slugid,
         'event': {
             'repository': {
-                'html_url': params['html_url'],
+                'html_url': html_url,
                 'full_name': repository_full_name,
             },
             'release': {
-                'tag_name': params['head_rev'],
-                'target_commitish': params['branch'],
+                'tag_name': commit,
+                'target_commitish': ref,
             },
             'sender': {
                 'login': 'TaskclusterHook',
