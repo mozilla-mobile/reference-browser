@@ -25,5 +25,6 @@ def _run_gradle_process(gradle_command, output_prefix):
     if exit_code is not 0:
         print("Gradle command returned error: {}".format(exit_code))
 
+    output = output.decode('utf-8')
     output_line = [line for line in output.split('\n') if line.startswith(output_prefix)][0]
     return output_line.split(' ', 1)[1]

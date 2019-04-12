@@ -8,6 +8,7 @@ class Variant:
         self.engine = engine
         self.abi = abi
         self.build_type = build_type
+        self.gradle_postfix = raw[:1].upper() + raw[1:]
         self.signed_by_default = build_type == 'debug'
 
     def platform(self):
@@ -25,12 +26,14 @@ class Variant:
         engine = 'geckoNightly'
 
         for supported_abi in ABIS:
-            if raw_variant[len(engine):].startswith(supported_abi):
+            if raw_variant[len(engine):].startswith(supported_abi.capitalize()):
                 abi = supported_abi
                 break
         else:
             raise ValueError('This variant ("{}") does not match any of our supported '
                              'abis ({})'.format(raw_variant, ABIS))
 
-        build_type = raw_variant[len(engine + abi)]
+        build_type = raw_variant[len(engine + abi):]
+        # first letter was artificially uppercase'd for the full variant
+        build_type = build_type[:1].lower() + build_type[1:]
         return Variant(raw_variant, engine + abi, engine, abi, build_type)

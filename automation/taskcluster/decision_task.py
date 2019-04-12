@@ -61,7 +61,7 @@ def variant_assemble_task(scheduler: decisionlib.Scheduler, variant: Variant):
 
     return gradle_task(
         'assemble: {}'.format(variant.raw),
-        'assemble{}'.format(variant.raw.capitalize()),
+        'assemble{}'.format(variant.gradle_postfix),
         [decisionlib.AndroidArtifact('public/target.apk', output_path)]
     ) \
         .with_treeherder('build', variant.platform(), 1, 'A', variant.engine) \
@@ -71,7 +71,7 @@ def variant_assemble_task(scheduler: decisionlib.Scheduler, variant: Variant):
 def variant_test_task(scheduler: decisionlib.Scheduler, variant: Variant):
     gradle_task(
         'test: {}'.format(variant.raw),
-        'test{}UnitTest'.format(variant.raw.capitalize()),
+        'test{}UnitTest'.format(variant.gradle_postfix),
     ) \
         .with_treeherder('test', variant.platform(), 1, 'T', variant.engine) \
         .schedule(scheduler)
@@ -163,7 +163,7 @@ def release(scheduler: decisionlib.Scheduler, track: Track, date: datetime.datet
     sign_task_id = decisionlib.sign_task(
         'Sign',
         'autograph_apk',
-        decisionlib.SigningType.DEP,
+        decisionlib.SigningType.RELEASE if track == Track.NIGHTLY else decisionlib.SigningType.DEP,
         [(assemble_task_id, ['public/target.{}.apk'.format(abi) for abi in ABIS])],
     ) \
         .with_treeherder('other', 'android-all', 1, 'Ns') \
@@ -181,7 +181,7 @@ def release(scheduler: decisionlib.Scheduler, track: Track, date: datetime.datet
     project_shell_task(
         'nimbledroid',
         """
-        pip install decisionlib
+        pip install decisionlib-mhentges
         API_KEY=`decisionlib get-secret {secret} api_key`
         curl --location https://queue.taskcluster.net/v1/task/{task_id}/artifacts/public/target.arm.apk > target.arm.apk
         curl -F username="$API_KEY" -F password="" -F apk=@target.arm.apk https://nimbledroid.com/api/v2/apks -F auto_scenarios=false
