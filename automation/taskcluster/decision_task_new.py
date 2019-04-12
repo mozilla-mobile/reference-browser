@@ -5,10 +5,10 @@ import json
 import subprocess
 from typing import List
 
+import arrow
 import taskcluster
 
 import decisionlib
-from decisionlib.scheduler import Scheduler
 
 ABIS = ('aarch64', 'arm', 'x86')
 
@@ -45,7 +45,7 @@ class Variant:
         self.build_type = build_type
         self.signed_by_default = build_type == 'debug'
 
-    def get_treeherder(self):
+    def to_treeherder_platform(self):
         return 'android-{}-{}'.format(self.abi, self.build_type)
 
     @staticmethod
@@ -87,29 +87,20 @@ def from_gradle():
     return [Variant.from_gradle_variant_string(raw_variant) for raw_variant in variants]
 
 
-def lint_tasks(scheduler: Scheduler):
-    gradle_task('detekt', 'detekt') \
-        .with_treeherder('test', 'lint', 1, 'detekt') \
-        .schedule(scheduler)
-
-    gradle_task('ktlint', 'ktlint') \
-        .with_treeherder('test', 'lint', 1, 'ktlint') \
-        .schedule(scheduler)
-
-    gradle_task('lint', 'lint') \
-        .with_treeherder('test', 'lint', 1, 'lint') \
-        .schedule(scheduler)
-
-    project_shell_task(
-        'compare-locales',
-        'pip install "compare-locales>5.0.2,<6.0" && '
-        'compare-locales --validate l10n.toml .'
-    ) \
-        .with_treeherder('test', 'lint', 2, 'compare-locale') \
-        .schedule(scheduler)
+def lint_tasks():
+    return [
+        gradle_task('detekt', 'detekt').with_treeherder('test', 'lint', 1, 'detekt'),
+        gradle_task('ktlint', 'ktlint').with_treeherder('test', 'lint', 1, 'ktlint'),
+        gradle_task('lint', 'lint').with_treeherder('test', 'lint', 1, 'lint'),
+        project_shell_task(
+            'compare-locales',
+            'pip install "compare-locales>5.0.2,<6.0" && '
+            'compare-locales --validate l10n.toml .'
+        ).with_treeherder('test', 'lint', 2, 'compare-locale')
+    ]
 
 
-def variant_assemble_task(scheduler: Scheduler, variant: Variant):
+def variant_assemble_task(scheduler: decisionlib.Scheduler, variant: Variant):
     unsigned = '' if variant.signed_by_default else '-unsigned'
     output_path = '{flavor}/{build_type}/app-{engine}-{abi}-{build_type}{unsigned}.apk'.format(
         flavor=variant.flavor,
@@ -124,51 +115,84 @@ def variant_assemble_task(scheduler: Scheduler, variant: Variant):
         'assemble{}'.format(variant.raw.capitalize()),
         [decisionlib.AndroidArtifact('public/target.apk', output_path)]
     ) \
-        .with_treeherder('build', variant.get_treeherder(), 1, 'A', variant.engine) \
+        .with_treeherder('build', variant.to_treeherder_platform(), 1, 'A', variant.engine) \
         .schedule(scheduler)
 
 
-def variant_test_task(scheduler: Scheduler, variant: Variant):
+def variant_test_task(scheduler: decisionlib.Scheduler, variant: Variant):
     gradle_task(
         'test: {}'.format(variant.raw),
         'test{}UnitTest'.format(variant.raw.capitalize()),
     ) \
-        .with_treeherder('test', variant.get_treeherder(), 1, 'T', variant.engine) \
+        .with_treeherder('test', variant.to_treeherder_platform(), 1, 'T', variant.engine) \
         .schedule(scheduler)
 
 
-def pull_request(scheduler: Scheduler, pr_title):
+def pull_request(scheduler: decisionlib.Scheduler, pr_title):
     if '[ci skip]' in pr_title:
         print('Pull request title contains "[ci skip]"')
         print('Exit')
         return {}
 
+    scheduler.append_all(lint_tasks())
     for variant in from_gradle():
         variant_assemble_task(scheduler, variant)
         variant_test_task(scheduler, variant)
 
-    lint_tasks(scheduler)
 
-
-def master_push(scheduler: Scheduler):
+def master_push(
+        scheduler: decisionlib.Scheduler,
+        mozharness_task_id: decisionlib.SlugId,
+        gecko_revision: str
+):
+    scheduler.append_all(lint_tasks())
     for variant in from_gradle():
         assemble_task_id = variant_assemble_task(scheduler, variant)
         variant_test_task(scheduler, variant)
 
         if variant.abi in ('aarch64', 'arm') and variant.build_type == 'releaseRaptor':
-            decisionlib.sign_task(
+            sign_task_id = decisionlib.sign_task(
                 'sign: {}'.format(variant.raw),
                 'autograph_apk_reference_browser',
                 decisionlib.SigningType.DEP,
-                [(assemble_task_id, ['public/target.{}.apk'.format(abi) for abi in ABIS])],
+                [(assemble_task_id, ['public/target.apk'])],
             ) \
-                .with_treeherder('other', variant.get_treeherder(), 1, 'As', variant.engine) \
+                .with_treeherder('other', variant.to_treeherder_platform(), 1, 'As',
+                                 variant.engine) \
                 .schedule(scheduler)
 
-    lint_tasks(scheduler)
+            decisionlib.raptor_task(
+                'raptor speedometer: {}'.format(variant.raw),
+                decisionlib.RemoteArtifact(sign_task_id, 'public/target.apk'),
+                mozharness_task_id,
+                variant.abi == 'arm',
+                'refbrow',
+                'org.mozilla.reference.browser',
+                'GeckoViewActivity',
+                gecko_revision
+            ) \
+                .with_treeherder('test', variant.to_treeherder_platform(), 2, 'sp') \
+                .schedule(scheduler)
 
 
-def release(scheduler: Scheduler, track: Track, date: datetime.datetime, commit: str):
+def release_sign_task_routes(track: Track, date: datetime.datetime, commit: str):
+    index_release = 'signed-nightly' if track == Track.NIGHTLY else 'staging-signed-nightly'
+    return [
+        route.format(
+            prefix='index.project.mobile.reference-browser.{}'.format(index_release),
+            year=date.year,
+            month=date.month,
+            day=date.day,
+            commit=commit,
+        ) for route in (
+            '{prefix}.nightly.{year}.{month}.{day}.latest',
+            '{prefix}.nightly.{year}.{month}.{day}.revision.{commit}',
+            '{prefix}.nightly.latest',
+        )
+    ]
+
+
+def release(scheduler: decisionlib.Scheduler, track: Track, date: datetime.datetime, commit: str):
     prefix_secret = '{}/project/mobile'.format(
         'garbage/staging' if track == Track.STAGING_NIGHTLY else '')
     sentry_secret = '{}/reference-browser/sentry'.format(prefix_secret)
@@ -185,23 +209,9 @@ def release(scheduler: Scheduler, track: Track, date: datetime.datetime, commit:
     ) \
         .append_file_secret(sentry_secret, 'dsn', '.sentry_token') \
         .with_treeherder('build', 'android-all', 1, 'NA') \
-        .map(lambda builder, _: builder.with_notify_owner() if track == Track.NIGHTLY else None) \
+        .map(lambda task, _: task.with_notify_owner() if track == Track.NIGHTLY else None) \
         .schedule(scheduler)
 
-    index_release = 'signed-nightly' if track == Track.NIGHTLY else 'staging-signed-nightly'
-    sign_routes = [
-        route.format(
-            prefix='index.project.mobile.reference-browser.{}'.format(index_release),
-            year=date.year,
-            month=date.month,
-            day=date.day,
-            commit=commit,
-        ) for route in (
-            '{prefix}.nightly.{year}.{month}.{day}.latest',
-            '{prefix}.nightly.{year}.{month}.{day}.revision.{commit}',
-            '{prefix}.nightly.latest',
-        )
-    ]
     sign_task_id = decisionlib.sign_task(
         'Sign',
         'autograph_apk',
@@ -209,7 +219,7 @@ def release(scheduler: Scheduler, track: Track, date: datetime.datetime, commit:
         [(assemble_task_id, ['public/target.{}.apk'.format(abi) for abi in ABIS])],
     ) \
         .with_treeherder('other', 'android-all', 1, 'Ns') \
-        .with_routes(sign_routes) \
+        .with_routes(release_sign_task_routes(track, date, commit)) \
         .schedule(scheduler)
 
     decisionlib.google_play_task(
@@ -230,6 +240,36 @@ def release(scheduler: Scheduler, track: Track, date: datetime.datetime, commit:
         .append_dependency(assemble_task_id) \
         .with_treeherder('test', 'android-all', 2, 'nd') \
         .schedule(scheduler)
+
+
+def gradle_get_geckoview_nightly_version():
+    print("Fetching geckoview version from gradle")
+    nightly_version = _run_gradle_process('printGeckoviewVersions', 'nightly: ')
+    nightly_version = nightly_version.strip('"')
+    print('Got nightly version: "{}"'.format(nightly_version))
+    return nightly_version
+
+
+def taskcluster_get_geckoview_task_id(geckoview_nightly_version):
+    nightly_build_id = geckoview_nightly_version.split('.')[-1]
+    nightly_date = arrow.get(nightly_build_id, 'YYYYMMDDHHmmss')
+
+    raptor_index = 'gecko.v2.mozilla-central.pushdate.{}.{:02}.{:02}.{}.firefox.linux64-debug' \
+        .format(nightly_date.year, nightly_date.month, nightly_date.day, nightly_build_id)
+    return taskcluster.Index().findTask(raptor_index)['taskId']
+
+
+def _run_gradle_process(gradle_command, output_prefix):
+    process = subprocess.Popen(["./gradlew", "--no-daemon", "--quiet", gradle_command],
+                               stdout=subprocess.PIPE)
+    output, err = process.communicate()
+    exit_code = process.wait()
+
+    if exit_code is not 0:
+        print("Gradle command returned error: {}".format(exit_code))
+
+    variants_line = [line for line in output.split('\n') if line.startswith(output_prefix)][0]
+    return variants_line.split(' ', 1)[1]
 
 
 def main():
@@ -253,19 +293,22 @@ def main():
 
     result = parser.parse_args()
     checkout = decisionlib.Checkout.from_cwd()
-    scheduler = Scheduler()
+    queue = taskcluster.Queue({'baseUrl': 'http://taskcluster/queue/v1'})
+    scheduler = decisionlib.Scheduler()
     if result.command == 'pull-request':
         pull_request(scheduler, result.pr_title)
         trust_level = decisionlib.TrustLevel.L1
     elif result.command == 'master-push':
-        master_push(scheduler)
+        geckoview_nightly_version = gradle_get_geckoview_nightly_version()
+        mozharness_task_id = taskcluster_get_geckoview_task_id(geckoview_nightly_version)
+        gecko_revision = queue.task(mozharness_task_id)['payload']['env']['GECKO_HEAD_REV']
+        master_push(scheduler, mozharness_task_id, gecko_revision)
         trust_level = decisionlib.TrustLevel.L3
     else:
         release(scheduler, Track(result.track), datetime.datetime.now(), checkout.commit)
         trust_level = decisionlib.TrustLevel.L3
 
     trigger = decisionlib.Trigger(result.task_group_id, trust_level, result.owner, result.source)
-    queue = taskcluster.Queue({'baseUrl': 'http://taskcluster/queue/v1'})
     scheduler.schedule_tasks(queue, trigger, checkout)
 
 

@@ -1,13 +1,12 @@
 import datetime
 from enum import Enum
+import json
 import os
 
 from git import Repo
 from typing import Optional, Tuple, List, Any, Callable
 
 import taskcluster
-
-from decisionlib.scheduler import Scheduler
 
 SlugId = str
 
@@ -52,6 +51,52 @@ class Checkout:
         return Checkout(product_id, html_url, str(ref), str(ref.commit))
 
 
+class Scheduler:
+    _tasks: List[Tuple[SlugId, 'Task']]
+
+    def __init__(self):
+        self._tasks = []
+
+    def append(self, task: 'Task'):
+        task_id = 'task_id'
+        self._tasks.append((task_id, task))
+        return 'task_id'
+
+    def append_all(self, tasks: List['Task']):
+        for task in tasks:
+            self.append(task)
+
+    @staticmethod
+    def write_cot_files(full_task_graph):
+        with open('task-graph.json', 'w') as f:
+            json.dump(full_task_graph, f)
+
+        # These files are needed to keep chainOfTrust happy. However, they are not needed
+        # for many projects at the moment. For more details, see:
+        # https://github.com/mozilla-releng/scriptworker/pull/209/files#r184180585
+        for file_names in ('actions.json', 'parameters.yml'):
+            with open(file_names, 'w') as f:
+                json.dump({}, f)
+
+    def schedule_tasks(
+            self,
+            queue,
+            trigger: Trigger,
+            checkout: Checkout,
+            write_cot_files=write_cot_files
+    ):
+        full_task_graph = {}
+
+        for task_id, task in self._tasks:
+            task = task.compile(task_id, trigger, checkout)
+            queue.createTask(task_id, task)
+            full_task_graph[task_id] = {
+                'task': queue.task(task_id)
+            }
+
+        write_cot_files(full_task_graph)
+
+
 class Treeherder:
     def __init__(self, job_kind: str, machine_platform: str, tier: int, symbol: str,
                  group_symbol: str = None):
@@ -90,17 +135,17 @@ class ConfigurationContext:
 
 
 class Task:
-    name: str
-    provisioner_id: str
-    payload: Any
-    decide_worker_type: Callable[[TrustLevel], str]
-    description: str
-    priority: Optional[Priority]
-    treeherder: Optional[Treeherder]
-    routes: List[str]
-    dependencies: List[SlugId]
-    scopes: List[str]
-    map_functions: List[Callable[['Task', ConfigurationContext], None]]
+    _name: str
+    _provisioner_id: str
+    _payload: Any
+    _decide_worker_type: Callable[[TrustLevel], str]
+    _description: str
+    _priority: Optional[Priority]
+    _treeherder: Optional[Treeherder]
+    _routes: List[str]
+    _dependencies: List[SlugId]
+    _scopes: List[str]
+    _map_functions: List[Callable[['Task', ConfigurationContext], None]]
 
     def __init__(
             self,
@@ -109,68 +154,68 @@ class Task:
             decide_worker_type: Callable[[TrustLevel], str],
             payload: Any = None,
     ):
-        self.name = name
-        self.provisioner_id = provisioner_id
-        self.payload = payload
-        self.decide_worker_type = decide_worker_type
-        self.description = ''
-        self.routes = []
-        self.dependencies = []
-        self.scopes = []
-        self.map_functions = []
+        self._name = name
+        self._provisioner_id = provisioner_id
+        self._payload = payload
+        self._decide_worker_type = decide_worker_type
+        self._description = ''
+        self._routes = []
+        self._dependencies = []
+        self._scopes = []
+        self._map_functions = []
 
     def with_description(self, description: str):
-        self.description = description
+        self._description = description
         return self
 
     def with_priority(self, priority: Priority):
-        self.priority = priority
+        self._priority = priority
         return self
 
     def with_payload(self, payload: Any):
-        self.payload = payload
+        self._payload = payload
         return self
 
     def with_routes(self, routes: List[str]):
-        self.routes = routes
+        self._routes = routes
         return self
 
     def append_route(self, route: str):
-        self.routes.append(route)
+        self._routes.append(route)
         return self
 
     def with_scopes(self, scopes: List[str]):
-        self.scopes = scopes
+        self._scopes = scopes
         return self
 
     def append_scope(self, scope: str):
-        self.scopes.append(scope)
+        self._scopes.append(scope)
         return self
 
     def with_dependencies(self, dependencies: List[SlugId]):
-        self.dependencies = dependencies
+        self._dependencies = dependencies
         return self
 
     def append_dependency(self, dependency: SlugId):
-        self.dependencies.append(dependency)
+        self._dependencies.append(dependency)
         return self
 
     def with_notify_owner(self):
-        self.map(lambda builder, context: builder.append_route(
+        self.map(lambda task, context: task.append_route(
             'notify.email.{}.on-failed'.format(context.trigger.owner)))
 
     def with_treeherder(self, job_kind: str, machine_platform: str, tier: int, symbol: str,
-                 group_symbol: str = None):
-        self.treeherder = Treeherder(job_kind, machine_platform, tier, symbol, group_symbol)
-        return self.map(lambda builder, context: builder.append_route(
+                        group_symbol: str = None):
+        self._treeherder = Treeherder(job_kind, machine_platform, tier, symbol, group_symbol)
+        return self.map(lambda task, context: task.append_route(
             'tc-treeherder.v2.{}.{}'.format(context.product_id, context.checkout.commit)))
 
     def map(self, configuration: Callable[['Task', ConfigurationContext], None]):
-        self.map_functions.append(configuration)
+        self._map_functions.append(configuration)
         return self
 
     def schedule(self, scheduler: Scheduler):
-        return scheduler.append_task(self)
+        return scheduler.append(self)
 
     def compile(
             self,
@@ -179,36 +224,36 @@ class Task:
             checkout: Checkout,
     ):
         context = ConfigurationContext(checkout.product_id, checkout, trigger)
-        worker_type = self.decide_worker_type(trigger.level)
-        for map_function in self.map_functions:
+        worker_type = self._decide_worker_type(trigger.level)
+        for map_function in self._map_functions:
             map_function(self, context)
 
         return {
             'scheduler_id': '{}-level-{}'.format(checkout.product_id, trigger.level),
             'taskGroupId': trigger.task_group_id,
-            'provisionerId': self.provisioner_id,
+            'provisionerId': self._provisioner_id,
             'workerType': worker_type,
             'metadata': {
-                'name': self.name,
-                'description': self.description,
+                'name': self._name,
+                'description': self._description,
                 'owner': trigger.owner,
                 'source': trigger.source,
             },
-            'routes': self.routes,
-            'dependencies': [task_id] + self.dependencies,
-            'scopes': self.scopes,
-            'payload': self.payload or {},
-            'priority': self.priority.value if self.priority else None,
+            'routes': self._routes,
+            'dependencies': [task_id] + self._dependencies,
+            'scopes': self._scopes,
+            'payload': self._payload or {},
+            'priority': self._priority.value if self._priority else None,
             'extra': {
                 'treeherder': {
-                    'symbol': self.treeherder.symbol,
-                    'groupSymbol': self.treeherder.group_symbol,
-                    'jobKind': self.treeherder.job_kind,
-                    'tier': self.treeherder.tier,
+                    'symbol': self._treeherder.symbol,
+                    'groupSymbol': self._treeherder.group_symbol,
+                    'jobKind': self._treeherder.job_kind,
+                    'tier': self._treeherder.tier,
                     'machine': {
-                        'platform': self.treeherder.machine_platform
+                        'platform': self._treeherder.machine_platform
                     },
-                } if self.treeherder else {}
+                } if self._treeherder else {}
             },
             'created': taskcluster.stringDate(datetime.datetime.now()),
             'deadline': taskcluster.fromNow('1 day'),
@@ -235,11 +280,11 @@ class AndroidArtifact:
 
 
 class ShellTask(Task):
-    task: Task
-    image: str
-    commands: str
-    artifacts: List[AndroidArtifact]
-    file_secrets: List[Tuple[str, str, str]]
+    _task: Task
+    _image: str
+    _commands: str
+    _artifacts: List[AndroidArtifact]
+    _file_secrets: List[Tuple[str, str, str]]
 
     def __init__(
             self,
@@ -251,17 +296,17 @@ class ShellTask(Task):
             artifacts: List[AndroidArtifact]
     ):
         super().__init__(name, provisioner_id, decide_worker_type)
-        self.image = image
-        self.commands = commands
-        self.artifacts = artifacts
-        self.file_secrets = []
+        self._image = image
+        self._commands = commands
+        self._artifacts = artifacts
+        self._file_secrets = []
 
     def append_secret(self, secret):
-        self.task.append_scope('secrets:get:{}'.format(secret))
+        self._task.append_scope('secrets:get:{}'.format(secret))
         return self
 
     def append_file_secret(self, secret, key, target_file):
-        self.file_secrets.append((secret, key, target_file))
+        self._file_secrets.append((secret, key, target_file))
         return self.append_secret(secret)
 
     def compile(
@@ -273,25 +318,25 @@ class ShellTask(Task):
         fetch_file_secrets_commands = [
             'python automation/taskcluster/helper/get-secret.py -s {} -k {} -f {}'.format(
                 secret, key, target_file
-            ) for secret, key, target_file in self.file_secrets
+            ) for secret, key, target_file in self._file_secrets
         ]
 
-        def configuration(builder: Task, context: ConfigurationContext):
+        def configuration(task: Task, context: ConfigurationContext):
             commands = ' && '.join([
                 'export TERM=dumb',
                 'git fetch {} {}'.format(context.checkout.html_url, context.checkout.ref),
                 'git config advice.detachedHead false',
                 'git checkout FETCH_HEAD',
                 *fetch_file_secrets_commands,
-                self.commands,
+                self._commands,
             ])
 
-            builder.with_payload({
+            task.with_payload({
                 'features': {
-                    'chainOfTrust': True if self.artifacts else False,
-                    'taskclusterProxy': True if self.file_secrets else False,
+                    'chainOfTrust': True if self._artifacts else False,
+                    'taskclusterProxy': True if self._file_secrets else False,
                 },
-                'image': self.image,
+                'image': self._image,
                 'command': [
                     '/bin/bash',
                     '--login',
@@ -303,11 +348,11 @@ class ShellTask(Task):
                         'type': artifact.type.value,
                         'path': artifact.fs_path(context.product_id),
                     }
-                    for artifact in self.artifacts
+                    for artifact in self._artifacts
                 }
             })
 
-        self.task.map(configuration)
+        self._task.map(configuration)
         return super().compile(task_id, trigger, checkout)
 
 
@@ -359,7 +404,7 @@ def sign_task(
     return Task(name, 'scriptworker-prov-v1', decide_worker_type, payload) \
         .with_dependencies([assemble_task_id for assemble_task_id, _ in artifacts]) \
         .map(
-        lambda builder, context: builder.with_scopes([
+        lambda task, context: task.with_scopes([
             'project:mobile:{}:releng:signing:format:{}'.format(
                 context.product_id, signing_format),
             'project:mobile:{}:releng:signing:cert:{}'.format(
@@ -388,9 +433,79 @@ def google_play_task(
     return Task(name, 'scriptworker-prov-v1', decide_worker_type, payload) \
         .with_dependencies([signing_task_id for signing_task_id, _ in artifacts]) \
         .map(
-        lambda builder, context: builder.with_scopes([
+        lambda task, context: task.with_scopes([
             'project:mobile:{name}:releng:googleplay:product:{name}{type}'.format(
                 name=name,
                 type=':dep' if context.trigger.level == TrustLevel.L1 else ''
             )
         ]))
+
+
+class RemoteArtifact:
+    def __init__(self, task_id: str, path: str):
+        self.task_id = task_id
+        self.path = path
+
+    def url(self):
+        return 'https://queue.taskcluster.net/v1/task/{}/artifacts/{}'.format(self.task_id,
+                                                                              self.path)
+
+
+def raptor_task(
+        name: str,
+        signed_apk: RemoteArtifact,
+        mozharness_task_id: str,
+        is_arm: bool,
+        raptor_app_id: str,
+        package_name: str,
+        activity_class_name: str,
+        gecko_revision: str,
+):
+    worker_type = 'gecko-t-ap-perf-g5' if is_arm else 'gecko-t-ap-perf-p2'
+    artifacts = [{
+        'path': '/builds/worker/{}'.format(worker_path),
+        'type': 'directory',
+        'name': 'public/{}/'.format(public_folder),
+    } for worker_path, public_folder in (
+        ('artifacts', 'test'),
+        ('workspace/build/logs', 'logs'),
+        ('workspace/build/blobber_upload_dir', 'test_info')
+    )]
+
+    payload = {
+        'artifacts': artifacts,
+        'command': [
+            './test-linux.sh',
+            '--installer-url={}'.format(signed_apk.url()),
+            '--test-packages-url={}'.format(RemoteArtifact(
+                mozharness_task_id, 'public/build/target.test_packages.json').url()),
+            '--test=raptor-speedometer',
+            '--app={}'.format(raptor_app_id),
+            '--binary={}'.format(package_name),
+            '--activity={}'.format(activity_class_name),
+            '--download-symbols=ondemand',
+        ],
+        'env': {
+            'XPCOM_DEBUG_BREAK': 'warn',
+            'MOZ_NO_REMOTE': '1',
+            'MOZ_HIDE_RESULTS_TABLE': '1',
+            'TAKSLUCSTER_WORKER_TYPE': 'proj-autophone/{}'.format(worker_type),
+            'MOZHARNESS_URL': RemoteArtifact(
+                mozharness_task_id, 'public/build/mozharness.zip').url(),
+            'MOZHARNESS_SCRIPT': 'raptor_script.py',
+            'NEED_XVFB': 'false',
+            'WORKING_DIR': '/builds/worker',
+            'WORKSPACE': '/builds/worker/workspace',
+            'MOZ_NODE_PATH': '/usr/local/bin/node',
+            'NO_FAIL_ON_TEST_ERRORS': '1',
+            'MOZHARNESS_CONFIG': 'raptor/android_hw_config.py',
+            'MOZ_AUTOMATION': '1',
+            'MOZILLA_BUILD_URL': signed_apk.url()
+        },
+        'context': 'https://hg.mozilla.org/mozilla-central/raw-file/{}/'
+                   'taskcluster/scripts/tester/test-linux.sh'.format(gecko_revision),
+    }
+
+    return Task(name, 'proj-autophone', lambda _: worker_type) \
+        .append_dependency(signed_apk.task_id) \
+        .with_payload(payload)
