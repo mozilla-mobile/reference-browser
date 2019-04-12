@@ -104,7 +104,10 @@ tasks:
               SHORT_HEAD_BRANCH: ${short_head_branch}
               TASK_ID: ${decision_task_id}
               TASKS_PRIORITY: ${tasks_priority}
-              TRUST_LEVEL: ${trust_level}
+              DECISIONLIB_TRUST_LEVEL: ${trust_level}
+              DECISIONLIB_TASK_GROUP_ID: ${task_group_id}
+              DECISIONLIB_OWNER: ${user}@users.noreply.github.com
+              DECISIONLIB_SOURCE: ${repository}/raw/${head_rev}/.taskcluster.yml
             features:
               taskclusterProxy: true
           extra:
