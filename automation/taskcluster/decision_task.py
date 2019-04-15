@@ -58,6 +58,7 @@ def pr_or_push(is_push=False):
     variants = get_build_variants()
     geckoview_nightly_version = get_geckoview_versions()
     mozharness_task_id = fetch_mozharness_task_id(geckoview_nightly_version)
+    gecko_revision = taskcluster.Queue().task(mozharness_task_id)['payload']['env']['GECKO_HEAD_REV']
 
     build_tasks = {}
     signing_tasks = {}
@@ -66,10 +67,10 @@ def pr_or_push(is_push=False):
     for variant in variants:
         assemble_task_id = taskcluster.slugId()
         build_tasks[assemble_task_id] = BUILDER.craft_assemble_task(variant)
+        build_tasks[taskcluster.slugId()] = BUILDER.craft_test_task(variant)
         architecture, build_type, _ = get_architecture_and_build_type_and_product_from_variant(
             variant
         )
-
         if (
             is_push and
             architecture in ('aarch64', 'arm') and
@@ -78,9 +79,17 @@ def pr_or_push(is_push=False):
         ):
             signing_task_id = taskcluster.slugId()
             signing_tasks[signing_task_id] = BUILDER.craft_master_commit_signing_task(assemble_task_id, variant)
-            other_tasks[taskcluster.slugId()] = BUILDER.craft_raptor_task(signing_task_id, mozharness_task_id, variant)
 
-        build_tasks[taskcluster.slugId()] = BUILDER.craft_test_task(variant)
+            for craft_function in (
+                BUILDER.craft_raptor_speedometer_task,
+                BUILDER.craft_raptor_speedometer_power_task,
+                BUILDER.craft_raptor_tp6m_task
+            ):
+                args = (signing_task_id, mozharness_task_id, variant, gecko_revision)
+                other_tasks[taskcluster.slugId()] = craft_function(*args)
+                # we also want the arm APK to be tested on 64-bit-devices
+                if architecture == 'arm':
+                    other_tasks[taskcluster.slugId()] = craft_function(*args, force_run_on_64_bit_device=True)
 
     for craft_function in (
         BUILDER.craft_detekt_task,
