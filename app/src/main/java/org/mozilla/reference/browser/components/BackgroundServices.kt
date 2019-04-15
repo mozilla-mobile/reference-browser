@@ -25,7 +25,6 @@ class BackgroundServices(
     companion object {
         const val CLIENT_ID = "3c49430b43dfba77"
         const val REDIRECT_URL = "https://accounts.firefox.com/oauth/success/$CLIENT_ID"
-        const val SUCCESS_PATH = "signin_confirmed"
     }
 
     // This is slightly messy - here we need to know the union of all "scopes"

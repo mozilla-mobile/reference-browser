@@ -36,9 +36,9 @@ Make sure you use the same Google Account for both steps.
 
 Signed Nightly builds can be downloaded from:
 
-* [⬇️ ARM64/Aarch64 devices (64 bit; Android 5+)](https://index.taskcluster.net/v1/task/project.mobile.reference-browser.signed-nightly.nightly.latest/artifacts/public/app-geckoNightly-aarch64-release-unsigned.apk)
-* [⬇️ ARM devices (32 bit; Android 5+)](https://index.taskcluster.net/v1/task/project.mobile.reference-browser.signed-nightly.nightly.latest/artifacts/public/app-geckoNightly-arm-release-unsigned.apk)
-* [⬇️ x86  devices (32 bit; Android 5+)](https://index.taskcluster.net/v1/task/project.mobile.reference-browser.signed-nightly.nightly.latest/artifacts/public/app-geckoNightly-x86-release-unsigned.apk)
+* [⬇️ ARM64/Aarch64 devices (64 bit; Android 5+)](https://index.taskcluster.net/v1/task/project.mobile.reference-browser.signed-nightly.nightly.latest/artifacts/public/target.aarch64.apk)
+* [⬇️ ARM devices (32 bit; Android 5+)](https://index.taskcluster.net/v1/task/project.mobile.reference-browser.signed-nightly.nightly.latest/artifacts/public/target.arm.apk)
+* [⬇️ x86  devices (32 bit; Android 5+)](https://index.taskcluster.net/v1/task/project.mobile.reference-browser.signed-nightly.nightly.latest/artifacts/public/target.x86.apk)
 
 > Please note that these builds do not auto-update, you will have to keep up to date manually.
 
