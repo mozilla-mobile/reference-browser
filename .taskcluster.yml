@@ -53,7 +53,7 @@ tasks:
 
     task_group_id:
       $if: 'tasks_for == "cron"'
-      then: ${event.cron.task_group_id}
+      then: ${cron.task_id}
       else: ${decision_task_id}
   in:
     $let:
