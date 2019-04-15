@@ -1,37 +1,25 @@
 import argparse
-import datetime
-from enum import Enum
-from typing import List
 
 import arrow
-import taskcluster
-from decisionlib import decision as decisionlib
+from decisionlib.decision import *
 
 from gradle import load_geckoview_nightly_version, load_variants
 from variant import Variant, ABIS
 
 
-def project_shell_task(
-        name: str,
-        script: str,
-        artifacts: List[decisionlib.AndroidArtifact] = (),
-):
-    image = 'mozillamobile/android-components:1.15'
-    return decisionlib.shell_task(name, image, script, artifacts)
-
-
-def gradle_task(
-        name: str,
-        gradle_command: str,
-        artifacts: List[decisionlib.AndroidArtifact] = (),
-):
-    command = './gradlew --no-daemon -PcrashReports=true clean {}'.format(gradle_command)
-    return project_shell_task(name, command, artifacts)
-
-
 class Track(Enum):
     NIGHTLY = 'nightly'
     STAGING_NIGHTLY = 'staging-nightly'
+
+
+def project_shell_task(name: str, script: str):
+    image = 'mozillamobile/android-components:1.15'
+    return shell_task(name, image, script)
+
+
+def gradle_task(name: str, gradle_command: str):
+    command = './gradlew --no-daemon -PcrashReports=true clean {}'.format(gradle_command)
+    return project_shell_task(name, command)
 
 
 def lint_tasks():
@@ -49,7 +37,7 @@ def lint_tasks():
     ]
 
 
-def variant_assemble_task(scheduler: decisionlib.Scheduler, variant: Variant):
+def variant_assemble_task(scheduler: Scheduler, variant: Variant):
     unsigned = '' if variant.signed_by_default else '-unsigned'
     output_path = '{flavor}/{build_type}/app-{engine}-{abi}-{build_type}{unsigned}.apk'.format(
         flavor=variant.flavor,
@@ -62,22 +50,19 @@ def variant_assemble_task(scheduler: decisionlib.Scheduler, variant: Variant):
     return gradle_task(
         'assemble: {}'.format(variant.raw),
         'assemble{}'.format(variant.gradle_postfix),
-        [decisionlib.AndroidArtifact('public/target.apk', output_path)]
     ) \
+        .append_artifact(AndroidArtifact('public/target.apk', output_path)) \
         .with_treeherder('build', variant.platform(), 1, 'A', variant.engine) \
         .schedule(scheduler)
 
 
-def variant_test_task(scheduler: decisionlib.Scheduler, variant: Variant):
-    gradle_task(
-        'test: {}'.format(variant.raw),
-        'test{}UnitTest'.format(variant.gradle_postfix),
-    ) \
+def variant_test_task(scheduler: Scheduler, variant: Variant):
+    gradle_task('test: {}'.format(variant.raw), 'test{}UnitTest'.format(variant.gradle_postfix)) \
         .with_treeherder('test', variant.platform(), 1, 'T', variant.engine) \
         .schedule(scheduler)
 
 
-def pull_request(scheduler: decisionlib.Scheduler, pr_title):
+def pull_request(scheduler: Scheduler, pr_title):
     if '[ci skip]' in pr_title:
         print('Pull request title contains "[ci skip]"')
         print('Exit')
@@ -90,8 +75,8 @@ def pull_request(scheduler: decisionlib.Scheduler, pr_title):
 
 
 def master_push(
-        scheduler: decisionlib.Scheduler,
-        mozharness_task_id: decisionlib.SlugId,
+        scheduler: Scheduler,
+        mozharness_task_id: SlugId,
         gecko_revision: str
 ):
     scheduler.append_all(lint_tasks())
@@ -100,18 +85,18 @@ def master_push(
         variant_test_task(scheduler, variant)
 
         if variant.abi in ('aarch64', 'arm') and variant.build_type == 'releaseRaptor':
-            sign_task_id = decisionlib.sign_task(
+            sign_task_id = sign_task(
                 'sign: {}'.format(variant.raw),
                 'autograph_apk_reference_browser',
-                decisionlib.SigningType.DEP,
+                SigningType.DEP,
                 [(assemble_task_id, ['public/target.apk'])],
             ) \
                 .with_treeherder('other', variant.platform(), 1, 'As', variant.engine) \
                 .schedule(scheduler)
 
-            decisionlib.raptor_task(
+            raptor_task(
                 'raptor speedometer: {}'.format(variant.raw),
-                decisionlib.RemoteArtifact(sign_task_id, 'public/target.apk'),
+                (sign_task_id, 'public/target.apk'),
                 mozharness_task_id,
                 variant.abi == 'arm',
                 'refbrow',
@@ -140,37 +125,35 @@ def release_sign_task_routes(track: Track, date: datetime.datetime, commit: str)
     ]
 
 
-def release(scheduler: decisionlib.Scheduler, track: Track, date: datetime.datetime, commit: str):
+def release(scheduler: Scheduler, track: Track, date: datetime.datetime, commit: str):
     prefix_secret = '{}/project/mobile'.format(
         'garbage/staging' if track == Track.STAGING_NIGHTLY else '')
     sentry_secret = '{}/reference-browser/sentry'.format(prefix_secret)
     nimbledroid_secret = '{}/reference-browser/nimbledroid'.format(prefix_secret)
 
-    assemble_task_id = gradle_task(
-        'assemble',
-        'assembleRelease',
-        [decisionlib.AndroidArtifact(
+    assemble_task_id = gradle_task('assemble', 'assembleRelease') \
+        .append_artifacts(
+        [AndroidArtifact(
             'public/target.{}.apk'.format(abi),
             "geckoNightly{}/release/app-geckoNightly-{}-release-unsigned.apk".format(
                 abi.capitalize(), abi)
-        ) for abi in ABIS],
-    ) \
+        ) for abi in ABIS]) \
         .append_file_secret(sentry_secret, 'dsn', '.sentry_token') \
         .with_treeherder('build', 'android-all', 1, 'NA') \
         .map(lambda task, _: task.with_notify_owner() if track == Track.NIGHTLY else None) \
         .schedule(scheduler)
 
-    sign_task_id = decisionlib.sign_task(
+    sign_task_id = sign_task(
         'Sign',
         'autograph_apk',
-        decisionlib.SigningType.RELEASE if track == Track.NIGHTLY else decisionlib.SigningType.DEP,
+        SigningType.RELEASE if track == Track.NIGHTLY else SigningType.DEP,
         [(assemble_task_id, ['public/target.{}.apk'.format(abi) for abi in ABIS])],
     ) \
         .with_treeherder('other', 'android-all', 1, 'Ns') \
-        .with_routes(release_sign_task_routes(track, date, commit)) \
+        .append_routes(release_sign_task_routes(track, date, commit)) \
         .schedule(scheduler)
 
-    decisionlib.google_play_task(
+    google_play_task(
         'Push',
         'nightly',
         [(sign_task_id, ['public/target.{}.apk'.format(abi) for abi in ABIS])],
@@ -182,11 +165,11 @@ def release(scheduler: decisionlib.Scheduler, track: Track, date: datetime.datet
         'nimbledroid',
         """
         pip install decisionlib-mhentges
-        API_KEY=`decisionlib get-secret {secret} api_key`
+        export API_KEY=`decisionlib get-secret {secret} api_key`
         curl --location https://queue.taskcluster.net/v1/task/{task_id}/artifacts/public/target.arm.apk > target.arm.apk
-        curl -F username="$API_KEY" -F password="" -F apk=@target.arm.apk https://nimbledroid.com/api/v2/apks -F auto_scenarios=false
         curl --location https://index.taskcluster.net/v1/task/gecko.v2.mozilla-central.latest.mobile.android-api-16-opt/artifacts/public/build/geckoview_example.apk > geckoview_example_nd.apk
-        curl -F username="$API_KEY" -F password="" -F apk=@geckoview_example_nd.apk https://nimbledroid.com/api/v2/apks -F auto_scenarios=false
+        python3 automation/taskcluster/upload_apk_nimbledroid.py target.arm.apk
+        python3 automation/taskcluster/upload_apk_nimbledroid.py geckoview_example_nd.apk
         """.format(secret=nimbledroid_secret, task_id=assemble_task_id)
     ) \
         .append_secret(nimbledroid_secret) \
@@ -222,30 +205,22 @@ def main():
                                 choices=['nightly', 'staging-nightly'])
 
     result = parser.parse_args()
-    checkout = decisionlib.Checkout.from_cwd()
-    trigger = decisionlib.Trigger.from_environment()
-    # queue = taskcluster.Queue({'baseUrl': 'http://taskcluster/queue/v1'})
-    scheduler = decisionlib.Scheduler()
+    checkout = Checkout.from_cwd()
+    trigger = Trigger.from_environment()
+    queue = taskcluster.Queue({'baseUrl': 'http://taskcluster/queue/v1'})
+    scheduler = Scheduler()
     if result.command == 'pull-request':
         pull_request(scheduler, result.pr_title)
     elif result.command == 'master-push':
         geckoview_nightly_version = load_geckoview_nightly_version()
         mozharness_task_id = taskcluster_get_geckoview_task_id(geckoview_nightly_version)
-        # gecko_revision = queue.task(mozharness_task_id)['payload']['env']['GECKO_HEAD_REV']
-        gecko_revision = '<gecko_revision>'
+        gecko_revision = queue.task(mozharness_task_id)['payload']['env']['GECKO_HEAD_REV']
         master_push(scheduler, mozharness_task_id, gecko_revision)
     else:
         date = arrow.get(result.date)
         release(scheduler, Track(result.track), date, checkout.commit)
 
-    class Bonk:
-        def createTask(self, _, __):
-            pass
-
-        def task(self, task_id):
-            return task_id
-
-    scheduler.schedule_tasks(Bonk(), trigger, checkout)
+    scheduler.schedule_tasks(queue, trigger, checkout)
 
 
 if __name__ == '__main__':
