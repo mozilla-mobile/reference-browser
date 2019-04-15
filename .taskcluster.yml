@@ -30,14 +30,6 @@ tasks:
         then: ${event.after}
         else: ${event.release.tag_name}
 
-    push_date_time:
-      $if: 'tasks_for == "github-pull-request"'
-      then: ${event.pull_request.head.repo.pushed_at}
-      else:
-        $if: 'tasks_for == "github-push"'
-        then: ${event.repository.pushed_at}
-        else: ${event.release.published_at}
-
     repository:
       $if: 'tasks_for == "github-pull-request"'
       then: ${event.pull_request.head.repo.html_url}
@@ -102,7 +94,6 @@ tasks:
               MOBILE_HEAD_BRANCH: ${head_branch}
               MOBILE_HEAD_REPOSITORY: ${repository}
               MOBILE_HEAD_REV: ${head_rev}
-              MOBILE_PUSH_DATE_TIME: ${push_date_time}
               MOBILE_TRIGGERED_BY: ${user}
               SCHEDULER_ID: ${scheduler_id}
               SHORT_HEAD_BRANCH: ${short_head_branch}
@@ -111,20 +102,6 @@ tasks:
               TRUST_LEVEL: ${trust_level}
             features:
               taskclusterProxy: true
-              chainOfTrust: true
-            artifacts:
-              public/task-graph.json:
-                type: file
-                path: /build/reference-browser/task-graph.json
-                expires: ${expires_in}
-              public/actions.json:
-                type: file
-                path: /build/reference-browser/actions.json
-                expires: ${expires_in}
-              public/parameters.yml:
-                type: file
-                path: /build/reference-browser/parameters.yml
-                expires: ${expires_in}
           extra:
             tasks_for: ${tasks_for}
             treeherder:
@@ -158,7 +135,6 @@ tasks:
                           && python automation/taskcluster/decision_task.py pull-request
                       env:
                         GITHUB_PULL_TITLE: ${pull_request_title}
-                        MOBILE_PULL_REQUEST_NUMBER: ${pull_request_number}
                     extra:
                       treeherder:
                         symbol: D-PR
@@ -172,6 +148,8 @@ tasks:
                 - scopes:
                     - ${assume_scope_prefix}:branch:${short_head_branch}
                   payload:
+                    features:
+                      chainOfTrust: true
                     command:
                       - >-
                         cd ..
@@ -180,6 +158,19 @@ tasks:
                         && git config advice.detachedHead false
                         && git checkout ${head_rev}
                         && python automation/taskcluster/decision_task.py push
+                    artifacts:
+                      public/task-graph.json:
+                        type: file
+                        path: /build/reference-browser/task-graph.json
+                        expires: ${expires_in}
+                      public/actions.json:
+                        type: file
+                        path: /build/reference-browser/actions.json
+                        expires: ${expires_in}
+                      public/parameters.yml:
+                        type: file
+                        path: /build/reference-browser/parameters.yml
+                        expires: ${expires_in}
                   extra:
                     treeherder:
                       symbol: D
@@ -205,6 +196,8 @@ tasks:
                   - scopes:
                       - ${assume_scope}
                     payload:
+                      features:
+                        chainOfTrust: true
                       command:
                         - >-
                           cd ..
@@ -215,6 +208,19 @@ tasks:
                             release \
                             --nightly \
                             ${command_staging_flag}
+                      artifacts:
+                        public/task-graph.json:
+                          type: file
+                          path: /build/reference-browser/task-graph.json
+                          expires: ${expires_in}
+                        public/actions.json:
+                          type: file
+                          path: /build/reference-browser/actions.json
+                          expires: ${expires_in}
+                        public/parameters.yml:
+                          type: file
+                          path: /build/reference-browser/parameters.yml
+                          expires: ${expires_in}
                     extra:
                       cron: {$json: {$eval: 'cron'}}
                       tasks_for: ${tasks_for}
