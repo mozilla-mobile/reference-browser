@@ -72,10 +72,10 @@ def pr_or_push(is_push=False):
             variant
         )
         if (
-            # is_push and
+            is_push and
             architecture in ('aarch64', 'arm') and
-            build_type == 'releaseRaptor' #and
-            # SHORT_HEAD_BRANCH == 'master'
+            build_type == 'releaseRaptor' and
+            SHORT_HEAD_BRANCH == 'master'
         ):
             signing_task_id = taskcluster.slugId()
             signing_tasks[signing_task_id] = BUILDER.craft_master_commit_signing_task(assemble_task_id, variant)
