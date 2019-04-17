@@ -6,6 +6,8 @@ package org.mozilla.reference.browser
 
 import android.app.Application
 import android.content.Context
+import mozilla.components.concept.fetch.Client
+import mozilla.components.lib.fetch.httpurlconnection.HttpURLConnectionClient
 import mozilla.components.service.glean.Glean
 import mozilla.components.service.glean.config.Configuration
 import mozilla.components.support.base.facts.register
@@ -104,8 +106,9 @@ private fun setupMegazord(): Boolean {
     // See https://github.com/mozilla-mobile/reference-browser/pull/356.
     return try {
         val megazordClass = Class.forName("mozilla.appservices.ReferenceBrowserMegazord")
-        val megazordInitMethod = megazordClass.getDeclaredMethod("init")
-        megazordInitMethod.invoke(megazordClass)
+        val megazordInitMethod = megazordClass.getDeclaredMethod("init", Lazy::class.java)
+        val client: Lazy<Client> = lazy { HttpURLConnectionClient() }
+        megazordInitMethod.invoke(megazordClass, client)
         true
     } catch (e: ClassNotFoundException) {
         Logger.info("mozilla.appservices.ReferenceBrowserMegazord not found; skipping megazord init.")
