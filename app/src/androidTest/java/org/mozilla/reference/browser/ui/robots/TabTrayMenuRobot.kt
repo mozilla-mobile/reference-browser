@@ -2,6 +2,8 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
+@file:Suppress("TooManyFunctions")
+
 package org.mozilla.reference.browser.ui.robots
 
 import androidx.test.espresso.Espresso.onView
@@ -29,11 +31,12 @@ class TabTrayMenuRobot {
     fun verifyCloseButtonInTabPreview() = closeTabButtonTabTray()
     fun verifyDefaultOpenTabTitle() = openTabTabTrayTitle()
     fun verifyDefaultOpenTabThumbnail() = openTabTabTrayThumbnail()
-    fun verifyRegularBrowsingButton(regularBrowsingButtonChecked: Boolean) = regularBrowsingButton().assertIsChecked(regularBrowsingButtonChecked)
-    fun verifyPrivateBrowsingButton(privateButtonChecked: Boolean) = privateBrowsingButton().assertIsChecked(privateButtonChecked)
+    fun verifyRegularBrowsingButton(regularBrowsingButtonChecked: Boolean) =
+            regularBrowsingButton().assertIsChecked(regularBrowsingButtonChecked)
+    fun verifyPrivateBrowsingButton(privateButtonChecked: Boolean) =
+            privateBrowsingButton().assertIsChecked(privateButtonChecked)
 
     fun verifyThereAreNotPrivateTabsOpen() = privateTabs().check(doesNotExist())
-    fun verifyThereAreNoRegularTabsOpen() = regularTabs().check(doesNotExist())
     fun verifyThereIsOnePrivateTabOpen() = privateTabs().check(matches(isDisplayed()))
     fun verifyThereIsOneTabOpen() = regularTabs().check(matches(isDisplayed()))
 
@@ -55,7 +58,8 @@ class TabTrayMenuRobot {
             return NavigationToolbarRobot.Transition()
         }
 
-        fun openMoreOptionsMenu(interact: TabTrayMoreOptionsMenuRobot.() -> Unit): TabTrayMoreOptionsMenuRobot.Transition {
+        fun openMoreOptionsMenu(interact: TabTrayMoreOptionsMenuRobot.() -> Unit):
+                TabTrayMoreOptionsMenuRobot.Transition {
             menuButton().click()
             TabTrayMoreOptionsMenuRobot().interact()
             return TabTrayMoreOptionsMenuRobot.Transition()
@@ -73,10 +77,6 @@ class TabTrayMenuRobot {
             return NavigationToolbarRobot.Transition()
         }
     }
-}
-
-fun tabTray(interact: TabTrayMenuRobot.() -> Unit) {
-    TabTrayMenuRobot().interact()
 }
 
 private fun regularBrowsingButton() = onView(withId(R.id.button_tabs))

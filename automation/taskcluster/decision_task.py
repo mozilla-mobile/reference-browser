@@ -80,11 +80,15 @@ def pr_or_push(is_push=False):
             signing_task_id = taskcluster.slugId()
             signing_tasks[signing_task_id] = BUILDER.craft_master_commit_signing_task(assemble_task_id, variant)
 
-            for craft_function in (
+            ALL_RAPTOR_CRAFT_FUNCTIONS = [
+                BUILDER.craft_raptor_tp6m_task(for_suite=i)
+                for i in range(1, 11)
+            ] + [
                 BUILDER.craft_raptor_speedometer_task,
                 BUILDER.craft_raptor_speedometer_power_task,
-                BUILDER.craft_raptor_tp6m_task
-            ):
+            ]
+
+            for craft_function in ALL_RAPTOR_CRAFT_FUNCTIONS:
                 args = (signing_task_id, mozharness_task_id, variant, gecko_revision)
                 other_tasks[taskcluster.slugId()] = craft_function(*args)
                 # we also want the arm APK to be tested on 64-bit-devices
