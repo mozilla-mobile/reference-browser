@@ -507,22 +507,21 @@ class TaskBuilder(object):
             force_run_on_64_bit_device=force_run_on_64_bit_device,
         )
 
-    def craft_raptor_tp6m_task(self, signing_task_id, mozharness_task_id, variant, gecko_revision, force_run_on_64_bit_device=False):
-        # XXX We are not chunking dynamically, but we have hardcoded jobs that are numbered and
-        # using chunk is a way to loop over and schedule these jobs easier
-        chunk = 1
+    def craft_raptor_tp6m_task(self, for_suite):
 
-        return self._craft_raptor_task(
-            signing_task_id,
-            mozharness_task_id,
-            variant,
-            gecko_revision,
-            name_prefix='raptor tp6m-{}'.format(chunk),
-            description='Raptor tp6m on the Reference Browser',
-            test_name='raptor-tp6m-{}'.format(chunk),
-            job_symbol='tp6m-{}'.format(chunk),
-            force_run_on_64_bit_device=force_run_on_64_bit_device,
-        )
+        def craft_function(signing_task_id, mozharness_task_id, variant, gecko_revision, force_run_on_64_bit_device=False):
+            return self._craft_raptor_task(
+                signing_task_id,
+                mozharness_task_id,
+                variant,
+                gecko_revision,
+                name_prefix='raptor tp6m-{}'.format(for_suite),
+                description='Raptor tp6m on the Reference Browser',
+                test_name='raptor-tp6m-{}'.format(for_suite),
+                job_symbol='tp6m-{}'.format(for_suite),
+                force_run_on_64_bit_device=force_run_on_64_bit_device,
+            )
+        return craft_function
 
     def _craft_raptor_task(
         self,
