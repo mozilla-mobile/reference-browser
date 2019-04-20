@@ -25,6 +25,7 @@ import org.mozilla.reference.browser.browser.BrowserFragment
 import org.mozilla.reference.browser.browser.CrashIntegration
 import org.mozilla.reference.browser.ext.components
 import org.mozilla.reference.browser.ext.isCrashReportActive
+import org.mozilla.reference.browser.tabs.TabsTouchHelper
 import org.mozilla.reference.browser.telemetry.DataReportingNotification
 
 open class BrowserActivity : AppCompatActivity() {
@@ -103,13 +104,17 @@ open class BrowserActivity : AppCompatActivity() {
     override fun onCreateView(parent: View?, name: String?, context: Context, attrs: AttributeSet?): View? =
         when (name) {
             EngineView::class.java.name -> components.core.engine.createView(context, attrs).asView()
-            TabsTray::class.java.name -> BrowserTabsTray(context, attrs)
+            TabsTray::class.java.name -> {
+                BrowserTabsTray(context, attrs).also { tray ->
+                    TabsTouchHelper(tray.tabsAdapter).attachToRecyclerView(tray)
+                }
+            }
             else -> super.onCreateView(parent, name, context, attrs)
         }
 
     private fun onNonFatalCrash(crash: Crash) {
         Snackbar.make(findViewById(android.R.id.content), crash_report_non_fatal_message, LENGTH_LONG)
-            .setAction(crash_report_non_fatal_action) { _ ->
+            .setAction(crash_report_non_fatal_action) {
                 crashIntegration.sendCrashReport(crash)
             }.show()
     }
