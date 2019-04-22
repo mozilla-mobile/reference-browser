@@ -7,7 +7,6 @@ package org.mozilla.reference.browser
 import android.app.Application
 import android.content.Context
 import mozilla.components.concept.fetch.Client
-import mozilla.components.lib.fetch.httpurlconnection.HttpURLConnectionClient
 import mozilla.components.service.glean.Glean
 import mozilla.components.service.glean.config.Configuration
 import mozilla.components.support.base.facts.register
@@ -30,7 +29,7 @@ open class BrowserApplication : Application() {
 
         setupCrashReporting(this)
 
-        val megazordEnabled = setupMegazord()
+        val megazordEnabled = setupMegazord(components)
         setupLogging(megazordEnabled)
 
         if (!isMainProcess()) {
@@ -96,7 +95,7 @@ private fun setupCrashReporting(application: BrowserApplication) {
  *
  * @return Boolean indicating if we're in a megazord.
  */
-private fun setupMegazord(): Boolean {
+private fun setupMegazord(components: Components): Boolean {
     // mozilla.appservices.ReferenceBrowserMegazord will be missing if we're doing an application-services
     // dependency substitution locally. That class is supplied dynamically by the org.mozilla.appservices
     // gradle plugin, and that won't happen if we're not megazording. We won't megazord if we're
@@ -107,7 +106,7 @@ private fun setupMegazord(): Boolean {
     return try {
         val megazordClass = Class.forName("mozilla.appservices.ReferenceBrowserMegazord")
         val megazordInitMethod = megazordClass.getDeclaredMethod("init", Lazy::class.java)
-        val client: Lazy<Client> = lazy { HttpURLConnectionClient() }
+        val client: Lazy<Client> = lazy { components.core.client }
         megazordInitMethod.invoke(megazordClass, client)
         true
     } catch (e: ClassNotFoundException) {
