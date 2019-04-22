@@ -15,9 +15,9 @@ private object Versions {
     const val google_material = "1.0.0"
 
     const val android_gradle_plugin = "3.2.1"
-    const val appservices_gradle_plugin = "0.4.4"
 
     const val mozilla_android_components = "0.51.0-SNAPSHOT"
+    const val mozilla_appservices = "0.26.2"
 
     const val thirdparty_sentry = "1.7.10"
 
@@ -93,7 +93,8 @@ object Deps {
 
     const val tools_androidgradle = "com.android.tools.build:gradle:${Versions.android_gradle_plugin}"
     const val tools_kotlingradle = "org.jetbrains.kotlin:kotlin-gradle-plugin:${Versions.kotlin}"
-    const val tools_appservicesgradle = "org.mozilla.appservices:gradle-plugin:${Versions.appservices_gradle_plugin}"
+
+    const val mozilla_appservices = Versions.mozilla_appservices
 
     const val espresso_contrib = "com.android.support.test.espresso:espresso-contrib:${Versions.espresso_version}"
     const val espresso_core = "com.android.support.test.espresso:espresso-core:${Versions.espresso_core}"

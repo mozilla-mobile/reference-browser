@@ -9,7 +9,6 @@ buildscript {
     dependencies {
         classpath Deps.tools_androidgradle
         classpath Deps.tools_kotlingradle
-        classpath Deps.tools_appservicesgradle
     }
 }
 
@@ -20,6 +19,7 @@ plugins {
 allprojects {
     repositories {
         google()
+        mavenLocal()
 
         maven {
             url "https://snapshots.maven.mozilla.org/maven2"

@@ -20,6 +20,7 @@ import org.mozilla.reference.browser.ext.components
 import org.mozilla.reference.browser.ext.isCrashReportActive
 import org.mozilla.reference.browser.settings.Settings
 import org.mozilla.reference.browser.telemetry.GleanFactProcessor
+import mozilla.appservices.ReferenceBrowserMegazord
 
 open class BrowserApplication : Application() {
     val components by lazy { Components(this) }
