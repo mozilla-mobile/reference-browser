@@ -1,7 +1,7 @@
 import argparse
 
 import arrow
-from decisionlib.decision import *
+from decisionlib.decisionlib import *
 
 from gradle import load_geckoview_nightly_version, load_variants
 from variant import Variant, ABIS
@@ -14,7 +14,7 @@ class Track(Enum):
 
 def project_shell_task(name: str, script: str):
     image = 'mozillamobile/android-components:1.15'
-    return shell_task(name, image, script)
+    return mobile_shell_task(name, image, script, 'ref-browser')
 
 
 def gradle_task(name: str, gradle_command: str):
@@ -24,16 +24,16 @@ def gradle_task(name: str, gradle_command: str):
 
 def lint_tasks():
     return [
-        gradle_task('detekt', 'detekt').with_treeherder('test', 'lint', 1, 'detekt'),
-        gradle_task('ktlint', 'ktlint').with_treeherder('test', 'lint', 1, 'ktlint'),
-        gradle_task('lint', 'lint').with_treeherder('test', 'lint', 1, 'lint'),
+        gradle_task('detekt', 'detekt').with_treeherder('detekt', 'test', 'lint', 1),
+        gradle_task('ktlint', 'ktlint').with_treeherder('ktlint', 'test', 'lint', 1),
+        gradle_task('lint', 'lint').with_treeherder('lint', 'test', 'lint', 1),
         project_shell_task(
             'compare-locales',
             """
             pip install "compare-locales>5.0.2,<6.0"
             compare-locales --validate l10n.toml .
             """
-        ).with_treeherder('test', 'lint', 2, 'compare-locale')
+        ).with_treeherder('compare-locale', 'test', 'lint', 2)
     ]
 
 
@@ -51,14 +51,14 @@ def variant_assemble_task(scheduler: Scheduler, variant: Variant):
         'assemble: {}'.format(variant.raw),
         'assemble{}'.format(variant.gradle_postfix),
     ) \
-        .append_artifact(AndroidArtifact('public/target.apk', output_path)) \
-        .with_treeherder('build', variant.platform(), 1, 'A', variant.engine) \
+        .with_artifact(AndroidArtifact('public/target.apk', output_path)) \
+        .with_treeherder('{}(build)'.format(variant.engine), variant.platform(), 1, 'A') \
         .schedule(scheduler)
 
 
 def variant_test_task(scheduler: Scheduler, variant: Variant):
     gradle_task('test: {}'.format(variant.raw), 'test{}UnitTest'.format(variant.gradle_postfix)) \
-        .with_treeherder('test', variant.platform(), 1, 'T', variant.engine) \
+        .with_treeherder('{}(T)'.format(variant.engine), 'test', variant.platform(), 1) \
         .schedule(scheduler)
 
 
@@ -91,7 +91,7 @@ def master_push(
                 SigningType.DEP,
                 [(assemble_task_id, ['public/target.apk'])],
             ) \
-                .with_treeherder('other', variant.platform(), 1, 'As', variant.engine) \
+                .with_treeherder('{}(As)'.format(variant.engine), 'other', variant.platform(), 1) \
                 .schedule(scheduler)
 
             raptor_task(
@@ -104,7 +104,7 @@ def master_push(
                 'GeckoViewActivity',
                 gecko_revision
             ) \
-                .with_treeherder('test', variant.platform(), 2, 'sp') \
+                .with_treeherder('sp', 'test', variant.platform(), 2) \
                 .schedule(scheduler)
 
 
@@ -132,25 +132,25 @@ def release(scheduler: Scheduler, track: Track, date: datetime.datetime, commit:
     nimbledroid_secret = '{}/reference-browser/nimbledroid'.format(prefix_secret)
 
     assemble_task_id = gradle_task('assemble', 'assembleRelease') \
-        .append_artifacts(
+        .with_artifacts(
         [AndroidArtifact(
             'public/target.{}.apk'.format(abi),
             "geckoNightly{}/release/app-geckoNightly-{}-release-unsigned.apk".format(
                 abi.capitalize(), abi)
         ) for abi in ABIS]) \
-        .append_file_secret(sentry_secret, 'dsn', '.sentry_token') \
-        .with_treeherder('build', 'android-all', 1, 'NA') \
+        .with_file_secret(sentry_secret, 'dsn', '.sentry_token') \
+        .with_treeherder('NA', 'build', 'android-all', 1) \
         .map(lambda task, _: task.with_notify_owner() if track == Track.NIGHTLY else None) \
         .schedule(scheduler)
 
     sign_task_id = sign_task(
         'Sign',
-        'autograph_apk',
+        'autograph_apk_reference_browser',
         SigningType.RELEASE if track == Track.NIGHTLY else SigningType.DEP,
         [(assemble_task_id, ['public/target.{}.apk'.format(abi) for abi in ABIS])],
     ) \
-        .with_treeherder('other', 'android-all', 1, 'Ns') \
-        .append_routes(release_sign_task_routes(track, date, commit)) \
+        .with_treeherder('Ns', 'other', 'android-all', 1) \
+        .with_routes(release_sign_task_routes(track, date, commit)) \
         .schedule(scheduler)
 
     google_play_task(
@@ -158,7 +158,7 @@ def release(scheduler: Scheduler, track: Track, date: datetime.datetime, commit:
         'nightly',
         [(sign_task_id, ['public/target.{}.apk'.format(abi) for abi in ABIS])],
     ) \
-        .with_treeherder('other', 'android-all', 1, 'gp') \
+        .with_treeherder('gp', 'other', 'android-all', 1) \
         .schedule(scheduler)
 
     project_shell_task(
@@ -172,9 +172,9 @@ def release(scheduler: Scheduler, track: Track, date: datetime.datetime, commit:
         python3 automation/taskcluster/upload_apk_nimbledroid.py geckoview_example_nd.apk
         """.format(secret=nimbledroid_secret, task_id=assemble_task_id)
     ) \
-        .append_secret(nimbledroid_secret) \
-        .append_dependency(assemble_task_id) \
-        .with_treeherder('test', 'android-all', 2, 'nd') \
+        .with_secret(nimbledroid_secret) \
+        .with_dependency(assemble_task_id) \
+        .with_treeherder('nd', 'test', 'android-all', 2) \
         .schedule(scheduler)
 
 
@@ -205,9 +205,8 @@ def main():
                                 choices=['nightly', 'staging-nightly'])
 
     result = parser.parse_args()
-    checkout = Checkout.from_cwd()
-    trigger = Trigger.from_environment()
-    queue = taskcluster.Queue({'baseUrl': 'http://taskcluster/queue/v1'})
+    checkout = Checkout.from_environment()
+    queue = taskcluster.Queue({'rootUrl': os.environ['TASKCLUSTER_PROXY_URL']})
     scheduler = Scheduler()
     if result.command == 'pull-request':
         pull_request(scheduler, result.pr_title)
@@ -220,7 +219,7 @@ def main():
         date = arrow.get(result.date)
         release(scheduler, Track(result.track), date, checkout.commit)
 
-    scheduler.schedule_tasks(queue, trigger, checkout)
+    scheduler.schedule_tasks(queue, checkout)
 
 
 if __name__ == '__main__':

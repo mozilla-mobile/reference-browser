@@ -100,12 +100,13 @@ tasks:
               MOBILE_HEAD_REPOSITORY: ${repository}
               MOBILE_HEAD_REV: ${head_rev}
               MOBILE_TRIGGERED_BY: ${user}
-              SCHEDULER_ID: ${scheduler_id}
               SHORT_HEAD_BRANCH: ${short_head_branch}
               TASK_ID: ${decision_task_id}
               TASKS_PRIORITY: ${tasks_priority}
               DECISIONLIB_TRUST_LEVEL: ${trust_level}
               DECISIONLIB_TASK_GROUP_ID: ${task_group_id}
+              DECISIONLIB_SCHEDULER_ID: ${scheduler_id}
+              DECISIONLIB_CHECKOUT_REF: ${head_branch}
               DECISIONLIB_OWNER: ${user}@users.noreply.github.com
               DECISIONLIB_SOURCE: ${repository}/raw/${head_rev}/.taskcluster.yml
             features:
@@ -253,9 +254,12 @@ tasks:
                                 && git clone ${repository}
                                 && cd reference-browser
                                 && git checkout ${event.release.tag_name}
-                                && python automation/taskcluster/decision_task.py \
+                                && apt install -y python3 python3-pip
+                          && pip3 install decisionlib-mhentges
+                          && pip3 install arrow
+                          && python3 automation/taskcluster/decision_task.py \
                                   raptor \
-                                  ${staging_flag}
+                                  ${staging_flag} --date ${now}
                             artifacts:
                               public/task-graph.json:
                                 type: file
