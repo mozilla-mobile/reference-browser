@@ -26,6 +26,11 @@ class CustomTabsIntegration(
     sessionId: String,
     activity: Activity?
 ) : LifecycleAwareFeature, BackHandler {
+
+    init {
+        toolbar.urlBoxView = null
+    }
+
     private val session = sessionManager.findSessionById(sessionId)
 
     private val menuToolbar by lazy {
