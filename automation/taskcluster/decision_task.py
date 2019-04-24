@@ -14,7 +14,8 @@ class Track(Enum):
 
 def project_shell_task(name: str, script: str):
     image = 'mozillamobile/android-components:1.15'
-    return mobile_shell_task(name, image, script, 'ref-browser')
+    return mobile_shell_task(name, image, script, 'ref-browser') \
+        .with_install_python_3()
 
 
 def gradle_task(name: str, gradle_command: str):
