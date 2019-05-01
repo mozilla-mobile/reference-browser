@@ -56,4 +56,25 @@
         mozac:browserToolbarSuggestionForegroundColor="@color/toolbarSuggestionForeground"
         mozac:browserToolbarSuggestionBackgroundColor="@color/toolbarSuggestionBackground" />
 
+    <mozilla.components.feature.readerview.view.ReaderViewControlsBar
+        android:id="@+id/readerViewBar"
+        android:background="#FFFFFFFF"
+        android:elevation="10dp"
+        android:visibility="gone"
+        android:layout_gravity="bottom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/readerViewAppearanceButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|bottom"
+        android:src="@drawable/mozac_ic_font"
+        android:visibility="gone"
+        android:layout_marginRight="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginBottom="16dp"
+        app:layout_behavior="org.mozilla.reference.browser.browser.ReaderViewAppearanceButtonBehavior" />
+
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
