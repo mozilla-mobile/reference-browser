@@ -11,6 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.fragment_browser.*
+import kotlinx.android.synthetic.main.fragment_browser.view.*
 import mozilla.components.feature.awesomebar.AwesomeBarFeature
 import mozilla.components.feature.downloads.DownloadsFeature
 import mozilla.components.feature.findinpage.view.FindInPageView
@@ -46,8 +47,10 @@ class BrowserFragment : Fragment(), BackHandler, UserInteractionHandler {
     private val sitePermissionFeature = ViewBoundFeatureWrapper<SitePermissionsFeature>()
     private val pictureInPictureIntegration = ViewBoundFeatureWrapper<PictureInPictureIntegration>()
     private val thumbnailsFeature = ViewBoundFeatureWrapper<ThumbnailsFeature>()
+    private val readerViewFeature = ViewBoundFeatureWrapper<ReaderViewIntegration>()
 
     private val backButtonHandler: List<ViewBoundFeatureWrapper<*>> = listOf(
+        readerViewFeature,
         fullScreenFeature,
         findInPageIntegration,
         toolbarIntegration,
@@ -194,6 +197,19 @@ class BrowserFragment : Fragment(), BackHandler, UserInteractionHandler {
                         requireComponents.core.sessionManager),
                 owner = this,
                 view = view
+        )
+
+        readerViewFeature.set(
+            feature = ReaderViewIntegration(
+                requireContext(),
+                requireComponents.core.engine,
+                requireComponents.core.sessionManager,
+                view.toolbar,
+                view.readerViewBar,
+                view.readerViewAppearanceButton
+            ),
+            owner = this,
+            view = view
         )
     }
 

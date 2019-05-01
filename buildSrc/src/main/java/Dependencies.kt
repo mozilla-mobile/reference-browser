@@ -17,7 +17,7 @@ private object Versions {
     const val android_gradle_plugin = "3.2.1"
     const val appservices_gradle_plugin = "0.4.4"
 
-    const val mozilla_android_components = "0.51.0-SNAPSHOT"
+    const val mozilla_android_components = "0.52.0-SNAPSHOT"
 
     const val thirdparty_sentry = "1.7.10"
 
@@ -70,6 +70,7 @@ object Deps {
     const val mozilla_feature_storage = "org.mozilla.components:feature-storage:${Versions.mozilla_android_components}"
     const val mozilla_feature_prompts = "org.mozilla.components:feature-prompts:${Versions.mozilla_android_components}"
     const val mozilla_feature_qr = "org.mozilla.components:feature-qr:${Versions.mozilla_android_components}"
+    const val mozilla_feature_readerview = "org.mozilla.components:feature-readerview:${Versions.mozilla_android_components}"
 
     const val mozilla_ui_autocomplete = "org.mozilla.components:ui-autocomplete:${Versions.mozilla_android_components}"
     const val mozilla_ui_colors = "org.mozilla.components:ui-colors:${Versions.mozilla_android_components}"
