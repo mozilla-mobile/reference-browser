@@ -86,7 +86,7 @@ def master_push(
         variant_test_task(scheduler, variant)
 
         if variant.abi in ('aarch64', 'arm') and variant.build_type == 'releaseRaptor':
-            sign_task_id = sign_task(
+            sign_task_id = mobile_sign_task(
                 'sign: {}'.format(variant.raw),
                 'autograph_apk_reference_browser',
                 SigningType.DEP,
@@ -95,7 +95,7 @@ def master_push(
                 .with_treeherder('{}(As)'.format(variant.engine), 'other', variant.platform(), 1) \
                 .schedule(scheduler)
 
-            raptor_task(
+            mobile_raptor_task(
                 'raptor speedometer: {}'.format(variant.raw),
                 (sign_task_id, 'public/target.apk'),
                 mozharness_task_id,
@@ -144,7 +144,7 @@ def release(scheduler: Scheduler, track: Track, date: datetime.datetime, commit:
         .map(lambda task, _: task.with_notify_owner() if track == Track.NIGHTLY else None) \
         .schedule(scheduler)
 
-    sign_task_id = sign_task(
+    sign_task_id = mobile_sign_task(
         'Sign',
         'autograph_apk_reference_browser',
         SigningType.RELEASE if track == Track.NIGHTLY else SigningType.DEP,
@@ -154,7 +154,7 @@ def release(scheduler: Scheduler, track: Track, date: datetime.datetime, commit:
         .with_routes(release_sign_task_routes(track, date, commit)) \
         .schedule(scheduler)
 
-    google_play_task(
+    mobile_google_play_task(
         'Push',
         'nightly',
         [(sign_task_id, ['public/target.{}.apk'.format(abi) for abi in ABIS])],
@@ -207,20 +207,21 @@ def main():
 
     result = parser.parse_args()
     checkout = Checkout.from_environment()
-    queue = taskcluster.Queue({'rootUrl': os.environ['TASKCLUSTER_PROXY_URL']})
+    queue = TaskclusterQueue.from_environment()
     scheduler = Scheduler()
     if result.command == 'pull-request':
         pull_request(scheduler, result.pr_title)
     elif result.command == 'master-push':
         geckoview_nightly_version = load_geckoview_nightly_version()
         mozharness_task_id = taskcluster_get_geckoview_task_id(geckoview_nightly_version)
-        gecko_revision = queue.task(mozharness_task_id)['payload']['env']['GECKO_HEAD_REV']
+        gecko_revision = queue.get_internal() \
+            .task(mozharness_task_id)['payload']['env']['GECKO_HEAD_REV']
         master_push(scheduler, mozharness_task_id, gecko_revision)
     else:
         date = arrow.get(result.date)
         release(scheduler, Track(result.track), date, checkout.commit)
 
-    scheduler.schedule_tasks(queue, checkout)
+    scheduler.schedule_tasks(queue, checkout, Trigger.from_environment())
 
 
 if __name__ == '__main__':
