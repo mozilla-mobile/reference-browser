@@ -140,7 +140,7 @@ def release(scheduler: Scheduler, track: Track, date: datetime.datetime, commit:
                 abi.capitalize(), abi)
         ) for abi in ABIS]) \
         .with_file_secret(sentry_secret, 'dsn', '.sentry_token') \
-        .with_treeherder('NA', 'build', 'android-all', 1) \
+        .map(lambda task, _: task.with_treeherder('NA', 'build', 'android-all', 1) if track == Track.NIGHTLY else None) \
         .map(lambda task, _: task.with_notify_owner() if track == Track.NIGHTLY else None) \
         .schedule(scheduler)
 
@@ -150,7 +150,7 @@ def release(scheduler: Scheduler, track: Track, date: datetime.datetime, commit:
         SigningType.RELEASE if track == Track.NIGHTLY else SigningType.DEP,
         [(assemble_task_id, ['public/target.{}.apk'.format(abi) for abi in ABIS])],
     ) \
-        .with_treeherder('Ns', 'other', 'android-all', 1) \
+        .map(lambda task, _: task.with_treeherder('Ns', 'other', 'android-all', 1) if track == Track.NIGHTLY else None) \
         .with_routes(release_sign_task_routes(track, date, commit)) \
         .schedule(scheduler)
 
@@ -159,7 +159,7 @@ def release(scheduler: Scheduler, track: Track, date: datetime.datetime, commit:
         'nightly',
         [(sign_task_id, ['public/target.{}.apk'.format(abi) for abi in ABIS])],
     ) \
-        .with_treeherder('gp', 'other', 'android-all', 1) \
+        .map(lambda task, _: task.with_treeherder('gp', 'other', 'android-all', 1) if track == Track.NIGHTLY else None) \
         .schedule(scheduler)
 
     project_shell_task(
@@ -175,7 +175,7 @@ def release(scheduler: Scheduler, track: Track, date: datetime.datetime, commit:
     ) \
         .with_secret(nimbledroid_secret) \
         .with_dependency(assemble_task_id) \
-        .with_treeherder('nd', 'test', 'android-all', 2) \
+        .map(lambda task, _: task.with_treeherder('nd', 'test', 'android-all', 2) if track == Track.NIGHTLY else None) \
         .schedule(scheduler)
 
 

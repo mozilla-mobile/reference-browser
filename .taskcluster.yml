@@ -104,6 +104,7 @@ tasks:
               TASK_ID: ${decision_task_id}
               TASKS_PRIORITY: ${tasks_priority}
               DECISIONLIB_TRUST_LEVEL: ${trust_level}
+              DECISIONLIB_DECISION_TASK_ID: ${decision_task_id}
               DECISIONLIB_TASK_GROUP_ID: ${task_group_id}
               DECISIONLIB_SCHEDULER_ID: ${scheduler_id}
               DECISIONLIB_CHECKOUT_REF: ${head_branch}
