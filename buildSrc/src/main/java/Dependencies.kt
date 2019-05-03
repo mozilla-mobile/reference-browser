@@ -11,23 +11,23 @@ private object Versions {
     const val androidx_constraintlayout = "1.1.3"
     const val androidx_preference = "1.0.0"
 
-    const val workmanager = "1.0.0-beta01"
+    const val workmanager = "2.0.0"
     const val google_material = "1.0.0"
 
-    const val android_gradle_plugin = "3.2.1"
+    const val android_gradle_plugin = "3.3.2"
     const val appservices_gradle_plugin = "0.4.4"
 
     const val mozilla_android_components = "0.52.0-SNAPSHOT"
 
     const val thirdparty_sentry = "1.7.10"
 
-    const val espresso_core = "2.2.2"
-    const val espresso_version = "3.0.2"
+    const val espresso_core = "3.1.0"
+    const val espresso_version = "3.1.0"
     const val mockwebserver = "3.10.0"
     const val orchestrator = "1.1.1"
-    const val tools_test_rules = "1.1.1"
-    const val tools_test_runner = "1.1.1"
-    const val uiautomator = "2.1.3"
+    const val tools_test_rules = "1.1.0"
+    const val tools_test_runner = "1.1.0"
+    const val uiautomator = "2.2.0"
 }
 
 // Synchronized dependencies used by (some) modules
@@ -53,6 +53,7 @@ object Deps {
     const val mozilla_browser_menu = "org.mozilla.components:browser-menu:${Versions.mozilla_android_components}"
     const val mozilla_browser_errorpages = "org.mozilla.components:browser-errorpages:${Versions.mozilla_android_components}"
     const val mozilla_browser_storage_sync = "org.mozilla.components:browser-storage-sync:${Versions.mozilla_android_components}"
+    const val mozilla_browser_icons = "org.mozilla.components:browser-icons:${Versions.mozilla_android_components}"
 
     const val mozilla_feature_accounts = "org.mozilla.components:feature-accounts:${Versions.mozilla_android_components}"
     const val mozilla_feature_awesomebar = "org.mozilla.components:feature-awesomebar:${Versions.mozilla_android_components}"
@@ -89,20 +90,20 @@ object Deps {
     const val androidx_appcompat = "androidx.appcompat:appcompat:${Versions.androidx_appcompat}"
     const val androidx_constraintlayout = "androidx.constraintlayout:constraintlayout:${Versions.androidx_constraintlayout}"
     const val androidx_preference = "androidx.preference:preference-ktx:${Versions.androidx_preference}"
-    const val arch_workmanager = "android.arch.work:work-runtime-ktx:${Versions.workmanager}"
+    const val androidx_work_runtime = "androidx.work:work-runtime-ktx:${Versions.workmanager}"
     const val google_material = "com.google.android.material:material:${Versions.google_material}"
 
     const val tools_androidgradle = "com.android.tools.build:gradle:${Versions.android_gradle_plugin}"
     const val tools_kotlingradle = "org.jetbrains.kotlin:kotlin-gradle-plugin:${Versions.kotlin}"
     const val tools_appservicesgradle = "org.mozilla.appservices:gradle-plugin:${Versions.appservices_gradle_plugin}"
 
-    const val espresso_contrib = "com.android.support.test.espresso:espresso-contrib:${Versions.espresso_version}"
-    const val espresso_core = "com.android.support.test.espresso:espresso-core:${Versions.espresso_core}"
-    const val espresso_idling_resources = "com.android.support.test.espresso:espresso-idling-resource:${Versions.espresso_version}"
-    const val espresso_web = "com.android.support.test.espresso:espresso-web:${Versions.espresso_version}"
+    const val espresso_contrib = "androidx.test.espresso:espresso-contrib:${Versions.espresso_version}"
+    const val espresso_core = "androidx.test.espresso:espresso-core:${Versions.espresso_core}"
+    const val espresso_idling_resources = "androidx.test.espresso:espresso-idling-resource:${Versions.espresso_version}"
+    const val espresso_web = "androidx.test.espresso:espresso-web:${Versions.espresso_version}"
     const val mockwebserver = "com.squareup.okhttp3:mockwebserver:${Versions.mockwebserver}"
     const val orchestrator =  "androidx.test:orchestrator:${Versions.orchestrator}"
-    const val tools_test_rules = "com.android.support.test:rules:${Versions.tools_test_rules}"
-    const val tools_test_runner = "com.android.support.test:runner:${Versions.tools_test_runner}"
-    const val uiautomator = "com.android.support.test.uiautomator:uiautomator-v18:${Versions.uiautomator}"
+    const val tools_test_rules = "androidx.test:rules:${Versions.tools_test_rules}"
+    const val tools_test_runner = "androidx.test:runner:${Versions.tools_test_runner}"
+    const val uiautomator = "androidx.test.uiautomator:uiautomator:${Versions.uiautomator}"
 }

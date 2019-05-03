@@ -19,8 +19,6 @@ import mozilla.components.feature.intent.IntentProcessor
 import mozilla.components.lib.crash.Crash
 import mozilla.components.support.base.feature.BackHandler
 import mozilla.components.support.utils.SafeIntent
-import org.mozilla.reference.browser.R.string.crash_report_non_fatal_action
-import org.mozilla.reference.browser.R.string.crash_report_non_fatal_message
 import org.mozilla.reference.browser.browser.BrowserFragment
 import org.mozilla.reference.browser.browser.CrashIntegration
 import org.mozilla.reference.browser.ext.components
@@ -113,8 +111,8 @@ open class BrowserActivity : AppCompatActivity() {
         }
 
     private fun onNonFatalCrash(crash: Crash) {
-        Snackbar.make(findViewById(android.R.id.content), crash_report_non_fatal_message, LENGTH_LONG)
-            .setAction(crash_report_non_fatal_action) {
+        Snackbar.make(findViewById(android.R.id.content), R.string.crash_report_non_fatal_message, LENGTH_LONG)
+            .setAction(R.string.crash_report_non_fatal_action) {
                 crashIntegration.sendCrashReport(crash)
             }.show()
     }

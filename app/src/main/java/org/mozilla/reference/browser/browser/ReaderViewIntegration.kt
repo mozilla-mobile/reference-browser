@@ -82,7 +82,6 @@ class ReaderViewIntegration(
     }
 
     override fun onBackPressed(): Boolean {
-        readerViewButton.setSelected(false)
         return feature.onBackPressed()
     }
 }
