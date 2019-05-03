@@ -157,12 +157,6 @@ if (project.hasProperty("telemetry") && project.property("telemetry") == "true")
     }
 }
 
-tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
-    kotlinOptions {
-        jvmTarget = '1.8'
-    }
-}
-
 configurations {
     geckoNightlyArmImplementation {}
     geckoNightlyX86Implementation {}
