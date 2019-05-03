@@ -113,6 +113,7 @@ tasks:
             features:
               taskclusterProxy: true
           extra:
+            parent: ${decision_task_id}
             tasks_for: ${tasks_for}
             treeherder:
               machine:
