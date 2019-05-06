@@ -162,21 +162,22 @@ def release(scheduler: Scheduler, track: Track, date: datetime.datetime, commit:
         .map(lambda task, _: task.with_treeherder('gp', 'other', 'android-all', 1) if track == Track.NIGHTLY else None) \
         .schedule(scheduler)
 
-    project_shell_task(
-        'nimbledroid',
-        """
-        pip install decisionlib-mhentges
-        export API_KEY=`decisionlib get-secret {secret} api_key`
-        curl --location https://queue.taskcluster.net/v1/task/{task_id}/artifacts/public/target.arm.apk > target.arm.apk
-        curl --location https://index.taskcluster.net/v1/task/gecko.v2.mozilla-central.latest.mobile.android-api-16-opt/artifacts/public/build/geckoview_example.apk > geckoview_example_nd.apk
-        python3 automation/taskcluster/upload_apk_nimbledroid.py target.arm.apk
-        python3 automation/taskcluster/upload_apk_nimbledroid.py geckoview_example_nd.apk
-        """.format(secret=nimbledroid_secret, task_id=assemble_task_id)
-    ) \
-        .with_secret(nimbledroid_secret) \
-        .with_dependency(assemble_task_id) \
-        .map(lambda task, _: task.with_treeherder('nd', 'test', 'android-all', 2) if track == Track.NIGHTLY else None) \
-        .schedule(scheduler)
+    if track == Track.NIGHTLY:
+        project_shell_task(
+            'nimbledroid',
+            """
+            pip install decisionlib-mhentges
+            export API_KEY=`decisionlib get-secret {secret} api_key`
+            curl --location https://queue.taskcluster.net/v1/task/{task_id}/artifacts/public/target.arm.apk > target.arm.apk
+            curl --location https://index.taskcluster.net/v1/task/gecko.v2.mozilla-central.latest.mobile.android-api-16-opt/artifacts/public/build/geckoview_example.apk > geckoview_example_nd.apk
+            python3 automation/taskcluster/upload_apk_nimbledroid.py target.arm.apk
+            python3 automation/taskcluster/upload_apk_nimbledroid.py geckoview_example_nd.apk
+            """.format(secret=nimbledroid_secret, task_id=assemble_task_id)
+        ) \
+            .with_secret(nimbledroid_secret) \
+            .with_dependency(assemble_task_id) \
+            .with_treeherder('nd', 'test', 'android-all', 2) \
+            .schedule(scheduler)
 
 
 def taskcluster_get_geckoview_task_id(geckoview_nightly_version):

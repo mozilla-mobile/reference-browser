@@ -14,9 +14,6 @@ def main():
     apk = parser.parse_args().apk
     api_key = os.environ['API_KEY']
 
-    print('SKIP: Uploads {} to nimbledroid'.format(apk))
-    return
-
     response = requests.post(
         'https://nimbledroid.com/api/v2/apks',
         auth=(api_key, ''),
