@@ -39,26 +39,17 @@ def lint_tasks():
 
 
 def variant_assemble_task(scheduler: Scheduler, variant: Variant):
-    unsigned = '' if variant.signed_by_default else '-unsigned'
-    output_path = '{flavor}/{build_type}/app-{engine}-{abi}-{build_type}{unsigned}.apk'.format(
-        flavor=variant.flavor,
-        build_type=variant.build_type,
-        engine=variant.engine,
-        abi=variant.abi,
-        unsigned=unsigned,
-    )
-
     return gradle_task(
         'assemble: {}'.format(variant.raw),
-        'assemble{}'.format(variant.gradle_postfix),
+        'assemble{}'.format(variant.for_gradle_command),
     ) \
-        .with_artifact(AndroidArtifact('public/target.apk', output_path)) \
-        .with_treeherder('{}(build)'.format(variant.engine), variant.platform(), 1, 'A') \
+        .with_artifact(AndroidArtifact('public/target.apk', variant.gradle_apk_path())) \
+        .with_treeherder('{}(A)'.format(variant.engine), 'build', variant.platform(), 1) \
         .schedule(scheduler)
 
 
 def variant_test_task(scheduler: Scheduler, variant: Variant):
-    gradle_task('test: {}'.format(variant.raw), 'test{}UnitTest'.format(variant.gradle_postfix)) \
+    gradle_task('test: {}'.format(variant.raw), 'test{}UnitTest'.format(variant.for_gradle_command)) \
         .with_treeherder('{}(T)'.format(variant.engine), 'test', variant.platform(), 1) \
         .schedule(scheduler)
 
@@ -90,7 +81,7 @@ def master_push(
                 'sign: {}'.format(variant.raw),
                 'autograph_apk_reference_browser',
                 SigningType.DEP,
-                [(assemble_task_id, ['public/target.apk'])],
+                (assemble_task_id, ['public/target.apk']),
             ) \
                 .with_treeherder('{}(As)'.format(variant.engine), 'other', variant.platform(), 1) \
                 .schedule(scheduler)
@@ -148,7 +139,7 @@ def release(scheduler: Scheduler, track: Track, date: datetime.datetime, commit:
         'Sign',
         'autograph_apk_reference_browser',
         SigningType.RELEASE if track == Track.NIGHTLY else SigningType.DEP,
-        [(assemble_task_id, ['public/target.{}.apk'.format(abi) for abi in ABIS])],
+        *[(assemble_task_id, ['public/target.{}.apk'.format(abi) for abi in ABIS])],
     ) \
         .map(lambda task, _: task.with_treeherder('Ns', 'other', 'android-all', 1) if track == Track.NIGHTLY else None) \
         .with_routes(release_sign_task_routes(track, date, commit)) \

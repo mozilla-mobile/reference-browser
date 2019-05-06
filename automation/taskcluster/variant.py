@@ -4,15 +4,24 @@ ABIS = ('aarch64', 'arm', 'x86')
 class Variant:
     def __init__(self, raw: str, flavor: str, engine: str, abi: str, build_type: str):
         self.raw = raw
-        self.flavor = flavor
         self.engine = engine
         self.abi = abi
         self.build_type = build_type
-        self.gradle_postfix = raw[:1].upper() + raw[1:]
-        self.signed_by_default = build_type == 'debug'
+        self.for_gradle_command = raw[:1].upper() + raw[1:]
+        self._signed_by_default = build_type == 'debug'
+        self._flavor = flavor
 
     def platform(self):
         return 'android-{}-{}'.format(self.abi, self.build_type)
+
+    def gradle_apk_path(self):
+        return '{flavor}/{build_type}/app-{engine}-{abi}-{build_type}{unsigned}.apk'.format(
+            flavor=self._flavor,
+            build_type=self.build_type,
+            engine=self.engine,
+            abi=self.abi,
+            unsigned='' if self._signed_by_default else '-unsigned',
+        )
 
     @staticmethod
     def from_gradle_variant_string(raw_variant: str):
