@@ -173,8 +173,10 @@ class BrowserFragment : Fragment(), BackHandler, UserInteractionHandler {
 
         sitePermissionFeature.set(
             feature = SitePermissionsFeature(
-                anchorView = awesomeBar,
-                sessionManager = requireComponents.core.sessionManager
+                context = requireContext(),
+                fragmentManager = requireFragmentManager(),
+                sessionManager = requireComponents.core.sessionManager,
+                sessionId = sessionId
             ) { permissions ->
                 requestPermissions(permissions, REQUEST_CODE_APP_PERMISSIONS)
             },
