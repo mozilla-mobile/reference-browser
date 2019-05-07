@@ -205,8 +205,7 @@ tasks:
                           && cd reference-browser
                           && git checkout ${event.release.tag_name}
                           && python automation/taskcluster/decision_task.py \
-                            release \
-                            --nightly \
+                            nightly \
                             ${command_staging_flag}
                       artifacts:
                         public/task-graph.json:

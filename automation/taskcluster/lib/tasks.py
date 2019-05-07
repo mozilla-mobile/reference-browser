@@ -23,8 +23,6 @@ _DEFAULT_TASK_URL = 'https://queue.taskcluster.net/v1/task'
 _ARCH_APK_LOCATION_PATTERN = 'public/target.{}.apk'
 _SUPPORTED_ARCHITECTURES = ('aarch64', 'arm', 'x86')
 _APKS_PATHS = [_ARCH_APK_LOCATION_PATTERN.format(arch) for arch in _SUPPORTED_ARCHITECTURES]
-_SUPPORTED_BUILD_TYPES = ('Debug', 'Release', 'ReleaseRaptor')
-_SUPPORTED_PRODUCTS = ('geckoNightly',)
 
 class TaskBuilder(object):
     def __init__(
@@ -53,12 +51,12 @@ class TaskBuilder(object):
         self.date = arrow.get(date_string)
         self.trust_level = trust_level
 
-    def craft_assemble_release_task(self, is_staging=False):
+    def craft_assemble_nightly_task(self, version_name, is_staging=False):
         artifacts = {
             _ARCH_APK_LOCATION_PATTERN.format(arch): {
                 "type": 'file',
-                "path": "/build/reference-browser/app/build/outputs/apk/geckoNightly{}/release/"
-                        "app-geckoNightly-{}-release-unsigned.apk".format(arch.capitalize(), arch),
+                "path": "/build/reference-browser/app/build/outputs/apk/{}/nightly/"
+                        "app-{}-nightly-unsigned.apk".format(arch, arch),
                 "expires": taskcluster.stringDate(taskcluster.fromNow(DEFAULT_EXPIRES_IN)),
             }
             for arch in _SUPPORTED_ARCHITECTURES
@@ -75,7 +73,8 @@ class TaskBuilder(object):
         )
 
         gradle_commands = (
-            './gradlew --no-daemon -PcrashReportEnabled=true -Ptelemetry=true clean test assembleRelease',
+            './gradlew --no-daemon -PcrashReportEnabled=true -Ptelemetry=true -PversionName={} '
+            'clean test assembleNightly'.format(version_name),
         )
 
         command = ' && '.join(
@@ -176,7 +175,7 @@ class TaskBuilder(object):
         return self._craft_clean_gradle_task(
             name='lint',
             description='Running ktlint over all modules',
-            gradle_task='lint',
+            gradle_task='lintAarch64Debug',
             treeherder={
                 'jobKind': 'test',
                 'machine': {
@@ -320,27 +319,24 @@ class TaskBuilder(object):
         }
 
     def craft_master_commit_signing_task(self, assemble_task_id, variant):
-        architecture, build_type, product = \
-            get_architecture_and_build_type_and_product_from_variant(variant)
-        product = convert_camel_case_into_kebab_case(product)
-        postfix = convert_camel_case_into_kebab_case('{}-{}'.format(architecture, build_type))
+        architecture, build_type = \
+            get_architecture_and_build_type_from_variant(variant)
 
         routes = []
         if self.repo_url == _OFFICIAL_REPO_URL:
             routes = [
-                'index.project.mobile.reference-browser.branch.{}.revision.{}.{}.{}'.format(
-                    self.short_head_branch, self.commit, product, postfix
+                'index.project.mobile.reference-browser.v2.branch.master.revision.{}.{}.{}'.format(
+                    self.commit, build_type, architecture
                 ),
-                'index.project.mobile.reference-browser.branch.{}.latest.{}.{}'.format(
-                    self.short_head_branch, product, postfix
+                'index.project.mobile.reference-browser.v2.branch.master.latest.{}.{}'.format(
+                    build_type, architecture
                 ),
-                'index.project.mobile.reference-browser.branch.{}.pushdate.{}.{}.{}.revision.{}.{}.{}'.format(
-                    self.short_head_branch, self.date.year, self.date.month, self.date.day,
-                    self.commit, product, postfix
+                'index.project.mobile.reference-browser.v2.branch.master.pushdate.{}.{}.{}.revision.{}.{}.{}'.format(
+                    self.date.year, self.date.month, self.date.day,
+                    self.commit, build_type, architecture
                 ),
-                'index.project.mobile.reference-browser.branch.{}.pushdate.{}.{}.{}.latest.{}.{}'.format(
-                    self.short_head_branch, self.date.year, self.date.month, self.date.day,
-                    product, postfix
+                'index.project.mobile.reference-browser.v2.branch.master.pushdate.{}.{}.{}.latest.{}.{}'.format(
+                    self.date.year, self.date.month, self.date.day, build_type, architecture
                 ),
             ]
 
@@ -363,20 +359,20 @@ class TaskBuilder(object):
         )
 
     def craft_nightly_signing_task(self, build_task_id, is_staging=True):
-        index_release = 'staging-signed-nightly' if is_staging else 'signed-nightly'
+        index_release = 'staging.nightly' if is_staging else 'nightly'
         routes = [
-            'index.project.mobile.reference-browser.{}.nightly.{}.{}.{}.latest'.format(
+            'index.project.mobile.reference-browser.v2.{}.{}.{}.{}.latest'.format(
                 index_release, self.date.year, self.date.month, self.date.day
             ),
-            'index.project.mobile.reference-browser.{}.nightly.{}.{}.{}.revision.{}'.format(
+            'index.project.mobile.reference-browser.v2.{}.{}.{}.{}.revision.{}'.format(
                 index_release, self.date.year, self.date.month, self.date.day, self.commit
             ),
-            'index.project.mobile.reference-browser.{}.nightly.latest'.format(index_release),
+            'index.project.mobile.reference-browser.v2.{}.latest'.format(index_release),
         ]
 
         return self._craft_signing_task(
             name='Signing task',
-            description='Sign release builds of reference-browser',
+            description='Sign nightly builds of reference-browser',
             signing_type='dep-signing' if is_staging else 'release-signing',
             assemble_task_id=build_task_id,
             apk_paths=_APKS_PATHS,
@@ -541,7 +537,7 @@ class TaskBuilder(object):
         apk_location = '{}/{}/artifacts/{}'.format(
             _DEFAULT_TASK_URL, signing_task_id, DEFAULT_APK_ARTIFACT_LOCATION
         )
-        architecture, _, __ = get_architecture_and_build_type_and_product_from_variant(variant)
+        architecture, _ = get_architecture_and_build_type_from_variant(variant)
         worker_type = 'gecko-t-ap-perf-p2' if force_run_on_64_bit_device or architecture == 'aarch64' else 'gecko-t-ap-perf-g5'
 
         if force_run_on_64_bit_device:
@@ -580,7 +576,7 @@ class TaskBuilder(object):
                     "--test-packages-url={}/{}/artifacts/public/build/target.test_packages.json".format(_DEFAULT_TASK_URL, mozharness_task_id),
                     "--test={}".format(test_name),
                     "--app=refbrow",
-                    "--binary=org.mozilla.reference.browser",
+                    "--binary=org.mozilla.reference.browser.raptor",
                     "--activity=GeckoViewActivity",
                     "--download-symbols=ondemand"
                 ] + extra_test_args,
@@ -617,15 +613,13 @@ class TaskBuilder(object):
 
 
 def _craft_treeherder_platform_from_variant(variant):
-    architecture, build_type, _ = get_architecture_and_build_type_and_product_from_variant(
-        variant
-    )
+    architecture, build_type = get_architecture_and_build_type_from_variant(variant)
     return 'android-{}-{}'.format(architecture, build_type)
 
 
 def _craft_treeherder_group_symbol_from_variant(variant):
-    _, __, product = get_architecture_and_build_type_and_product_from_variant(variant)
-    return product
+    _, build_type = get_architecture_and_build_type_from_variant(variant)
+    return build_type
 
 
 def _craft_artifacts_from_variant(variant):
@@ -639,52 +633,20 @@ def _craft_artifacts_from_variant(variant):
 
 
 def _craft_apk_full_path_from_variant(variant):
-    architecture, build_type, product = get_architecture_and_build_type_and_product_from_variant(
+    architecture, build_type = get_architecture_and_build_type_from_variant(
         variant
     )
-
-    short_variant = variant[:-len(build_type)]
-    postfix = '-unsigned' if build_type.startswith('release') else ''
-    product = lower_case_first_letter(product)
-
-    return '/build/reference-browser/app/build/outputs/apk/{short_variant}/{build_type}/app-{product}-{architecture}-{build_type}{postfix}.apk'.format(
+    postfix = '' if build_type.startswith('debug') else '-unsigned'
+    return '/build/reference-browser/app/build/outputs/apk/{architecture}/{build_type}/app-{architecture}-{build_type}{postfix}.apk'.format(
         architecture=architecture,
         build_type=build_type,
-        short_variant=short_variant,
-        product=product,
         postfix=postfix
     )
 
 
-def get_architecture_and_build_type_and_product_from_variant(variant):
-    for supported_product in _SUPPORTED_PRODUCTS:
-        if variant.startswith(supported_product):
-            product = supported_product
-            break
-    else:
-        raise ValueError(
-            'Cannot identify product in "{}". '
-            'Expected to find one of these supported ones: {}'.format(
-                variant, _SUPPORTED_PRODUCTS
-            )
-        )
-
-    for supported_build_type in _SUPPORTED_BUILD_TYPES:
-        if variant.endswith(supported_build_type):
-            build_type = lower_case_first_letter(supported_build_type)
-            break
-    else:
-        raise ValueError(
-            'Cannot identify build type in "{}". '
-            'Expected to find one of these supported ones: {}'.format(
-                variant, _SUPPORTED_BUILD_TYPES
-            )
-        )
-
-    remaining_variant_data = variant[len(product):-len(build_type)]
-    remaining_variant_data = remaining_variant_data.lower()
+def get_architecture_and_build_type_from_variant(variant):
     for supported_architecture in _SUPPORTED_ARCHITECTURES:
-        if remaining_variant_data == supported_architecture:
+        if variant.startswith(supported_architecture):
             architecture = supported_architecture
             break
     else:
@@ -695,8 +657,10 @@ def get_architecture_and_build_type_and_product_from_variant(variant):
             )
         )
 
+    build_type = variant[len(architecture):]
+    build_type = lower_case_first_letter(build_type)
 
-    return architecture, build_type, product
+    return architecture, build_type
 
 
 def schedule_task(queue, taskId, task):
