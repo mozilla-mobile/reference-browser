@@ -13,6 +13,8 @@ apply from: "$project.rootDir/automation/gradle/versionCode.gradle"
 
 apply plugin: 'org.mozilla.appservices'
 
+import com.android.build.gradle.internal.tasks.AppPreBuildTask
+
 appservices {
     defaultConfig {
         megazord = 'reference-browser'
@@ -29,25 +31,36 @@ android {
         applicationId "org.mozilla.reference.browser"
         minSdkVersion Config.minSdkVersion
         targetSdkVersion Config.targetSdkVersion
-        versionCode Config.versionCode
-        versionName Config.versionName + Config.generateVersionSuffix()
+        versionCode 1
+        versionName Config.generateDebugVersionName()
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         testInstrumentationRunnerArguments clearPackageData: 'true'
     }
 
+    def releaseTemplate = {
+        minifyEnabled false
+        proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        matchingFallbacks = ['release'] // Use on the "release" build type in dependencies (AARs)
+    }
+
     buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        }
-        releaseRaptor {
-            initWith release
-            manifestPlaceholders.isRaptorEnabled = "true"
-            matchingFallbacks = ['release']
-        }
         debug {
             applicationIdSuffix ".debug"
+        }
+        raptor releaseTemplate >> { // the ">>" concatenates the raptor-specific options with the template
+            manifestPlaceholders.isRaptorEnabled = "true"
+            matchingFallbacks = ['release']
+            applicationIdSuffix ".raptor"
+        }
+        nightly releaseTemplate >> {
+            buildConfigField "boolean", "IS_RELEASED", "true"
+        }
+    }
+
+    variantFilter { // There's a "release" build type that exists by default that we don't use (it's replaced by "nightly" and "beta")
+        if (buildType.name == 'release') {
+            setIgnore true
         }
     }
 
@@ -55,12 +68,9 @@ android {
         execution 'ANDROIDX_TEST_ORCHESTRATOR'
     }
 
-    flavorDimensions "engine", "abi"
+    flavorDimensions "abi"
 
     productFlavors {
-        // GeckoView release channels (For now only Nightly)
-        geckoNightly { dimension "engine" }
-
         // Processor architectures
         arm {
             dimension "abi"
@@ -135,7 +145,7 @@ if (project.hasProperty("telemetry") && project.property("telemetry") == "true")
 // -------------------------------------------------------------------------------------------------
     def buildType = variant.buildType.name
 
-    if (buildType == "release") {
+    if (variant.buildType.buildConfigFields['IS_RELEASED']?.value) {
         def versionCode = generatedVersionCode
 
         // The Google Play Store does not allow multiple APKs for the same app that all have the
@@ -145,22 +155,34 @@ if (project.hasProperty("telemetry") && project.property("telemetry") == "true")
         // Our x86 builds need a higher version code to avoid installing ARM builds on an x86 device
         // with ARM compatibility mode.
 
-        if (variant.flavorName.contains("X86")) {
+        if (variant.flavorName.contains("x86")) {
             versionCode = versionCode + 2
-        } else if (variant.flavorName.contains("Aarch64")) {
+        } else if (variant.flavorName.contains("aarch64")) {
             versionCode = versionCode + 1
         }
 
         variant.outputs.all { output ->
-            setVersionCodeOverride(versionCode)
+            versionCodeOverride = versionCode
+            versionNameOverride = Config.releaseVersionName(project)
+        }
+
+        // If this is a release build, validate that "versionName" is set
+        tasks.withType(AppPreBuildTask) { prebuildTask ->
+            // You can't add a closure to a variant, so we need to look for an early variant-specific type
+            // of task (AppPreBuildTask is the first) and filter to make sure we're looking at the task for
+            // this variant that we're currently configuring
+            if (prebuildTask.variantName != variant.name) {
+                return
+            }
+
+            // Append to the task so the first thing it does is run our validation
+            prebuildTask.doFirst {
+                if (!project.hasProperty('versionName')) {
+                    throw new RuntimeException("Release builds require the 'versionName' property, e.g.: './gradlew -PversionName=<...> assembleNightly'")
+                }
+            }
         }
     }
-}
-
-configurations {
-    geckoNightlyArmImplementation {}
-    geckoNightlyX86Implementation {}
-    geckoNightlyAarch64Implementation {}
 }
 
 dependencies {
@@ -210,10 +232,10 @@ dependencies {
     implementation Deps.mozilla_lib_crash
     implementation Deps.thirdparty_sentry
 
-    geckoNightlyImplementation Deps.mozilla_browser_engine_gecko_nightly
-    geckoNightlyArmImplementation Gecko.geckoview_nightly_arm
-    geckoNightlyX86Implementation Gecko.geckoview_nightly_x86
-    geckoNightlyAarch64Implementation Gecko.geckoview_nightly_aarch64
+    implementation Deps.mozilla_browser_engine_gecko_nightly
+    armImplementation Gecko.geckoview_nightly_arm
+    x86Implementation Gecko.geckoview_nightly_x86
+    aarch64Implementation Gecko.geckoview_nightly_aarch64
 
     implementation Deps.kotlin_stdlib
     implementation Deps.kotlin_coroutines
