@@ -9,10 +9,12 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import mozilla.components.browser.storage.sync.PlacesHistoryStorage
+import mozilla.components.concept.sync.DeviceType
 import mozilla.components.service.fxa.Config
-import mozilla.components.service.fxa.FxaAccountManager
 import mozilla.components.feature.sync.BackgroundSyncManager
 import mozilla.components.feature.sync.GlobalSyncableStoreProvider
+import mozilla.components.service.fxa.manager.DeviceTuple
+import mozilla.components.service.fxa.manager.FxaAccountManager
 
 /**
  * Component group for background services. These are components that need to be accessed from
@@ -43,7 +45,13 @@ class BackgroundServices(
         it.addStore("history")
     }
 
-    val accountManager = FxaAccountManager(context, config, scopes, syncManager).also {
+    val accountManager = FxaAccountManager(
+        context,
+        config,
+        scopes,
+        DeviceTuple("Reference Browser", DeviceType.MOBILE, emptyList()),
+        syncManager
+    ).also {
         CoroutineScope(Dispatchers.Main).launch { it.initAsync().await() }
     }
 }

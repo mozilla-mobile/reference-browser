@@ -6,7 +6,7 @@ package org.mozilla.reference.browser.components
 
 import mozilla.components.feature.accounts.FirefoxAccountsAuthFeature
 import mozilla.components.feature.tabs.TabsUseCases
-import mozilla.components.service.fxa.FxaAccountManager
+import mozilla.components.service.fxa.manager.FxaAccountManager
 
 /**
  * Component group which encapsulates foreground-friendly services.
