@@ -4,10 +4,12 @@ import subprocess
 from variant import Variant
 
 
-def load_variants():
+def load_variants(build_type: str):
     variants_json = _run_gradle_process('printBuildVariants', 'variants: ')
     variants = json.loads(variants_json)
-    return [Variant.from_gradle_variant_string(raw_variant) for raw_variant in variants]
+    return [Variant(variant_dict['name'], variant_dict['abi'], variant_dict['isSigned'], variant_dict['buildType'])
+            for variant_dict in variants
+            if variant_dict['buildType'] == build_type]
 
 
 def load_geckoview_nightly_version():
@@ -17,8 +19,9 @@ def load_geckoview_nightly_version():
 
 
 def _run_gradle_process(gradle_command, output_prefix):
-    process = subprocess.Popen(["./gradlew", "--no-daemon", "--quiet", gradle_command],
+    process = subprocess.Popen(["./gradlew", "--quiet", gradle_command],
                                stdout=subprocess.PIPE)
+    print('Running gradle command: "{}"...'.format(gradle_command))
     output, err = process.communicate()
     exit_code = process.wait()
 

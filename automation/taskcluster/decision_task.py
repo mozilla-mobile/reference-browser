@@ -4,7 +4,7 @@ import arrow
 from decisionlib.decisionlib import *
 
 from gradle import load_geckoview_nightly_version, load_variants
-from variant import Variant, ABIS
+from variant import Variant
 
 
 class Track(Enum):
@@ -44,13 +44,13 @@ def variant_assemble_task(scheduler: Scheduler, variant: Variant):
         'assemble{}'.format(variant.for_gradle_command),
     ) \
         .with_artifact(AndroidArtifact('public/target.apk', variant.gradle_apk_path())) \
-        .with_treeherder('{}(A)'.format(variant.engine), 'build', variant.platform(), 1) \
+        .with_treeherder('{}(A)'.format(variant.build_type), 'build', variant.platform, 1) \
         .schedule(scheduler)
 
 
 def variant_test_task(scheduler: Scheduler, variant: Variant):
     gradle_task('test: {}'.format(variant.raw), 'test{}UnitTest'.format(variant.for_gradle_command)) \
-        .with_treeherder('{}(T)'.format(variant.engine), 'test', variant.platform(), 1) \
+        .with_treeherder('{}(T)'.format(variant.build_type), 'test', variant.platform, 1) \
         .schedule(scheduler)
 
 
@@ -61,9 +61,28 @@ def pull_request(scheduler: Scheduler, pr_title):
         return {}
 
     scheduler.append_all(lint_tasks())
-    for variant in load_variants():
+    for variant in load_variants('debug'):
         variant_assemble_task(scheduler, variant)
         variant_test_task(scheduler, variant)
+
+
+def raptor_routes(variant: Variant, context: ConfigurationContext):
+    return [
+        route.format(
+            prefix='index.project.mobile.reference-browser.v2.branch.master',
+            year=context.date.year,
+            month=context.date.month,
+            day=context.date.day,
+            commit=context.commit,
+            build_type=variant.build_type,
+            abi=variant.abi,
+        ) for route in (
+            '{prefix}.revision.{commit}.{build_type}.{abi}'
+            '{prefix}.latest.{build_type}.{abi}'
+            '{prefix}.pushdate.{year}.{month}.{day}.revision.{commit}.{build_type}.{abi}',
+            '{prefix}.pushdate.{year}.{month}.{day}.latest.{build_type}.{abi}',
+        )
+    ]
 
 
 def master_push(
@@ -72,43 +91,70 @@ def master_push(
         gecko_revision: str
 ):
     scheduler.append_all(lint_tasks())
-    for variant in load_variants():
-        assemble_task_id = variant_assemble_task(scheduler, variant)
+    for variant in load_variants('debug'):
+        variant_assemble_task(scheduler, variant)
         variant_test_task(scheduler, variant)
 
-        if variant.abi in ('aarch64', 'arm') and variant.build_type == 'releaseRaptor':
-            sign_task_id = mobile_sign_task(
-                'sign: {}'.format(variant.raw),
-                'autograph_apk_reference_browser',
-                SigningType.DEP,
-                (assemble_task_id, ['public/target.apk']),
-            ) \
-                .with_treeherder('{}(As)'.format(variant.engine), 'other', variant.platform(), 1) \
-                .schedule(scheduler)
+    for variant in [Variant.from_values(abi, False, 'raptor') for abi in ('aarch64', 'arm')]:
+        assemble_task_id = variant_assemble_task(scheduler, variant)
 
+        sign_task_id = mobile_sign_task(
+            'sign: {}'.format(variant.raw),
+            'autograph_apk_reference_browser',
+            SigningType.DEP,
+            (assemble_task_id, ['public/target.apk']),
+        ) \
+            .map(lambda task, context: task.with_routes(raptor_routes(variant, context))) \
+            .with_treeherder('{}(As)'.format(variant.build_type), 'other', variant.platform, 1) \
+            .schedule(scheduler)
+
+        def variant_raptor_task(task_name: str, test_name: str, treeherder_symbol: str,
+                                test_linux_args: List[str] = ()):
             mobile_raptor_task(
-                'raptor speedometer: {}'.format(variant.raw),
+                task_name,
+                test_name,
                 (sign_task_id, 'public/target.apk'),
                 mozharness_task_id,
                 variant.abi == 'arm',
                 'refbrow',
                 'org.mozilla.reference.browser',
                 'GeckoViewActivity',
-                gecko_revision
+                gecko_revision,
+                test_linux_args,
             ) \
-                .with_treeherder('sp', 'test', variant.platform(), 2) \
+                .with_treeherder(treeherder_symbol, 'test', variant.platform, 2) \
                 .schedule(scheduler)
 
+        variant_raptor_task(
+            'raptor speedometer: {}'.format(variant.raw),
+            'raptor-speedometer',
+            'Rap-P(sp)'
+        ),
 
-def release_sign_task_routes(track: Track, date: datetime.datetime, commit: str):
+        variant_raptor_task(
+            'raptor speedometer power: {}'.format(variant.raw),
+            'raptor-speedometer',
+            'Rap(sp)',
+            ['--power-test', '--page-cycles 5', '--host HOST_IP'],
+        )
+
+        for suite in range(1, 11):
+            variant_raptor_task(
+                'raptor tp6m-{}'.format(suite),
+                'raptor-tp6m-{}'.format(suite),
+                'Rap(tp6m-{})'.format(suite)
+            )
+
+
+def release_sign_task_routes(track: Track, context: ConfigurationContext):
     index_release = 'signed-nightly' if track == Track.NIGHTLY else 'staging-signed-nightly'
     return [
         route.format(
             prefix='index.project.mobile.reference-browser.{}'.format(index_release),
-            year=date.year,
-            month=date.month,
-            day=date.day,
-            commit=commit,
+            year=context.date.year,
+            month=context.date.month,
+            day=context.date.day,
+            commit=context.commit,
         ) for route in (
             '{prefix}.nightly.{year}.{month}.{day}.latest',
             '{prefix}.nightly.{year}.{month}.{day}.revision.{commit}',
@@ -117,19 +163,17 @@ def release_sign_task_routes(track: Track, date: datetime.datetime, commit: str)
     ]
 
 
-def release(scheduler: Scheduler, track: Track, date: datetime.datetime, commit: str):
+def release(scheduler: Scheduler, track: Track, version_name: str):
     prefix_secret = '{}/project/mobile'.format(
         'garbage/staging' if track == Track.STAGING_NIGHTLY else '')
     sentry_secret = '{}/reference-browser/sentry'.format(prefix_secret)
     nimbledroid_secret = '{}/reference-browser/nimbledroid'.format(prefix_secret)
+    variants = load_variants('nightly')
 
-    assemble_task_id = gradle_task('assemble', 'assembleRelease') \
+    assemble_task_id = gradle_task('assemble', 'assembleNightly -PversionName={}'.format(version_name)) \
         .with_artifacts(
-        [AndroidArtifact(
-            'public/target.{}.apk'.format(abi),
-            "geckoNightly{}/release/app-geckoNightly-{}-release-unsigned.apk".format(
-                abi.capitalize(), abi)
-        ) for abi in ABIS]) \
+        [AndroidArtifact('public/target.{}.apk'.format(variant.abi), variant.gradle_apk_path())
+         for variant in variants]) \
         .with_file_secret(sentry_secret, 'dsn', '.sentry_token') \
         .map(lambda task, _: task.with_treeherder('NA', 'build', 'android-all', 1) if track == Track.NIGHTLY else None) \
         .map(lambda task, _: task.with_notify_owner() if track == Track.NIGHTLY else None) \
@@ -139,16 +183,16 @@ def release(scheduler: Scheduler, track: Track, date: datetime.datetime, commit:
         'Sign',
         'autograph_apk_reference_browser',
         SigningType.RELEASE if track == Track.NIGHTLY else SigningType.DEP,
-        *[(assemble_task_id, ['public/target.{}.apk'.format(abi) for abi in ABIS])],
+        *[(assemble_task_id, ['public/target.{}.apk'.format(variant.abi) for variant in variants])],
     ) \
         .map(lambda task, _: task.with_treeherder('Ns', 'other', 'android-all', 1) if track == Track.NIGHTLY else None) \
-        .with_routes(release_sign_task_routes(track, date, commit)) \
+        .map(lambda task, context: task.with_routes(release_sign_task_routes(track, context))) \
         .schedule(scheduler)
 
     mobile_google_play_task(
         'Push',
         'nightly',
-        [(sign_task_id, ['public/target.{}.apk'.format(abi) for abi in ABIS])],
+        [(sign_task_id, ['public/target.{}.apk'.format(variant.abi) for variant in variants])],
     ) \
         .map(lambda task, _: task.with_treeherder('gp', 'other', 'android-all', 1) if track == Track.NIGHTLY else None) \
         .schedule(scheduler)
@@ -193,12 +237,10 @@ def main():
     pr_parser.add_argument('--pr-title', required=True)
 
     release_parser = command_subparser.add_parser('release')
-    release_parser.add_argument('--date', required=True)
-    release_parser.add_argument('--track', required=True,
-                                choices=['nightly', 'staging-nightly'])
+    release_parser.add_argument('--track', required=True, choices=['nightly', 'staging-nightly'])
 
     result = parser.parse_args()
-    checkout = Checkout.from_environment()
+    trigger = Trigger.from_environment()
     queue = TaskclusterQueue.from_environment()
     scheduler = Scheduler()
     if result.command == 'pull-request':
@@ -210,10 +252,10 @@ def main():
             .task(mozharness_task_id)['payload']['env']['GECKO_HEAD_REV']
         master_push(scheduler, mozharness_task_id, gecko_revision)
     else:
-        date = arrow.get(result.date)
-        release(scheduler, Track(result.track), date, checkout.commit)
+        version_name = '1.0.{}'.format(trigger.date.strftime('%y%V'))
+        release(scheduler, Track(result.track), version_name)
 
-    scheduler.schedule_tasks(queue, checkout, Trigger.from_environment())
+    scheduler.schedule_tasks(queue, Checkout.from_environment(), Trigger.from_environment())
 
 
 if __name__ == '__main__':

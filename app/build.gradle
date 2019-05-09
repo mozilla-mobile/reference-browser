@@ -276,7 +276,7 @@ dependencies {
 }
 
 // -------------------------------------------------------------------------------------------------
-// Task for printing all vuild variants to build variants in parallel in automation
+// Task for printing all build variants to build variants in parallel in automation
 // -------------------------------------------------------------------------------------------------
 task printBuildVariants {
     doLast {

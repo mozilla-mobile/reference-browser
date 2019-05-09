@@ -101,6 +101,7 @@ tasks:
               DECISIONLIB_TRUST_LEVEL: ${trust_level}
               DECISIONLIB_DECISION_TASK_ID: ${decision_task_id}
               DECISIONLIB_SCHEDULER_ID: ${scheduler_id}
+              DECISIONLIB_DATE: ${now}
               DECISIONLIB_CHECKOUT_REF: ${head_branch}
               DECISIONLIB_OWNER: ${user}@users.noreply.github.com
               DECISIONLIB_SOURCE: ${repository}/raw/${head_rev}/.taskcluster.yml
@@ -255,7 +256,7 @@ tasks:
                           && pip3 install arrow
                           && python3 automation/taskcluster/decision_task.py \
                                   raptor \
-                                  ${staging_flag} --date ${now}
+                                  ${staging_flag}
                             artifacts:
                               public/task-graph.json:
                                 type: file
