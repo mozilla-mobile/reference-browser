@@ -7,6 +7,7 @@ package org.mozilla.reference.browser.components
 import android.content.Context
 import android.content.SharedPreferences
 import android.preference.PreferenceManager
+import mozilla.components.browser.icons.BrowserIcons
 import mozilla.components.browser.session.SessionManager
 import mozilla.components.browser.session.storage.SessionStorage
 import mozilla.components.browser.storage.sync.PlacesHistoryStorage
@@ -68,6 +69,9 @@ class Core(private val context: Context) {
                 .periodicallyInForeground(interval = 30, unit = TimeUnit.SECONDS)
                 .whenGoingToBackground()
                 .whenSessionsChange()
+
+            // Install the "icons" WebExtension to automatically load icons for every visited website.
+            icons.install(engine, sessionManager = this)
         }
     }
 
@@ -76,6 +80,11 @@ class Core(private val context: Context) {
      * private sessions).
      */
     val historyStorage by lazy { PlacesHistoryStorage(context) }
+
+    /**
+     * Icons component for loading, caching and processing website icons.
+     */
+    val icons by lazy { BrowserIcons(context, client) }
 
     /**
      * Constructs a [TrackingProtectionPolicy] based on current preferences.
