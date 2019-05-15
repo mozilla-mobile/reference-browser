@@ -11,26 +11,22 @@
     android:layout_height="match_parent"
     tools:context=".BrowserActivity">
 
-    <FrameLayout
+    <mozilla.components.concept.engine.EngineView
+        android:id="@+id/engineView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        app:layout_behavior="mozilla.components.feature.session.behavior.EngineViewBottomBehavior" />
 
-        <mozilla.components.concept.engine.EngineView
-            android:id="@+id/engineView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-
-        <mozilla.components.browser.awesomebar.BrowserAwesomeBar
-            android:id="@+id/awesomeBar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="4dp"
-            android:visibility="gone"
-            mozac:awesomeBarTitleTextColor="#ffffff"
-            mozac:awesomeBarDescriptionTextColor="#dddddd"
-            mozac:awesomeBarChipTextColor="#ffffff"
-            mozac:awesomeBarChipBackgroundColor="#444444" />
-    </FrameLayout>
+    <mozilla.components.browser.awesomebar.BrowserAwesomeBar
+        android:id="@+id/awesomeBar"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="4dp"
+        android:visibility="gone"
+        mozac:awesomeBarTitleTextColor="#ffffff"
+        mozac:awesomeBarDescriptionTextColor="#dddddd"
+        mozac:awesomeBarChipTextColor="#ffffff"
+        mozac:awesomeBarChipBackgroundColor="#444444" />
 
     <mozilla.components.feature.findinpage.view.FindInPageBar
         android:id="@+id/findInPageBar"
