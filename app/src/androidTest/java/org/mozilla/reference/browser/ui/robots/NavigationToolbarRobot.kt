@@ -5,9 +5,8 @@
 package org.mozilla.reference.browser.ui.robots
 
 import android.net.Uri
-import androidx.test.InstrumentationRegistry
+import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
@@ -17,14 +16,17 @@ import androidx.test.espresso.action.ViewActions.pressImeActionButton
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.action.ViewActions.replaceText
 import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.uiautomator.By
 import androidx.test.uiautomator.UiDevice
+import androidx.test.uiautomator.Until
+import org.mozilla.reference.browser.helpers.TestAssetHelper.waitingTime
 
 /**
  * Implementation of Robot Pattern for the navigation toolbar  menu.
  */
 class NavigationToolbarRobot {
 
-    fun verifyNewTabAddressView() = newTabAddressText()
+    fun verifyNewTabAddressView() = assertNewTabAddressText()
     fun checkNumberOfTabsTabCounter(numTabs: String) = numberOfOpenTabsTabCounter.check(matches(withText(numTabs)))
 
     class Transition {
@@ -42,7 +44,7 @@ class NavigationToolbarRobot {
         }
 
         fun openThreeDotMenu(interact: ThreeDotMenuRobot.() -> Unit): ThreeDotMenuRobot.Transition {
-            mDevice.waitForIdle()
+            mDevice.wait(Until.findObject(By.text("Menu")), waitingTime)
             threeDotButton().click()
             ThreeDotMenuRobot().interact()
             return ThreeDotMenuRobot.Transition()
@@ -61,11 +63,12 @@ fun navigationToolbar(interact: NavigationToolbarRobot.() -> Unit): NavigationTo
     return NavigationToolbarRobot.Transition()
 }
 
-private fun threeDotMenuRecyclerViewDoesNotExist() = onView(withId(R.id.mozac_browser_menu_recyclerView))
-        .check(ViewAssertions.doesNotExist())
 private fun threeDotButton() = onView(ViewMatchers.withContentDescription("Menu"))
 private fun openTabTray() = onView(ViewMatchers.withId(R.id.counter_box))
-private fun newTabAddressText() = onView(ViewMatchers.withText("about:blank"))
 private var numberOfOpenTabsTabCounter = onView(ViewMatchers.withId(R.id.counter_text))
 private fun urlBar() = onView(ViewMatchers.withId(R.id.mozac_browser_toolbar_url_view))
 private fun awesomeBar() = onView(withId(R.id.mozac_browser_toolbar_edit_url_view))
+
+private fun assertNewTabAddressText() {
+    mDevice.wait(Until.findObject(By.text("Search or enter address")), waitingTime)
+}

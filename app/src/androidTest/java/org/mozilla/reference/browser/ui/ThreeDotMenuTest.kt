@@ -4,7 +4,7 @@
 
 package org.mozilla.reference.browser.ui
 
-import androidx.test.InstrumentationRegistry
+import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.uiautomator.UiDevice
 import okhttp3.mockwebserver.MockWebServer
 import org.junit.After
@@ -69,7 +69,6 @@ class ThreeDotMenuTest {
         }.openNavigationToolbar {
         }.openThreeDotMenu {
             verifyThreeDotMenuExists()
-
             verifyForwardButtonExists()
             verifyReloadButtonExists()
             verifyStopButtonExists()
@@ -126,7 +125,7 @@ class ThreeDotMenuTest {
         }.openNavigationToolbar {
         }.openThreeDotMenu {
 
-            // refresh page and verify
+        // refresh page and verify
         }.refreshPage {
             verifyPageContent("REFRESHED")
         }.openNavigationToolbar {
@@ -135,7 +134,11 @@ class ThreeDotMenuTest {
 
     @Test
     fun doShareTest() {
+        val loremIpsumWebPage = TestAssetHelper.getLoremIpsumAsset(mockWebServer)
+
         navigationToolbar {
+        }.enterUrlAndEnterToBrowser(loremIpsumWebPage.url) {
+        }.openNavigationToolbar {
         }.openThreeDotMenu {
         }.openShare {
             verifyContentPanel()
@@ -145,8 +148,6 @@ class ThreeDotMenuTest {
     @Test
     // finds specific text snippets in a lorem ipsum sample page
     fun findInPageTest() {
-        val mDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
-
         val loremIpsumWebPage = TestAssetHelper.getLoremIpsumAsset(mockWebServer)
 
         navigationToolbar {
@@ -157,6 +158,7 @@ class ThreeDotMenuTest {
             verifyFindInPageNextButton()
             verifyFindInPagePrevButton()
             verifyFindInPageCloseButton()
+            mDevice.waitForIdle()
             enterFindInPageQuery("lab")
             mDevice.waitForIdle()
             verifyFindNextInPageResult("1/3")
@@ -178,7 +180,11 @@ class ThreeDotMenuTest {
     // so less flaky, we only test redirect to github login
     // (redirect happens with / without WIFI enabled)
     fun reportIssueTest() {
+        val loremIpsumWebPage = TestAssetHelper.getLoremIpsumAsset(mockWebServer)
+
         navigationToolbar {
+        }.enterUrlAndEnterToBrowser(loremIpsumWebPage.url) {
+        }.openNavigationToolbar {
         }.openThreeDotMenu {
         }.reportIssue {
             verifyFXAUrl()
