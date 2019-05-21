@@ -4,13 +4,15 @@
 
 package org.mozilla.reference.browser.ui.robots
 
-import androidx.test.InstrumentationRegistry
+import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
+import androidx.test.uiautomator.By
 import androidx.test.uiautomator.UiDevice
 import androidx.test.uiautomator.UiSelector
+import androidx.test.uiautomator.Until
 import org.hamcrest.CoreMatchers.containsString
 import org.junit.Assert.assertTrue
 import org.mozilla.reference.browser.R
@@ -24,16 +26,18 @@ class BrowserRobot {
         val mDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
         val testContent = mDevice.findObject((UiSelector().textContains(expectedText)))
 
-        mDevice.waitForIdle()
         testContent.waitForExists(waitingTime)
         assertTrue(testContent.exists())
     }
 
     fun verifyFXAUrl() {
         val mDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
-        val redirectUrl = "https://accounts.firefox.com/"
+        // if WIFI off
+        val redirectUrl = "https://github.com/login"
+        // if WIFI on
+        // val redirectUrl = "https://accounts.firefox.com"
 
-        mDevice.waitForIdle()
+        mDevice.wait(Until.findObject(By.res("mozac_browser_toolbar_url_view")), waitingTime)
         onView(withId(R.id.mozac_browser_toolbar_url_view))
                 .check(matches(withText(containsString(redirectUrl))))
     }
