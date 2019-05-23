@@ -8,13 +8,15 @@ import org.junit.Rule
 import org.junit.Test
 import org.mozilla.reference.browser.helpers.BrowserActivityTestRule
 import org.mozilla.reference.browser.ui.robots.navigationToolbar
-import androidx.test.InstrumentationRegistry
+import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.uiautomator.UiDevice
 import androidx.test.uiautomator.UiSelector
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.matcher.ViewMatchers
+import androidx.test.espresso.matcher.ViewMatchers.withId
 import org.mozilla.reference.browser.helpers.click
 import org.junit.Before
+import org.mozilla.reference.browser.R
 
 /**
  *  Tests for verifying tab tray menu:
@@ -30,12 +32,14 @@ class TabTrayMenuTest {
     @Before
     // SetUp to close all tabs before starting each test
     fun setUp() {
+        val mDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
+
         fun optionsButton() = onView(ViewMatchers.withContentDescription("More options"))
         fun closeAllTabsButton() = onView(ViewMatchers.withText("Close All Tabs"))
         fun goBackButton() = onView(ViewMatchers.withContentDescription("back"))
+        val tabCounterButton = onView(withId(R.id.counter_text))
 
-        val mDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
-        val tabCounterButton = mDevice.findObject(UiSelector().descriptionContains("Tab Counter"))
+        mDevice.waitForIdle()
         tabCounterButton.click()
 
         val thereAreTabsOpenInTabTray = mDevice.findObject(UiSelector().text("about:blank")).exists()
@@ -59,9 +63,6 @@ class TabTrayMenuTest {
             verifyGoBackButton()
             verifyNewTabButton()
             verifyMenuButton()
-            verifyDefaultOpenTabTitle()
-            verifyCloseButtonInTabPreview()
-            verifyDefaultOpenTabThumbnail()
             goBackFromTabTrayTest()
         }
     }

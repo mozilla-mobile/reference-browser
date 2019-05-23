@@ -5,6 +5,7 @@
 package org.mozilla.reference.browser.ui.robots
 
 import androidx.test.espresso.Espresso
+import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.matcher.ViewMatchers
 
 /**
@@ -12,15 +13,16 @@ import androidx.test.espresso.matcher.ViewMatchers
  */
 class SettingsViewPrivacyRobot {
 
-    fun verifyPrivacyUpButton() = privacyUpButton()
+    fun verifyPrivacyUpButton() = assertPrivacyUpButton()
     fun verifyPrivacySettings() = assertPrivacySettingsView()
-    fun verifyTrackingProtectionHeading() = trackingProtectionHeading()
-    fun verifyTPEnableInNormalBrowsing() = tpEnableInNormalBrowsing()
-    fun verifyTPEnableinPrivateBrowsing() = tpEnableInPrivateBrowsing()
-    fun verifyDataChoicesHeading() = dataChoicesHeading()
+    fun verifyTrackingProtectionHeading() = assertTrackingProtectionHeading()
+    fun verifyTPEnableInNormalBrowsing() = assertTpEnableInNormalBrowsing()
+    fun verifyTPEnableinPrivateBrowsing() = assertTpEnableInPrivateBrowsing()
+    fun verifyDataChoicesHeading() = assertDataChoicesHeading()
+
     // verifyUseTelemetryToggle does not yet check that the client telemetry is disabled/enabled
-    fun verifyUseTelemetryToggle() = useTelemetryToggle()
-    fun verifyTelemetrySummary() = telemetrySummary()
+    fun verifyUseTelemetryToggle() = assertUseTelemetryToggle()
+    fun verifyTelemetrySummary() = assertTelemetrySummary()
 
     class Transition {
         fun settingsViewPrivacy(interact: SettingsViewPrivacyRobot.() -> Unit): SettingsViewPrivacyRobot.Transition {
@@ -30,10 +32,27 @@ class SettingsViewPrivacyRobot {
 }
 
 private fun privacyUpButton() = Espresso.onView(ViewMatchers.withContentDescription("Navigate up"))
-private fun assertPrivacySettingsView() = Espresso.onView(ViewMatchers.withText("Privacy Settings"))
+private fun privacySettingsView() = Espresso.onView(ViewMatchers.withText("Privacy Settings"))
 private fun trackingProtectionHeading() = Espresso.onView(ViewMatchers.withText("Tracking Protection"))
 private fun tpEnableInNormalBrowsing() = Espresso.onView(ViewMatchers.withText("Enable in Normal Browsing Mode"))
 private fun tpEnableInPrivateBrowsing() = Espresso.onView(ViewMatchers.withText("Enable in Private Browsing Mode"))
 private fun dataChoicesHeading() = Espresso.onView(ViewMatchers.withText("Data Choices"))
 private fun useTelemetryToggle() = Espresso.onView(ViewMatchers.withText("Use Telemetry"))
 private fun telemetrySummary() = Espresso.onView(ViewMatchers.withText("Send usage data"))
+
+private fun assertPrivacyUpButton() = privacyUpButton()
+        .check(ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+private fun assertPrivacySettingsView() = privacySettingsView()
+        .check(ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+private fun assertTrackingProtectionHeading() = trackingProtectionHeading()
+        .check(ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+private fun assertTpEnableInNormalBrowsing() = tpEnableInNormalBrowsing()
+        .check(ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+private fun assertTpEnableInPrivateBrowsing() = tpEnableInPrivateBrowsing()
+        .check(ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+private fun assertDataChoicesHeading() = dataChoicesHeading()
+        .check(ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+private fun assertUseTelemetryToggle() = useTelemetryToggle()
+        .check(ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+private fun assertTelemetrySummary() = telemetrySummary()
+        .check(ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
