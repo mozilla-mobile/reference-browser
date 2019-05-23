@@ -9,7 +9,7 @@ package org.mozilla.reference.browser.ui.robots
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.withId
-import androidx.test.InstrumentationRegistry
+import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
@@ -20,15 +20,15 @@ import org.mozilla.reference.browser.R
 class ThreeDotMenuRobot {
 
     fun verifyThreeDotMenuExists() = threeDotMenuRecyclerViewExists()
-    fun verifyForwardButtonExists() = forwardButton()
-    fun verifyReloadButtonExists() = refreshButton()
-    fun verifyStopButtonExists() = stopButton()
-    fun verifyShareButtonExists() = shareButton()
-    fun verifyRequestDesktopSiteToggleExists() = requestDesktopSiteToggle()
-    fun verifyFindInPageButtonExists() = findInPageButton()
-    fun verifyReportIssueExists() = reportIssueButton()
-    fun verifyOpenSettingsExists() = settingsButton()
 
+    fun verifyForwardButtonExists() = assertForwardButton()
+    fun verifyReloadButtonExists() = assertRefreshButton()
+    fun verifyStopButtonExists() = assertStopButton()
+    fun verifyShareButtonExists() = assertShareButton()
+    fun verifyRequestDesktopSiteToggleExists() = assertRequestDesktopSiteToggle()
+    fun verifyFindInPageButtonExists() = assertFindInPageButton()
+    fun verifyReportIssueExists() = assertReportIssueButton()
+    fun verifyOpenSettingsExists() = assertSettingsButton()
     fun verifyShareButtonDoesntExist() = assertShareButtonDoesntExist()
     fun verifyRequestDesktopSiteToggleDoesntExist() = assertRequestDesktopSiteToggleDoesntExist()
     fun verifyFindInPageButtonDoesntExist() = assertFindInPageButtonDoesntExist()
@@ -58,7 +58,6 @@ class ThreeDotMenuRobot {
 
             shareButton().click()
             device.pressBack()
-
             ContentPanelRobot().interact()
             return ContentPanelRobot.Transition()
         }
@@ -106,3 +105,20 @@ private fun assertShareButtonDoesntExist() = shareButton().check(ViewAssertions.
 private fun assertRequestDesktopSiteToggleDoesntExist() =
         requestDesktopSiteToggle().check(ViewAssertions.doesNotExist())
 private fun assertFindInPageButtonDoesntExist() = findInPageButton().check(ViewAssertions.doesNotExist())
+
+private fun assertForwardButton() = forwardButton()
+        .check(ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+private fun assertRefreshButton() = refreshButton()
+        .check(ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+private fun assertStopButton() = stopButton()
+        .check(ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+private fun assertShareButton() = shareButton()
+        .check(ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+private fun assertRequestDesktopSiteToggle() = requestDesktopSiteToggle()
+        .check(ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+private fun assertFindInPageButton() = findInPageButton()
+        .check(ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+private fun assertReportIssueButton() = reportIssueButton()
+        .check(ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+private fun assertSettingsButton() = settingsButton()
+        .check(ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))

@@ -4,11 +4,16 @@
 
 package org.mozilla.reference.browser.ui.robots
 
-import androidx.test.espresso.matcher.ViewMatchers.withText
+import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.assertion.ViewAssertions
+import androidx.test.espresso.matcher.ViewMatchers
+import androidx.test.uiautomator.By
+import androidx.test.uiautomator.Until
+import org.mozilla.reference.browser.helpers.TestAssetHelper.waitingTimeShort
 
 class ExternalAppsRobot {
-    fun verifyAndroidDefaultApps() = defaultAppsLayout()
-    fun verifyFxAQrCode() = fXAQrCode()
+    fun verifyAndroidDefaultApps() = assertDefaultAppsLayout()
+    fun verifyFxAQrCode() = assertFXAQrCode()
 
     class Transition {
         fun externalApps(interact: ExternalAppsRobot.() -> Unit): ExternalAppsRobot.Transition {
@@ -17,5 +22,10 @@ class ExternalAppsRobot {
     }
 }
 
-private fun defaultAppsLayout() = withText("Default apps")
-private fun fXAQrCode() = withText("Pairing")
+private fun fXAQrCode() = onView(ViewMatchers.withText("Pairing"))
+
+private fun assertDefaultAppsLayout() {
+    mDevice.wait(Until.findObject(By.text("Default apps")), waitingTimeShort)
+}
+private fun assertFXAQrCode() = fXAQrCode()
+        .check(ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))

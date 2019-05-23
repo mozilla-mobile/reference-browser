@@ -5,7 +5,9 @@
 package org.mozilla.reference.browser.ui.robots
 
 import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.matcher.ViewMatchers.withText
+import androidx.test.espresso.matcher.ViewMatchers
+import androidx.test.platform.app.InstrumentationRegistry
+import androidx.test.uiautomator.UiDevice
 
 /**
  * Implementation of Robot Pattern for the Content Panel.
@@ -14,10 +16,13 @@ class ContentPanelRobot {
     fun verifyContentPanel() = shareContentPanel()
 
     class Transition {
+        val mDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
+
         fun contentPanel(interact: ContentPanelRobot.() -> Unit): ContentPanelRobot.Transition {
+            mDevice.waitForIdle()
             return ContentPanelRobot.Transition()
         }
     }
 }
 
-private fun shareContentPanel() = onView(withText("Share with..."))
+private fun shareContentPanel() = onView((ViewMatchers.withText("Share")))

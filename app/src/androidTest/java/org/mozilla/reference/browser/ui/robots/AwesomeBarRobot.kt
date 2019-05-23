@@ -5,9 +5,7 @@
 package org.mozilla.reference.browser.ui.robots
 
 import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.action.ViewActions.clearText
 import androidx.test.espresso.matcher.ViewMatchers.withId
-import androidx.test.espresso.web.sugar.Web.onWebView
 import org.mozilla.reference.browser.R
 
 /**
@@ -15,8 +13,6 @@ import org.mozilla.reference.browser.R
  */
 
 class AwesomeBarRobot {
-
-    fun clearUrl() = urlBarSearch().perform(clearText())
 
     class Transition {
 
@@ -32,5 +28,5 @@ fun browser(interact: AwesomeBarRobot.() -> Unit): AwesomeBarRobot.Transition {
     AwesomeBarRobot().interact()
     return AwesomeBarRobot.Transition()
 }
-private fun webView() = onWebView()
+
 private fun urlBarSearch() = onView(withId(R.id.mozac_browser_toolbar_edit_url_view))

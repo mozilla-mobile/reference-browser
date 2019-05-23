@@ -5,7 +5,10 @@
 package org.mozilla.reference.browser.ui.robots
 
 import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.matcher.ViewMatchers
+import androidx.test.platform.app.InstrumentationRegistry
+import androidx.test.uiautomator.UiDevice
 import org.mozilla.reference.browser.helpers.click
 
 /**
@@ -15,18 +18,21 @@ import org.mozilla.reference.browser.helpers.click
 
 class TabTrayMoreOptionsMenuRobot {
 
-    fun verifyCloseAllTabsButton() = closeAllTabsButton()
-    fun verifyCloseAllPrivateTabsButton() = closeAllPrivateTabsButton()
+    fun verifyCloseAllTabsButton() = assertCloseAllTabsButton()
+    fun verifyCloseAllPrivateTabsButton() = assertCloseAllPrivateTabsButton()
 
     class Transition {
+        val mDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
 
         fun closeAllTabs(interact: NavigationToolbarRobot.() -> Unit): NavigationToolbarRobot {
+            mDevice.waitForIdle()
             closeAllTabsButton().click()
             NavigationToolbarRobot().interact()
             return NavigationToolbarRobot()
         }
 
         fun closeAllPrivateTabs(interact: NavigationToolbarRobot.() -> Unit): NavigationToolbarRobot.Transition {
+            mDevice.waitForIdle()
             closeAllPrivateTabsButton().click()
             NavigationToolbarRobot().interact()
             return NavigationToolbarRobot.Transition()
@@ -36,3 +42,8 @@ class TabTrayMoreOptionsMenuRobot {
 
 private fun closeAllTabsButton() = onView(ViewMatchers.withText("Close All Tabs"))
 private fun closeAllPrivateTabsButton() = onView(ViewMatchers.withText("Close Private Tabs"))
+
+private fun assertCloseAllTabsButton() = closeAllTabsButton()
+        .check(ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+private fun assertCloseAllPrivateTabsButton() = closeAllPrivateTabsButton()
+        .check(ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
