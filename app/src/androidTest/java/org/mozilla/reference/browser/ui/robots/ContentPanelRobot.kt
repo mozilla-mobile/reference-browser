@@ -10,7 +10,7 @@ import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.uiautomator.UiDevice
 
 /**
- * Implementation of Robot Pattern for the Content Panel.
+ * Implementation of Robot Pattern for the content panel.
  */
 class ContentPanelRobot {
     fun verifyContentPanel() = shareContentPanel()

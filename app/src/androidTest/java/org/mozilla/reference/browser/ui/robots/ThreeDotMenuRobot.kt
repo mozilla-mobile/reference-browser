@@ -17,6 +17,9 @@ import androidx.test.uiautomator.UiDevice
 import org.mozilla.reference.browser.helpers.click
 import org.mozilla.reference.browser.R
 
+/**
+ * Implementation of Robot Pattern for three dot menu.
+ */
 class ThreeDotMenuRobot {
 
     fun verifyThreeDotMenuExists() = threeDotMenuRecyclerViewExists()

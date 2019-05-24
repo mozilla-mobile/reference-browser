@@ -22,7 +22,7 @@ import androidx.test.uiautomator.Until
 import org.mozilla.reference.browser.helpers.TestAssetHelper.waitingTime
 
 /**
- * Implementation of Robot Pattern for the navigation toolbar  menu.
+ * Implementation of Robot Pattern for the navigation toolbar menu.
  */
 class NavigationToolbarRobot {
 

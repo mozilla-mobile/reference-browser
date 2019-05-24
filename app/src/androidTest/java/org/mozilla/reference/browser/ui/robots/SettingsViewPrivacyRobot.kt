@@ -7,6 +7,9 @@ package org.mozilla.reference.browser.ui.robots
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.matcher.ViewMatchers
+import androidx.test.uiautomator.By
+import androidx.test.uiautomator.Until
+import org.mozilla.reference.browser.helpers.TestAssetHelper
 
 /**
  * Implementation of Robot Pattern for the settings privacy menu.
@@ -39,9 +42,9 @@ private fun tpEnableInPrivateBrowsing() = Espresso.onView(ViewMatchers.withText(
 private fun dataChoicesHeading() = Espresso.onView(ViewMatchers.withText("Data Choices"))
 private fun useTelemetryToggle() = Espresso.onView(ViewMatchers.withText("Use Telemetry"))
 private fun telemetrySummary() = Espresso.onView(ViewMatchers.withText("Send usage data"))
-
-private fun assertPrivacyUpButton() = privacyUpButton()
-        .check(ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+private fun assertPrivacyUpButton() {
+    mDevice.wait(Until.findObject(By.text("Navigate up")), TestAssetHelper.waitingTimeShort)
+}
 private fun assertPrivacySettingsView() = privacySettingsView()
         .check(ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
 private fun assertTrackingProtectionHeading() = trackingProtectionHeading()

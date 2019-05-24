@@ -50,7 +50,7 @@ BUILDER = TaskBuilder(
 )
 
 
-def pr_or_push():
+def pr():
     if SKIP_TASKS_TRIGGER in PR_TITLE:
         print("Pull request title contains", SKIP_TASKS_TRIGGER)
         print("Exit")
@@ -74,6 +74,13 @@ def pr_or_push():
         other_tasks[taskcluster.slugId()] = craft_function()
 
     return (build_tasks, signing_tasks, other_tasks)
+
+
+def push():
+    all_tasks = pr()
+    other_tasks = all_tasks[-1]
+    other_tasks[taskcluster.slugId()] = BUILDER.craft_ui_tests_task()
+    return all_tasks 
 
 
 def raptor(is_staging):
@@ -154,8 +161,10 @@ if __name__ == "__main__":
 
     command = result.command
 
-    if command in ('pull-request', 'push'):
-        ordered_groups_of_tasks = pr_or_push()
+    if command in ('pull-request'):
+        ordered_groups_of_tasks = pr()
+    elif command in ('push'):
+        ordered_groups_of_tasks = push()
     elif command == 'raptor':
         ordered_groups_of_tasks = raptor(result.staging)
     elif command == 'nightly':

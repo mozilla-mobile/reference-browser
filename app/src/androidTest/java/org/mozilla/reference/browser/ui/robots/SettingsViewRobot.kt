@@ -11,7 +11,10 @@ import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
+import androidx.test.uiautomator.By
+import androidx.test.uiautomator.Until
 import org.mozilla.reference.browser.R
+import org.mozilla.reference.browser.helpers.TestAssetHelper
 import org.mozilla.reference.browser.helpers.click
 
 /**
@@ -103,8 +106,9 @@ private fun remoteDebuggingToggle() = Espresso.onView(ViewMatchers.withId(R.id.s
 private fun mozillaHeading() = Espresso.onView(ViewMatchers.withText("Mozilla"))
 private fun aboutReferenceBrowserButton() = Espresso.onView(ViewMatchers.withText("About Reference Browser"))
 
-private fun assertNavigateUpButton() = navigateUpButton()
-        .check(ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+private fun assertNavigateUpButton() {
+    mDevice.wait(Until.findObject(By.text("Navigate up")), TestAssetHelper.waitingTimeShort)
+}
 private fun assertSyncSigninButton() = syncSigninButton()
         .check(ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
 private fun assertSyncHistorySummary() = syncHistorySummary()

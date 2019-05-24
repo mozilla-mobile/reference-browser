@@ -24,7 +24,7 @@ import org.mozilla.reference.browser.helpers.assertIsChecked
 import org.mozilla.reference.browser.helpers.click
 
 /**
- * Implementation of Robot Pattern for the tab tray  menu.
+ * Implementation of Robot Pattern for the tab tray menu.
  */
 
 val mDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())

@@ -11,6 +11,9 @@ import androidx.test.uiautomator.By
 import androidx.test.uiautomator.Until
 import org.mozilla.reference.browser.helpers.TestAssetHelper.waitingTimeShort
 
+/**
+ * Implementation of Robot Pattern for any non-Reference Browser (external) apps.
+ */
 class ExternalAppsRobot {
     fun verifyAndroidDefaultApps() = assertDefaultAppsLayout()
     fun verifyFxAQrCode() = assertFXAQrCode()
