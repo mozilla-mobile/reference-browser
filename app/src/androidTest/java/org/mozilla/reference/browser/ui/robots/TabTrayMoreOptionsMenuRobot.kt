@@ -8,11 +8,14 @@ import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.platform.app.InstrumentationRegistry
+import androidx.test.uiautomator.By
 import androidx.test.uiautomator.UiDevice
+import androidx.test.uiautomator.Until
+import org.mozilla.reference.browser.helpers.TestAssetHelper
 import org.mozilla.reference.browser.helpers.click
 
 /**
- * Implementation of Robot Pattern for the menun in tab tray that shows more options.
+ * Implementation of Robot Pattern for menu in tab tray that shows more options.
  * So far only Close All Tabs is implemented.
  */
 
@@ -42,8 +45,9 @@ class TabTrayMoreOptionsMenuRobot {
 
 private fun closeAllTabsButton() = onView(ViewMatchers.withText("Close All Tabs"))
 private fun closeAllPrivateTabsButton() = onView(ViewMatchers.withText("Close Private Tabs"))
-
-private fun assertCloseAllTabsButton() = closeAllTabsButton()
-        .check(ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+private fun assertCloseAllTabsButton() {
+    val mDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
+    mDevice.wait(Until.findObject(By.res("Close All Tabs")), TestAssetHelper.waitingTime)
+}
 private fun assertCloseAllPrivateTabsButton() = closeAllPrivateTabsButton()
         .check(ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))

@@ -11,7 +11,6 @@ import org.mozilla.reference.browser.R
 /**
  * Implementation of Robot Pattern for awesomebar.
  */
-
 class AwesomeBarRobot {
 
     class Transition {

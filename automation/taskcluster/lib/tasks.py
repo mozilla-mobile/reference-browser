@@ -216,14 +216,55 @@ class TaskBuilder(object):
             }
         )
 
+    def craft_ui_tests_task(self):
+        artifacts = {
+            "public": {
+                "type": "directory",
+                "path": "/build/reference-browser/results",
+                "expires": taskcluster.stringDate(taskcluster.fromNow(DEFAULT_EXPIRES_IN))
+            }
+        }
+
+        env_vars = {
+            "GOOGLE_PROJECT": "moz-reference-browser-230023",
+            "GOOGLE_APPLICATION_CREDENTIALS": ".firebase_token.json"
+        }
+
+        gradle_commands = (
+            './gradlew --no-daemon clean assembleDebug assembleAndroidTest',
+        )
+
+        test_commands = (
+            'automation/taskcluster/androidTest/ui-test.sh arm -1',
+        )
+
+        command = ' && '.join(
+            cmd
+            for commands in (gradle_commands, test_commands)
+            for cmd in commands
+            if cmd
+        )
+
+        return self._craft_build_ish_task(
+            name='UI tests',
+            description='Execute Gradle tasks for UI tests',
+            command=command,
+            scopes=[
+                'secrets:get:project/mobile/reference-browser/firebase'
+            ],
+            artifacts=artifacts,
+            env_vars=env_vars,
+        )
+
     def _craft_build_ish_task(
         self, name, description, command, dependencies=None, artifacts=None, scopes=None,
-        routes=None, treeherder=None
+        routes=None, treeherder=None, env_vars=None
     ):
         dependencies = [] if dependencies is None else dependencies
         artifacts = {} if artifacts is None else artifacts
         scopes = [] if scopes is None else scopes
         routes = [] if routes is None else routes
+        env_vars = {} if env_vars is None else env_vars 
 
         full_command = ' && '.join([
             'export TERM=dumb',
@@ -244,9 +285,10 @@ class TaskBuilder(object):
 
         payload = {
             "features": features,
+            "env": env_vars, 
             "maxRunTime": 7200,
             # TODO Stop using this docker image
-            "image": "mozillamobile/android-components:1.15",
+            "image": "mozillamobile/android-components:1.17",
             "command": [
                 "/bin/bash",
                 "--login",
@@ -289,6 +331,9 @@ class TaskBuilder(object):
         deadline = taskcluster.fromNow('1 day')
         expires = taskcluster.fromNow(DEFAULT_EXPIRES_IN)
 
+        if self.trust_level == 3:
+            routes.append("tc-treeherder.v2.reference-browser.{}".format(self.commit))
+
         return {
             "provisionerId": provisioner_id,
             "workerType": worker_type,
@@ -302,9 +347,7 @@ class TaskBuilder(object):
             "priority": self.tasks_priority,
             "dependencies": [self.task_id] + dependencies,
             "requires": "all-completed",
-            "routes": routes + [
-                "tc-treeherder.v2.reference-browser.{}".format(self.commit)
-            ],
+            "routes": routes,
             "scopes": scopes,
             "payload": payload,
             "extra": {
