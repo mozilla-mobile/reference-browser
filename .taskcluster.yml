@@ -111,90 +111,43 @@ tasks:
             owner: ${user}@users.noreply.github.com
             source: ${repository}/raw/${head_rev}/.taskcluster.yml
       in:
-        $if: 'tasks_for in ["github-pull-request", "github-push"]'
-        then:
-          - $if: 'tasks_for == "github-pull-request" && event["action"] in ["opened", "reopened", "synchronize"]'
-            then:
-              $let:
-                pull_request_title: ${event.pull_request.title}
-                pull_request_number: ${event.pull_request.number}
-                pull_request_url: ${event.pull_request.html_url}
-              in:
+        $flatten:
+          $if: 'tasks_for in ["github-pull-request", "github-push"]'
+          then:
+            - $if: 'tasks_for == "github-pull-request" && event["action"] in ["opened", "reopened", "synchronize"]'
+              then:
+                $let:
+                  pull_request_title: ${event.pull_request.title}
+                  pull_request_number: ${event.pull_request.number}
+                  pull_request_url: ${event.pull_request.html_url}
+                in:
+                  $mergeDeep:
+                    - {$eval: 'default_task_definition'}
+                    - scopes:
+                        - ${assume_scope_prefix}:pull-request
+                      payload:
+                        command:
+                          - >-
+                            cd ..
+                            && git clone ${repository}
+                            && cd reference-browser
+                            && git config advice.detachedHead false
+                            && git checkout ${head_rev}
+                            && python automation/taskcluster/decision_task.py pull-request
+                        env:
+                          GITHUB_PULL_TITLE: ${pull_request_title}
+                      extra:
+                        treeherder:
+                          symbol: D-PR
+                      metadata:
+                        name: 'Reference-Browser - Decision task (Pull Request #${pull_request_number})'
+                        description: 'Building and testing the Reference Browser - triggered by [#${pull_request_number}](${pull_request_url})'
+            - $if: 'tasks_for == "github-push" && head_branch[:10] != "refs/tags/"'
+              then:
                 $mergeDeep:
                   - {$eval: 'default_task_definition'}
                   - scopes:
-                      - ${assume_scope_prefix}:pull-request
-                    payload:
-                      command:
-                        - >-
-                          cd ..
-                          && git clone ${repository}
-                          && cd reference-browser
-                          && git config advice.detachedHead false
-                          && git checkout ${head_rev}
-                          && python automation/taskcluster/decision_task.py pull-request
-                      env:
-                        GITHUB_PULL_TITLE: ${pull_request_title}
-                    extra:
-                      treeherder:
-                        symbol: D-PR
-                    metadata:
-                      name: 'Reference-Browser - Decision task (Pull Request #${pull_request_number})'
-                      description: 'Building and testing the Reference Browser - triggered by [#${pull_request_number}](${pull_request_url})'
-          - $if: 'tasks_for == "github-push" && head_branch[:10] != "refs/tags/"'
-            then:
-              $mergeDeep:
-                - {$eval: 'default_task_definition'}
-                - scopes:
-                    - ${assume_scope_prefix}:branch:${short_head_branch}
-                  payload:
-                    features:
-                      chainOfTrust: true
-                    command:
-                      - >-
-                        cd ..
-                        && git clone ${repository}
-                        && cd reference-browser
-                        && git config advice.detachedHead false
-                        && git checkout ${head_rev}
-                        && python automation/taskcluster/decision_task.py push
-                    artifacts:
-                      public/task-graph.json:
-                        type: file
-                        path: /build/reference-browser/task-graph.json
-                        expires: ${expires_in}
-                      public/actions.json:
-                        type: file
-                        path: /build/reference-browser/actions.json
-                        expires: ${expires_in}
-                      public/parameters.yml:
-                        type: file
-                        path: /build/reference-browser/parameters.yml
-                        expires: ${expires_in}
-                  extra:
-                    treeherder:
-                      symbol: D
-                  metadata:
-                    name: Reference-Browser - Decision task
-                    description: Schedules the build and test tasks for Android components.
-        else:
-          - $if: 'tasks_for == "cron"'
-            then:
-              $let:
-                command_staging_flag:
-                  $if: 'trust_level == 3'
-                  then: ''
-                  else: '--staging'
-
-                assume_scope:
-                  $if: 'trust_level == 3'
-                  then: assume:hook-id:project-mobile/reference-browser-nightly
-                  else: assume:hook-id:project-mobile/reference-browser-nightly-staging
-              in:
-                $mergeDeep:
-                  - {$eval: 'default_task_definition'}
-                  - scopes:
-                      - ${assume_scope}
+                      - ${assume_scope_prefix}:branch:${short_head_branch}
                     payload:
                       features:
                         chainOfTrust: true
@@ -203,10 +156,9 @@ tasks:
                           cd ..
                           && git clone ${repository}
                           && cd reference-browser
-                          && git checkout ${event.release.tag_name}
-                          && python automation/taskcluster/decision_task.py \
-                            nightly \
-                            ${command_staging_flag}
+                          && git config advice.detachedHead false
+                          && git checkout ${head_rev}
+                          && python automation/taskcluster/decision_task.py push
                       artifacts:
                         public/task-graph.json:
                           type: file
@@ -221,10 +173,99 @@ tasks:
                           path: /build/reference-browser/parameters.yml
                           expires: ${expires_in}
                     extra:
-                      cron: {$json: {$eval: 'cron'}}
-                      tasks_for: ${tasks_for}
                       treeherder:
-                        symbol: N
+                        symbol: D
                     metadata:
-                      name: Reference-Browser - Nightly Decision Task
-                      description: Decision task scheduled by cron task [${cron.task_id}](https://tools.taskcluster.net/tasks/${cron.task_id})
+                      name: Reference-Browser - Decision task
+                      description: Schedules the build and test tasks for Android components.
+          else:
+            - $if: 'tasks_for == "cron"'
+              then:
+                $let:
+                  staging_flag:
+                    $if: 'trust_level == 3'
+                    then: ''
+                    else: '--staging'
+                in:
+                  - $if: 'cron.name == "nightly"'
+                    then:
+                      $mergeDeep:
+                        - {$eval: 'default_task_definition'}
+                        - scopes:
+                            - $if: 'trust_level == 3'
+                              then: assume:hook-id:project-mobile/reference-browser-nightly
+                              else: assume:hook-id:project-mobile/reference-browser-nightly-staging
+                          payload:
+                            features:
+                              chainOfTrust: true
+                            command:
+                              - >-
+                                cd ..
+                                && git clone ${repository}
+                                && cd reference-browser
+                                && git checkout ${event.release.tag_name}
+                                && python automation/taskcluster/decision_task.py \
+                                  nightly \
+                                  ${staging_flag}
+                            artifacts:
+                              public/task-graph.json:
+                                type: file
+                                path: /build/reference-browser/task-graph.json
+                                expires: ${expires_in}
+                              public/actions.json:
+                                type: file
+                                path: /build/reference-browser/actions.json
+                                expires: ${expires_in}
+                              public/parameters.yml:
+                                type: file
+                                path: /build/reference-browser/parameters.yml
+                                expires: ${expires_in}
+                          extra:
+                            cron: {$json: {$eval: 'cron'}}
+                            tasks_for: ${tasks_for}
+                            treeherder:
+                              symbol: nightly-D
+                          metadata:
+                            name: Reference-Browser - Nightly Decision Task
+                            description: Decision task scheduled by cron task [${cron.task_id}](https://tools.taskcluster.net/tasks/${cron.task_id})
+                  - $if: 'cron.name == "raptor"'
+                    then:
+                      $mergeDeep:
+                        - {$eval: 'default_task_definition'}
+                        - scopes:
+                            - $if: 'trust_level == 3'
+                              then: assume:hook-id:project-mobile/reference-browser-raptor
+                              else: assume:hook-id:project-mobile/reference-browser-raptor-staging
+                          payload:
+                            features:
+                              chainOfTrust: true
+                            command:
+                              - >-
+                                cd ..
+                                && git clone ${repository}
+                                && cd reference-browser
+                                && git checkout ${event.release.tag_name}
+                                && python automation/taskcluster/decision_task.py \
+                                  raptor \
+                                  ${staging_flag}
+                            artifacts:
+                              public/task-graph.json:
+                                type: file
+                                path: /build/reference-browser/task-graph.json
+                                expires: ${expires_in}
+                              public/actions.json:
+                                type: file
+                                path: /build/reference-browser/actions.json
+                                expires: ${expires_in}
+                              public/parameters.yml:
+                                type: file
+                                path: /build/reference-browser/parameters.yml
+                                expires: ${expires_in}
+                          extra:
+                            cron: {$json: {$eval: 'cron'}}
+                            tasks_for: ${tasks_for}
+                            treeherder:
+                              symbol: raptor-D
+                          metadata:
+                            name: Reference-Browser - Raptor Decision Task
+                            description: Decision task scheduled by cron task [${cron.task_id}](https://tools.taskcluster.net/tasks/${cron.task_id})

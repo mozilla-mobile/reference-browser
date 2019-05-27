@@ -49,6 +49,7 @@ android {
             applicationIdSuffix ".debug"
         }
         raptor releaseTemplate >> { // the ">>" concatenates the raptor-specific options with the template
+            applicationIdSuffix ".raptor"
             manifestPlaceholders.isRaptorEnabled = "true"
             matchingFallbacks = ['release']
         }
@@ -279,10 +280,13 @@ dependencies {
 // -------------------------------------------------------------------------------------------------
 task printBuildVariants {
     doLast {
-        def buildVariants = android.applicationVariants.collect { variant ->
-            variant.name
-        }
-        println "variants: " + groovy.json.JsonOutput.toJson(buildVariants)
+        def variantData = android.applicationVariants.collect { variant -> [
+            name: variant.name,
+            buildType: variant.buildType.name,
+            abi: variant.productFlavors.find { it.dimension == 'abi' }.name,
+            isSigned: variant.signingReady,
+        ]}
+        println "variants: " + groovy.json.JsonOutput.toJson(variantData)
     }
 }
 
