@@ -51,7 +51,8 @@ def make_decision_task(params):
     context = {
         'tasks_for': 'cron',
         'cron': {
-            'task_id': params['cron_task_id']
+            'task_id': params['cron_task_id'],
+            'name': params['name'],
         },
         'now': datetime.datetime.utcnow().isoformat()[:23] + 'Z',
         'as_slugid': as_slugid,
@@ -80,6 +81,12 @@ def make_decision_task(params):
 
 
 def schedule():
+    parser = argparse.ArgumentParser(
+        description='Creates and submits a graph of tasks to Taskcluster for reference-browser'
+    )
+
+    parser.add_argument('name', choices=['nightly', 'raptor'])
+    result = parser.parse_args()
     queue = taskcluster.Queue({'baseUrl': 'http://taskcluster/queue/v1'})
 
     html_url, branch, head_rev = calculate_git_references(ROOT)
@@ -87,7 +94,8 @@ def schedule():
         'html_url': html_url,
         'head_rev': head_rev,
         'branch': branch,
-        'cron_task_id': os.environ.get('CRON_TASK_ID', '<cron_task_id>')
+        'cron_task_id': os.environ.get('CRON_TASK_ID', '<cron_task_id>'),
+        'name': result.name,
     }
     decision_task_id, decision_task = make_decision_task(params)
     schedule_task(queue, decision_task_id, decision_task)
