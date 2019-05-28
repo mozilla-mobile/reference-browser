@@ -98,7 +98,7 @@ tasks:
               SHORT_HEAD_BRANCH: ${short_head_branch}
               TASK_ID: ${decision_task_id}
               TASKS_PRIORITY: ${tasks_priority}
-              DECISIONLIB_TRUST_LEVEL: ${trust_level}
+              TRUST_LEVEL: ${trust_level}
               DECISIONLIB_DECISION_TASK_ID: ${decision_task_id}
               DECISIONLIB_SCHEDULER_ID: ${scheduler_id}
               DECISIONLIB_DATE: ${now}
@@ -135,11 +135,10 @@ tasks:
                         command:
                           - >-
                             cd ..
-                            && git clone ${repository}
-                            && cd reference-browser
-                            && git config advice.detachedHead false
-                            && git checkout ${head_rev}
-                            && python automation/taskcluster/decision_task.py pull-request
+                            && apt install -y python3-pip
+                            && pip3 install decisionlib-mhentges arrow
+                            && decisionlib schedule --ref ${head_branch} --revision ${head_rev} ${repository} \
+                              automation/taskcluster/decision_task.py pull-request --pr-title "${pull_request_title}"
                         env:
                           GITHUB_PULL_TITLE: ${pull_request_title}
                       extra:
@@ -160,11 +159,10 @@ tasks:
                       command:
                         - >-
                           cd ..
-                          && git clone ${repository}
-                          && cd reference-browser
-                          && git config advice.detachedHead false
-                          && git checkout ${head_rev}
-                          && python automation/taskcluster/decision_task.py push
+                          && apt install -y python3-pip
+                          && pip3 install decisionlib-mhentges arrow
+                          && decisionlib schedule --revision ${head_rev} ${repository} \
+                            automation/taskcluster/decision_task.py master-push
                       artifacts:
                         public/task-graph.json:
                           type: file
@@ -207,12 +205,10 @@ tasks:
                             command:
                               - >-
                                 cd ..
-                                && git clone ${repository}
-                                && cd reference-browser
-                                && git checkout ${event.release.tag_name}
-                                && python automation/taskcluster/decision_task.py \
-                                  nightly \
-                                  ${staging_flag}
+                                && apt install -y python3-pip
+                                && pip3 install decisionlib-mhentges arrow
+                                && decisionlib schedule --revision ${event.release.tag_name} ${repository} \
+                                  automation/taskcluster/decision_task.py nightly ${staging_flag}
                             artifacts:
                               public/task-graph.json:
                                 type: file
@@ -248,15 +244,10 @@ tasks:
                             command:
                               - >-
                                 cd ..
-                                && git clone ${repository}
-                                && cd reference-browser
-                                && git checkout ${event.release.tag_name}
-                                && apt install -y python3 python3-pip
-                          && pip3 install decisionlib-mhentges
-                          && pip3 install arrow
-                          && python3 automation/taskcluster/decision_task.py \
-                                  raptor \
-                                  ${staging_flag}
+                                && apt install -y python3-pip
+                                && pip3 install decisionlib-mhentges arrow
+                                && decisionlib schedule --revision ${event.release.tag_name} ${repository} \
+                                  automation/taskcluster/decision_task.py raptor ${staging_flag}
                             artifacts:
                               public/task-graph.json:
                                 type: file

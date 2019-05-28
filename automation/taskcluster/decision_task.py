@@ -1,6 +1,5 @@
 import argparse
 
-import arrow
 from decisionlib.decisionlib import *
 
 from gradle import load_geckoview_nightly_version, load_variants
@@ -58,7 +57,7 @@ def pull_request(scheduler: Scheduler, pr_title):
     if '[ci skip]' in pr_title:
         print('Pull request title contains "[ci skip]"')
         print('Exit')
-        return {}
+        return
 
     scheduler.append_all(lint_tasks())
     for variant in load_variants('debug'):
@@ -77,8 +76,8 @@ def raptor_routes(variant: Variant, context: ConfigurationContext):
             build_type=variant.build_type,
             abi=variant.abi,
         ) for route in (
-            '{prefix}.revision.{commit}.{build_type}.{abi}'
-            '{prefix}.latest.{build_type}.{abi}'
+            '{prefix}.revision.{commit}.{build_type}.{abi}',
+            '{prefix}.latest.{build_type}.{abi}',
             '{prefix}.pushdate.{year}.{month}.{day}.revision.{commit}.{build_type}.{abi}',
             '{prefix}.pushdate.{year}.{month}.{day}.latest.{build_type}.{abi}',
         )
@@ -221,7 +220,7 @@ def taskcluster_get_geckoview_task_id(geckoview_nightly_version):
 
     raptor_index = 'gecko.v2.mozilla-central.pushdate.{}.{:02}.{:02}.{}.firefox.linux64-debug' \
         .format(nightly_date.year, nightly_date.month, nightly_date.day, nightly_build_id)
-    return taskcluster.Index().findTask(raptor_index)['taskId']
+    return taskcluster.Index({'rootUrl': os.environ['TASKCLUSTER_PROXY_URL']}).findTask(raptor_index)['taskId']
 
 
 def main():
@@ -242,7 +241,7 @@ def main():
     result = parser.parse_args()
     trigger = Trigger.from_environment()
     queue = TaskclusterQueue.from_environment()
-    scheduler = Scheduler()
+    scheduler = Scheduler(TrustLevel(int(os.environ['TRUST_LEVEL'])))
     if result.command == 'pull-request':
         pull_request(scheduler, result.pr_title)
     elif result.command == 'master-push':
@@ -255,7 +254,7 @@ def main():
         version_name = '1.0.{}'.format(trigger.date.strftime('%y%V'))
         release(scheduler, Track(result.track), version_name)
 
-    scheduler.schedule_tasks(queue, Checkout.from_environment(), Trigger.from_environment())
+    scheduler.schedule_tasks(queue, Checkout.from_environment(), trigger)
 
 
 if __name__ == '__main__':
