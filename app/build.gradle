@@ -208,6 +208,7 @@ dependencies {
     implementation Deps.mozilla_feature_contextmenu
     implementation Deps.mozilla_feature_customtabs
     implementation Deps.mozilla_feature_findinpage
+    implementation Deps.mozilla_feature_media
     implementation Deps.mozilla_feature_sitepermissions
     implementation Deps.mozilla_feature_intent
     implementation Deps.mozilla_feature_search
