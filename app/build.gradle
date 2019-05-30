@@ -78,16 +78,22 @@ android {
                 abiFilter "armeabi-v7a"
             }
         }
+        aarch64 {
+            dimension "abi"
+            ndk {
+                abiFilter "arm64-v8a"
+            }
+        }
         x86 {
             dimension "abi"
             ndk {
                 abiFilter "x86"
             }
         }
-        aarch64 {
+        x86_64 {
             dimension "abi"
             ndk {
-                abiFilter "arm64-v8a"
+                abiFilter "x86_64"
             }
         }
     }
@@ -155,7 +161,9 @@ if (project.hasProperty("telemetry") && project.property("telemetry") == "true")
         // Our x86 builds need a higher version code to avoid installing ARM builds on an x86 device
         // with ARM compatibility mode.
 
-        if (variant.flavorName.contains("x86")) {
+        if (variant.flavorName.contains("x86_64")) {
+            versionCode = versionCode + 3
+	} else if (variant.flavorName.contains("x86")) {
             versionCode = versionCode + 2
         } else if (variant.flavorName.contains("aarch64")) {
             versionCode = versionCode + 1
@@ -235,8 +243,9 @@ dependencies {
 
     implementation Deps.mozilla_browser_engine_gecko_nightly
     armImplementation Gecko.geckoview_nightly_arm
-    x86Implementation Gecko.geckoview_nightly_x86
     aarch64Implementation Gecko.geckoview_nightly_aarch64
+    x86Implementation Gecko.geckoview_nightly_x86
+    x86_64Implementation Gecko.geckoview_nightly_x86_64
 
     implementation Deps.kotlin_stdlib
     implementation Deps.kotlin_coroutines
