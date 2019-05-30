@@ -21,7 +21,7 @@ _OFFICIAL_REPO_URL = 'https://github.com/mozilla-mobile/reference-browser'
 _DEFAULT_TASK_URL = 'https://queue.taskcluster.net/v1/task'
 
 _ARCH_APK_LOCATION_PATTERN = 'public/target.{}.apk'
-_SUPPORTED_ARCHITECTURES = ('aarch64', 'arm', 'x86')
+_SUPPORTED_ARCHITECTURES = ('aarch64', 'arm', 'x86', 'x86_64')
 _APKS_PATHS = [_ARCH_APK_LOCATION_PATTERN.format(arch) for arch in _SUPPORTED_ARCHITECTURES]
 
 class TaskBuilder(object):
