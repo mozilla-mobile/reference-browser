@@ -43,7 +43,8 @@ class ToolbarIntegration(
         val forward = BrowserMenuItemToolbar.Button(
             mozilla.components.ui.icons.R.drawable.mozac_ic_forward,
             iconTintColorResource = R.color.icons,
-            contentDescription = "Forward") {
+            contentDescription = "Forward",
+            isEnabled = { sessionManager.selectedSession?.canGoForward == true }) {
             sessionUseCases.goForward.invoke()
         }
 
