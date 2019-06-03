@@ -12,7 +12,6 @@ import androidx.preference.Preference.OnPreferenceClickListener
 import androidx.preference.PreferenceFragmentCompat
 import android.widget.Toast
 import android.widget.Toast.LENGTH_SHORT
-import mozilla.components.browser.session.Session
 import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.R.string.pref_key_firefox_account
 import org.mozilla.reference.browser.ext.getPreferenceKey
@@ -158,8 +157,10 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
     private fun getAboutPageListener(): OnPreferenceClickListener {
         return OnPreferenceClickListener {
-            activity?.finish()
-            requireComponents.core.sessionManager.add(Session("about:version"), true)
+            fragmentManager?.beginTransaction()
+                ?.replace(android.R.id.content, AboutFragment())
+                ?.addToBackStack(null)
+                ?.commit()
             true
         }
     }
