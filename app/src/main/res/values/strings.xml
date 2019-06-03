@@ -141,16 +141,15 @@
     <!-- About content -->
     <string name="about_content"><![CDATA[
 <p>%1$s puts you in control.</p>
-<p>Use it as a reference browser:
-  <ul>
-    <li>Learn how to build your own browser.</li>
-    <li>Contribute to making it easier to build browsers.</li>
-    <li>File bug reports!</li>
-  </ul>
+<p>Use it as a reference to:
+    <br>&bull; Learn how to build your own browser.
+    <br>&bull; Contribute to making it easier to build browsers.
+    <br>&bull; File bug reports!
 </p>
 <p>%1$s is produced by Mozilla. Our mission is to foster a healthy, open Internet.<br/>
     ]]></string>
 
     <string name="menu_share_with">Share with…</string>
+    <string name="toast_copied">Copied!</string>
 
 </resources>
