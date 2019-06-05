@@ -135,6 +135,7 @@ class BrowserFragment : Fragment(), BackHandler, UserInteractionHandler {
             feature = PromptFeature(
                 fragment = this,
                 sessionManager = requireComponents.core.sessionManager,
+                sessionId = sessionId,
                 fragmentManager = requireFragmentManager(),
                 onNeedToRequestPermissions = { permissions ->
                     requestPermissions(permissions, REQUEST_CODE_PROMPT_PERMISSIONS)
