@@ -95,7 +95,7 @@ class BrowserFragment : Fragment(), BackHandler, UserInteractionHandler {
                 requireFragmentManager(),
                 requireComponents.core.sessionManager,
                 requireComponents.useCases.tabsUseCases,
-                view,
+                view.parent as View,
                 sessionId),
             owner = this,
             view = view)
