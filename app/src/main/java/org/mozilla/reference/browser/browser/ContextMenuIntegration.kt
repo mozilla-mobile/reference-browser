@@ -10,7 +10,13 @@ import androidx.fragment.app.FragmentManager
 import kotlinx.android.synthetic.main.fragment_browser.view.*
 import mozilla.components.browser.session.SessionManager
 import mozilla.components.feature.contextmenu.ContextMenuCandidate
+import mozilla.components.feature.contextmenu.ContextMenuCandidate.Companion.createCopyImageLocationCandidate
+import mozilla.components.feature.contextmenu.ContextMenuCandidate.Companion.createCopyLinkCandidate
+import mozilla.components.feature.contextmenu.ContextMenuCandidate.Companion.createOpenImageInNewTabCandidate
+import mozilla.components.feature.contextmenu.ContextMenuCandidate.Companion.createSaveImageCandidate
+import mozilla.components.feature.contextmenu.ContextMenuCandidate.Companion.createShareLinkCandidate
 import mozilla.components.feature.contextmenu.ContextMenuFeature
+import mozilla.components.feature.contextmenu.DefaultSnackbarDelegate
 import mozilla.components.feature.tabs.TabsUseCases
 import mozilla.components.support.base.feature.LifecycleAwareFeature
 
@@ -22,8 +28,25 @@ class ContextMenuIntegration(
     parentView: View,
     sessionId: String? = null
 ) : LifecycleAwareFeature {
-    private val feature = ContextMenuFeature(fragmentManager, sessionManager,
-        ContextMenuCandidate.defaultCandidates(context, tabsUseCases, parentView), parentView.engineView, sessionId)
+
+    private val candidates = run {
+        if (sessionId != null) {
+            val snackbarDelegate = DefaultSnackbarDelegate()
+            listOf(
+                createCopyLinkCandidate(context, parentView, snackbarDelegate),
+                createShareLinkCandidate(context),
+                createOpenImageInNewTabCandidate(context, tabsUseCases, parentView, snackbarDelegate),
+                createSaveImageCandidate(context),
+                createCopyImageLocationCandidate(context, parentView, snackbarDelegate)
+            )
+        } else {
+            ContextMenuCandidate.defaultCandidates(context, tabsUseCases, parentView)
+        }
+    }
+
+    private val feature = ContextMenuFeature(
+        fragmentManager, sessionManager, candidates, parentView.engineView, sessionId
+    )
 
     override fun start() {
         feature.start()
