@@ -8,6 +8,7 @@ import android.app.Activity
 import android.content.Context
 import mozilla.components.browser.menu.BrowserMenuBuilder
 import mozilla.components.browser.menu.item.BrowserMenuItemToolbar
+import mozilla.components.browser.menu.item.BrowserMenuSwitch
 import mozilla.components.browser.menu.item.SimpleBrowserMenuItem
 import mozilla.components.browser.session.SessionManager
 import mozilla.components.browser.toolbar.BrowserToolbar
@@ -63,6 +64,16 @@ class CustomTabsIntegration(
             menuToolbar,
             SimpleBrowserMenuItem("Share") {
                 session?.url?.let { context.share(it) }
+            },
+
+            BrowserMenuSwitch("Request desktop site", {
+                session?.desktopMode ?: false
+            }) { checked ->
+                sessionUseCases.requestDesktopSite.invoke(checked, session)
+            },
+
+            SimpleBrowserMenuItem("Find in Page") {
+                FindInPageIntegration.launch?.invoke()
             }
         )
     }

@@ -9,6 +9,7 @@ import android.util.AttributeSet
 import android.view.View
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import mozilla.components.browser.session.SessionManager
+import mozilla.components.browser.session.runWithSessionIdOrSelected
 import mozilla.components.browser.toolbar.BrowserToolbar
 import mozilla.components.concept.engine.EngineView
 import mozilla.components.feature.findinpage.FindInPageFeature
@@ -19,6 +20,7 @@ import mozilla.components.support.base.feature.LifecycleAwareFeature
 
 class FindInPageIntegration(
     private val sessionManager: SessionManager,
+    private val sessionId: String? = null,
     private val view: FindInPageView,
     engineView: EngineView
 ) : LifecycleAwareFeature, BackHandler {
@@ -45,10 +47,10 @@ class FindInPageIntegration(
     }
 
     private fun launch() {
-        val session = sessionManager.selectedSession ?: return
-
-        view.asView().visibility = View.VISIBLE
-        feature.bind(session)
+        sessionManager.runWithSessionIdOrSelected(sessionId) {
+            view.asView().visibility = View.VISIBLE
+            feature.bind(it)
+        }
     }
 
     companion object {
