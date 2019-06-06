@@ -451,7 +451,7 @@ class TaskBuilder(object):
     def craft_push_task(self, signing_task_id, is_staging=True):
         payload = {
             "commit": True,
-            "google_play_track": 'nightly',
+            "channel": 'nightly',
             "upstreamArtifacts": [
                 {
                     "paths": _APKS_PATHS,
