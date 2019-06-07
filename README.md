@@ -36,13 +36,14 @@ Make sure you use the same Google Account for both steps.
 
 Signed Nightly builds can be downloaded from:
 
-* [⬇️ ARM64/Aarch64 devices (64 bit; Android 5+)](https://index.taskcluster.net/v1/task/project.mobile.reference-browser.signed-nightly.nightly.latest/artifacts/public/target.aarch64.apk)
-* [⬇️ ARM devices (32 bit; Android 5+)](https://index.taskcluster.net/v1/task/project.mobile.reference-browser.signed-nightly.nightly.latest/artifacts/public/target.arm.apk)
-* [⬇️ x86  devices (32 bit; Android 5+)](https://index.taskcluster.net/v1/task/project.mobile.reference-browser.signed-nightly.nightly.latest/artifacts/public/target.x86.apk)
+* [⬇️ ARM64/Aarch64 devices (64 bit; Android 5+)](https://index.taskcluster.net/v1/task/project.mobile.reference-browser.v2.nightly.latest/artifacts/public/target.aarch64.apk)
+* [⬇️ ARM devices (32 bit; Android 5+)](https://index.taskcluster.net/v1/task/project.mobile.reference-browser.v2.nightly.latest/artifacts/public/target.arm.apk)
+* [⬇️ x86_64  devices (64 bit; Android 5+)](https://index.taskcluster.net/v1/task/project.mobile.reference-browser.v2.nightly.latest/artifacts/public/target.x86_64.apk)
+* [⬇️ x86  devices (32 bit; Android 5+)](https://index.taskcluster.net/v1/task/project.mobile.reference-browser.v2.nightly.latest/artifacts/public/target.x86.apk)
 
 > Please note that these builds do not auto-update, you will have to keep up to date manually.
 
-The latest Nightly build task can be found [here](https://tools.taskcluster.net/index/project.mobile.reference-browser.signed-nightly.nightly/latest).
+The latest Nightly build task can be found [here](https://tools.taskcluster.net/index/project.mobile.reference-browser.v2.nightly/latest).
 
 # Getting Involved
 
