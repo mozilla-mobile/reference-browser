@@ -27,11 +27,10 @@ def get_debug_variants():
 
 def get_geckoview_versions():
     print("Fetching geckoview version from gradle")
-    output = _run_gradle_process('printGeckoviewVersions')
-    nightly_version = _extract_content_from_command_output(output, prefix='nightly: ')
-    nightly_version = nightly_version.strip('"')
-    print('Got nightly version: "{}"'.format(nightly_version))
-    return nightly_version
+    output = _run_gradle_process('printGeckoviewVersion')
+    geckoview_version = _extract_content_from_command_output(output, prefix='geckoviewVersion: ')
+    print('Got geckoview version: "{}"'.format(geckoview_version))
+    return geckoview_version
 
 
 def _run_gradle_process(gradle_command):
