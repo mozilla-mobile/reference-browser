@@ -281,7 +281,7 @@ class BrowserFragment : Fragment(), BackHandler, UserInteractionHandler {
                 it.onPermissionsResult(permissions, grantResults)
             }
             REQUEST_CODE_APP_PERMISSIONS -> sitePermissionFeature.withFeature {
-                it.onPermissionsResult(grantResults)
+                it.onPermissionsResult(permissions, grantResults)
             }
         }
     }
