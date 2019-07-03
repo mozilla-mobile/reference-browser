@@ -157,6 +157,7 @@ class BrowserFragment : Fragment(), BackHandler, UserInteractionHandler {
                     requireContext(),
                     requireComponents.core.sessionManager,
                     toolbar,
+                    engineView,
                     requireComponents.useCases.sessionUseCases,
                     id,
                     activity
