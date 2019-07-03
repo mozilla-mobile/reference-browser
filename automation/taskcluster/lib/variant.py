@@ -1,20 +1,19 @@
-class Variant:
-    def __init__(self, raw, abi, is_signed, build_type):
-        self.raw = raw
+class VariantApk:
+    def __init__(self, abi, file_name):
         self.abi = abi
-        self.build_type = build_type
-        self._is_signed = is_signed
-        self.for_gradle_command = raw[:1].upper() + raw[1:]
-        self.platform = 'android-{}-{}'.format(self.abi, self.build_type)
+        self._file_name = file_name
+        self.taskcluster_path = 'public/target.{}.apk'.format(abi)
 
-    def apk_absolute_path(self):
-        return '/build/reference-browser/app/build/outputs/apk/{abi}/{build_type}/app-{abi}-{build_type}{unsigned}.apk'.format(
-            build_type=self.build_type,
-            abi=self.abi,
-            unsigned='' if self._is_signed else '-unsigned',
+    def absolute_path(self, build_type):
+        return '/build/reference-browser/app/build/outputs/apk/{build_type}/{file_name}'.format(
+            build_type=build_type,
+            file_name=self._file_name
         )
 
-    @staticmethod
-    def from_values(abi, is_signed, build_type):
-        raw = abi + build_type[:1].upper() + build_type[1:]
-        return Variant(raw, abi, is_signed, build_type)
+
+class Variant:
+    def __init__(self, name, build_type, apks):
+        self.name = name
+        self.build_type = build_type
+        self.apks = apks
+        self.taskcluster_apk_paths = ['public/target.{}.apk'.format(apk.abi) for apk in apks]

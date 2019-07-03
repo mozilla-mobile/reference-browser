@@ -14,7 +14,7 @@ import argparse
 import datetime
 import taskcluster
 
-from lib.gradle import get_debug_variants, get_geckoview_versions
+from lib.gradle import get_geckoview_versions, get_variant
 from lib.tasks import (
     TaskBuilder,
     schedule_task_graph,
@@ -60,10 +60,10 @@ def pr():
     signing_tasks = {}
     other_tasks = {}
 
-    for variant in get_debug_variants():
-        assemble_task_id = taskcluster.slugId()
-        build_tasks[assemble_task_id] = BUILDER.craft_assemble_task(variant)
-        build_tasks[taskcluster.slugId()] = BUILDER.craft_test_task(variant)
+    variant = get_variant('debug')
+    assemble_task_id = taskcluster.slugId()
+    build_tasks[assemble_task_id] = BUILDER.craft_assemble_task(variant)
+    build_tasks[taskcluster.slugId()] = BUILDER.craft_test_task(variant)
 
     for craft_function in (
         BUILDER.craft_detekt_task,
@@ -92,27 +92,26 @@ def raptor(is_staging):
     mozharness_task_id = gecko_revision_for_version(geckoview_nightly_version)
     gecko_revision = taskcluster.Queue().task(mozharness_task_id)['payload']['env']['GECKO_HEAD_REV']
 
-    for variant in [Variant.from_values(abi, False, 'raptor') for abi in ('arm', 'aarch64')]:
-        assemble_task_id = taskcluster.slugId()
-        build_tasks[assemble_task_id] = BUILDER.craft_assemble_task(variant)
-        signing_task_id = taskcluster.slugId()
-        signing_tasks[signing_task_id] = BUILDER.craft_raptor_signing_task(
-            assemble_task_id, variant, is_staging)
+    variant = get_variant('raptor')
+    assemble_task_id = taskcluster.slugId()
+    build_tasks[assemble_task_id] = BUILDER.craft_assemble_task(variant)
+    signing_task_id = taskcluster.slugId()
+    signing_tasks[signing_task_id] = BUILDER.craft_raptor_signing_task(
+        assemble_task_id, variant, is_staging)
 
-        all_raptor_craft_functions = [
-            BUILDER.craft_raptor_tp6m_task(for_suite=i)
-            for i in range(1, 11)
-        ] + [
-            BUILDER.craft_raptor_speedometer_task,
-            BUILDER.craft_raptor_speedometer_power_task,
-        ]
+    all_raptor_craft_functions = [
+        BUILDER.craft_raptor_tp6m_task(for_suite=i)
+        for i in range(1, 11)
+    ] + [
+        BUILDER.craft_raptor_speedometer_task,
+        BUILDER.craft_raptor_speedometer_power_task,
+    ]
 
-        for craft_function in all_raptor_craft_functions:
-            args = (signing_task_id, mozharness_task_id, variant, gecko_revision)
-            other_tasks[taskcluster.slugId()] = craft_function(*args)
-            # we also want the arm APK to be tested on 64-bit-devices
-            if variant.abi == 'arm':
-                other_tasks[taskcluster.slugId()] = craft_function(*args, force_run_on_64_bit_device=True)
+    for craft_function in all_raptor_craft_functions:
+        args = (signing_task_id, mozharness_task_id, variant, gecko_revision)
+        other_tasks[taskcluster.slugId()] = craft_function('armeabi-v7a', *args)
+        other_tasks[taskcluster.slugId()] = craft_function('arm64-v8a', *args)
+        other_tasks[taskcluster.slugId()] = craft_function('armeabi-v7a', *args, force_run_on_64_bit_device=True)
 
     return (build_tasks, signing_tasks, other_tasks)
 
@@ -126,15 +125,16 @@ def nightly(is_staging):
     formatted_date = datetime.datetime.now().strftime('%y%V')
     version_name = '1.0.{}'.format(formatted_date)
     assemble_task_id = taskcluster.slugId()
-    build_tasks[assemble_task_id] = BUILDER.craft_assemble_nightly_task(version_name, is_staging)
+    variant = get_variant('nightly')
+    build_tasks[assemble_task_id] = BUILDER.craft_assemble_nightly_task(variant, version_name, is_staging)
 
     signing_task_id = taskcluster.slugId()
     signing_tasks[signing_task_id] = BUILDER.craft_nightly_signing_task(
-        assemble_task_id, is_staging=is_staging
+        assemble_task_id, variant, is_staging=is_staging
     )
 
     push_task_id = taskcluster.slugId()
-    push_tasks[push_task_id] = BUILDER.craft_push_task(signing_task_id, is_staging)
+    push_tasks[push_task_id] = BUILDER.craft_push_task(signing_task_id, variant, is_staging)
 
     other_tasks[taskcluster.slugId()] = BUILDER.craft_upload_apk_nimbledroid_task(assemble_task_id)
 
