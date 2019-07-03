@@ -6,16 +6,19 @@ package org.mozilla.reference.browser.browser
 
 import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import mozilla.components.browser.menu.BrowserMenuBuilder
 import mozilla.components.browser.menu.item.BrowserMenuItemToolbar
 import mozilla.components.browser.menu.item.BrowserMenuSwitch
 import mozilla.components.browser.menu.item.SimpleBrowserMenuItem
 import mozilla.components.browser.session.SessionManager
 import mozilla.components.browser.toolbar.BrowserToolbar
+import mozilla.components.concept.engine.EngineView
 import mozilla.components.feature.customtabs.CustomTabsToolbarFeature
 import mozilla.components.feature.session.SessionUseCases
 import mozilla.components.support.base.feature.BackHandler
 import mozilla.components.support.base.feature.LifecycleAwareFeature
+import org.mozilla.reference.browser.BrowserActivity
 import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.ext.share
 
@@ -23,6 +26,7 @@ class CustomTabsIntegration(
     context: Context,
     sessionManager: SessionManager,
     toolbar: BrowserToolbar,
+    engineView: EngineView,
     sessionUseCases: SessionUseCases,
     sessionId: String,
     activity: Activity?
@@ -74,6 +78,24 @@ class CustomTabsIntegration(
 
             SimpleBrowserMenuItem("Find in Page") {
                 FindInPageIntegration.launch?.invoke()
+            },
+
+            SimpleBrowserMenuItem("Open in Browser") {
+                // Release the session from this view so that it can immediately be rendered by a different view
+                engineView.release()
+
+                // Stip the CustomTabConfig to turn this Session into a regular tab and then select it
+                sessionManager.findSessionById(sessionId)?.let { session ->
+                    session.customTabConfig = null
+                    sessionManager.select(session)
+                }
+
+                // Close this activity since it is no longer displaying any session
+                activity?.finish()
+
+                // Now switch to the actual browser which should now display our new selected session
+                val intent = Intent(context, BrowserActivity::class.java)
+                context.startActivity(intent)
             }
         )
     }
