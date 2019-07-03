@@ -1,7 +1,10 @@
 include ':app'
 
-Properties localProperties = null;
-String settingAppServicesPath = "substitutions.application-services.dir";
+final String settingAppServicesPath = "substitutions.application-services.dir"
+final String settingAndroidComponentsPath = "substitutions.android-components.dir"
+
+Properties localProperties = null
+
 // FIXME: substitution configuration for android-components.
 // See https://github.com/mozilla-mobile/reference-browser/issues/365
 
@@ -14,7 +17,10 @@ if (file('local.properties').canRead()) {
 }
 
 if (localProperties != null) {
-    String appServicesLocalPath = localProperties.getProperty(settingAppServicesPath);
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // Substituting application services
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    final String appServicesLocalPath = localProperties.getProperty(settingAppServicesPath)
 
     if (appServicesLocalPath != null) {
         logger.lifecycle("Local configuration: substituting application-services modules from path: $appServicesLocalPath")
@@ -27,8 +33,26 @@ if (localProperties != null) {
                 substitute module('org.mozilla.appservices:rustlog') with project(':rustlog-library')
             }
         }
-
     } else {
         logger.lifecycle("Local configuration: application-services substitution path missing. Specify it via '$settingAppServicesPath' setting.")
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // Substituting android components
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    final String androidComponentsPath = localProperties.getProperty(settingAndroidComponentsPath)
+
+    if (androidComponentsPath != null) {
+        logger.lifecycle("Local configuration: substituting android-components modules from path: $androidComponentsPath")
+
+        includeBuild(androidComponentsPath) {
+            dependencySubstitution {
+                substitute module('org.mozilla.components:concept-engine') with project(':concept-engine')
+                substitute module('org.mozilla.components:feature-session') with project(':feature-session')
+                substitute module('org.mozilla.components:browser-engine-gecko-nightly') with project(':browser-engine-gecko-nightly')
+            }
+        }
+    } else {
+        logger.lifecycle("Local configuration: no android-components substitution via '$settingAndroidComponentsPath' set up.")
     }
 }
