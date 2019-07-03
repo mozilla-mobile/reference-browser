@@ -9,6 +9,8 @@ import android.content.Context
 import mozilla.components.concept.fetch.Client
 import mozilla.components.service.glean.Glean
 import mozilla.components.service.glean.config.Configuration
+import mozilla.components.service.experiments.Experiments
+import mozilla.components.service.experiments.Configuration as ExperimentsConfiguration
 import mozilla.components.support.base.facts.register
 import mozilla.components.support.base.log.Log
 import mozilla.components.support.base.log.logger.Logger
@@ -71,6 +73,7 @@ private fun setupGlean(context: Context) {
     Glean.initialize(context, Configuration(httpClient = lazy { context.components.core.client }))
     Glean.setUploadEnabled(BuildConfig.TELEMETRY_ENABLED && Settings.isTelemetryEnabled(context))
     GleanFactProcessor().register()
+    Experiments.initialize(context, ExperimentsConfiguration(httpClient = lazy { context.components.core.client }))
 }
 
 private fun setupCrashReporting(application: BrowserApplication) {
