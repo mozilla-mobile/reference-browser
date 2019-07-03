@@ -6,23 +6,18 @@ from __future__ import print_function
 import json
 import subprocess
 
-from lib.variant import Variant
+from lib.variant import VariantApk, Variant
 
 
-def get_debug_variants():
-    print("Fetching build variants from gradle")
-    output = _run_gradle_process('printBuildVariants')
-    content = _extract_content_from_command_output(output, prefix='variants: ')
-    variants = json.loads(content)
+def get_variant(build_type):
+    print("Fetching variant from gradle")
+    output = _run_gradle_process('printVariant', variantBuildType=build_type)
+    content = _extract_content_from_command_output(output, prefix='variant: ')
+    variant = json.loads(content)
 
-    if len(variants) == 0:
-        raise ValueError("Could not get build variants from gradle")
-
-    print("Got variants: {}".format(variants))
-    return [Variant(variant_dict['name'], variant_dict['abi'], variant_dict['isSigned'],
-                    variant_dict['buildType'])
-            for variant_dict in variants
-            if variant_dict['buildType'] == 'debug']
+    print("Got variant: {}".format(variant))
+    apks = [VariantApk(apk['abi'], apk['fileName']) for apk in variant['apks']]
+    return Variant(variant['name'], build_type, apks)
 
 
 def get_geckoview_versions():
@@ -33,8 +28,14 @@ def get_geckoview_versions():
     return geckoview_version
 
 
-def _run_gradle_process(gradle_command):
-    process = subprocess.Popen(["./gradlew", "--no-daemon", "--quiet", gradle_command], stdout=subprocess.PIPE)
+def _run_gradle_process(gradle_command, **kwargs):
+    gradle_properties = [
+        '-P{property_name}={value}'.format(property_name=property_name, value=value)
+        for property_name, value in kwargs.iteritems()
+    ]
+    process = subprocess.Popen(
+        ["./gradlew", "--no-daemon", "--quiet", gradle_command] + gradle_properties,
+        stdout=subprocess.PIPE)
     output, err = process.communicate()
     exit_code = process.wait()
 

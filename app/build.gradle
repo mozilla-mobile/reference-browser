@@ -280,17 +280,19 @@ dependencies {
 }
 
 // -------------------------------------------------------------------------------------------------
-// Task for printing all vuild variants to build variants in parallel in automation
+// Task for printing APK information for the requested variant
+// Usage: "./gradlew printVariant -PvariantBuildType=nightly"
 // -------------------------------------------------------------------------------------------------
-task printBuildVariants {
+task printVariant {
     doLast {
-        def variantData = android.applicationVariants.collect { variant -> [
-            name: variant.name,
-            buildType: variant.buildType.name,
-            abi: variant.productFlavors.find { it.dimension == 'abi' }.name,
-            isSigned: variant.signingReady,
-        ]}
-        println "variants: " + groovy.json.JsonOutput.toJson(variantData)
+        def rawVariant = android.applicationVariants.find { it.buildType.name == variantBuildType }
+        println "variant: " + groovy.json.JsonOutput.toJson([
+            name: rawVariant.name,
+            apks: rawVariant.variantData.outputScope.apkDatas.collect { [
+                abi: it.filters.find { it.filterType == 'ABI' }.identifier,
+                fileName: it.outputFileName
+            ] }
+        ])
     }
 }
 
