@@ -14,6 +14,7 @@ apply from: "$project.rootDir/automation/gradle/versionCode.gradle"
 apply plugin: 'org.mozilla.appservices'
 
 import com.android.build.gradle.internal.tasks.AppPreBuildTask
+import com.android.build.OutputFile
 
 appservices {
     defaultConfig {
@@ -68,36 +69,6 @@ android {
         execution 'ANDROIDX_TEST_ORCHESTRATOR'
     }
 
-    flavorDimensions "abi"
-
-    productFlavors {
-        // Processor architectures
-        arm {
-            dimension "abi"
-            ndk {
-                abiFilter "armeabi-v7a"
-            }
-        }
-        aarch64 {
-            dimension "abi"
-            ndk {
-                abiFilter "arm64-v8a"
-            }
-        }
-        x86 {
-            dimension "abi"
-            ndk {
-                abiFilter "x86"
-            }
-        }
-        x86_64 {
-            dimension "abi"
-            ndk {
-                abiFilter "x86_64"
-            }
-        }
-    }
-
     lintOptions {
         lintConfig file("lint.xml")
     }
@@ -110,7 +81,19 @@ android {
     packagingOptions {
         exclude 'META-INF/atomicfu.kotlin_module'
     }
+
+    splits {
+        abi {
+            enable true
+
+            reset()
+
+            include "x86", "armeabi-v7a", "arm64-v8a", "x86_64"
+        }
+    }
 }
+
+def baseVersionCode = generatedVersionCode
 
 android.applicationVariants.all { variant ->
 
@@ -149,11 +132,7 @@ if (project.hasProperty("telemetry") && project.property("telemetry") == "true")
 // -------------------------------------------------------------------------------------------------
 // Generating version codes for Google Play
 // -------------------------------------------------------------------------------------------------
-    def buildType = variant.buildType.name
-
     if (variant.buildType.buildConfigFields['IS_RELEASED']?.value) {
-        def versionCode = generatedVersionCode
-
         // The Google Play Store does not allow multiple APKs for the same app that all have the
         // same version code. Therefore we need to have different version codes for our ARM and x86
         // builds.
@@ -161,17 +140,29 @@ if (project.hasProperty("telemetry") && project.property("telemetry") == "true")
         // Our x86 builds need a higher version code to avoid installing ARM builds on an x86 device
         // with ARM compatibility mode.
 
-        if (variant.flavorName.contains("x86_64")) {
-            versionCode = versionCode + 3
-	} else if (variant.flavorName.contains("x86")) {
-            versionCode = versionCode + 2
-        } else if (variant.flavorName.contains("aarch64")) {
-            versionCode = versionCode + 1
-        }
+        def versionName = Config.releaseVersionName(project)
 
-        variant.outputs.all { output ->
-            versionCodeOverride = versionCode
-            versionNameOverride = Config.releaseVersionName(project)
+        variant.outputs.each { output ->
+            def abi = output.getFilter(OutputFile.ABI)
+
+            def versionCodeOverride
+
+            if (abi == "x86_64") {
+                versionCodeOverride = baseVersionCode + 3
+            } else if (abi == "x86") {
+                versionCodeOverride = baseVersionCode + 2
+            } else if (abi == "arm64-v8a") {
+                versionCodeOverride = baseVersionCode + 1
+            } else if (abi == "armeabi-v7a") {
+                versionCodeOverride = baseVersionCode
+            } else {
+                throw RuntimeException("Unknown ABI: $abi")
+            }
+
+            println("versionCode for $abi = $versionCodeOverride")
+
+            output.versionNameOverride = versionName
+            output.versionCodeOverride = versionCodeOverride
         }
 
         // If this is a release build, validate that "versionName" is set
