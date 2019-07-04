@@ -85,6 +85,7 @@ class BrowserFragment : Fragment(), BackHandler, UserInteractionHandler {
                 requireComponents.core.sessionManager,
                 requireComponents.useCases.sessionUseCases,
                 requireComponents.useCases.tabsUseCases,
+                requireComponents.useCases.webAppUseCases,
                 sessionId),
             owner = this,
             view = view)
@@ -249,19 +250,12 @@ class BrowserFragment : Fragment(), BackHandler, UserInteractionHandler {
         }
     }
 
-    @Suppress("ReturnCount")
     override fun onBackPressed(): Boolean {
-        return backButtonHandler.firstOrNull { it.onBackPressed() } != null
+        return backButtonHandler.any { it.onBackPressed() }
     }
 
     override fun onHomePressed(): Boolean {
-        var handled = false
-
-        pictureInPictureIntegration.withFeature {
-            handled = it.onHomePressed()
-        }
-
-        return handled
+        return pictureInPictureIntegration.get()?.onHomePressed() ?: false
     }
 
     override fun onPictureInPictureModeChanged(enabled: Boolean) {
