@@ -8,6 +8,7 @@ import android.content.Context
 import mozilla.components.browser.search.SearchEngineManager
 import mozilla.components.browser.session.SessionManager
 import mozilla.components.concept.engine.Settings
+import mozilla.components.feature.pwa.WebAppUseCases
 import mozilla.components.feature.search.SearchUseCases
 import mozilla.components.feature.session.SessionUseCases
 import mozilla.components.feature.session.SettingsUseCases
@@ -42,4 +43,9 @@ class UseCases(
      * Use cases that provide settings management.
      */
     val settingsUseCases by lazy { SettingsUseCases(engineSettings, sessionManager) }
+
+    /**
+     * Use cases that provide shortcut and progressive web app management.
+     */
+    val webAppUseCases by lazy { WebAppUseCases(context, sessionManager) }
 }
