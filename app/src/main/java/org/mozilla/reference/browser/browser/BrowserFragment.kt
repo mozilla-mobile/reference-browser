@@ -14,6 +14,7 @@ import kotlinx.android.synthetic.main.fragment_browser.*
 import kotlinx.android.synthetic.main.fragment_browser.view.*
 import mozilla.components.feature.awesomebar.AwesomeBarFeature
 import mozilla.components.feature.downloads.DownloadsFeature
+import mozilla.components.feature.downloads.manager.FetchDownloadManager
 import mozilla.components.feature.findinpage.view.FindInPageView
 import mozilla.components.feature.prompts.PromptFeature
 import mozilla.components.feature.session.FullScreenFeature
@@ -31,6 +32,7 @@ import org.mozilla.reference.browser.AppPermissionCodes.REQUEST_CODE_DOWNLOAD_PE
 import org.mozilla.reference.browser.AppPermissionCodes.REQUEST_CODE_PROMPT_PERMISSIONS
 import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.UserInteractionHandler
+import org.mozilla.reference.browser.downloads.DownloadService
 import org.mozilla.reference.browser.ext.requireComponents
 import org.mozilla.reference.browser.pip.PictureInPictureIntegration
 import org.mozilla.reference.browser.tabs.TabsTrayFragment
@@ -126,6 +128,10 @@ class BrowserFragment : Fragment(), BackHandler, UserInteractionHandler {
                 sessionManager = requireComponents.core.sessionManager,
                 sessionId = sessionId,
                 fragmentManager = childFragmentManager,
+                downloadManager = FetchDownloadManager(
+                    requireContext().applicationContext,
+                    DownloadService::class
+                ),
                 onNeedToRequestPermissions = { permissions ->
                     requestPermissions(permissions, REQUEST_CODE_DOWNLOAD_PERMISSIONS)
                 }),

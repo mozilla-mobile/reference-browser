@@ -90,6 +90,8 @@
             </intent-filter>
         </service>
 
+        <service android:name=".downloads.DownloadService" />
+
         <activity
           android:name=".settings.SettingsActivity"
           android:label="@string/settings"
