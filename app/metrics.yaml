@@ -31,7 +31,7 @@ experiments.metrics:
     bugs:
       - 1556751
     data_reviews:
-      - TBD
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1556751#c6
     notification_emails:
       - tlong@mozilla.com
     expires: 2019-10-01
