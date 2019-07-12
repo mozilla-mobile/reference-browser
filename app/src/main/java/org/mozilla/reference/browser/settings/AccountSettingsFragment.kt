@@ -13,8 +13,8 @@ import androidx.preference.PreferenceFragmentCompat
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import mozilla.components.concept.sync.SyncStatusObserver
 import mozilla.components.feature.sync.getLastSynced
+import mozilla.components.service.fxa.sync.SyncStatusObserver
 import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.ext.getPreferenceKey
 import org.mozilla.reference.browser.ext.requireComponents
@@ -70,16 +70,13 @@ class AccountSettingsFragment : PreferenceFragmentCompat() {
 
         preferenceSyncNow.onPreferenceClickListener = getClickListenerForSyncNow()
 
-        if (requireComponents.backgroundServices.syncManager.isSyncRunning()) {
-            preferenceSyncNow.title = getString(R.string.syncing)
-            preferenceSyncNow.isEnabled = false
-        } else {
-            preferenceSyncNow.isEnabled = true
-        }
-
         // NB: ObserverRegistry will take care of cleaning up internal references to 'observer' and
         // 'owner' when appropriate.
-        requireComponents.backgroundServices.syncManager.register(syncStatusObserver, owner = this, autoPause = true)
+        requireComponents.backgroundServices.accountManager.registerForSyncEvents(
+            syncStatusObserver,
+            owner = this,
+            autoPause = true
+        )
     }
 
     fun updateLastSyncedTimePref(context: Context, pref: Preference, failed: Boolean = false) {
@@ -118,7 +115,15 @@ class AccountSettingsFragment : PreferenceFragmentCompat() {
 
     private fun getClickListenerForSyncNow(): OnPreferenceClickListener {
         return OnPreferenceClickListener {
-            requireComponents.backgroundServices.syncManager.syncNow()
+            CoroutineScope(Dispatchers.Main).launch {
+                // Trigger a sync.
+                requireComponents.backgroundServices.accountManager.syncNowAsync().await()
+                // Poll for device events.
+                requireComponents.backgroundServices.accountManager.authenticatedAccount()
+                    ?.deviceConstellation()
+                    ?.refreshDeviceStateAsync()
+                    ?.await()
+            }
             true
         }
     }
