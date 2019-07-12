@@ -86,10 +86,8 @@ private fun setupGlean(context: Context) {
     // following code will not be executed as this only gets called on startup, so it will be on
     // the next application launch following enrollment that the code below will be executed and the
     // metric recorded.
-    Experiments.withExperiment("reference-browser-test") {
-        // If we match the 'reference-browser-test' experiment, 'it' will be the branch name that
-        // we were enrolled in.
-        ExperimentsMetrics.activeExperiment.set(it)
+    Experiments.withExperiment("reference-browser-test") { branchName ->
+        ExperimentsMetrics.activeExperiment.set(branchName)
     }
 }
 
