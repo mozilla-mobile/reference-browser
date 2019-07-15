@@ -11,6 +11,7 @@ import com.google.android.material.snackbar.Snackbar.LENGTH_LONG
 import androidx.appcompat.app.AppCompatActivity
 import android.util.AttributeSet
 import android.view.View
+import androidx.fragment.app.Fragment
 import mozilla.components.browser.session.Session
 import mozilla.components.browser.tabstray.BrowserTabsTray
 import mozilla.components.concept.engine.EngineView
@@ -26,6 +27,9 @@ import org.mozilla.reference.browser.ext.isCrashReportActive
 import org.mozilla.reference.browser.tabs.TabsTouchHelper
 import org.mozilla.reference.browser.telemetry.DataReportingNotification
 
+/**
+ * Activity that holds the [BrowserFragment].
+ */
 open class BrowserActivity : AppCompatActivity() {
 
     private lateinit var crashIntegration: CrashIntegration
@@ -33,13 +37,19 @@ open class BrowserActivity : AppCompatActivity() {
     private val sessionId: String?
         get() = SafeIntent(intent).getStringExtra(IntentProcessor.ACTIVE_SESSION_ID)
 
+    /**
+     * Returns a new instance of [BrowserFragment] to display.
+     */
+    open fun createBrowserFragment(sessionId: String?): Fragment =
+        BrowserFragment.create(sessionId)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         if (savedInstanceState == null) {
             supportFragmentManager?.beginTransaction()?.apply {
-                replace(R.id.container, BrowserFragment.create(sessionId))
+                replace(R.id.container, createBrowserFragment(sessionId))
                 commit()
             }
         }
