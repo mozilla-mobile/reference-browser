@@ -6,7 +6,8 @@ package org.mozilla.reference.browser.components
 
 import android.content.Context
 import mozilla.components.browser.session.SessionManager
-import mozilla.components.feature.intent.IntentProcessor
+import mozilla.components.feature.customtabs.CustomTabIntentProcessor
+import mozilla.components.feature.intent.TabIntentProcessor
 import mozilla.components.feature.search.SearchUseCases
 import mozilla.components.feature.session.SessionUseCases
 
@@ -20,10 +21,16 @@ class Utilities(
     private val searchUseCases: SearchUseCases
 ) {
     /**
-     * Provides intent processing functionality for CustomTab, ACTION_VIEW
-     * and ACTION_SEND intents.
+     * Provides intent processing functionality for CustomTab intents.
      */
-    val intentProcessor by lazy {
-        IntentProcessor(sessionUseCases, sessionManager, searchUseCases, context)
+    val customTabIntentProcessor by lazy {
+        CustomTabIntentProcessor(sessionManager, sessionUseCases.loadUrl, context.resources)
+    }
+
+    /**
+     * Provides intent processing functionality for ACTION_VIEW and ACTION_SEND intents.
+     */
+    val tabIntentProcessor by lazy {
+        TabIntentProcessor(sessionManager, sessionUseCases.loadUrl, searchUseCases.newTabSearch)
     }
 }

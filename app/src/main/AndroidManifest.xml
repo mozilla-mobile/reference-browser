@@ -45,7 +45,7 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".CustomTabActivity"
+        <activity android:name=".ExternalAppBrowserActivity"
             android:configChanges="keyboard|keyboardHidden|mcc|mnc|orientation|screenSize|locale|layoutDirection|smallestScreenSize|screenLayout"
             android:windowSoftInputMode="adjustResize|stateAlwaysHidden"
             android:exported="false"
