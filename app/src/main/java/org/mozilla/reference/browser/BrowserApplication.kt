@@ -9,6 +9,8 @@ import android.content.Context
 import mozilla.components.concept.fetch.Client
 import mozilla.components.service.glean.Glean
 import mozilla.components.service.glean.config.Configuration
+import mozilla.components.service.experiments.Experiments
+import mozilla.components.service.experiments.Configuration as ExperimentsConfiguration
 import mozilla.components.support.base.facts.register
 import mozilla.components.support.base.log.Log
 import mozilla.components.support.base.log.logger.Logger
@@ -16,6 +18,7 @@ import mozilla.components.support.base.log.sink.AndroidLogSink
 import mozilla.components.support.ktx.android.content.isMainProcess
 import mozilla.components.support.ktx.android.content.runOnlyInMainProcess
 import mozilla.components.support.rustlog.RustLog
+import org.mozilla.reference.browser.GleanMetrics.ExperimentsMetrics
 import org.mozilla.reference.browser.ext.components
 import org.mozilla.reference.browser.ext.isCrashReportActive
 import org.mozilla.reference.browser.settings.Settings
@@ -71,6 +74,21 @@ private fun setupGlean(context: Context) {
     Glean.initialize(context, Configuration(httpClient = lazy { context.components.core.client }))
     Glean.setUploadEnabled(BuildConfig.TELEMETRY_ENABLED && Settings.isTelemetryEnabled(context))
     GleanFactProcessor().register()
+    Experiments.initialize(
+        context,
+        ExperimentsConfiguration(httpClient = lazy { context.components.core.client })
+    )
+
+    // Recording the experiment ID in Glean through the use of the `withExperiment` function should
+    // allow us to validate the automatically recorded enrollment in the experiment, as well as the
+    // functionality of doing something within the client app based on the specific branch. It
+    // should be noted that the first time that the client is enrolled in the experiment, the
+    // following code will not be executed as this only gets called on startup, so it will be on
+    // the next application launch following enrollment that the code below will be executed and the
+    // metric recorded.
+    Experiments.withExperiment("reference-browser-test") { branchName ->
+        ExperimentsMetrics.activeExperiment.set(branchName)
+    }
 }
 
 private fun setupCrashReporting(application: BrowserApplication) {
