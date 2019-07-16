@@ -115,7 +115,7 @@ class TaskBuilder(object):
         return self._craft_clean_gradle_task(
             name='test: {}'.format(variant.name),
             description='Building and testing variant {}'.format(variant.name),
-            gradle_task='test{}UnitTest -PskipSplitApk'.format(variant.build_type),
+            gradle_task='test{}UnitTest'.format(variant.build_type),
             treeherder={
                 'groupSymbol': variant.build_type,
                 'jobKind': 'test',
