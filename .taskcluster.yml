@@ -2,6 +2,7 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 version: 1
+reporting: checks-v1
 policy:
   pullRequests: public
 tasks:
@@ -80,7 +81,7 @@ tasks:
           retries: 5
           routes:
             $flatten:
-              - statuses  # Automatically added by taskcluster-github. It must be explicit because of Chain of Trust
+              - checks  # Automatically added by taskcluster-github. It must be explicit because of Chain of Trust
               - $if: 'trust_level == 3'
                 then:
                     - tc-treeherder.v2.reference-browser.${head_rev}

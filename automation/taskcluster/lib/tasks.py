@@ -321,6 +321,8 @@ class TaskBuilder(object):
         if self.trust_level == 3:
             routes.append("tc-treeherder.v2.reference-browser.{}".format(self.commit))
 
+        routes.append("checks")
+
         return {
             "provisionerId": provisioner_id,
             "workerType": worker_type,
