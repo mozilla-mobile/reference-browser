@@ -38,7 +38,7 @@ class BackgroundServices(
 
     private val serverConfig = ServerConfig.release(CLIENT_ID, REDIRECT_URL)
     private val deviceConfig = DeviceConfig(
-        name = "Reference Browser on" + Build.MANUFACTURER + " " + Build.MODEL,
+        name = "Reference Browser on " + Build.MANUFACTURER + " " + Build.MODEL,
         type = DeviceType.MOBILE,
         capabilities = setOf(DeviceCapability.SEND_TAB)
     )
