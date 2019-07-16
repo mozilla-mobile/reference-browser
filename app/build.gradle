@@ -84,7 +84,7 @@ android {
 
     splits {
         abi {
-            enable !project.hasProperty("skipSplitApk")
+            enable true
 
             reset()
 
