@@ -118,7 +118,7 @@ tasks:
         $flatten:
           $if: 'tasks_for in ["github-pull-request", "github-push"]'
           then:
-            - $if: 'tasks_for == "github-pull-request" && event["action"] in ["opened", "reopened", "synchronize"]'
+            - $if: 'tasks_for == "github-pull-request" && event["action"] in ["opened", "reopened", "edited", "synchronize"]'
               then:
                 $let:
                   pull_request_title: ${event.pull_request.title}
