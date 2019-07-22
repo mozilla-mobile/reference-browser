@@ -71,8 +71,8 @@ private fun setupLogging(megazordEnabled: Boolean) {
 }
 
 private fun setupGlean(context: Context) {
-    Glean.initialize(context, Configuration(httpClient = lazy { context.components.core.client }))
     Glean.setUploadEnabled(BuildConfig.TELEMETRY_ENABLED && Settings.isTelemetryEnabled(context))
+    Glean.initialize(context, Configuration(httpClient = lazy { context.components.core.client }))
     GleanFactProcessor().register()
     Experiments.initialize(
         context,
