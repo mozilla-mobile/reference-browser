@@ -14,11 +14,11 @@ import argparse
 import datetime
 import taskcluster
 
-from lib.gradle import get_geckoview_versions, get_variant
+from lib.gradle import get_variant
 from lib.tasks import (
     TaskBuilder,
     schedule_task_graph,
-    gecko_revision_for_version,
+    fetch_mozharness_task_id,
 )
 from lib.chain_of_trust import (
     populate_chain_of_trust_task_graph,
@@ -88,8 +88,7 @@ def raptor(is_staging):
     signing_tasks = {}
     other_tasks = {}
 
-    geckoview_nightly_version = get_geckoview_versions()
-    mozharness_task_id = gecko_revision_for_version(geckoview_nightly_version)
+    mozharness_task_id = fetch_mozharness_task_id()
     gecko_revision = taskcluster.Queue().task(mozharness_task_id)['payload']['env']['GECKO_HEAD_REV']
 
     variant = get_variant('raptor')
