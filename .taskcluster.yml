@@ -106,6 +106,20 @@ tasks:
               TRUST_LEVEL: ${trust_level}
             features:
               taskclusterProxy: true
+              chainOfTrust: true
+            artifacts:
+              public/task-graph.json:
+                type: file
+                path: /build/reference-browser/task-graph.json
+                expires: ${expires_in}
+              public/actions.json:
+                type: file
+                path: /build/reference-browser/actions.json
+                expires: ${expires_in}
+              public/parameters.yml:
+                type: file
+                path: /build/reference-browser/parameters.yml
+                expires: ${expires_in}
           extra:
             tasks_for: ${tasks_for}
             treeherder:
@@ -140,6 +154,7 @@ tasks:
                             && python automation/taskcluster/decision_task.py pull-request
                         env:
                           GITHUB_PULL_TITLE: ${pull_request_title}
+                          MOBILE_PULL_REQUEST_NUMBER: ${pull_request_number}
                       extra:
                         treeherder:
                           symbol: D-PR
@@ -153,8 +168,6 @@ tasks:
                   - scopes:
                       - ${assume_scope_prefix}:branch:${short_head_branch}
                     payload:
-                      features:
-                        chainOfTrust: true
                       command:
                         - >-
                           cd ..
@@ -163,19 +176,6 @@ tasks:
                           && git config advice.detachedHead false
                           && git checkout ${head_rev}
                           && python automation/taskcluster/decision_task.py push
-                      artifacts:
-                        public/task-graph.json:
-                          type: file
-                          path: /build/reference-browser/task-graph.json
-                          expires: ${expires_in}
-                        public/actions.json:
-                          type: file
-                          path: /build/reference-browser/actions.json
-                          expires: ${expires_in}
-                        public/parameters.yml:
-                          type: file
-                          path: /build/reference-browser/parameters.yml
-                          expires: ${expires_in}
                     extra:
                       treeherder:
                         symbol: D
@@ -200,8 +200,6 @@ tasks:
                               then: assume:hook-id:project-mobile/reference-browser-nightly
                               else: assume:hook-id:project-mobile/reference-browser-nightly-staging
                           payload:
-                            features:
-                              chainOfTrust: true
                             command:
                               - >-
                                 cd ..
@@ -211,19 +209,6 @@ tasks:
                                 && python automation/taskcluster/decision_task.py \
                                   nightly \
                                   ${staging_flag}
-                            artifacts:
-                              public/task-graph.json:
-                                type: file
-                                path: /build/reference-browser/task-graph.json
-                                expires: ${expires_in}
-                              public/actions.json:
-                                type: file
-                                path: /build/reference-browser/actions.json
-                                expires: ${expires_in}
-                              public/parameters.yml:
-                                type: file
-                                path: /build/reference-browser/parameters.yml
-                                expires: ${expires_in}
                           extra:
                             cron: {$json: {$eval: 'cron'}}
                             tasks_for: ${tasks_for}
@@ -241,8 +226,6 @@ tasks:
                               then: assume:hook-id:project-mobile/reference-browser-raptor
                               else: assume:hook-id:project-mobile/reference-browser-raptor-staging
                           payload:
-                            features:
-                              chainOfTrust: true
                             command:
                               - >-
                                 cd ..
@@ -252,19 +235,6 @@ tasks:
                                 && python automation/taskcluster/decision_task.py \
                                   raptor \
                                   ${staging_flag}
-                            artifacts:
-                              public/task-graph.json:
-                                type: file
-                                path: /build/reference-browser/task-graph.json
-                                expires: ${expires_in}
-                              public/actions.json:
-                                type: file
-                                path: /build/reference-browser/actions.json
-                                expires: ${expires_in}
-                              public/parameters.yml:
-                                type: file
-                                path: /build/reference-browser/parameters.yml
-                                expires: ${expires_in}
                           extra:
                             cron: {$json: {$eval: 'cron'}}
                             tasks_for: ${tasks_for}
