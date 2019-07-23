@@ -20,14 +20,6 @@ def get_variant(build_type):
     return Variant(variant['name'], build_type, apks)
 
 
-def get_geckoview_versions():
-    print("Fetching geckoview version from gradle")
-    output = _run_gradle_process('printGeckoviewVersion')
-    geckoview_version = _extract_content_from_command_output(output, prefix='geckoviewVersion: ')
-    print('Got geckoview version: "{}"'.format(geckoview_version))
-    return geckoview_version
-
-
 def _run_gradle_process(gradle_command, **kwargs):
     gradle_properties = [
         '-P{property_name}={value}'.format(property_name=property_name, value=value)

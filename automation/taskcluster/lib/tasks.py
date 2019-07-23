@@ -682,8 +682,7 @@ def schedule_task_graph(ordered_groups_of_tasks):
     return full_task_graph
 
 
-def gecko_revision_for_version(geckoview_nightly_version):
-    raptor_index = 'gecko.v2.mozilla-central.geckoview-version.{}.mobile.android-x86_64-opt'.format(
-        geckoview_nightly_version
-    )
+def fetch_mozharness_task_id():
+    # We now want to use the latest available raptor
+    raptor_index = 'gecko.v2.mozilla-central.nightly.latest.mobile.android-x86_64-opt'
     return taskcluster.Index().findTask(raptor_index)['taskId']
