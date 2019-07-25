@@ -73,6 +73,8 @@ def pr():
     ):
         other_tasks[taskcluster.slugId()] = craft_function()
 
+    other_tasks[taskcluster.slugId()] = BUILDER.craft_dependencies_task()
+
     return (build_tasks, signing_tasks, other_tasks)
 
 
@@ -136,6 +138,7 @@ def nightly(is_staging):
     push_tasks[push_task_id] = BUILDER.craft_push_task(signing_task_id, variant, is_staging)
 
     other_tasks[taskcluster.slugId()] = BUILDER.craft_upload_apk_nimbledroid_task(assemble_task_id)
+    other_tasks[taskcluster.slugId()] = BUILDER.craft_dependencies_task()
 
     return (build_tasks, signing_tasks, push_tasks, other_tasks)
 

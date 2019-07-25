@@ -185,6 +185,35 @@ class TaskBuilder(object):
             treeherder=treeherder,
         )
 
+    def craft_dependencies_task(self):
+        # Output the dependencies to an artifact.  This is used by the
+        # telemetry probe scraper to determine all of the metrics that
+        # &browser might send (both from itself and any of its dependent
+        # libraries that use Glean).
+        return self._craft_clean_gradle_task(
+            name='dependencies',
+            description='Write dependencies to a build artifact',
+            gradle_task='app:dependencies --configuration implementation > dependencies.txt',
+            treeherder={
+                'jobKind': 'test',
+                'machine': {
+                    'platform': 'lint',
+                },
+                'symbol': 'dependencies',
+                'tier': 1,
+            },
+            routes=[
+                'index.project.mobile.reference-browser.v2.branch.master.revision.{}'.format(self.commit)
+            ],
+            artifacts={
+                'public/dependencies.txt': {
+                    "type": 'file',
+                    "path": '/build/reference-browser/dependencies.txt',
+                    "expires": taskcluster.stringDate(taskcluster.fromNow(DEFAULT_EXPIRES_IN)),
+                }
+            },
+        )
+
     def craft_compare_locales_task(self):
         return self._craft_build_ish_task(
             name='compare-locales',
