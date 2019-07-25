@@ -23,10 +23,20 @@ allprojects {
 
         maven {
             url "https://snapshots.maven.mozilla.org/maven2"
+
+            content {
+                // Always fetch components from the snapshots repository
+                includeGroup "org.mozilla.components"
+            }
         }
 
         maven {
             url "https://maven.mozilla.org/maven2"
+
+            content {
+                // Never fetch components from here. We always want to use snapshots.
+                excludeGroup "org.mozilla.components"
+            }
         }
 
         jcenter()
