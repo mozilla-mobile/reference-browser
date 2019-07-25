@@ -20,7 +20,13 @@ class Components(private val context: Context) {
     val core by lazy { Core(context) }
     val search by lazy { Search(context) }
     val useCases by lazy {
-        UseCases(context, core.sessionManager, core.engine.settings, search.searchEngineManager)
+        UseCases(
+            context,
+            core.sessionManager,
+            core.engine.settings,
+            search.searchEngineManager,
+            core.client
+        )
     }
 
     // Background services are initiated eagerly; they kick off periodic tasks and setup an accounts system.
