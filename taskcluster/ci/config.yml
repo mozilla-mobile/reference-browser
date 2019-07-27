@@ -1,5 +1,8 @@
 ---
 trust-domain: mobile
+treeherder:
+    group-names:
+        'I': 'Docker Image Builds'
 task-priority: lowest
 
 taskgraph:
