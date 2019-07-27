@@ -2,7 +2,13 @@
 trust-domain: mobile
 task-priority: lowest
 
-taskgraph: {}
+taskgraph:
+    register: rb_taskgraph:register
+    repositories:
+        mobile:
+            name: "Reference Browser"
+    cached-task-prefix: project.mobile.reference-browser
+
 workers:
     aliases:
         b-android:
