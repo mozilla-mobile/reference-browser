@@ -1,0 +1,33 @@
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+---
+
+loader: rb_taskgraph.single_dep:loader
+
+kind-dependencies:
+    - build
+
+transforms:
+    - rb_taskgraph.signing:transforms
+    - taskgraph.transforms.task:transforms
+
+job-template:
+    description: Build Reference Browser from source code.
+    treeherder:
+        kind: build
+        symbol: S
+        tier: 2
+    worker-type:
+        by-variant:
+            nightly: signing
+            default: dep-signing
+    worker:
+        max-run-time: 3600
+        signing-type:
+            by-variant:
+                nightly:
+                    by-level:
+                        '3': nightly
+                        default: dep-signing
+                default: dep-signing

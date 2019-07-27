@@ -29,8 +29,19 @@ workers:
             implementation: scriptworker-signing
             os: scriptworker
             worker-type: mobile-signing-dep-v1
+        signing:
+            provisioner: scriptworker-prov-v1
+            implementation: scriptworker-signing
+            os: scriptworker
+            worker-type:
+                by-level:
+                    "3": mobile-signing-v1
+                    default: mobile-signing-dep-v1
         t-bitbar.*:
             provisioner: proj-autophone
             implementation: generic-worker
             os: linux-bitbar
             worker-type: 'gecko-{alias}'
+
+scriptworker:
+    scope-prefix: project:mobile:reference-browser:releng
