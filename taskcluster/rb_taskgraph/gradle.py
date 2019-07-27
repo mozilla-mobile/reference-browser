@@ -11,6 +11,13 @@ from taskgraph.util.memoize import memoize
 
 
 @memoize
+def get_build_variant(variant):
+    return _run_gradle_process(
+        ["printVariant", "-PvariantBuildType={}".format(variant)], prefix="variant: "
+    )
+
+
+@memoize
 def get_geckoview_version():
     print("Fetching geckoview version from gradle")
     geckoview_version = _run_gradle_process(

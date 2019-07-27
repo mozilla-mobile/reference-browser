@@ -1,0 +1,46 @@
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+---
+loader: taskgraph.loader.transform:loader
+
+transforms:
+    - rb_taskgraph.build:transforms
+    - taskgraph.transforms.job:transforms
+    - taskgraph.transforms.task:transforms
+
+job-defaults:
+    description: Build Reference Browser from source code.
+    treeherder:
+        kind: build
+        symbol: B
+        tier: 2
+    worker-type: b-android
+    worker:
+        docker-image: {in-tree: base}
+        max-run-time: 7200
+        chain-of-trust: true
+    run:
+        using: gradlew
+        use-caches: false
+    # Builds generate multiple APKs with different ABIs. For each APK described
+    # by `gradlew printVariant`, an artifact will be generated. `variant` and
+    # the per-apk config from `printVariant` can be used as subsistutions in
+    # `name` and `path`.
+    apk-artifact-template:
+        type: file
+        name: public/target.{abi}.apk
+        path: '/builds/worker/checkouts/src/app/build/outputs/apk/{variant}/{fileName}'
+jobs:
+    nightly:
+        run-on-tasks-for: [cron]
+        run:
+            gradlew: ["-PcrashReportEnabled=true", "-Ptelemetry=true", "assembleNightly"]
+    raptor:
+        run-on-tasks-for: [github-push]
+        run:
+            gradlew: ["assembleRaptor"]
+    debug:
+        run-on-tasks-for: [github-push, github-pull-request]
+        run:
+            gradlew: ["assembleDebug"]
