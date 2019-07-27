@@ -1,0 +1,27 @@
+---
+trust-domain: mobile
+task-priority: lowest
+
+taskgraph: {}
+workers:
+    aliases:
+        b-android:
+            provisioner: aws-provisioner-v1
+            implementation: docker-worker
+            os: linux
+            worker-type: 'mobile-{level}-b-ref-browser'
+        images:
+            provisioner: aws-provisioner-v1
+            implementation: docker-worker
+            os: linux
+            worker-type: 'mobile-{level}-images'
+        dep-signing:
+            provisioner: scriptworker-prov-v1
+            implementation: scriptworker-signing
+            os: scriptworker
+            worker-type: mobile-signing-dep-v1
+        t-bitbar.*:
+            provisioner: proj-autophone
+            implementation: generic-worker
+            os: linux-bitbar
+            worker-type: 'gecko-{alias}'
