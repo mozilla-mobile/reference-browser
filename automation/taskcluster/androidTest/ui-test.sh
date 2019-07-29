@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+
 # This Source Code Form is subject to the terms of the Mozilla Public
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -47,9 +48,8 @@ fi
 
 JAVA_BIN="/usr/bin/java"
 PATH_TEST="./automation/taskcluster/androidTest"
+PATH_APK="./app/build/outputs/apk/debug"
 FLANK_BIN="/build/test-tools/flank.jar"
-FLANK_CONF_ARM="${PATH_TEST}/flank-arm.yml"
-FLANK_CONF_X86="${PATH_TEST}/flank-x86.yml"
 
 echo
 echo "RETRIEVE SERVICE ACCT TOKEN"
@@ -73,17 +73,29 @@ echo
 # and try to download the artifacts. We will exit with the actual error code later.
 set +e
 
-if [[ "${device_type,,}" == "x86" ]]
+if [[ "${device_type,,}" == "aarch64" ]]
 then
-    deviceType="X86"
-    flank_template="$FLANK_CONF_X86"
+    flank_template="${PATH_TEST}/flank-aarch64.yml"
+    APK_APP="${PATH_APK}/app-arm64-v8a-debug.apk"
+elif [[ "${device_type,,}" == "arm" ]]
+then
+    flank_template="${PATH_TEST}/flank-arm.yml"
+    APK_APP="${PATH_APK}/app-armeabi-v7a-debug.apk"
+elif [[ "${device_type,,}" == "x86_64" ]]
+then
+    flank_template="${PATH_TEST}/flank-x86-64.yml"
+    APK_APP="${PATH_APK}/app-x86_64-debug.apk"
+elif [[ "${device_type,,}" == "x86" ]]
+then
+    flank_template="${PATH_TEST}/flank-x86.yml"
+    APK_APP="${PATH_APK}/app-x86-debug.apk"
 else
-    deviceType="Arm"
-    flank_template="$FLANK_CONF_ARM"
+     echo "NOT FOUND"
+#    exitcode=1
 fi
 
-APK_APP="./app/build/outputs/apk/${deviceType,,}/debug/app-${deviceType,,}-debug.apk"
-APK_TEST="./app/build/outputs/apk/androidTest/${deviceType,,}/debug/app-${deviceType,,}-debug-androidTest.apk"
+APK_TEST="./app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk"
+ls -la ./app/build/outputs/apk/androidTest/debug
 
 # keep running script on failure, so we can capture the failure and do some
 # final output
