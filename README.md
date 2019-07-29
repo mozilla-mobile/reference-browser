@@ -36,8 +36,8 @@ Make sure you use the same Google Account for both steps.
 
 Signed Nightly builds can be downloaded from:
 
-* [⬇️ ARM64/Aarch64 devices (64 bit; Android 5+)](https://index.taskcluster.net/v1/task/project.mobile.reference-browser.v2.nightly.latest/artifacts/public/target.aarch64.apk)
-* [⬇️ ARM devices (32 bit; Android 5+)](https://index.taskcluster.net/v1/task/project.mobile.reference-browser.v2.nightly.latest/artifacts/public/target.arm.apk)
+* [⬇️ ARM64/Aarch64 devices (64 bit; Android 5+)](https://index.taskcluster.net/v1/task/project.mobile.reference-browser.v2.nightly.latest/artifacts/public/target.arm64-v8a.apk)
+* [⬇️ ARM devices (32 bit; Android 5+)](https://index.taskcluster.net/v1/task/project.mobile.reference-browser.v2.nightly.latest/artifacts/public/target.armeabi-v7a.apk)
 * [⬇️ x86_64  devices (64 bit; Android 5+)](https://index.taskcluster.net/v1/task/project.mobile.reference-browser.v2.nightly.latest/artifacts/public/target.x86_64.apk)
 * [⬇️ x86  devices (32 bit; Android 5+)](https://index.taskcluster.net/v1/task/project.mobile.reference-browser.v2.nightly.latest/artifacts/public/target.x86.apk)
 
