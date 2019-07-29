@@ -34,8 +34,8 @@ gcloud:
   performance-metrics: true
 
   device:
-   - model: shamu
-     version: 21
+   - model: Nexus6 
+     version: 25
 
 flank:
   project: GOOGLE_PROJECT

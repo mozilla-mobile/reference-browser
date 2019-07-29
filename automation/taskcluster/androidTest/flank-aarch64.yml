@@ -34,8 +34,10 @@ gcloud:
   performance-metrics: true
 
   device:
-   - model: shamu
-     version: 21
+   - model: sailfish 
+     version: 25
+   - model: sailfish 
+     version: 28
 
 flank:
   project: GOOGLE_PROJECT
