@@ -21,6 +21,7 @@ import mozilla.components.feature.session.FullScreenFeature
 import mozilla.components.feature.session.SessionFeature
 import mozilla.components.feature.session.ThumbnailsFeature
 import mozilla.components.feature.session.SwipeRefreshFeature
+import mozilla.components.feature.session.WindowFeature
 import mozilla.components.feature.sitepermissions.SitePermissionsFeature
 import mozilla.components.feature.tabs.toolbar.TabsToolbarFeature
 import mozilla.components.support.base.feature.BackHandler
@@ -52,6 +53,7 @@ class BrowserFragment : Fragment(), BackHandler, UserInteractionHandler {
     private val thumbnailsFeature = ViewBoundFeatureWrapper<ThumbnailsFeature>()
     private val readerViewFeature = ViewBoundFeatureWrapper<ReaderViewIntegration>()
     private val swipeRefreshFeature = ViewBoundFeatureWrapper<SwipeRefreshFeature>()
+    private val windowFeature = ViewBoundFeatureWrapper<WindowFeature>()
 
     private val backButtonHandler: List<ViewBoundFeatureWrapper<*>> = listOf(
         readerViewFeature,
@@ -149,6 +151,12 @@ class BrowserFragment : Fragment(), BackHandler, UserInteractionHandler {
                 }),
             owner = this,
             view = view)
+
+        windowFeature.set(
+            feature = WindowFeature(requireComponents.core.sessionManager),
+            owner = this,
+            view = view
+        )
 
         fullScreenFeature.set(
             feature = FullScreenFeature(
