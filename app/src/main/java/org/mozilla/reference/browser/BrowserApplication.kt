@@ -43,6 +43,8 @@ open class BrowserApplication : Application() {
             return
         }
 
+        components.core.engine.warmUp()
+
         setupGlean(this)
     }
 
