@@ -11,19 +11,8 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply from: "$project.rootDir/automation/gradle/versionCode.gradle"
 
-apply plugin: 'org.mozilla.appservices'
-
 import com.android.build.gradle.internal.tasks.AppPreBuildTask
 import com.android.build.OutputFile
-
-appservices {
-    defaultConfig {
-        megazord = 'reference-browser'
-        // Necessary to allow for local dependency substitutions.
-        // See https://github.com/mozilla-mobile/reference-browser/pull/356#issuecomment-449190236
-        unitTestingEnabled = false
-    }
-}
 
 android {
     compileSdkVersion Config.compileSdkVersion
@@ -236,6 +225,7 @@ dependencies {
     implementation Deps.mozilla_support_utils
     implementation Deps.mozilla_support_ktx
     implementation Deps.mozilla_support_rustlog
+    implementation Deps.mozilla_support_rusthttp
     implementation Deps.mozilla_lib_crash
     implementation Deps.thirdparty_sentry
 
