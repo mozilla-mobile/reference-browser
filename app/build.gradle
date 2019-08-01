@@ -206,7 +206,6 @@ dependencies {
     implementation Deps.mozilla_feature_intent
     implementation Deps.mozilla_feature_search
     implementation Deps.mozilla_feature_session
-    implementation Deps.mozilla_feature_sync
     implementation Deps.mozilla_feature_toolbar
     implementation Deps.mozilla_feature_tabs
     implementation Deps.mozilla_feature_downloads
@@ -214,6 +213,7 @@ dependencies {
     implementation Deps.mozilla_feature_pwa
     implementation Deps.mozilla_feature_qr
     implementation Deps.mozilla_feature_readerview
+    implementation Deps.mozilla_feature_webchannel
 
     implementation Deps.mozilla_ui_autocomplete
     implementation Deps.mozilla_ui_colors

@@ -13,7 +13,6 @@ import androidx.preference.PreferenceFragmentCompat
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import mozilla.components.feature.sync.getLastSynced
 import mozilla.components.service.fxa.sync.SyncStatusObserver
 import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.ext.getPreferenceKey
@@ -80,7 +79,7 @@ class AccountSettingsFragment : PreferenceFragmentCompat() {
     }
 
     fun updateLastSyncedTimePref(context: Context, pref: Preference, failed: Boolean = false) {
-        val lastSyncTime = getLastSynced(context)
+        val lastSyncTime = 0L
 
         pref.summary = if (!failed && lastSyncTime == 0L) {
             // Never tried to sync.

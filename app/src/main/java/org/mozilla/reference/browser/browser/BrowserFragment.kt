@@ -52,6 +52,7 @@ class BrowserFragment : Fragment(), BackHandler, UserInteractionHandler {
     private val pictureInPictureIntegration = ViewBoundFeatureWrapper<PictureInPictureIntegration>()
     private val thumbnailsFeature = ViewBoundFeatureWrapper<ThumbnailsFeature>()
     private val readerViewFeature = ViewBoundFeatureWrapper<ReaderViewIntegration>()
+    private val webChannelFeature = ViewBoundFeatureWrapper<WebChannelIntegration>()
     private val swipeRefreshFeature = ViewBoundFeatureWrapper<SwipeRefreshFeature>()
     private val windowFeature = ViewBoundFeatureWrapper<WindowFeature>()
 
@@ -200,6 +201,16 @@ class BrowserFragment : Fragment(), BackHandler, UserInteractionHandler {
             ) { permissions ->
                 requestPermissions(permissions, REQUEST_CODE_APP_PERMISSIONS)
             },
+            owner = this,
+            view = view
+        )
+
+        webChannelFeature.set(
+            feature = WebChannelIntegration(
+                    requireContext(),
+                    requireComponents.core.engine,
+                    requireComponents.core.sessionManager
+            ),
             owner = this,
             view = view
         )

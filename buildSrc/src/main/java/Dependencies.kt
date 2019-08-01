@@ -16,7 +16,7 @@ private object Versions {
 
     const val android_gradle_plugin = "3.4.1"
 
-    const val mozilla_android_components = "+" // Always use the latest snapshot
+    const val mozilla_android_components = "7.0.0-vlad4" // Always use the latest snapshot
 
     const val thirdparty_sentry = "1.7.10"
 
@@ -64,7 +64,6 @@ object Deps {
     const val mozilla_feature_intent = "org.mozilla.components:feature-intent:${Versions.mozilla_android_components}"
     const val mozilla_feature_search = "org.mozilla.components:feature-search:${Versions.mozilla_android_components}"
     const val mozilla_feature_session = "org.mozilla.components:feature-session:${Versions.mozilla_android_components}"
-    const val mozilla_feature_sync = "org.mozilla.components:feature-sync:${Versions.mozilla_android_components}"
     const val mozilla_feature_toolbar = "org.mozilla.components:feature-toolbar:${Versions.mozilla_android_components}"
     const val mozilla_feature_tabs = "org.mozilla.components:feature-tabs:${Versions.mozilla_android_components}"
     const val mozilla_feature_downloads = "org.mozilla.components:feature-downloads:${Versions.mozilla_android_components}"
@@ -73,6 +72,7 @@ object Deps {
     const val mozilla_feature_pwa = "org.mozilla.components:feature-pwa:${Versions.mozilla_android_components}"
     const val mozilla_feature_qr = "org.mozilla.components:feature-qr:${Versions.mozilla_android_components}"
     const val mozilla_feature_readerview = "org.mozilla.components:feature-readerview:${Versions.mozilla_android_components}"
+    const val mozilla_feature_webchannel = "org.mozilla.components:feature-webchannel:${Versions.mozilla_android_components}"
 
     const val mozilla_ui_autocomplete = "org.mozilla.components:ui-autocomplete:${Versions.mozilla_android_components}"
     const val mozilla_ui_colors = "org.mozilla.components:ui-colors:${Versions.mozilla_android_components}"
