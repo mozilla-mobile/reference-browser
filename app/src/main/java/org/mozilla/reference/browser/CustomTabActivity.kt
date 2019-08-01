@@ -4,4 +4,15 @@
 
 package org.mozilla.reference.browser
 
-class CustomTabActivity : BrowserActivity()
+import android.os.Bundle
+import org.mozilla.reference.browser.ext.components
+
+class CustomTabActivity : BrowserActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+
+        // If a Custom Tab is restored by the OS after low memory, we need to process the intent again.
+        components.utils.intentProcessor.process(intent)
+
+        super.onCreate(savedInstanceState)
+    }
+}
