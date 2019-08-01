@@ -16,13 +16,12 @@ class IntentReceiverActivity : Activity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val intent = intent?.let { Intent(it) } ?: Intent()
-        val processors = components.utils
+        val utils = components.utils
 
         MainScope().launch {
-            processors.customTabIntentProcessor.process(intent) ||
-                processors.tabIntentProcessor.process(intent)
+            utils.intentProcessors.any { it.process(intent) }
 
-            val className = if (processors.customTabIntentProcessor.matches(intent)) {
+            val className = if (utils.externalIntentProcessors.any { it.matches(intent) }) {
                 ExternalAppBrowserActivity::class
             } else {
                 BrowserActivity::class
