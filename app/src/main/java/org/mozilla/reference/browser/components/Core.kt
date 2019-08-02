@@ -16,8 +16,8 @@ import mozilla.components.concept.engine.Engine
 import mozilla.components.concept.engine.EngineSession.TrackingProtectionPolicy
 import mozilla.components.concept.engine.EngineSession.TrackingProtectionPolicy.Companion.SAFE_BROWSING_ALL
 import mozilla.components.concept.fetch.Client
+import mozilla.components.feature.media.MediaFeature
 import mozilla.components.feature.media.RecordingDevicesNotificationFeature
-import mozilla.components.feature.media.notification.MediaNotificationFeature
 import mozilla.components.feature.media.state.MediaStateMachine
 import mozilla.components.feature.session.HistoryDelegate
 import org.mozilla.reference.browser.AppRequestInterceptor
@@ -81,13 +81,11 @@ class Core(private val context: Context) {
             RecordingDevicesNotificationFeature(context, sessionManager = this)
                 .enable()
 
-            val mediaStateMachine = MediaStateMachine(this).apply {
-                start()
-            }
+            MediaStateMachine.start(this)
 
-            // Show an ongoing notification while web content media is playing.
-            MediaNotificationFeature(context, mediaStateMachine)
-                .enable()
+            // Enable media features like showing an ongoing notification with media controls when
+            // media in web content is playing.
+            MediaFeature(context).enable()
         }
     }
 
