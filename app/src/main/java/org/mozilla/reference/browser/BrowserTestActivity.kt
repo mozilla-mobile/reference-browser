@@ -20,8 +20,6 @@ class BrowserTestActivity : Activity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        EngineProvider.testConfig = SafeIntent(intent).extras
-
         // We're creating a default session here so that we don't end up
         // with a gecko session that we don't manage. We want to receive
         // callbacks to update the UI (toolbar) which might have an impact
