@@ -5,7 +5,6 @@
 package org.mozilla.reference.browser
 
 import android.content.Context
-import android.os.Bundle
 import mozilla.components.browser.engine.gecko.GeckoEngine
 import mozilla.components.browser.engine.gecko.fetch.GeckoViewFetchClient
 import mozilla.components.concept.engine.DefaultSettings

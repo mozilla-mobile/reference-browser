@@ -24,7 +24,7 @@ class TabsPanel @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null
 ) : androidx.appcompat.widget.Toolbar(context, attrs) {
-    private lateinit var button: ToggleImageButton
+    private var button: ToggleImageButton
     private lateinit var privateButton: ToggleImageButton
     private var tabsFeature: TabsFeature? = null
     private var isPrivateTray = false
