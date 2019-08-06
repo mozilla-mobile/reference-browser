@@ -224,6 +224,11 @@ tasks:
                             - $if: 'trust_level == 3'
                               then: assume:hook-id:project-mobile/${project_name}-raptor
                               else: assume:hook-id:project-mobile/${project_name}-raptor-staging
+                          routes:
+                            $if: 'trust_level == 3'
+                            then:
+                              - notify.email.fenix-eng-notifications@mozilla.com.on-failed
+                              - notify.email.perftest-alerts@mozilla.com.on-failed
                           payload:
                             command:
                               - >-
@@ -239,6 +244,13 @@ tasks:
                             tasks_for: ${tasks_for}
                             treeherder:
                               symbol: raptor-D
+                            notify:
+                              email:
+                                link:
+                                  text: Treeherder Job
+                                  href: "https://treeherder.mozilla.org/#/jobs?repo=${project_name}&revision=${head_rev}"
+                                subject: "[${project_name}] Raptor decision task failed"
+                                content: "This calls for an action of the development team. If needed, escalate to the release engineering team in #releaseduty-mobile on Slack. Use the link to view it on Treeherder."
                           metadata:
                             name: ${project_name} - Raptor Decision Task
                             description: Decision task scheduled by cron task [${cron.task_id}](https://tools.taskcluster.net/tasks/${cron.task_id})
