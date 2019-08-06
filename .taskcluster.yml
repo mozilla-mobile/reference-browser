@@ -8,9 +8,8 @@ tasks:
   $let:
     decision_task_id: {$eval: as_slugid("decision_task")}
     expires_in: {$fromNow: '1 year'}
-
-    # We may need to change the following line because of https://github.com/mozilla-releng/scriptworker/issues/326
     user: ${event.sender.login}
+    project_name: reference-browser
 
     # We define the following variable at the very top, because they are used in the
     # default definition
@@ -83,7 +82,7 @@ tasks:
               - statuses  # Automatically added by taskcluster-github. It must be explicit because of Chain of Trust
               - $if: 'trust_level == 3'
                 then:
-                    - tc-treeherder.v2.reference-browser.${head_rev}
+                    - tc-treeherder.v2.${project_name}.${head_rev}
                 else: []
           payload:
             maxRunTime: 600   # Decision should remain fast enough to schedule a handful of tasks
@@ -110,15 +109,15 @@ tasks:
             artifacts:
               public/task-graph.json:
                 type: file
-                path: /build/reference-browser/task-graph.json
+                path: /build/${project_name}/task-graph.json
                 expires: ${expires_in}
               public/actions.json:
                 type: file
-                path: /build/reference-browser/actions.json
+                path: /build/${project_name}/actions.json
                 expires: ${expires_in}
               public/parameters.yml:
                 type: file
-                path: /build/reference-browser/parameters.yml
+                path: /build/${project_name}/parameters.yml
                 expires: ${expires_in}
           extra:
             tasks_for: ${tasks_for}
@@ -148,7 +147,7 @@ tasks:
                           - >-
                             cd ..
                             && git clone ${repository}
-                            && cd reference-browser
+                            && cd ${project_name}
                             && git config advice.detachedHead false
                             && git checkout ${head_rev}
                             && python automation/taskcluster/decision_task.py pull-request
@@ -159,7 +158,7 @@ tasks:
                         treeherder:
                           symbol: D-PR
                       metadata:
-                        name: 'Reference-Browser - Decision task (Pull Request #${pull_request_number})'
+                        name: '${project_name} - Decision task (Pull Request #${pull_request_number})'
                         description: 'Building and testing the Reference Browser - triggered by [#${pull_request_number}](${pull_request_url})'
             - $if: 'tasks_for == "github-push" && head_branch[:10] != "refs/tags/"'
               then:
@@ -172,7 +171,7 @@ tasks:
                         - >-
                           cd ..
                           && git clone ${repository}
-                          && cd reference-browser
+                          && cd ${project_name}
                           && git config advice.detachedHead false
                           && git checkout ${head_rev}
                           && python automation/taskcluster/decision_task.py push
@@ -180,7 +179,7 @@ tasks:
                       treeherder:
                         symbol: D
                     metadata:
-                      name: Reference-Browser - Decision task
+                      name: ${project_name} - Decision task
                       description: Schedules the build and test tasks for Android components.
           else:
             - $if: 'tasks_for == "cron"'
@@ -197,14 +196,14 @@ tasks:
                         - {$eval: 'default_task_definition'}
                         - scopes:
                             - $if: 'trust_level == 3'
-                              then: assume:hook-id:project-mobile/reference-browser-nightly
-                              else: assume:hook-id:project-mobile/reference-browser-nightly-staging
+                              then: assume:hook-id:project-mobile/${project_name}-nightly
+                              else: assume:hook-id:project-mobile/${project_name}-nightly-staging
                           payload:
                             command:
                               - >-
                                 cd ..
                                 && git clone ${repository}
-                                && cd reference-browser
+                                && cd ${project_name}
                                 && git checkout ${event.release.tag_name}
                                 && python automation/taskcluster/decision_task.py \
                                   nightly \
@@ -215,7 +214,7 @@ tasks:
                             treeherder:
                               symbol: nightly-D
                           metadata:
-                            name: Reference-Browser - Nightly Decision Task
+                            name: ${project_name} - Nightly Decision Task
                             description: Decision task scheduled by cron task [${cron.task_id}](https://tools.taskcluster.net/tasks/${cron.task_id})
                   - $if: 'cron.name == "raptor"'
                     then:
@@ -223,14 +222,14 @@ tasks:
                         - {$eval: 'default_task_definition'}
                         - scopes:
                             - $if: 'trust_level == 3'
-                              then: assume:hook-id:project-mobile/reference-browser-raptor
-                              else: assume:hook-id:project-mobile/reference-browser-raptor-staging
+                              then: assume:hook-id:project-mobile/${project_name}-raptor
+                              else: assume:hook-id:project-mobile/${project_name}-raptor-staging
                           payload:
                             command:
                               - >-
                                 cd ..
                                 && git clone ${repository}
-                                && cd reference-browser
+                                && cd ${project_name}
                                 && git checkout ${event.release.tag_name}
                                 && python automation/taskcluster/decision_task.py \
                                   raptor \
@@ -241,5 +240,5 @@ tasks:
                             treeherder:
                               symbol: raptor-D
                           metadata:
-                            name: Reference-Browser - Raptor Decision Task
+                            name: ${project_name} - Raptor Decision Task
                             description: Decision task scheduled by cron task [${cron.task_id}](https://tools.taskcluster.net/tasks/${cron.task_id})
