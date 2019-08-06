@@ -13,10 +13,10 @@ import android.util.AttributeSet
 import android.view.View
 import androidx.fragment.app.Fragment
 import mozilla.components.browser.session.Session
+import mozilla.components.browser.session.intent.EXTRA_SESSION_ID
 import mozilla.components.browser.tabstray.BrowserTabsTray
 import mozilla.components.concept.engine.EngineView
 import mozilla.components.concept.tabstray.TabsTray
-import mozilla.components.feature.intent.IntentProcessor
 import mozilla.components.lib.crash.Crash
 import mozilla.components.support.base.feature.BackHandler
 import mozilla.components.support.utils.SafeIntent
@@ -35,7 +35,7 @@ open class BrowserActivity : AppCompatActivity() {
     private lateinit var crashIntegration: CrashIntegration
 
     private val sessionId: String?
-        get() = SafeIntent(intent).getStringExtra(IntentProcessor.ACTIVE_SESSION_ID)
+        get() = SafeIntent(intent).getStringExtra(EXTRA_SESSION_ID)
 
     /**
      * Returns a new instance of [BrowserFragment] to display.

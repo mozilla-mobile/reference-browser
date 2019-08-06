@@ -20,7 +20,7 @@ class Search(private val context: Context) {
     val searchEngineManager by lazy {
         SearchEngineManager().apply {
             GlobalScope.launch {
-                load(context).await()
+                loadAsync(context).await()
             }
         }
     }

@@ -4,6 +4,8 @@
 
 package org.mozilla.reference.browser.components
 
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.launch
 import mozilla.components.feature.accounts.FirefoxAccountsAuthFeature
 import mozilla.components.feature.tabs.TabsUseCases
 import mozilla.components.service.fxa.manager.FxaAccountManager
@@ -18,8 +20,12 @@ class Services(
     val accountsAuthFeature by lazy {
         FirefoxAccountsAuthFeature(
             accountManager,
-            tabsUseCases,
             redirectUrl = BackgroundServices.REDIRECT_URL
-        )
+        ) {
+            _, authUrl ->
+                MainScope().launch {
+                    tabsUseCases.addTab.invoke(authUrl)
+                }
+        }
     }
 }

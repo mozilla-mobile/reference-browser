@@ -8,7 +8,6 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import mozilla.components.browser.session.Session
-import mozilla.components.support.utils.SafeIntent
 import org.mozilla.reference.browser.ext.components
 
 /**

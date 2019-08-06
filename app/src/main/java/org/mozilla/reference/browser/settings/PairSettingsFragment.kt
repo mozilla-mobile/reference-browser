@@ -33,7 +33,9 @@ class PairSettingsFragment : Fragment(), BackHandler {
                     requestPermissions(permissions, REQUEST_CODE_CAMERA_PERMISSIONS)
                 },
                 onScanResult = { pairingUrl ->
-                    requireComponents.services.accountsAuthFeature.beginPairingAuthentication(pairingUrl)
+                    requireComponents.services.accountsAuthFeature.beginPairingAuthentication(
+                        requireContext(), pairingUrl
+                    )
                     activity?.finish()
                 }
             ),
