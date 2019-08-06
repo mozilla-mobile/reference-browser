@@ -17,7 +17,6 @@ import org.mozilla.geckoview.GeckoRuntimeSettings
 import org.mozilla.reference.browser.ext.isCrashReportActive
 
 object EngineProvider {
-    var testConfig: Bundle? = null
 
     private var runtime: GeckoRuntime? = null
 
@@ -25,8 +24,6 @@ object EngineProvider {
     private fun getOrCreateRuntime(context: Context): GeckoRuntime {
         if (runtime == null) {
             val builder = GeckoRuntimeSettings.Builder()
-
-            testConfig?.let { builder.extras(it) }
 
             if (isCrashReportActive) {
                 builder.crashHandler(CrashHandlerService::class.java)
