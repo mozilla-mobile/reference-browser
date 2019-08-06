@@ -309,6 +309,7 @@ class TaskBuilder(object):
         routes=None,
         scopes=None,
         treeherder=None,
+        notify=None,
     ):
         dependencies = [] if dependencies is None else dependencies
         scopes = [] if scopes is None else scopes
@@ -321,6 +322,12 @@ class TaskBuilder(object):
 
         if self.trust_level == 3:
             routes.append("tc-treeherder.v2.reference-browser.{}".format(self.commit))
+
+        extra = {
+            "treeherder": treeherder,
+        }
+        if notify:
+            extra['notify'] = notify
 
         return {
             "provisionerId": provisioner_id,
@@ -338,9 +345,7 @@ class TaskBuilder(object):
             "routes": routes,
             "scopes": scopes,
             "payload": payload,
-            "extra": {
-                "treeherder": treeherder,
-            },
+            "extra": extra,
             "metadata": {
                 "name": "Reference-Browser - {}".format(name),
                 "description": description,
@@ -583,6 +588,7 @@ class TaskBuilder(object):
             dependencies=[signing_task_id],
             name=task_name,
             description=description,
+            routes=['notify.email.perftest-alerts@mozilla.com.on-failed'],
             payload={
                 "maxRunTime": 2700,
                 "artifacts": [{
@@ -642,7 +648,17 @@ class TaskBuilder(object):
                 },
                 'symbol': job_symbol,
                 'tier': 2,
-            }
+            },
+            notify={
+                'email': {
+                    'link': {
+                        'text': "Treeherder Job",
+                        'href': "https://treeherder.mozilla.org/#/jobs?repo=reference-browser&revision={}".format(self.commit),
+                    },
+                    'subject': '[reference-browser] Raptor job "{}" failed'.format(task_name),
+                    'content': "This calls for an action of the Performance team. Use the link to view it on Treeherder.",
+                },
+            },
         )
 
 
