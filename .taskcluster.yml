@@ -150,7 +150,7 @@ tasks:
                             && cd ${project_name}
                             && git config advice.detachedHead false
                             && git checkout ${head_rev}
-                            && python automation/taskcluster/decision_task.py raptor --staging
+                            && python automation/taskcluster/decision_task.py pull-request
                         env:
                           GITHUB_PULL_TITLE: ${pull_request_title}
                           MOBILE_PULL_REQUEST_NUMBER: ${pull_request_number}
