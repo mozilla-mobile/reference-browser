@@ -17,6 +17,7 @@ import mozilla.components.concept.sync.DeviceType
 import mozilla.components.concept.sync.OAuthAccount
 import mozilla.components.feature.push.AutoPushFeature
 import mozilla.components.feature.push.PushConfig
+import mozilla.components.feature.sendtab.SendTabFeature
 import mozilla.components.service.fxa.DeviceConfig
 import mozilla.components.service.fxa.ServerConfig
 import mozilla.components.service.fxa.SyncConfig
@@ -24,6 +25,7 @@ import mozilla.components.service.fxa.SyncEngine
 import mozilla.components.service.fxa.manager.FxaAccountManager
 import mozilla.components.service.fxa.sync.GlobalSyncableStoreProvider
 import org.mozilla.reference.browser.push.FirebasePush
+import org.mozilla.reference.browser.NotificationManager
 
 /**
  * Component group for background services. These are components that need to be accessed from
@@ -66,6 +68,11 @@ class BackgroundServices(
         // See https://github.com/mozilla-mobile/android-components/issues/3732
         setOf("https://identity.mozilla.com/apps/oldsync")
     ).also {
+        // Initializing the feature allows it to start observing events as needed.
+        SendTabFeature(it) { device, tabs ->
+            notificationManager.showReceivedTabs(device, tabs)
+        }
+
         CoroutineScope(Dispatchers.Main).launch { it.initAsync().await() }
 
         // We don't need the push service unless we're signed in.
@@ -102,4 +109,8 @@ class BackgroundServices(
     }
 
     private val pushService by lazy { FirebasePush() }
+
+    private val notificationManager by lazy {
+        NotificationManager(context)
+    }
 }

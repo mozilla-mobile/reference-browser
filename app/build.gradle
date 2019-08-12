@@ -207,6 +207,7 @@ dependencies {
     implementation Deps.mozilla_feature_sitepermissions
     implementation Deps.mozilla_feature_intent
     implementation Deps.mozilla_feature_search
+    implementation Deps.mozilla_feature_sendtab
     implementation Deps.mozilla_feature_session
     implementation Deps.mozilla_feature_toolbar
     implementation Deps.mozilla_feature_tabs
