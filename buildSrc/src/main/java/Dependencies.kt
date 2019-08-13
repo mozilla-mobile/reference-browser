@@ -39,6 +39,7 @@ object Deps {
     const val mozilla_concept_toolbar = "org.mozilla.components:concept-toolbar:${Versions.mozilla_android_components}"
     const val mozilla_concept_storage = "org.mozilla.components:concept-storage:${Versions.mozilla_android_components}"
     const val mozilla_concept_sync = "org.mozilla.components:concept-sync:${Versions.mozilla_android_components}"
+    const val mozilla_concept_push = "org.mozilla.components:concept-push:${Versions.mozilla_android_components}"
 
     const val mozilla_browser_awesomebar = "org.mozilla.components:browser-awesomebar:${Versions.mozilla_android_components}"
     const val mozilla_browser_engine_gecko = "org.mozilla.components:browser-engine-gecko:${Versions.mozilla_android_components}"
@@ -71,6 +72,7 @@ object Deps {
     const val mozilla_feature_downloads = "org.mozilla.components:feature-downloads:${Versions.mozilla_android_components}"
     const val mozilla_feature_storage = "org.mozilla.components:feature-storage:${Versions.mozilla_android_components}"
     const val mozilla_feature_prompts = "org.mozilla.components:feature-prompts:${Versions.mozilla_android_components}"
+    const val mozilla_feature_push = "org.mozilla.components:feature-push:${Versions.mozilla_android_components}"
     const val mozilla_feature_pwa = "org.mozilla.components:feature-pwa:${Versions.mozilla_android_components}"
     const val mozilla_feature_qr = "org.mozilla.components:feature-qr:${Versions.mozilla_android_components}"
     const val mozilla_feature_readerview = "org.mozilla.components:feature-readerview:${Versions.mozilla_android_components}"
@@ -90,6 +92,7 @@ object Deps {
     const val mozilla_support_rusthttp = "org.mozilla.components:support-rusthttp:${Versions.mozilla_android_components}"
 
     const val mozilla_lib_crash = "org.mozilla.components:lib-crash:${Versions.mozilla_android_components}"
+    const val mozilla_lib_push_firebase = "org.mozilla.components:lib-push-firebase:${Versions.mozilla_android_components}"
 
     const val thirdparty_sentry = "io.sentry:sentry-android:${Versions.thirdparty_sentry}"
 

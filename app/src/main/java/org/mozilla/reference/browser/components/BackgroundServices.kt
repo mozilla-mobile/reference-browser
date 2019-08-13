@@ -6,18 +6,24 @@ package org.mozilla.reference.browser.components
 
 import android.content.Context
 import android.os.Build
+import androidx.lifecycle.ProcessLifecycleOwner
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import mozilla.components.browser.storage.sync.PlacesHistoryStorage
+import mozilla.components.concept.sync.AccountObserver
 import mozilla.components.concept.sync.DeviceCapability
 import mozilla.components.concept.sync.DeviceType
+import mozilla.components.concept.sync.OAuthAccount
+import mozilla.components.feature.push.AutoPushFeature
+import mozilla.components.feature.push.PushConfig
 import mozilla.components.service.fxa.DeviceConfig
 import mozilla.components.service.fxa.ServerConfig
 import mozilla.components.service.fxa.SyncConfig
 import mozilla.components.service.fxa.SyncEngine
 import mozilla.components.service.fxa.manager.FxaAccountManager
 import mozilla.components.service.fxa.sync.GlobalSyncableStoreProvider
+import org.mozilla.reference.browser.push.FirebasePush
 
 /**
  * Component group for background services. These are components that need to be accessed from
@@ -61,5 +67,39 @@ class BackgroundServices(
         setOf("https://identity.mozilla.com/apps/oldsync")
     ).also {
         CoroutineScope(Dispatchers.Main).launch { it.initAsync().await() }
+
+        // We don't need the push service unless we're signed in.
+        it.register(object : AccountObserver {
+            override fun onAuthenticated(account: OAuthAccount, newAccount: Boolean) {
+                pushService.start(context)
+            }
+
+            override fun onLoggedOut() {
+                pushService.stop()
+            }
+        }, ProcessLifecycleOwner.get(), false)
     }
+
+    val pushFeature by lazy {
+        pushConfig?.let { config ->
+            AutoPushFeature(context, pushService, config)
+        }
+    }
+
+    /**
+     * The push configuration data class used to initialize the AutoPushFeature.
+     *
+     * If we have the `project_id` resource, then we know that the Firebase configuration and API
+     * keys are available for the FCM service to be used.
+     */
+    private val pushConfig by lazy {
+        val resId = context.resources.getIdentifier("project_id", "string", context.packageName)
+        if (resId == 0) {
+            return@lazy null
+        }
+        val projectId = context.resources.getString(resId)
+        PushConfig(projectId)
+    }
+
+    private val pushService by lazy { FirebasePush() }
 }
