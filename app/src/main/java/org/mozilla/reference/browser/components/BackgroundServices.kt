@@ -56,35 +56,29 @@ class BackgroundServices(
         syncPeriodInMinutes = 240L
     ) // four hours
 
-    val accountManager = FxaAccountManager(
-        context,
-        serverConfig,
-        deviceConfig,
-        syncConfig,
-        // We don't need to specify this explicitly, but `syncConfig` may be disabled due to an 'experiments'
-        // flag. In that case, sync scope necessary for syncing won't be acquired during authentication
-        // unless we explicitly specify it below.
-        // This is a good example of an information leak at the API level.
-        // See https://github.com/mozilla-mobile/android-components/issues/3732
-        setOf("https://identity.mozilla.com/apps/oldsync")
-    ).also {
-        // Initializing the feature allows it to start observing events as needed.
-        SendTabFeature(it) { device, tabs ->
-            notificationManager.showReceivedTabs(device, tabs)
+    val accountManager by lazy {
+        FxaAccountManager(
+            context,
+            serverConfig,
+            deviceConfig,
+            syncConfig,
+            // We don't need to specify this explicitly, but `syncConfig` may be disabled due to an 'experiments'
+            // flag. In that case, sync scope necessary for syncing won't be acquired during authentication
+            // unless we explicitly specify it below.
+            // This is a good example of an information leak at the API level.
+            // See https://github.com/mozilla-mobile/android-components/issues/3732
+            setOf("https://identity.mozilla.com/apps/oldsync")
+        ).also {
+            // We don't need the push service unless we're signed in.
+            it.register(pushServiceObserver, ProcessLifecycleOwner.get(), false)
+
+            // Initializing the feature allows it to start observing events as needed.
+            SendTabFeature(it, pushFeature) { device, tabs ->
+                notificationManager.showReceivedTabs(device, tabs)
+            }
+
+            CoroutineScope(Dispatchers.Main).launch { it.initAsync().await() }
         }
-
-        CoroutineScope(Dispatchers.Main).launch { it.initAsync().await() }
-
-        // We don't need the push service unless we're signed in.
-        it.register(object : AccountObserver {
-            override fun onAuthenticated(account: OAuthAccount, newAccount: Boolean) {
-                pushService.start(context)
-            }
-
-            override fun onLoggedOut() {
-                pushService.stop()
-            }
-        }, ProcessLifecycleOwner.get(), false)
     }
 
     val pushFeature by lazy {
@@ -112,5 +106,17 @@ class BackgroundServices(
 
     private val notificationManager by lazy {
         NotificationManager(context)
+    }
+
+    private val pushServiceObserver by lazy {
+        object : AccountObserver {
+            override fun onAuthenticated(account: OAuthAccount, newAccount: Boolean) {
+                pushService.start(context)
+            }
+
+            override fun onLoggedOut() {
+                pushService.stop()
+            }
+        }
     }
 }
