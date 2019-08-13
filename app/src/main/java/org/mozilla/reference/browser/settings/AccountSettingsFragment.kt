@@ -13,8 +13,8 @@ import androidx.preference.PreferenceFragmentCompat
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import mozilla.components.feature.sync.getLastSynced
 import mozilla.components.service.fxa.sync.SyncStatusObserver
+import mozilla.components.service.fxa.sync.getLastSynced
 import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.ext.getPreferenceKey
 import org.mozilla.reference.browser.ext.requireComponents
