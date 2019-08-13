@@ -30,7 +30,8 @@ class BrowserFragment : BaseBrowserFragment(), BackHandler, UserInteractionHandl
 
         AwesomeBarFeature(awesomeBar, toolbar, engineView)
             .addSearchProvider(
-                requireComponents.search.searchEngineManager.getDefaultSearchEngine(requireContext()),
+                requireContext(),
+                requireComponents.search.searchEngineManager,
                 requireComponents.useCases.searchUseCases.defaultSearch,
                 requireComponents.core.client)
             .addSessionProvider(
