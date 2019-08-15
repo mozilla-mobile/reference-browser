@@ -33,6 +33,8 @@ job-defaults:
         path: '/builds/worker/checkouts/src/app/build/outputs/apk/{variant}/{fileName}'
 jobs:
     nightly:
+        attributes:
+            nightly: true
         run-on-tasks-for: [cron]
         run:
             gradlew: ["-PcrashReportEnabled=true", "-Ptelemetry=true", "assembleNightly"]
