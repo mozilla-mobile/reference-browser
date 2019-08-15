@@ -295,3 +295,11 @@ task printGeckoviewVersion {
 // Normally this should use the same version as the dependency. But since we are using snapshots we can't reference a
 // git tag. So we are just using "master" and hoping for the best.
 apply from: 'https://github.com/mozilla-mobile/android-components/raw/master/components/service/glean/scripts/sdk_generator.gradle'
+
+if (gradle.hasProperty('localProperties.dependencySubstitutions.geckoviewTopsrcdir')) {
+    if (gradle.hasProperty('localProperties.dependencySubstitutions.geckoviewTopobjdir')) {
+        ext.topobjdir = gradle."localProperties.dependencySubstitutions.geckoviewTopobjdir"
+    }
+    ext.topsrcdir = gradle."localProperties.dependencySubstitutions.geckoviewTopsrcdir"
+    apply from: "${topsrcdir}/substitute-local-geckoview.gradle"
+}
