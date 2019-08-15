@@ -14,7 +14,6 @@ import mozilla.components.browser.storage.sync.PlacesHistoryStorage
 import mozilla.components.concept.engine.DefaultSettings
 import mozilla.components.concept.engine.Engine
 import mozilla.components.concept.engine.EngineSession.TrackingProtectionPolicy
-import mozilla.components.concept.engine.EngineSession.TrackingProtectionPolicy.Companion.SAFE_BROWSING_ALL
 import mozilla.components.concept.fetch.Client
 import mozilla.components.feature.media.MediaFeature
 import mozilla.components.feature.media.RecordingDevicesNotificationFeature
@@ -117,11 +116,16 @@ class Core(private val context: Context) {
         privateMode: Boolean = prefs.getBoolean(context.getPreferenceKey(pref_key_tracking_protection_private), true)
     ): TrackingProtectionPolicy {
 
+        val tackingPolicy = TrackingProtectionPolicy.recommended()
         return when {
-            normalMode && privateMode -> TrackingProtectionPolicy.recommended()
-            normalMode && !privateMode -> TrackingProtectionPolicy.recommended().forRegularSessionsOnly()
-            !normalMode && privateMode -> TrackingProtectionPolicy.recommended().forPrivateSessionsOnly()
-            else -> TrackingProtectionPolicy.select(SAFE_BROWSING_ALL)
+            normalMode && privateMode -> tackingPolicy
+            normalMode && !privateMode -> tackingPolicy.forRegularSessionsOnly()
+            !normalMode && privateMode -> tackingPolicy.forPrivateSessionsOnly()
+            else -> TrackingProtectionPolicy.select(
+                    trackingCategories = arrayOf(TrackingProtectionPolicy.TrackingCategory.NONE),
+                    safeBrowsingCategories = arrayOf(TrackingProtectionPolicy.SafeBrowsingCategory.RECOMMENDED),
+                    cookiePolicy = TrackingProtectionPolicy.CookiePolicy.ACCEPT_ALL
+            )
         }
     }
 }
