@@ -19,12 +19,19 @@ gradlew_schema = Schema(
         # Base work directory used to set up the task.
         Required("workdir"): text_type,
         Optional("use-caches"): bool,
+        Optional("secrets"): [
+            {
+                Required("name"): text_type,
+                Required("path"): text_type,
+                Required("key"): text_type,
+            }
+        ],
     }
 )
 
 
 @run_job_using("docker-worker", "gradlew", schema=gradlew_schema)
-def configure_mach(config, job, taskdesc):
+def configure_gradlew(config, job, taskdesc):
     run = job["run"]
     worker = taskdesc["worker"] = job["worker"]
 
@@ -38,9 +45,19 @@ def configure_mach(config, job, taskdesc):
     )
 
     # defer to the run_task implementation
-    run["command"] = "taskcluster/scripts/install-sdk.sh && {}".format(
-        " ".join(map(shell_quote, command))
-    )
+    run["command"] = "taskcluster/scripts/install-sdk.sh"
+    secrets = run.pop("secrets", [])
+    if secrets:
+        scopes = taskdesc.setdefault("scopes", [])
+        for secret in secrets:
+            run[
+                "command"
+            ] += " && taskcluster/scripts/get-secret.py -s {name} -k {key} -f {path}".format(
+                **secret
+            )
+            scopes.append("secrets:get:{}".format(secret["name"]))
+
+    run["command"] += " && {}".format(" ".join(map(shell_quote, command)))
     run["cwd"] = "{checkout}"
     run["using"] = "run-task"
     configure_taskdesc_for_run(config, job, taskdesc, job["worker"]["implementation"])

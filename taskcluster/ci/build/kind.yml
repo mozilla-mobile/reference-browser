@@ -31,6 +31,7 @@ job-defaults:
         type: file
         name: public/target.{abi}.apk
         path: '/builds/worker/checkouts/src/app/build/outputs/apk/{variant}/{fileName}'
+
 jobs:
     nightly:
         attributes:
@@ -38,6 +39,10 @@ jobs:
         run-on-tasks-for: [cron]
         run:
             gradlew: ["-PcrashReportEnabled=true", "-Ptelemetry=true", "assembleNightly"]
+            secrets:
+                - path: .sentry_token
+                  key: dsn
+                  name: project/mobile/reference-browser/sentry
     raptor:
         run-on-tasks-for: [github-push]
         run:
