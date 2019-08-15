@@ -40,6 +40,14 @@ workers:
                 by-level:
                     "3": mobile-signing-v1
                     default: mobile-signing-dep-v1
+        push-apk:
+            provisioner: scriptworker-prov-v1
+            implementation: scriptworker-pushapk
+            os: scriptworker
+            worker-type:
+                by-level:
+                    "3": mobile-pushapk-v1
+                    default: mobile-pushapk-dep-v1
         t-bitbar.*:
             provisioner: proj-autophone
             implementation: generic-worker
