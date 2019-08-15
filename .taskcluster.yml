@@ -18,7 +18,12 @@ tasks:
                       $if: 'tasks_for == "github-push"'
                       then: '${event.pusher.email}'
                       # Assume Pull Request
-                      else: '${event.pull_request.user.login}@users.noreply.github.com'
+                      else:
+                          $if: 'tasks_for == "github-pull-request"'
+                          then: '${event.pull_request.user.login}@users.noreply.github.com'
+                          else:
+                              $if: 'tasks_for in ["cron", "action"]'
+                              then: '${tasks_for}@noreply.mozilla.org'
                   baseRepoUrl:
                       $if: 'tasks_for == "github-push"'
                       then: '${event.repository.html_url}'
@@ -54,7 +59,7 @@ tasks:
                           then: ${event.ref}
                           else:
                               $if: 'tasks_for in ["cron", "action"]'
-                              then: '${repository.revision}'
+                              then: '${push.branch}'
                   head_sha:
                       $if: 'tasks_for == "github-push"'
                       then: '${event.after}'
@@ -65,7 +70,7 @@ tasks:
                               $if: 'tasks_for in ["cron", "action"]'
                               then: '${push.revision}'
                   level:
-                      $if: 'tasks_for in ["github-push", "cron"] && event.repository.html_url == "https://github.com/mozilla-mobile/reference-browser"'
+                      $if: 'tasks_for in ["github-push", "cron"] && false == "https://github.com/mozilla-mobile/reference-browser"'
                       then: '3'
                       else:
                           $if: 'tasks_for in ["cron", "action"]'
@@ -78,8 +83,13 @@ tasks:
                           $if: 'tasks_for == "cron"'
                           then: '${ownTaskId}'
               in:
-                  taskId: '${as_slugid("decision")}'
-                  taskGroupId: '${as_slugid("decision")}'
+                  taskId: '${ownTaskId}'
+                  taskGroupId:
+                      $if: 'tasks_for == "action"'
+                      then:
+                          '${action.taskGroupId}'
+                      else:
+                          '${ownTaskId}'  # same as taskId; this is how automation identifies a decision task
                   schedulerId: '${trustDomain}-level-${level}'
                   created: {$fromNow: ''}
                   deadline: {$fromNow: '1 day'}
@@ -195,7 +205,7 @@ tasks:
                                     ~/.local/bin/taskgraph decision
                                     --pushlog-id='0'
                                     --pushdate='0'
-                                    --project='${event.pull_request.head.repo.name}'
+                                    --project='${project}'
                                     --message=""
                                     --owner='${ownerEmail}'
                                     --level='${level}'
