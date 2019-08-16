@@ -41,6 +41,8 @@ jobs:
         run:
             gradlew: ["assembleRaptor"]
     debug:
+        attributes:
+            code-review: true
         run-on-tasks-for: [github-push, github-pull-request]
         run:
             gradlew: ["assembleDebug"]
