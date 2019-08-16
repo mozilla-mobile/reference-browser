@@ -13,7 +13,9 @@ transforms:
     - taskgraph.transforms.task:transforms
 
 job-template:
-    description: Build Reference Browser from source code.
+    description: Sign Reference Browser
+    index:
+        type: signing
     treeherder:
         kind: build
         symbol: S
