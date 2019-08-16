@@ -3,6 +3,9 @@ trust-domain: mobile
 treeherder:
     group-names:
         'I': 'Docker Image Builds'
+        'Rap': 'Raptor tests'
+        'Rap-P': 'Raptor power tests'
+
 task-priority: lowest
 
 taskgraph:
