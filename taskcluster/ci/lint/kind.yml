@@ -10,7 +10,8 @@ transforms:
     - taskgraph.transforms.task:transforms
 
 job-defaults:
-    attributes: {}
+    attributes:
+        code-review: true
     worker-type: b-android
     worker:
         docker-image: {in-tree: base}
