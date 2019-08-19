@@ -124,7 +124,13 @@ tasks:
                               $if: 'tasks_for == "cron"'
                               then:
                                   kind: cron-task
-                  routes: [checks]
+                  routes:
+                      $flatten:
+                          - checks
+                          - $if: 'tasks_for != "github-pull-request"'
+                            then:
+                                - "tc-treeherder.v2.${project}.${head_sha}"
+                            else: []
                   scopes:
                       # `https://` is 8 characters so, ${repoUrl[8:]} is the repository without the protocol.
                       $if: 'tasks_for == "github-push"'
