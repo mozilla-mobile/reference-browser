@@ -30,6 +30,6 @@ job-template:
             by-variant:
                 nightly:
                     by-level:
-                        '3': nightly
+                        '3': release-signing
                         default: dep-signing
                 default: dep-signing
