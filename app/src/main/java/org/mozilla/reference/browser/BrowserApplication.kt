@@ -17,7 +17,6 @@ import mozilla.components.support.ktx.android.content.isMainProcess
 import mozilla.components.support.ktx.android.content.runOnlyInMainProcess
 import mozilla.components.support.rustlog.RustLog
 import mozilla.components.support.rusthttp.RustHttpConfig
-import org.mozilla.reference.browser.GleanMetrics.ExperimentsMetrics
 import org.mozilla.reference.browser.ext.components
 import org.mozilla.reference.browser.ext.isCrashReportActive
 import org.mozilla.reference.browser.settings.Settings
@@ -45,6 +44,7 @@ open class BrowserApplication : Application() {
         components.core.engine.warmUp()
 
         setupGlean(this)
+        setupExperiments(this)
     }
 
     override fun onTrimMemory(level: Int) {
@@ -69,21 +69,13 @@ private fun setupGlean(context: Context) {
     Glean.setUploadEnabled(BuildConfig.TELEMETRY_ENABLED && Settings.isTelemetryEnabled(context))
     Glean.initialize(context, Configuration(httpClient = lazy { context.components.core.client }))
     GleanFactProcessor().register()
+}
+
+private fun setupExperiments(context: Context) {
     Experiments.initialize(
         context,
         ExperimentsConfiguration(httpClient = lazy { context.components.core.client })
     )
-
-    // Recording the experiment ID in Glean through the use of the `withExperiment` function should
-    // allow us to validate the automatically recorded enrollment in the experiment, as well as the
-    // functionality of doing something within the client app based on the specific branch. It
-    // should be noted that the first time that the client is enrolled in the experiment, the
-    // following code will not be executed as this only gets called on startup, so it will be on
-    // the next application launch following enrollment that the code below will be executed and the
-    // metric recorded.
-    Experiments.withExperiment("reference-browser-test") { branchName ->
-        ExperimentsMetrics.activeExperiment.set(branchName)
-    }
 }
 
 private fun setupCrashReporting(application: BrowserApplication) {
