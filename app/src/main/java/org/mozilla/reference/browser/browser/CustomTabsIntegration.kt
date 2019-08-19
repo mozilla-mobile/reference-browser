@@ -107,7 +107,9 @@ class CustomTabsIntegration(
         toolbar,
         sessionId,
         menuBuilder,
-        closeListener = { activity?.finish() })
+        window = activity?.window,
+        closeListener = { activity?.finish() }
+    )
 
     override fun start() {
         feature.start()
