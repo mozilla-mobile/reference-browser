@@ -129,7 +129,16 @@ tasks:
                       # `https://` is 8 characters so, ${repoUrl[8:]} is the repository without the protocol.
                       $if: 'tasks_for == "github-push"'
                       then:
-                          - 'assume:repo:${repoUrl[8:]}:branch:${event.base.repo.branch}'
+                          $let:
+                              short_head_branch:
+                                  $if: 'head_branch[:10] == "refs/tags/"'
+                                  then: {$eval: 'head_branch[10:]'}
+                                  else:
+                                      $if: 'head_branch[:11] == "refs/heads/"'
+                                      then: {$eval: 'head_branch[11:]'}
+                                      else: ${head_branch}
+                          in:
+                              - 'assume:repo:${repoUrl[8:]}:branch:${short_head_branch}'
                       else:
                           $if: 'tasks_for == "github-pull-request"'
                           then:
