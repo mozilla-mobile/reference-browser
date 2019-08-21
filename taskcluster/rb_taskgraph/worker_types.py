@@ -78,6 +78,8 @@ def build_scriptworker_signing_payload(config, task, task_def):
 def build_push_apk_payload(config, task, task_def):
     worker = task["worker"]
 
+    task_def["tags"]["worker-implementation"] = "scriptworker"
+
     task_def["payload"] = {
         "commit": worker["commit"],
         "upstreamArtifacts": worker["upstream-artifacts"],
