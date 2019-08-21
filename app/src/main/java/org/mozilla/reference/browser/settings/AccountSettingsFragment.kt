@@ -16,11 +16,10 @@ import kotlinx.coroutines.launch
 import mozilla.components.service.fxa.sync.SyncStatusObserver
 import mozilla.components.service.fxa.sync.getLastSynced
 import org.mozilla.reference.browser.R
-import org.mozilla.reference.browser.ext.getPreferenceKey
-import org.mozilla.reference.browser.ext.requireComponents
 import org.mozilla.reference.browser.R.string.pref_key_sign_out
 import org.mozilla.reference.browser.R.string.pref_key_sync_now
-import java.lang.Exception
+import org.mozilla.reference.browser.ext.getPreferenceKey
+import org.mozilla.reference.browser.ext.requireComponents
 
 class AccountSettingsFragment : PreferenceFragmentCompat() {
     private val syncStatusObserver = object : SyncStatusObserver {
@@ -116,13 +115,14 @@ class AccountSettingsFragment : PreferenceFragmentCompat() {
     private fun getClickListenerForSyncNow(): OnPreferenceClickListener {
         return OnPreferenceClickListener {
             CoroutineScope(Dispatchers.Main).launch {
-                // Trigger a sync.
+                // Trigger a sync & update devices.
                 requireComponents.backgroundServices.accountManager.syncNowAsync().await()
                 // Poll for device events.
                 requireComponents.backgroundServices.accountManager.authenticatedAccount()
-                    ?.deviceConstellation()
-                    ?.refreshDeviceStateAsync()
-                    ?.await()
+                        ?.deviceConstellation()?.run {
+                            refreshDevicesAsync().await()
+                            pollForEventsAsync().await()
+                        }
             }
             true
         }
