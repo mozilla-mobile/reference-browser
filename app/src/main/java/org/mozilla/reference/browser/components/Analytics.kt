@@ -11,11 +11,18 @@ import mozilla.components.lib.crash.CrashReporter
 import mozilla.components.lib.crash.service.GleanCrashReporterService
 import mozilla.components.lib.crash.service.MozillaSocorroService
 import mozilla.components.lib.crash.service.SentryService
+import mozilla.components.service.experiments.Experiments
+import mozilla.components.service.glean.Glean
+import mozilla.components.service.glean.config.Configuration
+import mozilla.components.support.base.facts.register
 import org.mozilla.geckoview.BuildConfig.MOZ_APP_BUILDID
 import org.mozilla.geckoview.BuildConfig.MOZ_APP_VERSION
 import org.mozilla.reference.browser.BrowserApplication
 import org.mozilla.reference.browser.BuildConfig
 import org.mozilla.reference.browser.R
+import org.mozilla.reference.browser.ext.components
+import org.mozilla.reference.browser.settings.Settings
+import org.mozilla.reference.browser.telemetry.GleanFactProcessor
 
 /**
  * Component group for all functionality related to analytics e.g. crash
@@ -48,6 +55,19 @@ class Analytics(private val context: Context) {
             nonFatalCrashIntent = PendingIntent
                 .getBroadcast(context, 0, Intent(BrowserApplication.NON_FATAL_CRASH_BROADCAST), 0),
             enabled = true
+        )
+    }
+
+    internal fun initializeGlean() {
+        Glean.setUploadEnabled(BuildConfig.TELEMETRY_ENABLED && Settings.isTelemetryEnabled(context))
+        Glean.initialize(context, Configuration(httpClient = lazy { context.components.core.client }))
+        GleanFactProcessor().register()
+    }
+
+    internal fun initializeExperiments() {
+        Experiments.initialize(
+            context,
+            mozilla.components.service.experiments.Configuration(httpClient = lazy { context.components.core.client })
         )
     }
 }
