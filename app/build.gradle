@@ -288,7 +288,7 @@ task printGeckoviewVersion {
         def configuration = configurations.implementationDependenciesMetadata
         def dependencies = configuration.incoming.resolutionResult.allDependencies
         def geckoviewDependency = dependencies.find { it.selected.id.moduleIdentifier.group == 'org.mozilla.geckoview' }
-        println('geckoviewVersion: ' + geckoviewDependency.selected.moduleVersion.version)
+        println('geckoviewVersion: ' + groovy.json.JsonOutput.toJson(geckoviewDependency.selected.moduleVersion.version))
     }
 }
 

@@ -19,4 +19,6 @@
 # the repo. Unless a later match takes precedence.
 * @mozilla-mobile/act
 /automation/ @mozilla-mobile/releng @mozilla-mobile/act
+/taskcluster/ @mozilla-mobile/releng @mozilla-mobile/act
+/.taskcluster.yml @mozilla-mobile/releng @mozilla-mobile/act
 /CODEOWNERS @mozilla-mobile/releng @mozilla-mobile/act
