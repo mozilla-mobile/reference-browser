@@ -11,7 +11,6 @@ import taskcluster
 
 
 def write_secret_to_file(path, data, key, base64decode=False, json_secret=False, append=False, prefix=''):
-    path = os.path.join(os.path.dirname(__file__), '../../../' + path)
     with open(path, 'a' if append else 'w') as f:
         value = data['secret'][key]
         if base64decode:
