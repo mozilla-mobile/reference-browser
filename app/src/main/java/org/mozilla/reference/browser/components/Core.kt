@@ -121,11 +121,7 @@ class Core(private val context: Context) {
             normalMode && privateMode -> trackingPolicy
             normalMode && !privateMode -> trackingPolicy.forRegularSessionsOnly()
             !normalMode && privateMode -> trackingPolicy.forPrivateSessionsOnly()
-            else -> TrackingProtectionPolicy.select(
-                    trackingCategories = arrayOf(TrackingProtectionPolicy.TrackingCategory.NONE),
-                    safeBrowsingCategories = arrayOf(TrackingProtectionPolicy.SafeBrowsingCategory.RECOMMENDED),
-                    cookiePolicy = TrackingProtectionPolicy.CookiePolicy.ACCEPT_ALL
-            )
+            else -> TrackingProtectionPolicy.none()
         }
     }
 }
