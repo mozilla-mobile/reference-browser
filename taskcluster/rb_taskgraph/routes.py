@@ -19,7 +19,7 @@ SIGNING_ROUTE_TEMPLATES = [
 def add_signing_indexes(config, task):
     routes = task.setdefault("routes", [])
 
-    if config.params["level"] != 3:
+    if config.params["level"] != "3":
         return task
 
     subs = config.params.copy()
