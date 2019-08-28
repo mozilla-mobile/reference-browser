@@ -18,6 +18,7 @@ import mozilla.components.feature.customtabs.CustomTabsToolbarFeature
 import mozilla.components.feature.session.SessionUseCases
 import mozilla.components.support.base.feature.BackHandler
 import mozilla.components.support.base.feature.LifecycleAwareFeature
+import mozilla.components.support.base.log.logger.Logger
 import org.mozilla.reference.browser.BrowserActivity
 import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.ext.share
@@ -32,11 +33,16 @@ class CustomTabsIntegration(
     activity: Activity?
 ) : LifecycleAwareFeature, BackHandler {
 
+    private val session = sessionManager.findSessionById(sessionId)
+    private val logger = Logger("CustomTabsIntegration")
+
     init {
+        if (session == null) {
+            logger.warn("The session for this ID, no longer exists. Finishing activity.")
+            activity?.finish()
+        }
         toolbar.urlBoxView = null
     }
-
-    private val session = sessionManager.findSessionById(sessionId)
 
     private val menuToolbar by lazy {
         val forward = BrowserMenuItemToolbar.Button(
