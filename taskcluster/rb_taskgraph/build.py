@@ -21,8 +21,10 @@ transforms = TransformSequence()
 @transforms.add
 def add_variant_config(config, tasks):
     for task in tasks:
-        variant = task["name"]
-        task.setdefault("attributes", {}).update({"build-type": variant})
+        attributes = task.setdefault("attributes", {})
+        variant = attributes["build-type"] if attributes.get("build-type") else task["name"]
+        attributes["build-type"] = variant
+
         task["treeherder"]["platform"] = "android/{}".format(variant)
 
         variant_config = get_build_variant(variant)

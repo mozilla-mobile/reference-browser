@@ -42,3 +42,25 @@ jobs:
         run-on-tasks-for: [github-push, github-pull-request]
         run:
             gradlew: ['clean', 'testDebugUnitTest']
+    ui:
+        attributes:
+            build-type: debug
+        treeherder:
+            symbol: ui
+        run-on-tasks-for: [github-push]
+        run:
+            # TODO Generate APKs in a build task instead
+            gradlew: ['clean', 'assembleDebug', 'assembleAndroidTest']
+            post-gradlew:
+                - ['automation/taskcluster/androidTest/ui-test.sh', 'aarch64', '-1']
+                - ['automation/taskcluster/androidTest/ui-test.sh', 'arm', '-1']
+            secrets:
+                - name: project/mobile/reference-browser/firebase
+                  key: firebaseToken
+                  path: .firebase_token.json
+                  json: true
+        worker:
+            docker-image: {in-tree: ui-tests}
+            env:
+                GOOGLE_APPLICATION_CREDENTIALS: '.firebase_token.json'
+                GOOGLE_PROJECT: moz-reference-browser-230023

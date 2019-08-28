@@ -16,6 +16,7 @@ gradlew_schema = Schema(
     {
         Required("using"): "gradlew",
         Required("gradlew"): [text_type],
+        Optional("post-gradlew"): [[text_type]],
         # Base work directory used to set up the task.
         Required("workdir"): text_type,
         Optional("use-caches"): bool,
@@ -24,6 +25,7 @@ gradlew_schema = Schema(
                 Required("name"): text_type,
                 Required("path"): text_type,
                 Required("key"): text_type,
+                Optional("json"): bool,
             }
         ],
     }
@@ -35,29 +37,34 @@ def configure_gradlew(config, job, taskdesc):
     run = job["run"]
     worker = taskdesc["worker"] = job["worker"]
 
-    command_prefix = ["./gradlew"]
-
-    gradlew = run.pop("gradlew")
-    command = command_prefix + gradlew
-
     worker.setdefault("env", {}).update(
         {"ANDROID_SDK_ROOT": path.join(run["workdir"], "android-sdk-linux")}
     )
 
     # defer to the run_task implementation
-    run["command"] = "taskcluster/scripts/install-sdk.sh"
+    run["command"] = _extract_command(run)
     secrets = run.pop("secrets", [])
-    if secrets:
-        scopes = taskdesc.setdefault("scopes", [])
-        for secret in secrets:
-            run[
-                "command"
-            ] += " && taskcluster/scripts/get-secret.py -s {name} -k {key} -f {path}".format(
-                **secret
-            )
-            scopes.append("secrets:get:{}".format(secret["name"]))
+    scopes = taskdesc.setdefault("scopes", [])
+    scopes.extend(["secrets:get:{}".format(secret["name"]) for secret in secrets])
 
-    run["command"] += " && {}".format(" ".join(map(shell_quote, command)))
     run["cwd"] = "{checkout}"
     run["using"] = "run-task"
     configure_taskdesc_for_run(config, job, taskdesc, job["worker"]["implementation"])
+
+
+def _extract_command(run):
+    pre_gradle_commands = [["taskcluster/scripts/install-sdk.sh"]]
+    pre_gradle_commands += [[
+        "taskcluster/scripts/get-secret.py",
+        "--json" if secret.get("json", False) else "",
+        "-s", secret["name"],
+        "-k", secret["key"],
+        "-f", secret["path"],
+    ] for secret in run.get("secrets", [])]
+
+    gradle_command = ["./gradlew"] + run.pop("gradlew")
+    post_gradle_commands = run.pop("post-gradlew", [])
+
+    commands = pre_gradle_commands + [gradle_command] + post_gradle_commands
+    shell_quoted_commands = [" ".join(map(shell_quote, command)) for command in commands]
+    return " && ".join(shell_quoted_commands)
