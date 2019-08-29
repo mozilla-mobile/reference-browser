@@ -54,6 +54,7 @@
         android:background="@color/toolbarBackgroundColor"
         app:layout_behavior="mozilla.components.browser.toolbar.behavior.BrowserToolbarBottomBehavior"
         app:layout_scrollFlags="scroll|enterAlways|snap|exitUntilCollapsed"
+        mozac:browserToolbarTrackingProtectionAndSecurityIndicatorSeparatorColor="@color/photonWhite"
         mozac:browserToolbarSuggestionForegroundColor="@color/toolbarSuggestionForeground"
         mozac:browserToolbarSuggestionBackgroundColor="@color/toolbarSuggestionBackground" />
 

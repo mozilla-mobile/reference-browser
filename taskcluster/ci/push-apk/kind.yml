@@ -1,0 +1,27 @@
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+---
+
+loader: rb_taskgraph.single_dep:loader
+
+kind-dependencies:
+    - signing
+
+only-for-attributes:
+    - nightly
+
+transforms:
+    - rb_taskgraph.pushapk:transforms
+    - taskgraph.transforms.task:transforms
+
+job-template:
+    description: Publish Reference Browser
+    treeherder:
+        kind: build
+        symbol: gp
+    worker-type: push-apk
+    worker:
+        channel: nightly
+        commit: true
+        product: reference-browser

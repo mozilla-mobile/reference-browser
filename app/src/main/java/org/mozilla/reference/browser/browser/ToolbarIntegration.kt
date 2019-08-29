@@ -114,6 +114,8 @@ class ToolbarIntegration(
     private val menuBuilder = BrowserMenuBuilder(menuItems)
 
     init {
+        toolbar.displayTrackingProtectionIcon = true
+        toolbar.displaySeparatorView = true
         toolbar.setMenuBuilder(menuBuilder)
 
         toolbar.hint = context.getString(R.string.toolbar_hint)
