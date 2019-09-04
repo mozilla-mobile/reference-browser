@@ -15,6 +15,7 @@ import mozilla.components.concept.sync.DeviceType
 import mozilla.components.service.fxa.DeviceConfig
 import mozilla.components.service.fxa.ServerConfig
 import mozilla.components.service.fxa.SyncConfig
+import mozilla.components.service.fxa.SyncEngine
 import mozilla.components.service.fxa.manager.FxaAccountManager
 import mozilla.components.service.fxa.sync.GlobalSyncableStoreProvider
 
@@ -33,7 +34,7 @@ class BackgroundServices(
 
     init {
         // Make the "history" store accessible to workers spawned by the sync manager.
-        GlobalSyncableStoreProvider.configureStore("history" to placesHistoryStorage)
+        GlobalSyncableStoreProvider.configureStore(SyncEngine.HISTORY to placesHistoryStorage)
     }
 
     private val serverConfig = ServerConfig.release(CLIENT_ID, REDIRECT_URL)
@@ -43,7 +44,7 @@ class BackgroundServices(
         capabilities = setOf(DeviceCapability.SEND_TAB)
     )
     private val syncConfig = SyncConfig(
-        syncableStores = setOf("history"),
+        supportedEngines = setOf(SyncEngine.HISTORY),
         syncPeriodInMinutes = 240L
     ) // four hours
 
