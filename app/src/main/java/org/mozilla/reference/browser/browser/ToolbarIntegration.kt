@@ -132,7 +132,7 @@ class ToolbarIntegration(
 
     private val toolbarFeature: ToolbarFeature = ToolbarFeature(
         toolbar,
-        context.components.core.sessionManager,
+        context.components.core.store,
         context.components.useCases.sessionUseCases.loadUrl,
         { searchTerms -> context.components.useCases.searchUseCases.defaultSearch.invoke(searchTerms) },
         sessionId

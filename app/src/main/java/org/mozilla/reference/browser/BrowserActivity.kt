@@ -13,10 +13,10 @@ import android.util.AttributeSet
 import android.view.View
 import androidx.fragment.app.Fragment
 import mozilla.components.browser.session.Session
-import mozilla.components.browser.session.intent.EXTRA_SESSION_ID
 import mozilla.components.browser.tabstray.BrowserTabsTray
 import mozilla.components.concept.engine.EngineView
 import mozilla.components.concept.tabstray.TabsTray
+import mozilla.components.feature.intent.ext.EXTRA_SESSION_ID
 import mozilla.components.lib.crash.Crash
 import mozilla.components.support.base.feature.BackHandler
 import mozilla.components.support.utils.SafeIntent

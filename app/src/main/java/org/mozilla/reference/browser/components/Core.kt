@@ -10,6 +10,7 @@ import android.preference.PreferenceManager
 import mozilla.components.browser.icons.BrowserIcons
 import mozilla.components.browser.session.SessionManager
 import mozilla.components.browser.session.storage.SessionStorage
+import mozilla.components.browser.state.store.BrowserStore
 import mozilla.components.browser.storage.sync.PlacesHistoryStorage
 import mozilla.components.concept.engine.DefaultSettings
 import mozilla.components.concept.engine.Engine
@@ -57,6 +58,13 @@ class Core(private val context: Context) {
     }
 
     /**
+     * The [BrowserStore] holds the global [BrowserState].
+     */
+    val store by lazy {
+        BrowserStore()
+    }
+
+    /**
      * The session manager component provides access to a centralized registry of
      * all browser sessions (i.e. tabs). It is initialized here to persist and restore
      * sessions from the [SessionStorage], and with a default session (about:blank) in
@@ -65,7 +73,7 @@ class Core(private val context: Context) {
     val sessionManager by lazy {
         val sessionStorage = SessionStorage(context, engine)
 
-        SessionManager(engine).apply {
+        SessionManager(engine, store).apply {
             sessionStorage.restore()?.let { snapshot -> restore(snapshot) }
 
             sessionStorage.autoSave(this)
