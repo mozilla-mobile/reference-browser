@@ -6,15 +6,15 @@ loader: taskgraph.loader.transform:loader
 
 transforms:
     - rb_taskgraph.variant:transforms
-    - rb_taskgraph.build_apk:transforms
+    - rb_taskgraph.build_aab:transforms
     - taskgraph.transforms.job:transforms
     - taskgraph.transforms.task:transforms
 
 job-defaults:
-    description: Build Reference Browser from source code.
+    description: Build AAB (Android App Bundle) from source code.
     treeherder:
         kind: build
-        symbol: B
+        symbol: AAB
         tier: 2
     worker-type: b-android
     worker:
@@ -24,14 +24,10 @@ job-defaults:
     run:
         using: gradlew
         use-caches: false
-    # Builds generate multiple APKs with different ABIs. For each APK described
-    # by `gradlew printVariant`, an artifact will be generated. `variant` and
-    # the per-apk config from `printVariant` can be used as subsistutions in
-    # `name` and `path`.
-    apk-artifact-template:
+    aab-artifact-template:
         type: file
-        name: public/target.{abi}.apk
-        path: '/builds/worker/checkouts/src/app/build/outputs/apk/{variant}/{fileName}'
+        name: public/target.aab
+        path: '/builds/worker/checkouts/src/app/build/outputs/bundle/{variant}/app.aab'
 
 jobs:
     nightly:
@@ -40,18 +36,12 @@ jobs:
         run-on-tasks-for: []
         include-nightly-version: true
         run:
-            gradlew: ["-PcrashReportEnabled=true", "-Ptelemetry=true", "assembleNightly"]
+            gradlew: ["-PcrashReportEnabled=true", "-Ptelemetry=true", "bundleNightly"]
             secrets:
                 - path: .sentry_token
                   key: dsn
                   name: project/mobile/reference-browser/sentry
-    raptor:
-        run-on-tasks-for: [github-push]
-        run:
-            gradlew: ["assembleRaptor"]
     debug:
-        attributes:
-            code-review: true
         run-on-tasks-for: [github-push, github-pull-request]
         run:
-            gradlew: ["assembleDebug"]
+            gradlew: ["bundleDebug"]
