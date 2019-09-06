@@ -54,13 +54,9 @@ def configure_gradlew(config, job, taskdesc):
 
 def _extract_command(run):
     pre_gradle_commands = [["taskcluster/scripts/install-sdk.sh"]]
-    pre_gradle_commands += [[
-        "taskcluster/scripts/get-secret.py",
-        "--json" if secret.get("json", False) else "",
-        "-s", secret["name"],
-        "-k", secret["key"],
-        "-f", secret["path"],
-    ] for secret in run.get("secrets", [])]
+    pre_gradle_commands += [
+        _generate_secret_command(secret) for secret in run.get("secrets", [])
+    ]
 
     gradle_command = ["./gradlew"] + run.pop("gradlew")
     post_gradle_commands = run.pop("post-gradlew", [])
@@ -68,3 +64,16 @@ def _extract_command(run):
     commands = pre_gradle_commands + [gradle_command] + post_gradle_commands
     shell_quoted_commands = [" ".join(map(shell_quote, command)) for command in commands]
     return " && ".join(shell_quoted_commands)
+
+
+def _generate_secret_command(secret):
+    secret_command = [
+        "taskcluster/scripts/get-secret.py",
+        "-s", secret["name"],
+        "-k", secret["key"],
+        "-f", secret["path"],
+    ]
+    if secret.get("json"):
+        secret_command.append("--json")
+
+    return secret_command
