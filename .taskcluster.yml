@@ -8,7 +8,12 @@ tasks:
           taskgraph:
               branch: taskgraph
               revision: 0c5a68749f9a7672a7e56604b69a7bd41b036614
+              repository:
+                  name: mobile
+                  description: Reference Browser
+              treeherder: true
           trustDomain: mobile
+          canonicalRepo: https://github.com/mozilla-mobile/reference-browser
       in:
           $if: 'tasks_for in ["github-pull-request", "github-push", "action", "cron"]'
           then:
@@ -75,10 +80,11 @@ tasks:
                       else:
                           $if: 'tasks_for == "cron"'
                           then: '${ownTaskId}'
+                  repositoryPrefix: '${uppercase(taskgraph.repository.name)}'
               in:
                   $let:
                       level:
-                          $if: 'tasks_for in ["github-push"] && repoUrl == "https://github.com/mozilla-mobile/reference-browser"'
+                          $if: 'tasks_for in ["github-push"] && repoUrl == canonicalRepo'
                           then: '3'
                           else:
                               $if: 'tasks_for in ["cron", "action"]'
@@ -113,7 +119,7 @@ tasks:
                                         name: "Decision Task for cron job ${cron.job_name}"
                                         description: 'Created by a [cron task](https://tools.taskcluster.net/tasks/${cron.task_id})'
                       provisionerId: "aws-provisioner-v1"
-                      workerType: "mobile-${level}-decision"
+                      workerType: "${trustDomain}-${level}-decision"
                       tags:
                           $if: 'tasks_for in ["github-push", "github-pull-request"]'
                           then:
@@ -129,7 +135,7 @@ tasks:
                       routes:
                           $flatten:
                               - checks
-                              - $if: 'tasks_for != "github-pull-request"'
+                              - $if: 'tasks_for != "github-pull-request" && taskgraph.treeherder'
                                 then:
                                     - "tc-treeherder.v2.${project}.${head_sha}"
                                 else: []
@@ -168,21 +174,21 @@ tasks:
                               # run-task uses these to check out the source; the inputs
                               # to `mach taskgraph decision` are all on the command line.
                               $merge:
-                                  - MOBILE_BASE_REPOSITORY: '${baseRepoUrl}'
-                                    MOBILE_HEAD_REPOSITORY: '${repoUrl}'
-                                    MOBILE_HEAD_REF: '${head_branch}'
-                                    MOBILE_HEAD_REV: '${head_sha}'
-                                    MOBILE_REPOSITORY_TYPE: git
+                                  - '${repositoryPrefix}_BASE_REPOSITORY': '${baseRepoUrl}'
+                                    '${repositoryPrefix}_HEAD_REPOSITORY': '${repoUrl}'
+                                    '${repositoryPrefix}_HEAD_REF': '${head_branch}'
+                                    '${repositoryPrefix}_HEAD_REV': '${head_sha}'
+                                    '${repositoryPrefix}_REPOSITORY_TYPE': git
                                     TASKGRAPH_BASE_REPOSITORY: https://hg.mozilla.org/ci/taskgraph
                                     TASKGRAPH_HEAD_REPOSITORY: https://hg.mozilla.org/ci/${taskgraph.branch}
                                     TASKGRAPH_HEAD_REV: ${taskgraph.revision}
                                     TASKGRAPH_REPOSITORY_TYPE: hg
-                                    REPOSITORIES: {$json: {mobile: "Reference Browser", taskgraph: "Taskgraph"}}
+                                    REPOSITORIES: {$json: {'${taskgraph.repository.name}': '${taskgraph.repository.description}', taskgraph: "Taskgraph"}}
                                     HG_STORE_PATH: /builds/worker/checkouts/hg-store
                                     ANDROID_SDK_ROOT: /builds/worker/android-sdk
                                   - $if: 'tasks_for in ["github-pull-request"]'
                                     then:
-                                        MOBILE_PULL_REQUEST_NUMBER: '${event.pull_request.number}'
+                                        '${repositoryPrefix}_PULL_REQUEST_NUMBER': '${event.pull_request.number}'
                                   - $if: 'tasks_for == "action"'
                                     then:
                                         ACTION_TASK_GROUP_ID: '${action.taskGroupId}'  # taskGroupId of the target task
@@ -201,7 +207,7 @@ tasks:
 
                           command:
                               - /usr/local/bin/run-task
-                              - '--mobile-checkout=/builds/worker/checkouts/src'
+                              - '--${taskgraph.repository.name}-checkout=/builds/worker/checkouts/src'
                               - '--taskgraph-checkout=/builds/worker/checkouts/taskgraph'
                               - '--task-cwd=/builds/worker/checkouts/src'
                               - '--'
@@ -226,11 +232,11 @@ tasks:
                                         --message=""
                                         --owner='${ownerEmail}'
                                         --level='${level}'
-                                        --base-repository="$MOBILE_BASE_REPOSITORY"
-                                        --head-repository="$MOBILE_HEAD_REPOSITORY"
-                                        --head-ref="$MOBILE_HEAD_REF"
-                                        --head-rev="$MOBILE_HEAD_REV"
-                                        --repository-type="$MOBILE_REPOSITORY_TYPE"
+                                        --base-repository="${'$'+repositoryPrefix}_BASE_REPOSITORY"
+                                        --head-repository="${'$'+repositoryPrefix}_HEAD_REPOSITORY"
+                                        --head-ref="${'$'+repositoryPrefix}_HEAD_REF"
+                                        --head-rev="${'$'+repositoryPrefix}_HEAD_REV"
+                                        --repository-type="${'$'+repositoryPrefix}_REPOSITORY_TYPE"
                                         --tasks-for='${tasks_for}'
                                         ${extraArgs}
 
