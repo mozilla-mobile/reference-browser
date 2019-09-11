@@ -6,31 +6,24 @@
 loader: rb_taskgraph.single_dep:loader
 
 kind-dependencies:
-    - build
+    - build-bundle
 
 transforms:
     - rb_taskgraph.signing:transforms
-    - rb_taskgraph.signing_apks:transforms
+    - rb_taskgraph.signing_bundle:transforms
     - taskgraph.transforms.task:transforms
 
 job-template:
-    description: Sign Reference Browser
+    description: Sign Reference Browser AAB
     index:
         type: signing
     treeherder:
         kind: build
-        symbol: S
+        symbol: S-AAB
         tier: 2
-    worker-type:
-        by-variant:
-            nightly: signing
-            default: dep-signing
+    # TODO Use "signing" once Nightly AABs have their own production key
+    worker-type: dep-signing
     worker:
         max-run-time: 3600
-        signing-type:
-            by-variant:
-                nightly:
-                    by-level:
-                        '3': release-signing
-                        default: dep-signing
-                default: dep-signing
+        # TODO Use "release-signing" once Nightly AABs have their own production key
+        signing-type: dep-signing

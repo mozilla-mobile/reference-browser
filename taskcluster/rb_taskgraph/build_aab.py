@@ -26,5 +26,6 @@ def add_artifacts(config, tasks):
                 "name": artifact_template["name"],
                 "path": artifact_template["path"].format(variant=variant),
             })
+            task["attributes"]["aab"] = artifact_template["name"]
 
         yield task
