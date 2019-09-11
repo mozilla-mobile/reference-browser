@@ -17,11 +17,11 @@ transforms = TransformSequence()
 
 
 @transforms.add
-def build_signing_task(config, tasks):
+def define_signing_flags(config, tasks):
     for task in tasks:
-        dep = task.pop("primary-dependency")
-        task["dependencies"] = {"build": dep.label}
-        task["name"] = dep.label[len(dep.kind) + 1 :]
+        dep = task["primary-dependency"]
+        # Current kind will be prepended later in the transform chain.
+        task["name"] = _get_dependent_job_name_without_its_kind(dep)
         task["attributes"] = dep.attributes.copy()
         task["attributes"]["signed"] = True
         if "run_on_tasks_for" in task["attributes"]:
@@ -36,12 +36,8 @@ def build_signing_task(config, tasks):
                 level=config.params["level"],
             )
         task["treeherder"] = inherit_treeherder_from_dep(task, dep)
-        task["worker"]["upstream-artifacts"] = [
-            {
-                "taskId": {"task-reference": "<build>"},
-                "taskType": "build",
-                "paths": dep.attributes["apks"].values(),
-                "formats": ["autograph_apk_reference_browser"],
-            }
-        ]
         yield task
+
+
+def _get_dependent_job_name_without_its_kind(dependent_job):
+    return dependent_job.label[len(dependent_job.kind) + 1:]
