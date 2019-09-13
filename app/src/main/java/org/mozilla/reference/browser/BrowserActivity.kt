@@ -48,7 +48,7 @@ open class BrowserActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         if (savedInstanceState == null) {
-            supportFragmentManager?.beginTransaction()?.apply {
+            supportFragmentManager.beginTransaction().apply {
                 replace(R.id.container, createBrowserFragment(sessionId))
                 commit()
             }
@@ -109,7 +109,7 @@ open class BrowserActivity : AppCompatActivity() {
         super.onUserLeaveHint()
     }
 
-    override fun onCreateView(parent: View?, name: String?, context: Context, attrs: AttributeSet?): View? =
+    override fun onCreateView(parent: View?, name: String, context: Context, attrs: AttributeSet): View? =
         when (name) {
             EngineView::class.java.name -> components.core.engine.createView(context, attrs).asView()
             TabsTray::class.java.name -> {
