@@ -111,8 +111,8 @@ abstract class BaseBrowserFragment : Fragment(), BackHandler, UserInteractionHan
         downloadsFeature.set(
             feature = DownloadsFeature(
                 requireContext(),
-                sessionManager = requireComponents.core.sessionManager,
-                sessionId = sessionId,
+                store = requireComponents.core.store,
+                useCases = requireComponents.core.downloadsUseCases,
                 fragmentManager = childFragmentManager,
                 downloadManager = FetchDownloadManager(
                     requireContext().applicationContext,
