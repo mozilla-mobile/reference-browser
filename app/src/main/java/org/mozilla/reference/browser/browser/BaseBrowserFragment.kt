@@ -101,8 +101,9 @@ abstract class BaseBrowserFragment : Fragment(), BackHandler, UserInteractionHan
             feature = ContextMenuIntegration(
                 requireContext(),
                 requireFragmentManager(),
-                requireComponents.core.sessionManager,
+                requireComponents.core.store,
                 requireComponents.useCases.tabsUseCases,
+                requireComponents.useCases.contextMenuUseCases,
                 view,
                 sessionId),
             owner = this,

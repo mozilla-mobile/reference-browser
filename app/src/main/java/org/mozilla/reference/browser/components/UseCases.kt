@@ -9,6 +9,7 @@ import mozilla.components.browser.search.SearchEngineManager
 import mozilla.components.browser.session.SessionManager
 import mozilla.components.concept.engine.Settings
 import mozilla.components.concept.fetch.Client
+import mozilla.components.feature.contextmenu.ContextMenuUseCases
 import mozilla.components.feature.pwa.WebAppUseCases
 import mozilla.components.feature.search.SearchUseCases
 import mozilla.components.feature.session.SessionUseCases
@@ -50,4 +51,9 @@ class UseCases(
      * Use cases that provide shortcut and progressive web app management.
      */
     val webAppUseCases by lazy { WebAppUseCases(context, sessionManager, client) }
+
+    /**
+     * Uses cases that provides context menu
+     */
+    val contextMenuUseCases: ContextMenuUseCases by lazy { ContextMenuUseCases(sessionManager) }
 }
