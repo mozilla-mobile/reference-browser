@@ -8,7 +8,7 @@ import android.content.Context
 import android.view.View
 import androidx.fragment.app.FragmentManager
 import kotlinx.android.synthetic.main.fragment_browser.view.*
-import mozilla.components.browser.session.SessionManager
+import mozilla.components.browser.state.store.BrowserStore
 import mozilla.components.feature.contextmenu.ContextMenuCandidate
 import mozilla.components.feature.contextmenu.ContextMenuCandidate.Companion.createCopyImageLocationCandidate
 import mozilla.components.feature.contextmenu.ContextMenuCandidate.Companion.createCopyLinkCandidate
@@ -16,6 +16,7 @@ import mozilla.components.feature.contextmenu.ContextMenuCandidate.Companion.cre
 import mozilla.components.feature.contextmenu.ContextMenuCandidate.Companion.createSaveImageCandidate
 import mozilla.components.feature.contextmenu.ContextMenuCandidate.Companion.createShareLinkCandidate
 import mozilla.components.feature.contextmenu.ContextMenuFeature
+import mozilla.components.feature.contextmenu.ContextMenuUseCases
 import mozilla.components.feature.contextmenu.DefaultSnackbarDelegate
 import mozilla.components.feature.tabs.TabsUseCases
 import mozilla.components.support.base.feature.LifecycleAwareFeature
@@ -23,8 +24,9 @@ import mozilla.components.support.base.feature.LifecycleAwareFeature
 class ContextMenuIntegration(
     context: Context,
     fragmentManager: FragmentManager,
-    sessionManager: SessionManager,
+    browserStore: BrowserStore,
     tabsUseCases: TabsUseCases,
+    contextMenuUseCases: ContextMenuUseCases,
     parentView: View,
     sessionId: String? = null
 ) : LifecycleAwareFeature {
@@ -36,16 +38,16 @@ class ContextMenuIntegration(
                 createCopyLinkCandidate(context, parentView, snackbarDelegate),
                 createShareLinkCandidate(context),
                 createOpenImageInNewTabCandidate(context, tabsUseCases, parentView, snackbarDelegate),
-                createSaveImageCandidate(context),
+                createSaveImageCandidate(context, contextMenuUseCases),
                 createCopyImageLocationCandidate(context, parentView, snackbarDelegate)
             )
         } else {
-            ContextMenuCandidate.defaultCandidates(context, tabsUseCases, parentView)
+            ContextMenuCandidate.defaultCandidates(context, tabsUseCases, contextMenuUseCases, parentView)
         }
     }
 
     private val feature = ContextMenuFeature(
-        fragmentManager, sessionManager, candidates, parentView.engineView, sessionId
+        fragmentManager, browserStore, candidates, parentView.engineView, contextMenuUseCases
     )
 
     override fun start() {
