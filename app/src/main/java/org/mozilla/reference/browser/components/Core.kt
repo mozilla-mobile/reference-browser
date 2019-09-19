@@ -16,6 +16,7 @@ import mozilla.components.concept.engine.DefaultSettings
 import mozilla.components.concept.engine.Engine
 import mozilla.components.concept.engine.EngineSession.TrackingProtectionPolicy
 import mozilla.components.concept.fetch.Client
+import mozilla.components.feature.downloads.DownloadsUseCases
 import mozilla.components.feature.media.MediaFeature
 import mozilla.components.feature.media.RecordingDevicesNotificationFeature
 import mozilla.components.feature.media.state.MediaStateMachine
@@ -95,6 +96,11 @@ class Core(private val context: Context) {
             MediaFeature(context).enable()
         }
     }
+
+    /**
+     * Contains use cases related to the downloads feature.
+     */
+    val downloadsUseCases: DownloadsUseCases by lazy { DownloadsUseCases(sessionManager) }
 
     /**
      * The storage component to persist browsing history (with the exception of

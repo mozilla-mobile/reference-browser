@@ -101,8 +101,9 @@ abstract class BaseBrowserFragment : Fragment(), BackHandler, UserInteractionHan
             feature = ContextMenuIntegration(
                 requireContext(),
                 requireFragmentManager(),
-                requireComponents.core.sessionManager,
+                requireComponents.core.store,
                 requireComponents.useCases.tabsUseCases,
+                requireComponents.useCases.contextMenuUseCases,
                 view,
                 sessionId),
             owner = this,
@@ -111,8 +112,8 @@ abstract class BaseBrowserFragment : Fragment(), BackHandler, UserInteractionHan
         downloadsFeature.set(
             feature = DownloadsFeature(
                 requireContext(),
-                sessionManager = requireComponents.core.sessionManager,
-                sessionId = sessionId,
+                store = requireComponents.core.store,
+                useCases = requireComponents.core.downloadsUseCases,
                 fragmentManager = childFragmentManager,
                 downloadManager = FetchDownloadManager(
                     requireContext().applicationContext,
