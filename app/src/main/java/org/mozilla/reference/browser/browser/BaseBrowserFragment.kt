@@ -153,7 +153,7 @@ abstract class BaseBrowserFragment : Fragment(), BackHandler, UserInteractionHan
 
         findInPageIntegration.set(
             feature = FindInPageIntegration(
-                requireComponents.core.sessionManager,
+                requireComponents.core.store,
                 sessionId,
                 findInPageBar as FindInPageView,
                 engineView),
