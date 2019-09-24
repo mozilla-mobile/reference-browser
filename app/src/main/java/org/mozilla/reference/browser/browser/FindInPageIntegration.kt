@@ -8,8 +8,8 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.View
 import androidx.coordinatorlayout.widget.CoordinatorLayout
-import mozilla.components.browser.session.SessionManager
-import mozilla.components.browser.session.runWithSessionIdOrSelected
+import mozilla.components.browser.state.selector.findCustomTabOrSelectedTab
+import mozilla.components.browser.state.store.BrowserStore
 import mozilla.components.browser.toolbar.BrowserToolbar
 import mozilla.components.concept.engine.EngineView
 import mozilla.components.feature.findinpage.FindInPageFeature
@@ -19,12 +19,12 @@ import mozilla.components.support.base.feature.BackHandler
 import mozilla.components.support.base.feature.LifecycleAwareFeature
 
 class FindInPageIntegration(
-    private val sessionManager: SessionManager,
+    private val store: BrowserStore,
     private val sessionId: String? = null,
     private val view: FindInPageView,
     engineView: EngineView
 ) : LifecycleAwareFeature, BackHandler {
-    private val feature = FindInPageFeature(sessionManager, view, engineView, ::onClose)
+    private val feature = FindInPageFeature(store, view, engineView, ::onClose)
 
     override fun start() {
         feature.start()
@@ -47,7 +47,7 @@ class FindInPageIntegration(
     }
 
     private fun launch() {
-        sessionManager.runWithSessionIdOrSelected(sessionId) {
+        store.state.findCustomTabOrSelectedTab(sessionId)?.let {
             view.asView().visibility = View.VISIBLE
             feature.bind(it)
         }
