@@ -7,6 +7,7 @@ package org.mozilla.reference.browser.components
 import android.content.Context
 import mozilla.components.browser.search.SearchEngineManager
 import mozilla.components.browser.session.SessionManager
+import mozilla.components.browser.state.store.BrowserStore
 import mozilla.components.concept.engine.Settings
 import mozilla.components.concept.fetch.Client
 import mozilla.components.feature.contextmenu.ContextMenuUseCases
@@ -23,6 +24,7 @@ import mozilla.components.feature.tabs.TabsUseCases
 class UseCases(
     private val context: Context,
     private val sessionManager: SessionManager,
+    private val store: BrowserStore,
     private val engineSettings: Settings,
     private val searchEngineManager: SearchEngineManager,
     private val client: Client
@@ -55,5 +57,5 @@ class UseCases(
     /**
      * Uses cases that provides context menu
      */
-    val contextMenuUseCases: ContextMenuUseCases by lazy { ContextMenuUseCases(sessionManager) }
+    val contextMenuUseCases: ContextMenuUseCases by lazy { ContextMenuUseCases(sessionManager, store) }
 }
