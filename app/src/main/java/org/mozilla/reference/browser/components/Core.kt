@@ -100,7 +100,7 @@ class Core(private val context: Context) {
     /**
      * Contains use cases related to the downloads feature.
      */
-    val downloadsUseCases: DownloadsUseCases by lazy { DownloadsUseCases(sessionManager) }
+    val downloadsUseCases: DownloadsUseCases by lazy { DownloadsUseCases(store) }
 
     /**
      * The storage component to persist browsing history (with the exception of

@@ -23,6 +23,7 @@ class Components(private val context: Context) {
         UseCases(
             context,
             core.sessionManager,
+            core.store,
             core.engine.settings,
             search.searchEngineManager,
             core.client
