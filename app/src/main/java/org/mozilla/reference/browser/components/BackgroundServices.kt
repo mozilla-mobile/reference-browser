@@ -34,7 +34,7 @@ class BackgroundServices(
 
     init {
         // Make the "history" store accessible to workers spawned by the sync manager.
-        GlobalSyncableStoreProvider.configureStore(SyncEngine.HISTORY to placesHistoryStorage)
+        GlobalSyncableStoreProvider.configureStore(SyncEngine.History to placesHistoryStorage)
     }
 
     private val serverConfig = ServerConfig.release(CLIENT_ID, REDIRECT_URL)
@@ -44,7 +44,7 @@ class BackgroundServices(
         capabilities = setOf(DeviceCapability.SEND_TAB)
     )
     private val syncConfig = SyncConfig(
-        supportedEngines = setOf(SyncEngine.HISTORY),
+        supportedEngines = setOf(SyncEngine.History),
         syncPeriodInMinutes = 240L
     ) // four hours
 

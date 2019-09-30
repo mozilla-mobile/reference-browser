@@ -13,6 +13,7 @@ import androidx.preference.PreferenceFragmentCompat
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import mozilla.components.service.fxa.sync.SyncReason
 import mozilla.components.service.fxa.sync.SyncStatusObserver
 import mozilla.components.service.fxa.sync.getLastSynced
 import org.mozilla.reference.browser.R
@@ -116,7 +117,7 @@ class AccountSettingsFragment : PreferenceFragmentCompat() {
         return OnPreferenceClickListener {
             CoroutineScope(Dispatchers.Main).launch {
                 // Trigger a sync & update devices.
-                requireComponents.backgroundServices.accountManager.syncNowAsync().await()
+                requireComponents.backgroundServices.accountManager.syncNowAsync(SyncReason.User).await()
                 // Poll for device events.
                 requireComponents.backgroundServices.accountManager.authenticatedAccount()
                         ?.deviceConstellation()?.run {
