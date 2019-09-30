@@ -6,8 +6,8 @@ policy:
 tasks:
     - $let:
           taskgraph:
-              branch: taskgraph
-              revision: 0c5a68749f9a7672a7e56604b69a7bd41b036614
+              branch: taskgraph-try
+              revision: c7273d4a6fb1dea993188122775c3379d50e4ce6
           trustDomain: mobile
       in:
           $if: 'tasks_for in ["github-pull-request", "github-push", "action", "cron"]'
@@ -195,7 +195,9 @@ tasks:
                           # Note: This task is built server side without the context or tooling that
                           # exist in tree so we must hard code the hash
                           image:
-                              mozillareleases/taskgraph:decision-mobile-6020473b1a928d8df50e234a7ca2e81ade2220a4fb5fbe16b02477dd64a49728@sha256:98d226736b7d03907114bf37938002b90e8a37cbe3a297690e349f1ddddb1d7c
+                              type: indexed-image
+                              namespace: taskgraph.cache.level-1.docker-images.v2.decision-mobile.hash.44d6daa1993785ad8ffe057609c49b76688ad863707f953af6207134c66709d9
+                              path: public/image.tar.zst
 
                           maxRunTime: 1800
 
