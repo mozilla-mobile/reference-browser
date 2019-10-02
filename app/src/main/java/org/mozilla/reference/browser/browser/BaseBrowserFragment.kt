@@ -128,7 +128,7 @@ abstract class BaseBrowserFragment : Fragment(), BackHandler, UserInteractionHan
         promptsFeature.set(
             feature = PromptFeature(
                 fragment = this,
-                sessionManager = requireComponents.core.sessionManager,
+                store = requireComponents.core.store,
                 sessionId = sessionId,
                 fragmentManager = requireFragmentManager(),
                 onNeedToRequestPermissions = { permissions ->
