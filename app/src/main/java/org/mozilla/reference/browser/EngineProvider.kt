@@ -33,6 +33,9 @@ object EngineProvider {
             // Allow for exfiltrating Gecko metrics through the Glean SDK.
             builder.telemetryDelegate(GeckoAdapter())
 
+            // About config it's no longer enabled by default
+            builder.aboutConfigEnabled(true)
+
             runtime = GeckoRuntime.create(context, builder.build())
         }
 
