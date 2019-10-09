@@ -1,8 +1,8 @@
 ---
 loader: taskgraph.loader.transform:loader
 transforms:
-    - rb_taskgraph.raptor:transforms
-    - rb_taskgraph.notify:transforms
+    - rb_taskgraph.transforms.raptor:transforms
+    - rb_taskgraph.transforms.notify:transforms
     - taskgraph.transforms.job:transforms
     - taskgraph.transforms.task:transforms
 

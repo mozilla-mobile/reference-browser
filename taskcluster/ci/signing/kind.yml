@@ -3,14 +3,14 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 ---
 
-loader: rb_taskgraph.single_dep:loader
+loader: rb_taskgraph.loader.single_dep:loader
 
 kind-dependencies:
     - build
 
 transforms:
-    - rb_taskgraph.signing:transforms
-    - rb_taskgraph.signing_apks:transforms
+    - rb_taskgraph.transforms.signing:transforms
+    - rb_taskgraph.transforms.signing_apks:transforms
     - taskgraph.transforms.task:transforms
 
 job-template:
