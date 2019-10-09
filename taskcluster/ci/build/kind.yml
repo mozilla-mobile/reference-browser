@@ -5,8 +5,8 @@
 loader: taskgraph.loader.transform:loader
 
 transforms:
-    - rb_taskgraph.variant:transforms
-    - rb_taskgraph.build_apk:transforms
+    - rb_taskgraph.transforms.variant:transforms
+    - rb_taskgraph.transforms.build_apk:transforms
     - taskgraph.transforms.job:transforms
     - taskgraph.transforms.task:transforms
 
