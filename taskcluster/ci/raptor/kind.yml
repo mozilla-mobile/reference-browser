@@ -2,6 +2,7 @@
 loader: taskgraph.loader.transform:loader
 transforms:
     - rb_taskgraph.raptor:transforms
+    - rb_taskgraph.notify:transforms
     - taskgraph.transforms.job:transforms
     - taskgraph.transforms.task:transforms
 
@@ -20,6 +21,18 @@ job-defaults:
             armeabi-v7a: t-bitbar-gw-perf-g5
             arm64-v8a: t-bitbar-gw-perf-p2
     description: ""
+    notify:
+        by-level:
+            '3':
+                email:
+                    content: This calls for action by the Performance team. Use the link to view it on Treeherder.
+                    link:
+                        text: Treeherder Job
+                        href: 'https://treeherder.mozilla.org/#/jobs?repo={product_name}&revision={head_rev}&searchStr={task_name}'
+                    on-reasons: [failed]
+                    subject: '[{product_name}] Raptor job "{task_name}" failed'
+                    to-addresses: [perftest-alerts@mozilla.com]
+            default: {}
     run-on-tasks-for: [github-push]
     treeherder:
         kind: test
