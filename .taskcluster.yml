@@ -78,12 +78,9 @@ tasks:
               in:
                   $let:
                       level:
-                          $if: 'tasks_for in ["github-push"] && repoUrl == "https://github.com/mozilla-mobile/reference-browser"'
+                          $if: 'tasks_for in ["github-push", "github-release", "action", "cron"] && repoUrl == "https://github.com/mozilla-mobile/fenix"'
                           then: '3'
-                          else:
-                              $if: 'tasks_for in ["cron", "action"]'
-                              then: '${repository.level}'
-                              else: 1
+                          else: '1'
                   in:
                       taskId: '${ownTaskId}'
                       taskGroupId:
