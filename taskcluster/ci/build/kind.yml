@@ -25,13 +25,13 @@ job-defaults:
         using: gradlew
         use-caches: false
     # Builds generate multiple APKs with different ABIs. For each APK described
-    # by `gradlew printVariant`, an artifact will be generated. `variant` and
-    # the per-apk config from `printVariant` can be used as subsistutions in
+    # by `gradlew printVariants`, an artifact will be generated. `variant` and
+    # the per-apk config from `printVariants` can be used as subsistutions in
     # `name` and `path`.
     apk-artifact-template:
         type: file
         name: public/target.{abi}.apk
-        path: '/builds/worker/checkouts/src/app/build/outputs/apk/{variant}/{fileName}'
+        path: '/builds/worker/checkouts/src/app/build/outputs/apk/{gradle_build_type}/{fileName}'
 
 jobs:
     nightly:
