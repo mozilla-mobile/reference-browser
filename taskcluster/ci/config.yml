@@ -14,6 +14,7 @@ taskgraph:
         mobile:
             name: "reference-browser"
     cached-task-prefix: project.mobile.reference-browser
+    decision-parameters: 'rb_taskgraph:get_decision_parameters'
 
 workers:
     aliases:
