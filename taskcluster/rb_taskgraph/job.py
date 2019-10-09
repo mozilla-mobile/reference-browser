@@ -53,7 +53,7 @@ def configure_gradlew(config, job, taskdesc):
 
 
 def _extract_command(run):
-    pre_gradle_commands = [["taskcluster/scripts/install-sdk.sh"]]
+    pre_gradle_commands = run.pop("pre-gradlew", [])
     pre_gradle_commands += [
         _generate_secret_command(secret) for secret in run.get("secrets", [])
     ]
