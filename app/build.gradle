@@ -269,18 +269,19 @@ dependencies {
 
 // -------------------------------------------------------------------------------------------------
 // Task for printing APK information for the requested variant
-// Usage: "./gradlew printVariant -PvariantBuildType=nightly"
+// Usage: ./gradlew printVariants
 // -------------------------------------------------------------------------------------------------
-task printVariant {
+task printVariants {
     doLast {
-        def rawVariant = android.applicationVariants.find { it.buildType.name == variantBuildType }
-        println "variant: " + groovy.json.JsonOutput.toJson([
-            name: rawVariant.name,
-            apks: rawVariant.variantData.outputScope.apkDatas.collect { [
+        def variants = android.applicationVariants.collect {[
+            apks: it.variantData.outputScope.apkDatas.collect {[
                 abi: it.filters.find { it.filterType == 'ABI' }.identifier,
-                fileName: it.outputFileName
-            ] }
-        ])
+                fileName: it.outputFileName,
+            ]},
+            build_type: it.buildType.name,
+            name: it.name,
+        ]}
+        println 'variants: ' + groovy.json.JsonOutput.toJson(variants)
     }
 }
 

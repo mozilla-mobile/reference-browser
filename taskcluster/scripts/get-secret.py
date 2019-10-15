@@ -1,16 +1,28 @@
-#!/usr/bin/python
+#!/usr/bin/env python
+
 # This Source Code Form is subject to the terms of the Mozilla Public
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
+from __future__ import absolute_import, print_function, unicode_literals
+
 import argparse
 import base64
-import os
+import errno
 import json
+import os
 import taskcluster
 
 
 def write_secret_to_file(path, data, key, base64decode=False, json_secret=False, append=False, prefix=''):
+    path = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../' + path))
+    try:
+        os.makedirs(os.path.dirname(path))
+    except OSError as error:
+        if error.errno != errno.EEXIST:
+            raise
+    print("Outputting secret to: {}".format(path))
+
     with open(path, 'a' if append else 'w') as f:
         value = data['secret'][key]
         if base64decode:
@@ -21,7 +33,17 @@ def write_secret_to_file(path, data, key, base64decode=False, json_secret=False,
 
 
 def fetch_secret_from_taskcluster(name):
-    secrets = taskcluster.Secrets({'baseUrl': 'http://taskcluster/secrets/v1'})
+    try:
+        secrets = taskcluster.Secrets({
+            # BaseUrl is still needed for tasks that haven't migrated to taskgraph yet.
+            'baseUrl': 'http://taskcluster/secrets/v1',
+        })
+    except taskcluster.exceptions.TaskclusterFailure:
+        # taskcluster library >=5 errors out when `baseUrl` is used
+        secrets = taskcluster.Secrets({
+            'rootUrl': os.environ.get('TASKCLUSTER_PROXY_URL', 'https://taskcluster.net'),
+        })
+
     return secrets.get(name)
 
 

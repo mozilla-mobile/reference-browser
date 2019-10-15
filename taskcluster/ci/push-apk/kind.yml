@@ -3,7 +3,7 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 ---
 
-loader: rb_taskgraph.single_dep:loader
+loader: rb_taskgraph.loader.single_dep:loader
 
 kind-dependencies:
     - signing
@@ -12,7 +12,7 @@ only-for-attributes:
     - nightly
 
 transforms:
-    - rb_taskgraph.pushapk:transforms
+    - rb_taskgraph.transforms.push_apk:transforms
     - taskgraph.transforms.task:transforms
 
 job-template:

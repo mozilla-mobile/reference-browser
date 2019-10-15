@@ -45,7 +45,9 @@ def configure_gradlew(config, job, taskdesc):
     run["command"] = _extract_command(run)
     secrets = run.pop("secrets", [])
     scopes = taskdesc.setdefault("scopes", [])
-    scopes.extend(["secrets:get:{}".format(secret["name"]) for secret in secrets])
+    new_secret_scopes = ["secrets:get:{}".format(secret["name"]) for secret in secrets]
+    new_secret_scopes = list(set(new_secret_scopes))  # Scopes must not have any duplicates
+    scopes.extend(new_secret_scopes)
 
     run["cwd"] = "{checkout}"
     run["using"] = "run-task"
@@ -53,7 +55,7 @@ def configure_gradlew(config, job, taskdesc):
 
 
 def _extract_command(run):
-    pre_gradle_commands = [["taskcluster/scripts/install-sdk.sh"]]
+    pre_gradle_commands = run.pop("pre-gradlew", [])
     pre_gradle_commands += [
         _generate_secret_command(secret) for secret in run.get("secrets", [])
     ]

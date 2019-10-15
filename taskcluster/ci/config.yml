@@ -12,8 +12,9 @@ taskgraph:
     register: rb_taskgraph:register
     repositories:
         mobile:
-            name: "Reference Browser"
+            name: "reference-browser"
     cached-task-prefix: project.mobile.reference-browser
+    decision-parameters: 'rb_taskgraph:get_decision_parameters'
 
 workers:
     aliases:

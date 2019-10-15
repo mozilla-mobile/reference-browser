@@ -13,6 +13,9 @@ transforms:
 jobs:
     base:
         symbol: I(base)
+    nimbledroid:
+        parent: base
+        symbol: I(nimbledroid)
     ui-tests:
         parent: base
         symbol: I(ui-tests)

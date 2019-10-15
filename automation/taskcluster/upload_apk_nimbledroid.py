@@ -12,6 +12,7 @@ import requests
 import json
 import urllib2
 import os
+import sys
 
 url = "https://nimbledroid.com/api/v2/apks"
 
@@ -32,22 +33,18 @@ def uploadApk(apk,key):
 	print json.dumps(response.json(), indent=4)
 
 
-def uploadGeckoViewExampleApk(key):
-	apk_url = 'https://index.taskcluster.net/v1/task/gecko.v2.mozilla-central.latest.mobile.android-api-16-opt/artifacts/public/build/geckoview_example.apk'
+def uploadNightlyRBApk(apk_url, key):
 	apk_data = urllib2.urlopen(apk_url).read()
-	with open('./geckoview_example_nd.apk', 'wb') as f:
-    		f.write(apk_data)
-	uploadApk({'apk' : open('geckoview_example_nd.apk')},key)
-
+	with open('./rb_example_nd.apk', 'wb') as f:
+		f.write(apk_data)
+	uploadApk({'apk' : open('rb_example_nd.apk')},key)
 
 
 # Get JSON data from taskcluster secrets service
-secrets = taskcluster.Secrets({'baseUrl': 'http://taskcluster/secrets/v1'})
+secrets = taskcluster.Secrets({
+	'rootUrl': os.environ.get('TASKCLUSTER_PROXY_URL', 'https://taskcluster.net'),
+})
 data = secrets.get('project/mobile/reference-browser/nimbledroid')
-
-rb_file_arm = {'apk': open('target.arm.apk')}
-
-# upload 32 bit apk
-uploadApk(rb_file_arm, data['secret']['api_key'])
-# also upload the latest geckoview example from:
-uploadGeckoViewExampleApk(data['secret']['api_key'])
+# upload the nightly build to Nimbledroid
+apk_url = sys.argv[1]
+uploadNightlyRBApk(apk_url, data['secret']['api_key'])
