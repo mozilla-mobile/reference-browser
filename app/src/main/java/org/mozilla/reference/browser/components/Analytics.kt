@@ -15,7 +15,6 @@ import mozilla.components.service.experiments.Experiments
 import mozilla.components.service.glean.Glean
 import mozilla.components.service.glean.config.Configuration
 import mozilla.components.service.glean.net.ConceptFetchHttpUploader
-import mozilla.components.support.base.facts.register
 import org.mozilla.geckoview.BuildConfig.MOZ_APP_BUILDID
 import org.mozilla.geckoview.BuildConfig.MOZ_APP_VERSION
 import org.mozilla.reference.browser.BrowserApplication
@@ -23,7 +22,6 @@ import org.mozilla.reference.browser.BuildConfig
 import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.ext.components
 import org.mozilla.reference.browser.settings.Settings
-import org.mozilla.reference.browser.telemetry.GleanFactProcessor
 
 /**
  * Component group for all functionality related to analytics e.g. crash
@@ -64,7 +62,6 @@ class Analytics(private val context: Context) {
         Glean.initialize(context, Configuration(
             httpClient = ConceptFetchHttpUploader(lazy { context.components.core.client })
         ))
-        GleanFactProcessor().register()
     }
 
     internal fun initializeExperiments() {
