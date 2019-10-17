@@ -3,19 +3,3 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 $schema: moz://mozilla.org/schemas/glean/metrics/1-0-0
-
-toolbar.events:
-  url_committed:
-    type: event
-    description: >
-      Records `url_committed` when a URL is committed (loaded) from the browser toolbar component by
-      normal means. This records only the standard glean event information with no additional glean
-      event extra keys information.
-    bugs:
-      - 1539080
-    data_reviews:
-      - https://github.com/mozilla-mobile/reference-browser/pull/677#pullrequestreview-220802676
-    notification_emails:
-      - tlong@mozilla.com
-      - aplacitelli@mozilla.com
-    expires: 2019-10-01
