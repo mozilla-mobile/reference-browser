@@ -42,6 +42,21 @@ internal class PictureInPictureObserver(
 ) : SelectionAwareSessionObserver(sessionManager) {
     private val whiteList = listOf("youtube.com/tv")
 
+    override fun onLoadingStateChanged(session: Session, loading: Boolean) {
+        super.onLoadingStateChanged(session, loading)
+        println("SEVTEST: loading: $loading, session: $session")
+    }
+
+// The following was printed on my first page load after opening a new tab. Not reproducible on following page loads
+/*
+2019-10-18 16:43:02.119 14883-14883/org.mozilla.reference.browser.debug I/System.out: SEVTEST: loading: true, session: Session(363e8f25-3d40-49df-a0b7-e6dadd90d364, http://google.com)
+2019-10-18 16:43:02.151 14883-14883/org.mozilla.reference.browser.debug I/System.out: SEVTEST: loading: false, session: Session(363e8f25-3d40-49df-a0b7-e6dadd90d364, http://google.com)
+2019-10-18 16:43:02.553 14883-14883/org.mozilla.reference.browser.debug I/System.out: SEVTEST: loading: true, session: Session(363e8f25-3d40-49df-a0b7-e6dadd90d364, http://google.com)
+2019-10-18 16:43:02.581 14883-14883/org.mozilla.reference.browser.debug I/System.out: SEVTEST: loading: false, session: Session(363e8f25-3d40-49df-a0b7-e6dadd90d364, http://google.com)
+2019-10-18 16:43:02.631 14883-14883/org.mozilla.reference.browser.debug I/System.out: SEVTEST: loading: true, session: Session(363e8f25-3d40-49df-a0b7-e6dadd90d364, http://google.com)
+2019-10-18 16:43:03.626 14883-14883/org.mozilla.reference.browser.debug I/System.out: SEVTEST: loading: false, session: Session(363e8f25-3d40-49df-a0b7-e6dadd90d364, https://www.google.com/?gws_rd=ssl)
+*/
+
     override fun onSessionSelected(session: Session) {
         super.onSessionSelected(session)
         whiteListed(isWhitelisted(session.url))
