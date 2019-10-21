@@ -191,6 +191,8 @@ abstract class BaseBrowserFragment : Fragment(), BackHandler, UserInteractionHan
             owner = this,
             view = view
         )
+
+        engineView.setDynamicToolbarMaxHeight(toolbar.getLayoutParams().height)
     }
 
     private fun fullScreenChanged(enabled: Boolean) {
