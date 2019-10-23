@@ -41,7 +41,7 @@ class CustomTabsIntegration(
             logger.warn("The session for this ID, no longer exists. Finishing activity.")
             activity?.finish()
         }
-        toolbar.urlBoxView = null
+        toolbar.display.setUrlBackground(null)
     }
 
     private val menuToolbar by lazy {
