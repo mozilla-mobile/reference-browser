@@ -15,8 +15,6 @@ transforms:
 
 job-template:
     description: Sign Reference Browser AAB
-    index:
-        type: signing
     treeherder:
         kind: build
         symbol: S-AAB
