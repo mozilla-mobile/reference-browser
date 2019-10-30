@@ -20,7 +20,7 @@ import mozilla.components.feature.prompts.PromptFeature
 import mozilla.components.feature.session.FullScreenFeature
 import mozilla.components.feature.session.SessionFeature
 import mozilla.components.feature.session.SwipeRefreshFeature
-import mozilla.components.feature.session.WindowFeature
+import mozilla.components.feature.tabs.WindowFeature
 import mozilla.components.feature.sitepermissions.SitePermissionsFeature
 import mozilla.components.support.base.feature.BackHandler
 import mozilla.components.support.base.feature.PermissionsFeature
@@ -138,7 +138,7 @@ abstract class BaseBrowserFragment : Fragment(), BackHandler, UserInteractionHan
             view = view)
 
         windowFeature.set(
-            feature = WindowFeature(requireComponents.core.sessionManager),
+            feature = WindowFeature(requireComponents.core.store, requireComponents.useCases.tabsUseCases),
             owner = this,
             view = view
         )
