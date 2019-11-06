@@ -99,8 +99,8 @@ object Deps {
 
     const val androidx_appcompat = "androidx.appcompat:appcompat:${Versions.androidx_appcompat}"
     const val androidx_constraintlayout = "androidx.constraintlayout:constraintlayout:${Versions.androidx_constraintlayout}"
-    const val androidx_preference = "androidx.preference:preference-ktx:${Versions.androidx_preference}"
-    const val androidx_work_runtime = "androidx.work:work-runtime-ktx:${Versions.workmanager}"
+    const val androidx_preference_ktx = "androidx.preference:preference-ktx:${Versions.androidx_preference}"
+    const val androidx_work_runtime_ktx = "androidx.work:work-runtime-ktx:${Versions.workmanager}"
     const val google_material = "com.google.android.material:material:${Versions.google_material}"
 
     const val tools_androidgradle = "com.android.tools.build:gradle:${Versions.android_gradle_plugin}"
