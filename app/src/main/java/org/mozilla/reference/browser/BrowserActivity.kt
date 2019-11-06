@@ -25,7 +25,6 @@ import org.mozilla.reference.browser.browser.CrashIntegration
 import org.mozilla.reference.browser.ext.components
 import org.mozilla.reference.browser.ext.isCrashReportActive
 import org.mozilla.reference.browser.tabs.TabsTouchHelper
-import org.mozilla.reference.browser.telemetry.DataReportingNotification
 
 /**
  * Activity that holds the [BrowserFragment].
@@ -61,7 +60,7 @@ open class BrowserActivity : AppCompatActivity() {
             lifecycle.addObserver(crashIntegration)
         }
 
-        DataReportingNotification.checkAndNotifyPolicy(this)
+        NotificationManager.checkAndNotifyPolicy(this)
     }
 
     override fun onBackPressed() {

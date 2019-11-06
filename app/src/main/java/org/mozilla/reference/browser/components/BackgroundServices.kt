@@ -12,6 +12,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import mozilla.components.browser.storage.sync.PlacesHistoryStorage
 import mozilla.components.concept.sync.AccountObserver
+import mozilla.components.concept.sync.AuthType
 import mozilla.components.concept.sync.DeviceCapability
 import mozilla.components.concept.sync.DeviceType
 import mozilla.components.concept.sync.OAuthAccount
@@ -74,7 +75,7 @@ class BackgroundServices(
 
             // Initializing the feature allows it to start observing events as needed.
             SendTabFeature(it, pushFeature) { device, tabs ->
-                notificationManager.showReceivedTabs(device, tabs)
+                NotificationManager.showReceivedTabs(context, device, tabs)
             }
 
             CoroutineScope(Dispatchers.Main).launch { it.initAsync().await() }
@@ -104,14 +105,12 @@ class BackgroundServices(
 
     private val pushService by lazy { FirebasePush() }
 
-    private val notificationManager by lazy {
-        NotificationManager(context)
-    }
-
     private val pushServiceObserver by lazy {
         object : AccountObserver {
-            override fun onAuthenticated(account: OAuthAccount, newAccount: Boolean) {
-                pushService.start(context)
+            override fun onAuthenticated(account: OAuthAccount, authType: AuthType) {
+                if (authType != AuthType.Existing) {
+                    pushService.start(context)
+                }
             }
 
             override fun onLoggedOut() {
