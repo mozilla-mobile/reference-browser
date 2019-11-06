@@ -41,6 +41,9 @@ jobs:
                 - path: .sentry_token
                   key: dsn
                   name: project/mobile/reference-browser/sentry
+                - path: app/src/main/res/values/firebase.xml
+                  key: firebase
+                  name: project/mobile/reference-browser/firebase
     debug:
         run-on-tasks-for: [github-push, github-pull-request]
         run:
