@@ -21,7 +21,9 @@ import mozilla.components.feature.media.MediaFeature
 import mozilla.components.feature.media.RecordingDevicesNotificationFeature
 import mozilla.components.feature.media.state.MediaStateMachine
 import mozilla.components.feature.session.HistoryDelegate
+import mozilla.components.feature.webnotifications.WebNotificationFeature
 import org.mozilla.reference.browser.AppRequestInterceptor
+import org.mozilla.reference.browser.BrowserActivity
 import org.mozilla.reference.browser.EngineProvider
 import org.mozilla.reference.browser.ext.getPreferenceKey
 import org.mozilla.reference.browser.R
@@ -94,6 +96,9 @@ class Core(private val context: Context) {
             // Enable media features like showing an ongoing notification with media controls when
             // media in web content is playing.
             MediaFeature(context).enable()
+
+            WebNotificationFeature(context, engine, icons, R.drawable.ic_notification,
+                BrowserActivity::class.java)
         }
     }
 
