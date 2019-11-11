@@ -214,6 +214,7 @@ dependencies {
     implementation Deps.mozilla_feature_qr
     implementation Deps.mozilla_feature_readerview
     implementation Deps.mozilla_feature_webcompat
+    implementation Deps.mozilla_feature_webnotifications
 
     implementation Deps.mozilla_ui_autocomplete
     implementation Deps.mozilla_ui_colors
