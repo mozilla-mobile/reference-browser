@@ -15,6 +15,7 @@ from pipes import quote as shell_quote
 gradlew_schema = Schema(
     {
         Required("using"): "gradlew",
+        Optional("pre-gradlew"): [[text_type]],
         Required("gradlew"): [text_type],
         Optional("post-gradlew"): [[text_type]],
         # Base work directory used to set up the task.
