@@ -24,6 +24,11 @@
         android:title="@string/privacy"
         android:summary="@string/preferences_privacy_summary"/>
 
+    <androidx.preference.SwitchPreferenceCompat
+        android:key="@string/pref_key_launch_external_app"
+        android:defaultValue="false"
+        android:title="@string/open_links_in_apps" />
+
     <androidx.preference.Preference
             android:key="@string/pref_key_make_default_browser"
             android:title="@string/preferences_make_default_browser"/>
