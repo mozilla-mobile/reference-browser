@@ -39,15 +39,9 @@ jobs:
             nightly: true
         run-on-tasks-for: []
         include-nightly-version: true
+        include-shippable-secrets: true
         run:
             gradlew: ["-PcrashReportEnabled=true", "-Ptelemetry=true", "assembleNightly"]
-            secrets:
-                - path: .sentry_token
-                  key: dsn
-                  name: project/mobile/reference-browser/sentry
-                - path: app/src/main/res/values/firebase.xml
-                  key: firebase
-                  name: project/mobile/reference-browser/firebase
     raptor:
         run-on-tasks-for: [github-push]
         run:

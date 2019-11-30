@@ -37,3 +37,29 @@ def add_nightly_version(config, tasks):
                 "-PversionName={}".format(version_name)
             )
         yield task
+
+@transforms.add
+def add_shippable_secrets(config, tasks):
+    for task in tasks:
+        secrets = task["run"].setdefault("secrets", [])
+
+        if task.pop("include-shippable-secrets", False) and config.params["level"] == "3":
+            build_type = task["attributes"]["build-type"]
+            secret_index = 'project/mobile/reference-browser/{}'.format(build_type)
+            secrets.extend([{
+                "key": key,
+                "name": secret_index,
+                "path": target_file,
+            } for key, target_file in (
+                ('sentry_dsn', '.sentry_token'),
+                ('firebase', 'app/src/main/res/values/firebase.xml'),
+            )])
+        else:
+            task["run"]["pre-gradlew"] = [[
+                "echo", '"{}"'.format(fake_value), ">", target_file
+            ] for fake_value, target_file in (
+                ("https://fake@sentry.prod.mozaws.net/368", ".sentry_token"),
+                # We don't need a fake key for Firebase.
+            )]
+
+        yield task

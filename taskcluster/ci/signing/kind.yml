@@ -16,7 +16,10 @@ transforms:
 job-template:
     description: Sign Reference Browser
     index:
-        type: signing
+        by-build-type:
+            (nightly|raptor):
+                type: signing
+            default: {}
     treeherder:
         kind: build
         symbol: S

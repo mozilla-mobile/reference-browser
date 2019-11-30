@@ -27,13 +27,16 @@ def define_signing_flags(config, tasks):
         if "run_on_tasks_for" in task["attributes"]:
             task["run-on-tasks-for"] = task["attributes"]["run_on_tasks_for"]
 
-        for key in ("worker-type", "worker.signing-type"):
+        for key in ("index", "worker-type", "worker.signing-type"):
             resolve_keyed_by(
                 task,
                 key,
                 item_name=task["name"],
                 variant=task["attributes"]["build-type"],
-                level=config.params["level"],
+                **{
+                    "build-type": task["attributes"]["build-type"],
+                    "level": config.params["level"],
+                }
             )
         task["treeherder"] = inherit_treeherder_from_dep(task, dep)
         yield task

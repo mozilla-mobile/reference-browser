@@ -11,8 +11,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.CallSuper
 import androidx.fragment.app.Fragment
+import androidx.preference.PreferenceManager
 import kotlinx.android.synthetic.main.fragment_browser.*
 import kotlinx.android.synthetic.main.fragment_browser.view.*
+import mozilla.components.feature.app.links.AppLinksFeature
 import mozilla.components.feature.downloads.DownloadsFeature
 import mozilla.components.feature.downloads.manager.FetchDownloadManager
 import mozilla.components.feature.findinpage.view.FindInPageView
@@ -33,6 +35,7 @@ import org.mozilla.reference.browser.AppPermissionCodes.REQUEST_CODE_PROMPT_PERM
 import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.UserInteractionHandler
 import org.mozilla.reference.browser.downloads.DownloadService
+import org.mozilla.reference.browser.ext.getPreferenceKey
 import org.mozilla.reference.browser.ext.requireComponents
 import org.mozilla.reference.browser.pip.PictureInPictureIntegration
 
@@ -47,6 +50,7 @@ abstract class BaseBrowserFragment : Fragment(), BackHandler, UserInteractionHan
     private val toolbarIntegration = ViewBoundFeatureWrapper<ToolbarIntegration>()
     private val contextMenuIntegration = ViewBoundFeatureWrapper<ContextMenuIntegration>()
     private val downloadsFeature = ViewBoundFeatureWrapper<DownloadsFeature>()
+    private val appLinksFeature = ViewBoundFeatureWrapper<AppLinksFeature>()
     private val promptsFeature = ViewBoundFeatureWrapper<PromptFeature>()
     private val fullScreenFeature = ViewBoundFeatureWrapper<FullScreenFeature>()
     private val findInPageIntegration = ViewBoundFeatureWrapper<FindInPageIntegration>()
@@ -75,6 +79,8 @@ abstract class BaseBrowserFragment : Fragment(), BackHandler, UserInteractionHan
 
     @CallSuper
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        val prefs = PreferenceManager.getDefaultSharedPreferences(requireContext())
+
         sessionFeature.set(
             feature = SessionFeature(
                 requireComponents.core.sessionManager,
@@ -124,6 +130,21 @@ abstract class BaseBrowserFragment : Fragment(), BackHandler, UserInteractionHan
                 }),
             owner = this,
             view = view)
+
+        appLinksFeature.set(
+            feature = AppLinksFeature(
+                requireContext(),
+                sessionManager = requireComponents.core.sessionManager,
+                sessionId = sessionId,
+                interceptLinkClicks = true,
+                fragmentManager = requireFragmentManager(),
+                launchInApp = {
+                    prefs.getBoolean(requireContext().getPreferenceKey(R.string.pref_key_launch_external_app), false)
+                }
+            ),
+            owner = this,
+            view = view
+        )
 
         promptsFeature.set(
             feature = PromptFeature(

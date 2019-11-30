@@ -81,6 +81,9 @@
     <!-- Preference category for sync settings -->
     <string name="sync_category">Choose what to sync</string>
 
+    <!-- Preference for open links in apps -->
+    <string name="open_links_in_apps">Open links in apps</string>
+
     <!-- Preference category for developer tools -->
     <string name="developer_tools_category">Developer tools</string>
 
