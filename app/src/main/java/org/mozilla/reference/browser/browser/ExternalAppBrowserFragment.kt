@@ -8,21 +8,20 @@ import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import kotlinx.android.synthetic.main.fragment_browser.*
-import kotlinx.android.synthetic.main.fragment_browser.view.*
 import mozilla.components.concept.engine.manifest.WebAppManifest
 import mozilla.components.feature.pwa.ext.getWebAppManifest
 import mozilla.components.feature.pwa.ext.putWebAppManifest
 import mozilla.components.feature.pwa.feature.WebAppActivityFeature
 import mozilla.components.feature.pwa.feature.WebAppHideToolbarFeature
 import mozilla.components.feature.pwa.feature.WebAppSiteControlsFeature
-import mozilla.components.support.base.feature.BackHandler
+import mozilla.components.support.base.feature.UserInteractionHandler
 import mozilla.components.support.base.feature.ViewBoundFeatureWrapper
 import org.mozilla.reference.browser.ext.requireComponents
 
 /**
  * Fragment used for browsing within an external app, such as for custom tabs and PWAs.
  */
-class ExternalAppBrowserFragment : BaseBrowserFragment(), BackHandler {
+class ExternalAppBrowserFragment : BaseBrowserFragment(), UserInteractionHandler {
     private val customTabsIntegration = ViewBoundFeatureWrapper<CustomTabsIntegration>()
     private val hideToolbarFeature = ViewBoundFeatureWrapper<WebAppHideToolbarFeature>()
 
@@ -82,7 +81,7 @@ class ExternalAppBrowserFragment : BaseBrowserFragment(), BackHandler {
 
     /**
      * Calls [onBackPressed] for features in the base class first,
-     * before trying to call the custom tab [BackHandler].
+     * before trying to call the custom tab [UserInteractionHandler].
      */
     override fun onBackPressed(): Boolean =
         super.onBackPressed() || customTabsIntegration.onBackPressed()

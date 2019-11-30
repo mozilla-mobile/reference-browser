@@ -16,8 +16,8 @@ import mozilla.components.browser.toolbar.BrowserToolbar
 import mozilla.components.concept.engine.EngineView
 import mozilla.components.feature.customtabs.CustomTabsToolbarFeature
 import mozilla.components.feature.session.SessionUseCases
-import mozilla.components.support.base.feature.BackHandler
 import mozilla.components.support.base.feature.LifecycleAwareFeature
+import mozilla.components.support.base.feature.UserInteractionHandler
 import mozilla.components.support.base.log.logger.Logger
 import org.mozilla.reference.browser.BrowserActivity
 import org.mozilla.reference.browser.R
@@ -31,7 +31,7 @@ class CustomTabsIntegration(
     sessionUseCases: SessionUseCases,
     sessionId: String,
     activity: Activity?
-) : LifecycleAwareFeature, BackHandler {
+) : LifecycleAwareFeature, UserInteractionHandler {
 
     private val session = sessionManager.findSessionById(sessionId)
     private val logger = Logger("CustomTabsIntegration")

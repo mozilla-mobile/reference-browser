@@ -18,8 +18,8 @@ import mozilla.components.concept.engine.Engine
 import mozilla.components.feature.findinpage.view.FindInPageBar
 import mozilla.components.feature.readerview.ReaderViewFeature
 import mozilla.components.feature.readerview.view.ReaderViewControlsView
-import mozilla.components.support.base.feature.BackHandler
 import mozilla.components.support.base.feature.LifecycleAwareFeature
+import mozilla.components.support.base.feature.UserInteractionHandler
 import org.mozilla.reference.browser.R
 
 class ReaderViewIntegration(
@@ -29,7 +29,7 @@ class ReaderViewIntegration(
     toolbar: BrowserToolbar,
     view: ReaderViewControlsView,
     readerViewAppearanceButton: FloatingActionButton
-) : LifecycleAwareFeature, BackHandler {
+) : LifecycleAwareFeature, UserInteractionHandler {
 
     private var readerViewButtonVisible = false
 
