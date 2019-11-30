@@ -24,8 +24,8 @@ import mozilla.components.feature.session.SessionFeature
 import mozilla.components.feature.session.SwipeRefreshFeature
 import mozilla.components.feature.tabs.WindowFeature
 import mozilla.components.feature.sitepermissions.SitePermissionsFeature
-import mozilla.components.support.base.feature.BackHandler
 import mozilla.components.support.base.feature.PermissionsFeature
+import mozilla.components.support.base.feature.UserInteractionHandler
 import mozilla.components.support.base.feature.ViewBoundFeatureWrapper
 import mozilla.components.support.ktx.android.view.enterToImmersiveMode
 import mozilla.components.support.ktx.android.view.exitImmersiveModeIfNeeded
@@ -33,7 +33,6 @@ import org.mozilla.reference.browser.AppPermissionCodes.REQUEST_CODE_APP_PERMISS
 import org.mozilla.reference.browser.AppPermissionCodes.REQUEST_CODE_DOWNLOAD_PERMISSIONS
 import org.mozilla.reference.browser.AppPermissionCodes.REQUEST_CODE_PROMPT_PERMISSIONS
 import org.mozilla.reference.browser.R
-import org.mozilla.reference.browser.UserInteractionHandler
 import org.mozilla.reference.browser.downloads.DownloadService
 import org.mozilla.reference.browser.ext.getPreferenceKey
 import org.mozilla.reference.browser.ext.requireComponents
@@ -45,7 +44,7 @@ import org.mozilla.reference.browser.pip.PictureInPictureIntegration
  * UI code specific to the app or to custom tabs can be found in the subclasses.
  */
 @Suppress("TooManyFunctions")
-abstract class BaseBrowserFragment : Fragment(), BackHandler, UserInteractionHandler {
+abstract class BaseBrowserFragment : Fragment(), UserInteractionHandler {
     private val sessionFeature = ViewBoundFeatureWrapper<SessionFeature>()
     private val toolbarIntegration = ViewBoundFeatureWrapper<ToolbarIntegration>()
     private val contextMenuIntegration = ViewBoundFeatureWrapper<ContextMenuIntegration>()

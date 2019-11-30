@@ -8,7 +8,7 @@ import android.R.id.content
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MenuItem
-import mozilla.components.support.base.feature.BackHandler
+import mozilla.components.support.base.feature.UserInteractionHandler
 
 class SettingsActivity : AppCompatActivity(), SettingsFragment.ActionBarUpdater {
 
@@ -37,7 +37,7 @@ class SettingsActivity : AppCompatActivity(), SettingsFragment.ActionBarUpdater 
 
     override fun onBackPressed() {
         supportFragmentManager.fragments.forEach {
-            if (it is BackHandler && it.onBackPressed()) {
+            if (it is UserInteractionHandler && it.onBackPressed()) {
                 return
             } else {
                 super.onBackPressed()

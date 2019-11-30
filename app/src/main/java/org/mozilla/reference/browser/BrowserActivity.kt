@@ -18,7 +18,7 @@ import mozilla.components.concept.engine.EngineView
 import mozilla.components.concept.tabstray.TabsTray
 import mozilla.components.feature.intent.ext.EXTRA_SESSION_ID
 import mozilla.components.lib.crash.Crash
-import mozilla.components.support.base.feature.BackHandler
+import mozilla.components.support.base.feature.UserInteractionHandler
 import mozilla.components.support.utils.SafeIntent
 import org.mozilla.reference.browser.browser.BrowserFragment
 import org.mozilla.reference.browser.browser.CrashIntegration
@@ -66,7 +66,7 @@ open class BrowserActivity : AppCompatActivity() {
 
     override fun onBackPressed() {
         supportFragmentManager.fragments.forEach {
-            if (it is BackHandler && it.onBackPressed()) {
+            if (it is UserInteractionHandler && it.onBackPressed()) {
                 return
             }
         }

@@ -11,17 +11,16 @@ import kotlinx.android.synthetic.main.fragment_browser.view.*
 import mozilla.components.feature.awesomebar.AwesomeBarFeature
 import mozilla.components.feature.session.ThumbnailsFeature
 import mozilla.components.feature.tabs.toolbar.TabsToolbarFeature
-import mozilla.components.support.base.feature.BackHandler
+import mozilla.components.support.base.feature.UserInteractionHandler
 import mozilla.components.support.base.feature.ViewBoundFeatureWrapper
 import org.mozilla.reference.browser.R
-import org.mozilla.reference.browser.UserInteractionHandler
 import org.mozilla.reference.browser.ext.requireComponents
 import org.mozilla.reference.browser.tabs.TabsTrayFragment
 
 /**
  * Fragment used for browsing the web within the main app.
  */
-class BrowserFragment : BaseBrowserFragment(), BackHandler, UserInteractionHandler {
+class BrowserFragment : BaseBrowserFragment(), UserInteractionHandler {
     private val thumbnailsFeature = ViewBoundFeatureWrapper<ThumbnailsFeature>()
     private val readerViewFeature = ViewBoundFeatureWrapper<ReaderViewIntegration>()
 
