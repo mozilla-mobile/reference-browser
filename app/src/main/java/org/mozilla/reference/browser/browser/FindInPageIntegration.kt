@@ -15,15 +15,15 @@ import mozilla.components.concept.engine.EngineView
 import mozilla.components.feature.findinpage.FindInPageFeature
 import mozilla.components.feature.findinpage.view.FindInPageBar
 import mozilla.components.feature.findinpage.view.FindInPageView
-import mozilla.components.support.base.feature.BackHandler
 import mozilla.components.support.base.feature.LifecycleAwareFeature
+import mozilla.components.support.base.feature.UserInteractionHandler
 
 class FindInPageIntegration(
     private val store: BrowserStore,
     private val sessionId: String? = null,
     private val view: FindInPageView,
     engineView: EngineView
-) : LifecycleAwareFeature, BackHandler {
+) : LifecycleAwareFeature, UserInteractionHandler {
     private val feature = FindInPageFeature(store, view, engineView, ::onClose)
 
     override fun start() {
