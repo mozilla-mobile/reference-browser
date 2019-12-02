@@ -73,10 +73,3 @@ jobs:
         test-name: raptor-speedometer
         treeherder:
             symbol: 'Rap(sp)'
-
-    speedometer-power:
-        test-name: raptor-speedometer
-        description: 'raptor speedometer power'
-        treeherder:
-            symbol: 'Rap-P(sp)'
-        args: ['--power-test', '--page-cycles 5', '--host HOST_IP']
