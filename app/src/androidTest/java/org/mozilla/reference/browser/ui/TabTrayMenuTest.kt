@@ -78,7 +78,7 @@ class TabTrayMenuTest {
         }.openMoreOptionsMenu {
             verifyCloseAllTabsButton()
         }.closeAllTabs {
-            verifyNewTabAddressView()
+            verifyNoTabAddressView()
             checkNumberOfTabsTabCounter("0")
         }
     }
@@ -148,7 +148,7 @@ class TabTrayMenuTest {
         }.openTabTrayMenu {
         }.goBackFromTabTray {
             // For now checking new tab is valid, this will change when browsing to/from different places
-            verifyNewTabAddressView()
+            verifyNoTabAddressView()
         }
     }
 }
