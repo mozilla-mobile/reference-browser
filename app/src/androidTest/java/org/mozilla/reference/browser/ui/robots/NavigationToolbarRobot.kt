@@ -5,28 +5,29 @@
 package org.mozilla.reference.browser.ui.robots
 
 import android.net.Uri
-import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.matcher.ViewMatchers
-import androidx.test.espresso.matcher.ViewMatchers.withId
-import androidx.test.espresso.matcher.ViewMatchers.withText
-import org.mozilla.reference.browser.R
-import org.mozilla.reference.browser.helpers.click
-import androidx.test.espresso.action.ViewActions.pressImeActionButton
 import androidx.test.espresso.action.ViewActions.click
+import androidx.test.espresso.action.ViewActions.pressImeActionButton
 import androidx.test.espresso.action.ViewActions.replaceText
 import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.matcher.ViewMatchers.withId
+import androidx.test.espresso.matcher.ViewMatchers.withText
+import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.uiautomator.By
 import androidx.test.uiautomator.UiDevice
 import androidx.test.uiautomator.Until
-import org.mozilla.reference.browser.helpers.TestAssetHelper.waitingTime
+import org.mozilla.reference.browser.R
+import org.mozilla.reference.browser.ext.waitAndInteract
+import org.mozilla.reference.browser.helpers.click
 
 /**
  * Implementation of Robot Pattern for the navigation toolbar menu.
  */
 class NavigationToolbarRobot {
 
+    fun verifyNoTabAddressView() = assertNoTabAddressText()
     fun verifyNewTabAddressView() = assertNewTabAddressText()
+
     fun checkNumberOfTabsTabCounter(numTabs: String) = numberOfOpenTabsTabCounter.check(matches(withText(numTabs)))
 
     class Transition {
@@ -44,8 +45,9 @@ class NavigationToolbarRobot {
         }
 
         fun openThreeDotMenu(interact: ThreeDotMenuRobot.() -> Unit): ThreeDotMenuRobot.Transition {
-            mDevice.wait(Until.findObject(By.text("Menu")), waitingTime)
-            threeDotButton().click()
+            mDevice.waitAndInteract(Until.findObject(By.desc("Menu"))) {
+                click()
+            }
             ThreeDotMenuRobot().interact()
             return ThreeDotMenuRobot.Transition()
         }
@@ -63,12 +65,15 @@ fun navigationToolbar(interact: NavigationToolbarRobot.() -> Unit): NavigationTo
     return NavigationToolbarRobot.Transition()
 }
 
-private fun threeDotButton() = onView(ViewMatchers.withContentDescription("Menu"))
-private fun openTabTray() = onView(ViewMatchers.withId(R.id.counter_box))
-private var numberOfOpenTabsTabCounter = onView(ViewMatchers.withId(R.id.counter_text))
-private fun urlBar() = onView(ViewMatchers.withId(R.id.mozac_browser_toolbar_url_view))
+private fun openTabTray() = onView(withId(R.id.counter_box))
+private var numberOfOpenTabsTabCounter = onView(withId(R.id.counter_text))
+private fun urlBar() = onView(withId(R.id.mozac_browser_toolbar_url_view))
 private fun awesomeBar() = onView(withId(R.id.mozac_browser_toolbar_edit_url_view))
 
+private fun assertNoTabAddressText() {
+    mDevice.waitAndInteract(Until.findObject(By.text("Search or enter address"))) {}
+}
+
 private fun assertNewTabAddressText() {
-    mDevice.wait(Until.findObject(By.text("Search or enter address")), waitingTime)
+    mDevice.waitAndInteract(Until.findObject(By.text("about:blank"))) {}
 }
