@@ -136,6 +136,13 @@
           android:theme="@style/AppTheme"
           android:parentActivityName=".BrowserActivity" />
 
+        <activity
+            android:name=".tabs.SyncedTabsActivity"
+            android:exported="false"
+            android:label="@string/synced_tabs"
+            android:theme="@style/AppTheme"
+            android:parentActivityName=".BrowserActivity" />
+
         <service
             android:name=".push.FirebasePush"
             android:exported="false">
