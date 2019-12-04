@@ -30,6 +30,7 @@ import org.mozilla.reference.browser.addons.AddonsActivity
 import org.mozilla.reference.browser.ext.components
 import org.mozilla.reference.browser.ext.share
 import org.mozilla.reference.browser.settings.SettingsActivity
+import org.mozilla.reference.browser.tabs.SyncedTabsActivity
 
 class ToolbarIntegration(
     context: Context,
@@ -107,6 +108,10 @@ class ToolbarIntegration(
                 context.startActivity(intent)
             },
 
+            SimpleBrowserMenuItem("Synced Tabs") {
+                openSyncedTabsActivity(context)
+            },
+
             SimpleBrowserMenuItem("Report issue") {
                 tabsUseCases.addTab.invoke(
                     "https://github.com/mozilla-mobile/reference-browser/issues/new")
@@ -157,6 +162,11 @@ class ToolbarIntegration(
 
     override fun onBackPressed(): Boolean {
         return toolbarFeature.onBackPressed()
+    }
+
+    private fun openSyncedTabsActivity(context: Context) {
+        val intent = Intent(context, SyncedTabsActivity::class.java)
+        context.startActivity(intent)
     }
 
     private fun openSettingsActivity(context: Context) {

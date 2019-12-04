@@ -1,0 +1,34 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/synced_tabs_item"
+    android:background="@color/photonGrey10"
+    android:paddingTop="10dp"
+    android:paddingBottom="10dp"
+    android:paddingStart="50dp"
+    android:paddingEnd="20dp"
+    android:layout_centerVertical="true"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <TextView
+        android:id="@+id/synced_tabs_item_title"
+        android:textSize="14sp"
+        android:textColor="@color/photonGrey90"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:maxLines="1"
+        tools:text="Mozilla" />
+    <TextView
+        android:id="@+id/synced_tabs_item_desc"
+        android:textSize="12sp"
+        android:layout_below="@+id/synced_tabs_item_title"
+        android:textColor="@color/photonGrey50"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:maxLines="1"
+        tools:text="https://www.mozilla.org" />
+</RelativeLayout>

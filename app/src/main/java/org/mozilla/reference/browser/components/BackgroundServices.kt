@@ -10,12 +10,14 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import mozilla.components.browser.storage.sync.PlacesHistoryStorage
+import mozilla.components.browser.storage.sync.RemoteTabsStorage
 import mozilla.components.concept.sync.DeviceCapability
 import mozilla.components.concept.sync.DeviceType
 import mozilla.components.feature.accounts.push.FxaPushSupportFeature
 import mozilla.components.feature.accounts.push.SendTabFeature
 import mozilla.components.feature.push.AutoPushFeature
 import mozilla.components.feature.push.PushConfig
+import mozilla.components.feature.syncedtabs.SyncedTabsFeature
 import mozilla.components.service.fxa.DeviceConfig
 import mozilla.components.service.fxa.ServerConfig
 import mozilla.components.service.fxa.SyncConfig
@@ -25,6 +27,8 @@ import mozilla.components.service.fxa.sync.GlobalSyncableStoreProvider
 import mozilla.components.support.base.log.logger.Logger
 import org.mozilla.reference.browser.push.FirebasePush
 import org.mozilla.reference.browser.NotificationManager
+import org.mozilla.reference.browser.ext.components
+import org.mozilla.reference.browser.tabs.SyncedTabsIntegration
 
 /**
  * Component group for background services. These are components that need to be accessed from
@@ -32,7 +36,8 @@ import org.mozilla.reference.browser.NotificationManager
  */
 class BackgroundServices(
     context: Context,
-    placesHistoryStorage: PlacesHistoryStorage
+    placesHistoryStorage: PlacesHistoryStorage,
+    private val remoteTabsStorage: RemoteTabsStorage = RemoteTabsStorage()
 ) {
     companion object {
         const val CLIENT_ID = "3c49430b43dfba77"
@@ -40,8 +45,9 @@ class BackgroundServices(
     }
 
     init {
-        // Make the "history" store accessible to workers spawned by the sync manager.
+        // Make the sync stores accessible to workers spawned by the sync manager.
         GlobalSyncableStoreProvider.configureStore(SyncEngine.History to placesHistoryStorage)
+        GlobalSyncableStoreProvider.configureStore(SyncEngine.Tabs to remoteTabsStorage)
     }
 
     private val serverConfig = ServerConfig.release(CLIENT_ID, REDIRECT_URL)
@@ -51,7 +57,7 @@ class BackgroundServices(
         capabilities = setOf(DeviceCapability.SEND_TAB)
     )
     private val syncConfig = SyncConfig(
-        supportedEngines = setOf(SyncEngine.History),
+        supportedEngines = setOf(SyncEngine.History, SyncEngine.Tabs),
         syncPeriodInMinutes = 240L
     ) // four hours
 
@@ -74,6 +80,10 @@ class BackgroundServices(
             }
 
             pushFeature?.let { push -> FxaPushSupportFeature(context, accountManager, push) }
+
+            SyncedTabsIntegration(context, accountManager).also {
+                it.launch()
+            }
 
             CoroutineScope(Dispatchers.Main).launch { accountManager.initAsync().await() }
         }
@@ -105,4 +115,6 @@ class BackgroundServices(
     }
 
     private val pushService by lazy { FirebasePush() }
+
+    val syncedTabs by lazy { SyncedTabsFeature(accountManager, context.components.core.store, remoteTabsStorage) }
 }

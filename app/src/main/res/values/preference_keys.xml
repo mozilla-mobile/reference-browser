@@ -11,6 +11,7 @@
     <string name="pref_key_telemetry" translatable="false">pref_key_telemetry</string>
     <string name="pref_key_make_default_browser" translatable="false">pref_key_make_default_browser</string>
     <string name="pref_key_sync_history" translatable="false">pref_key_sync_history</string>
+    <string name="pref_key_sync_tabs" translatable="false">pref_key_sync_tabs</string>
     <string name="pref_key_remote_debugging" translatable="false">pref_key_remote_debugging</string>
     <string name="pref_key_testing_mode" translatable="false">pref_key_testing_mode</string>
     <string name="pref_key_about_page" translatable="false">pref_key_about_page</string>

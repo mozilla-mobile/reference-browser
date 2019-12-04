@@ -18,6 +18,12 @@
             android:defaultValue="true"
             android:enabled="false"
             android:title="@string/preferences_sync_history" />
+
+        <CheckBoxPreference
+            android:key="@string/pref_key_sync_tabs"
+            android:defaultValue="true"
+            android:enabled="false"
+            android:title="@string/preferences_sync_tabs" />
     </PreferenceCategory>
 
     <org.mozilla.reference.browser.settings.CustomColorPreference

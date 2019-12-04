@@ -218,6 +218,7 @@ dependencies {
     implementation Deps.mozilla_feature_pwa
     implementation Deps.mozilla_feature_qr
     implementation Deps.mozilla_feature_readerview
+    implementation Deps.mozilla_feature_syncedtabs
     implementation Deps.mozilla_feature_webcompat
     implementation Deps.mozilla_feature_webnotifications
 
