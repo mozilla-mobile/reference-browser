@@ -18,14 +18,25 @@ import org.mozilla.reference.browser.tabs.PrivatePage
  * which in turn needs 'core' itself.
  */
 class AppRequestInterceptor(private val context: Context) : RequestInterceptor {
-    override fun onLoadRequest(session: EngineSession, uri: String): RequestInterceptor.InterceptionResponse? {
+    override fun onLoadRequest(
+        engineSession: EngineSession,
+        uri: String,
+        hasUserGesture: Boolean,
+        isSameDomain: Boolean
+    ): RequestInterceptor.InterceptionResponse? {
         return when (uri) {
             "about:privatebrowsing" -> {
                 val page = PrivatePage.createPrivateBrowsingPage(context, uri)
-                return RequestInterceptor.InterceptionResponse.Content(page, encoding = "base64")
+                RequestInterceptor.InterceptionResponse.Content(page, encoding = "base64")
             }
 
-            else -> context.components.services.accountsAuthFeature.interceptor.onLoadRequest(session, uri)
+            else -> {
+                context.components.services.accountsAuthFeature.interceptor.onLoadRequest(
+                    engineSession, uri, hasUserGesture, isSameDomain
+                ) ?: context.components.services.appLinksInterceptor.onLoadRequest(
+                    engineSession, uri, hasUserGesture, isSameDomain
+                )
+            }
         }
     }
 
