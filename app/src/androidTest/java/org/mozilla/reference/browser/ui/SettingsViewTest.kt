@@ -39,11 +39,10 @@ class SettingsViewTest {
             verifySyncQrSummary()
             verifyPrivacyButton()
             verifyPrivacySummary()
+            verifyOpenLinksInApps()
             verifyMakeDefaultBrowserButton()
             verifyDeveloperToolsHeading()
-            verifyRemoteDebuggingText()
-            // There are 2 toggles with the same id, the following will always fail the test
-            // verifyRemoteDebuggingToggle()
+            verifyRemoteDebugging()
             verifyMozillaHeading()
             verifyAboutReferenceBrowserButton()
         }
