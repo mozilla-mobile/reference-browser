@@ -135,7 +135,6 @@ abstract class BaseBrowserFragment : Fragment(), UserInteractionHandler {
                 requireContext(),
                 sessionManager = requireComponents.core.sessionManager,
                 sessionId = sessionId,
-                interceptLinkClicks = true,
                 fragmentManager = requireFragmentManager(),
                 launchInApp = {
                     prefs.getBoolean(requireContext().getPreferenceKey(R.string.pref_key_launch_external_app), false)
