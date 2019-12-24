@@ -6,12 +6,14 @@ package org.mozilla.reference.browser
 
 import android.app.Application
 import mozilla.components.concept.push.PushProcessor
+import mozilla.components.browser.session.Session
 import mozilla.components.support.base.log.Log
 import mozilla.components.support.base.log.sink.AndroidLogSink
 import mozilla.components.support.ktx.android.content.isMainProcess
 import mozilla.components.support.ktx.android.content.runOnlyInMainProcess
 import mozilla.components.support.rustlog.RustLog
 import mozilla.components.support.rusthttp.RustHttpConfig
+import mozilla.components.support.webextensions.WebExtensionSupport
 import org.mozilla.reference.browser.ext.isCrashReportActive
 
 open class BrowserApplication : Application() {
@@ -34,6 +36,23 @@ open class BrowserApplication : Application() {
         }
 
         components.core.engine.warmUp()
+
+        WebExtensionSupport.initialize(
+            engine = components.core.engine,
+            store = components.core.store,
+            onNewTabOverride = { _, engineSession, url ->
+                val session = Session(url)
+                components.core.sessionManager.add(session, true, engineSession)
+                session.id
+            },
+            onCloseTabOverride = { _, sessionId ->
+                components.useCases.tabsUseCases.removeTab(sessionId)
+            },
+            onSelectTabOverride = { _, sessionId ->
+                val selected = components.core.sessionManager.findSessionById(sessionId)
+                selected?.let { components.useCases.tabsUseCases.selectTab(it) }
+            }
+        )
 
         components.analytics.initializeGlean()
         components.analytics.initializeExperiments()
