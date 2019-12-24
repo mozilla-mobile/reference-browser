@@ -165,4 +165,8 @@
     <!-- %s is the device name -->
     <string name="fxa_tab_received_from_notification_name">Tab from %s</string>
 
+    <!-- Addons -->
+    <string name="addon_permissions_dialog_add">Add</string>
+    <string name="addon_permissions_dialog_cancel">Cancel</string>
+
 </resources>
