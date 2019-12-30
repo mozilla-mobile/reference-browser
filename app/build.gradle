@@ -182,6 +182,7 @@ dependencies {
     implementation Deps.mozilla_concept_toolbar
     implementation Deps.mozilla_concept_storage
     implementation Deps.mozilla_concept_sync
+    implementation Deps.mozilla_concept_push
 
     implementation Deps.mozilla_browser_engine_gecko_nightly
 
@@ -206,11 +207,13 @@ dependencies {
     implementation Deps.mozilla_feature_sitepermissions
     implementation Deps.mozilla_feature_intent
     implementation Deps.mozilla_feature_search
+    implementation Deps.mozilla_feature_sendtab
     implementation Deps.mozilla_feature_session
     implementation Deps.mozilla_feature_toolbar
     implementation Deps.mozilla_feature_tabs
     implementation Deps.mozilla_feature_downloads
     implementation Deps.mozilla_feature_prompts
+    implementation Deps.mozilla_feature_push
     implementation Deps.mozilla_feature_pwa
     implementation Deps.mozilla_feature_qr
     implementation Deps.mozilla_feature_readerview
@@ -228,7 +231,10 @@ dependencies {
     implementation Deps.mozilla_support_ktx
     implementation Deps.mozilla_support_rustlog
     implementation Deps.mozilla_support_rusthttp
+
     implementation Deps.mozilla_lib_crash
+    implementation Deps.mozilla_lib_push_firebase
+
     implementation Deps.thirdparty_sentry
 
     implementation Deps.kotlin_stdlib
@@ -236,8 +242,8 @@ dependencies {
 
     implementation Deps.androidx_appcompat
     implementation Deps.androidx_constraintlayout
-    implementation Deps.androidx_preference
-    implementation Deps.androidx_work_runtime
+    implementation Deps.androidx_preference_ktx
+    implementation Deps.androidx_work_runtime_ktx
     implementation Deps.google_material
 
     androidTestImplementation Deps.uiautomator

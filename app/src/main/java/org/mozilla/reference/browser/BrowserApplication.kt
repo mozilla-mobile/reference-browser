@@ -5,6 +5,7 @@
 package org.mozilla.reference.browser
 
 import android.app.Application
+import mozilla.components.concept.push.PushProcessor
 import mozilla.components.support.base.log.Log
 import mozilla.components.support.base.log.sink.AndroidLogSink
 import mozilla.components.support.ktx.android.content.isMainProcess
@@ -36,6 +37,10 @@ open class BrowserApplication : Application() {
 
         components.analytics.initializeGlean()
         components.analytics.initializeExperiments()
+
+        components.backgroundServices.pushFeature?.let {
+            PushProcessor.install(it)
+        }
     }
 
     override fun onTrimMemory(level: Int) {
