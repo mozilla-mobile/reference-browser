@@ -198,6 +198,7 @@ dependencies {
     implementation Deps.mozilla_browser_icons
 
     implementation Deps.mozilla_feature_accounts
+    implementation Deps.mozilla_feature_accounts_push
     implementation Deps.mozilla_feature_addons
     implementation Deps.mozilla_feature_app_links
     implementation Deps.mozilla_feature_awesomebar
@@ -208,7 +209,6 @@ dependencies {
     implementation Deps.mozilla_feature_sitepermissions
     implementation Deps.mozilla_feature_intent
     implementation Deps.mozilla_feature_search
-    implementation Deps.mozilla_feature_sendtab
     implementation Deps.mozilla_feature_session
     implementation Deps.mozilla_feature_toolbar
     implementation Deps.mozilla_feature_tabs

@@ -6,25 +6,23 @@ package org.mozilla.reference.browser.components
 
 import android.content.Context
 import android.os.Build
-import androidx.lifecycle.ProcessLifecycleOwner
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import mozilla.components.browser.storage.sync.PlacesHistoryStorage
-import mozilla.components.concept.sync.AccountObserver
-import mozilla.components.concept.sync.AuthType
 import mozilla.components.concept.sync.DeviceCapability
 import mozilla.components.concept.sync.DeviceType
-import mozilla.components.concept.sync.OAuthAccount
+import mozilla.components.feature.accounts.push.FxaPushSupportFeature
+import mozilla.components.feature.accounts.push.SendTabFeature
 import mozilla.components.feature.push.AutoPushFeature
 import mozilla.components.feature.push.PushConfig
-import mozilla.components.feature.sendtab.SendTabFeature
 import mozilla.components.service.fxa.DeviceConfig
 import mozilla.components.service.fxa.ServerConfig
 import mozilla.components.service.fxa.SyncConfig
 import mozilla.components.service.fxa.SyncEngine
 import mozilla.components.service.fxa.manager.FxaAccountManager
 import mozilla.components.service.fxa.sync.GlobalSyncableStoreProvider
+import mozilla.components.support.base.log.logger.Logger
 import org.mozilla.reference.browser.push.FirebasePush
 import org.mozilla.reference.browser.NotificationManager
 
@@ -69,16 +67,15 @@ class BackgroundServices(
             // This is a good example of an information leak at the API level.
             // See https://github.com/mozilla-mobile/android-components/issues/3732
             setOf("https://identity.mozilla.com/apps/oldsync")
-        ).also {
-            // We don't need the push service unless we're signed in.
-            it.register(pushServiceObserver, ProcessLifecycleOwner.get(), false)
+        ).also { accountManager ->
 
-            // Initializing the feature allows it to start observing events as needed.
-            SendTabFeature(it, pushFeature) { device, tabs ->
+            SendTabFeature(accountManager) { device, tabs ->
                 NotificationManager.showReceivedTabs(context, device, tabs)
             }
 
-            CoroutineScope(Dispatchers.Main).launch { it.initAsync().await() }
+            pushFeature?.let { push -> FxaPushSupportFeature(context, accountManager, push) }
+
+            CoroutineScope(Dispatchers.Main).launch { accountManager.initAsync().await() }
         }
     }
 
@@ -95,27 +92,17 @@ class BackgroundServices(
      * keys are available for the FCM service to be used.
      */
     private val pushConfig by lazy {
+        val logger = Logger("AutoPush")
+
         val resId = context.resources.getIdentifier("project_id", "string", context.packageName)
         if (resId == 0) {
+            logger.info("No push keys found. Exiting..")
             return@lazy null
         }
+        logger.info("Push keys detected, instantiation beginning..")
         val projectId = context.resources.getString(resId)
         PushConfig(projectId)
     }
 
     private val pushService by lazy { FirebasePush() }
-
-    private val pushServiceObserver by lazy {
-        object : AccountObserver {
-            override fun onAuthenticated(account: OAuthAccount, authType: AuthType) {
-                if (authType != AuthType.Existing) {
-                    pushService.start(context)
-                }
-            }
-
-            override fun onLoggedOut() {
-                pushService.stop()
-            }
-        }
-    }
 }
