@@ -19,6 +19,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import kotlinx.android.synthetic.main.fragment_add_ons.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
@@ -287,6 +288,7 @@ class AddonsFragment : Fragment(), View.OnClickListener {
     }
 
     private val onPositiveButtonClicked: ((Addon) -> Unit) = { addon ->
+        addonProgressOverlay.visibility = View.VISIBLE
         requireContext().components.core.addonManager.installAddon(
             addon,
             onSuccess = {
@@ -299,6 +301,8 @@ class AddonsFragment : Fragment(), View.OnClickListener {
                 this@AddonsFragment.view?.let { view ->
                     bindRecyclerView(view)
                 }
+
+                addonProgressOverlay.visibility = View.GONE
             },
             onError = { _, _ ->
                 Toast.makeText(
@@ -306,6 +310,8 @@ class AddonsFragment : Fragment(), View.OnClickListener {
                     "Failed to install: ${addon.translatableName.translate()}",
                     Toast.LENGTH_SHORT
                 ).show()
+
+                addonProgressOverlay.visibility = View.GONE
             }
         )
     }
