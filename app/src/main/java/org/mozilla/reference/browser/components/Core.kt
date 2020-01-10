@@ -126,8 +126,11 @@ class Core(private val context: Context) {
 
     // Addons
     val addonManager by lazy {
-        val addonUpdater = DefaultAddonUpdater(context, AddonUpdater.Frequency(1, TimeUnit.DAYS))
         AddonManager(store, engine, addonCollectionProvider, addonUpdater)
+    }
+
+    val addonUpdater by lazy {
+        DefaultAddonUpdater(context, AddonUpdater.Frequency(1, TimeUnit.DAYS))
     }
 
     val addonCollectionProvider by lazy {
