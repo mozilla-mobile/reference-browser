@@ -16,6 +16,7 @@ import kotlinx.android.synthetic.main.fragment_add_on_settings.*
 import mozilla.components.concept.engine.EngineSession
 import mozilla.components.concept.engine.EngineView
 import mozilla.components.feature.addons.Addon
+import mozilla.components.feature.addons.ui.translate
 import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.ext.components
 
