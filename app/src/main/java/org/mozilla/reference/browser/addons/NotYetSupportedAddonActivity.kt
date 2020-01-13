@@ -17,6 +17,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import mozilla.components.feature.addons.Addon
+import mozilla.components.feature.addons.ui.translate
 import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.ext.components
 
