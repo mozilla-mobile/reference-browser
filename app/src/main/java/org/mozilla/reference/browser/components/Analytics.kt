@@ -58,8 +58,9 @@ class Analytics(private val context: Context) {
     }
 
     internal fun initializeGlean() {
-        Glean.setUploadEnabled(BuildConfig.TELEMETRY_ENABLED && Settings.isTelemetryEnabled(context))
-        Glean.initialize(context, Configuration(
+        val enableUpload =
+            BuildConfig.TELEMETRY_ENABLED && Settings.isTelemetryEnabled(context)
+        Glean.initialize(context, enableUpload, Configuration(
             httpClient = ConceptFetchHttpUploader(lazy { context.components.core.client })
         ))
     }
