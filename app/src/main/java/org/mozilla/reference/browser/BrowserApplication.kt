@@ -64,6 +64,8 @@ open class BrowserApplication : Application() {
 
         components.backgroundServices.pushFeature?.let {
             PushProcessor.install(it)
+
+            it.initialize()
         }
     }
 
