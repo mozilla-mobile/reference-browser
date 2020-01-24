@@ -44,6 +44,7 @@ open class BrowserApplication : Application() {
         WebExtensionSupport.initialize(
             engine = components.core.engine,
             store = components.core.store,
+            openPopupInTab = true,
             onNewTabOverride = { _, engineSession, url ->
                 val session = Session(url)
                 components.core.sessionManager.add(session, true, engineSession)
