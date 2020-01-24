@@ -28,7 +28,7 @@ class SettingsViewRobot {
 
     fun verifyNavigateUp() = assertNavigateUpButton()
     fun verifySyncSigninButton() = assertSyncSigninButton()
-    fun verifySyncHistorySummary() = assertSyncHistorySummary()
+    fun verifySyncTabsAndHistorySummary() = assertSyncTabsAndHistorySummary()
     fun verifySyncQrCodeButton() = assertSyncQrCodeButton()
     fun verifySyncQrSummary() = assertSyncQrSummary()
     fun verifyPrivacyButton() = assertPrivacyButton()
@@ -96,7 +96,7 @@ private fun assertSettingsView() {
 }
 
 private fun syncSigninButton() = Espresso.onView(withText("Sign in"))
-private fun syncHistorySummary() = Espresso.onView(withText("Sync your history"))
+private fun syncTabsAndHistorySummary() = Espresso.onView(withText("Sync your tabs and history"))
 private fun syncQrCodeButton() = Espresso.onView(withText("Sign in with a QR code"))
 private fun syncQrSummary() = Espresso.onView(withText("Pair with Firefox Desktop"))
 private fun privacyButton() = Espresso.onView(withText("Privacy"))
@@ -113,7 +113,7 @@ private fun assertNavigateUpButton() {
 }
 private fun assertSyncSigninButton() = syncSigninButton()
         .check(matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
-private fun assertSyncHistorySummary() = syncHistorySummary()
+private fun assertSyncTabsAndHistorySummary() = syncTabsAndHistorySummary()
         .check(matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
 private fun assertSyncQrCodeButton() = syncQrCodeButton()
         .check(matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
