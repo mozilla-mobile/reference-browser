@@ -56,6 +56,10 @@ android {
 
     testOptions {
         execution 'ANDROIDX_TEST_ORCHESTRATOR'
+
+        unitTests {
+            includeAndroidResources = true
+        }
     }
 
     lintOptions {
@@ -272,12 +276,35 @@ dependencies {
     }
 
     androidTestImplementation Deps.mockwebserver
+    androidTestImplementation Deps.tools_test_ext_junit
     androidTestImplementation Deps.tools_test_runner
     androidTestImplementation Deps.tools_test_rules
     androidTestUtil Deps.orchestrator
-    androidTestImplementation Deps.espresso_core, {
+
+    testImplementation Deps.robolectric
+    testImplementation Deps.robolectric_shadows
+
+    testImplementation Deps.uiautomator
+
+    testImplementation Deps.espresso_core, {
         exclude group: 'com.android.support', module: 'support-annotations'
     }
+    testImplementation(Deps.espresso_contrib) {
+        exclude module: 'appcompat-v7'
+        exclude module: 'support-v4'
+        exclude module: 'support-annotations'
+        exclude module: 'recyclerview-v7'
+        exclude module: 'design'
+        exclude module: 'espresso-core'
+    }
+
+    testImplementation Deps.mockwebserver
+    testImplementation Deps.tools_test_ext_junit
+    testImplementation Deps.tools_test_runner
+    testImplementation Deps.tools_test_rules
+
+    testImplementation Deps.mozilla_support_test_appservices
+    testImplementation Deps.testing_mockito
 }
 
 // -------------------------------------------------------------------------------------------------

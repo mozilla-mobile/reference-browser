@@ -6,7 +6,7 @@ package org.mozilla.reference.browser.helpers
 
 import android.net.Uri
 import okhttp3.mockwebserver.MockWebServer
-import org.mozilla.reference.browser.ext.toUri
+import org.mozilla.reference.browser.helpers.ext.toUri
 import java.util.concurrent.TimeUnit
 
 /**

@@ -4,7 +4,6 @@
 
 package org.mozilla.reference.browser.helpers
 
-import android.net.Uri
 import android.os.Handler
 import android.os.Looper
 import androidx.test.InstrumentationRegistry
@@ -12,24 +11,7 @@ import okhttp3.mockwebserver.Dispatcher
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import okhttp3.mockwebserver.RecordedRequest
-import org.mozilla.reference.browser.ext.toUri
 import java.io.IOException
-
-object MockWebServerHelper {
-
-    fun initMockWebServerAndReturnEndpoints(vararg messages: String): List<Uri> {
-        val mockServer = MockWebServer()
-        var uniquePath = 0
-        val uris = mutableListOf<Uri>()
-        messages.forEach { message ->
-            val response = MockResponse().setBody("<html><body>$message</body></html>")
-            mockServer.enqueue(response)
-            val endpoint = mockServer.url(uniquePath++.toString()).toString().toUri()!!
-            uris += endpoint
-        }
-        return uris
-    }
-}
 
 /**
  * A [MockWebServer] [Dispatcher] that will return Android assets in the body of requests.

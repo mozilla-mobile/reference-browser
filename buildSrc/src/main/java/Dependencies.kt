@@ -27,6 +27,8 @@ private object Versions {
     const val tools_test_rules = "1.1.0"
     const val tools_test_runner = "1.1.0"
     const val uiautomator = "2.2.0"
+    const val robolectric = "4.3"
+    const val mockito = "2.24.5"
 
     object AndroidX {
         const val core = "1.1.0"
@@ -121,7 +123,12 @@ object Deps {
     const val espresso_web = "androidx.test.espresso:espresso-web:${Versions.espresso_version}"
     const val mockwebserver = "com.squareup.okhttp3:mockwebserver:${Versions.mockwebserver}"
     const val orchestrator =  "androidx.test:orchestrator:${Versions.orchestrator}"
+    const val tools_test_ext_junit = "androidx.test.ext:junit:${Versions.AndroidX.core}"
     const val tools_test_rules = "androidx.test:rules:${Versions.tools_test_rules}"
     const val tools_test_runner = "androidx.test:runner:${Versions.tools_test_runner}"
     const val uiautomator = "androidx.test.uiautomator:uiautomator:${Versions.uiautomator}"
+    const val robolectric = "org.robolectric:robolectric:${Versions.robolectric}"
+    const val robolectric_shadows = "org.robolectric:shadows-framework:${Versions.robolectric}"
+    const val mozilla_support_test_appservices  = "org.mozilla.components:support-test-appservices:${Versions.mozilla_android_components}"
+    const val testing_mockito = "org.mockito:mockito-core:${Versions.mockito}"
 }

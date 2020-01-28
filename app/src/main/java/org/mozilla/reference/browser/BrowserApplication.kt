@@ -21,7 +21,8 @@ import org.mozilla.reference.browser.push.PushFxaIntegration
 import org.mozilla.reference.browser.push.WebPushEngineIntegration
 
 open class BrowserApplication : Application() {
-    val components by lazy { Components(this) }
+
+    open val components by lazy { Components(this) }
 
     override fun onCreate() {
         super.onCreate()
