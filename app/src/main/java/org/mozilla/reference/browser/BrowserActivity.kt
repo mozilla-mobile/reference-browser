@@ -5,14 +5,16 @@
 package org.mozilla.reference.browser
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
-import com.google.android.material.snackbar.Snackbar
-import com.google.android.material.snackbar.Snackbar.LENGTH_LONG
-import androidx.appcompat.app.AppCompatActivity
 import android.util.AttributeSet
 import android.view.View
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import com.google.android.material.snackbar.Snackbar
+import com.google.android.material.snackbar.Snackbar.LENGTH_LONG
 import mozilla.components.browser.session.Session
+import mozilla.components.browser.state.state.WebExtensionState
 import mozilla.components.browser.tabstray.BrowserTabsTray
 import mozilla.components.concept.engine.EngineView
 import mozilla.components.concept.tabstray.TabsTray
@@ -20,6 +22,8 @@ import mozilla.components.feature.intent.ext.EXTRA_SESSION_ID
 import mozilla.components.lib.crash.Crash
 import mozilla.components.support.base.feature.UserInteractionHandler
 import mozilla.components.support.utils.SafeIntent
+import mozilla.components.support.webextensions.WebExtensionPopupFeature
+import org.mozilla.reference.browser.addons.WebExtensionActionPopupActivity
 import org.mozilla.reference.browser.browser.BrowserFragment
 import org.mozilla.reference.browser.browser.CrashIntegration
 import org.mozilla.reference.browser.ext.components
@@ -35,6 +39,10 @@ open class BrowserActivity : AppCompatActivity() {
 
     private val sessionId: String?
         get() = SafeIntent(intent).getStringExtra(EXTRA_SESSION_ID)
+
+    private val webExtensionPopupFeature by lazy {
+        WebExtensionPopupFeature(components.core.store, ::openPopup)
+    }
 
     /**
      * Returns a new instance of [BrowserFragment] to display.
@@ -61,6 +69,7 @@ open class BrowserActivity : AppCompatActivity() {
         }
 
         NotificationManager.checkAndNotifyPolicy(this)
+        lifecycle.addObserver(webExtensionPopupFeature)
     }
 
     override fun onBackPressed() {
@@ -124,5 +133,13 @@ open class BrowserActivity : AppCompatActivity() {
             .setAction(R.string.crash_report_non_fatal_action) {
                 crashIntegration.sendCrashReport(crash)
             }.show()
+    }
+
+    private fun openPopup(webExtensionState: WebExtensionState) {
+        val intent = Intent(this, WebExtensionActionPopupActivity::class.java)
+        intent.putExtra("web_extension_id", webExtensionState.id)
+        intent.putExtra("web_extension_name", webExtensionState.name)
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+        startActivity(intent)
     }
 }
