@@ -91,22 +91,22 @@ class SettingsViewRobot {
 
 private fun assertSettingsView() {
     // verify that we are in the correct settings view
-    Espresso.onView(withText("Settings"))
-    Espresso.onView(withText("About Reference Browser"))
+    Espresso.onView(withText(R.string.settings))
+    Espresso.onView(withText(R.string.preferences_about_page))
 }
 
-private fun syncSigninButton() = Espresso.onView(withText("Sign in"))
-private fun syncHistorySummary() = Espresso.onView(withText("Sync your history"))
-private fun syncQrCodeButton() = Espresso.onView(withText("Sign in with a QR code"))
-private fun syncQrSummary() = Espresso.onView(withText("Pair with Firefox Desktop"))
-private fun privacyButton() = Espresso.onView(withText("Privacy"))
-private fun privacySummary() = Espresso.onView(withText("Tracking, cookies, data choices"))
-private fun openLinksInAppsToggle() = Espresso.onView(allOf(withId(R.id.switchWidget), hasCousin(withText("Open links in apps"))))
-private fun makeDefaultBrowserButton() = Espresso.onView(withText("Make default browser"))
-private fun developerToolsHeading() = Espresso.onView(withText("Developer tools"))
-private fun remoteDebuggingToggle() = Espresso.onView(allOf(withId(R.id.switchWidget), hasCousin(withText("Remote debugging via USB"))))
-private fun mozillaHeading() = Espresso.onView(withText("Mozilla"))
-private fun aboutReferenceBrowserButton() = Espresso.onView(withText("About Reference Browser"))
+private fun syncSigninButton() = Espresso.onView(withText(R.string.sign_in))
+private fun syncHistorySummary() = Espresso.onView(withText(R.string.preferences_sign_in_summary))
+private fun syncQrCodeButton() = Espresso.onView(withText(R.string.pair_sign_in))
+private fun syncQrSummary() = Espresso.onView(withText(R.string.preferences_pair_sign_in_summary))
+private fun privacyButton() = Espresso.onView(withText(R.string.privacy))
+private fun privacySummary() = Espresso.onView(withText(R.string.preferences_privacy_summary))
+private fun openLinksInAppsToggle() = Espresso.onView(allOf(withId(R.id.switchWidget), hasCousin(withText(R.string.open_links_in_apps))))
+private fun makeDefaultBrowserButton() = Espresso.onView(withText(R.string.preferences_make_default_browser))
+private fun developerToolsHeading() = Espresso.onView(withText(R.string.developer_tools_category))
+private fun remoteDebuggingToggle() = Espresso.onView(allOf(withId(R.id.switchWidget), hasCousin(withText(R.string.preferences_remote_debugging))))
+private fun mozillaHeading() = Espresso.onView(withText(R.string.mozilla_category))
+private fun aboutReferenceBrowserButton() = Espresso.onView(withText(R.string.preferences_about_page))
 
 private fun assertNavigateUpButton() {
     mDevice.wait(Until.findObject(By.text("Navigate up")), TestAssetHelper.waitingTimeShort)
