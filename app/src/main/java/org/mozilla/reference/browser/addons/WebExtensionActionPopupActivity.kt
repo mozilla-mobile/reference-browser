@@ -17,6 +17,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import mozilla.components.browser.state.action.WebExtensionAction
 import mozilla.components.concept.engine.EngineSession
 import mozilla.components.concept.engine.EngineView
+import mozilla.components.concept.engine.window.WindowRequest
 import mozilla.components.lib.state.ext.consumeFrom
 import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.ext.components
@@ -48,17 +49,10 @@ class WebExtensionActionPopupActivity : AppCompatActivity() {
             else -> super.onCreateView(parent, name, context, attrs)
         }
 
-    override fun onBackPressed() {
-        components.core.store.dispatch(
-            WebExtensionAction.UpdatePopupSessionAction(webExtensionId, popupSession = null)
-        )
-        super.onBackPressed()
-    }
-
     /**
      * A fragment to show the web extension action popup with [EngineView].
      */
-    class WebExtensionActionPopupFragment : Fragment() {
+    class WebExtensionActionPopupFragment : Fragment(), EngineSession.Observer {
         private var engineSession: EngineSession? = null
         private lateinit var webExtensionId: String
 
@@ -76,18 +70,42 @@ class WebExtensionActionPopupActivity : AppCompatActivity() {
             val session = engineSession
             if (session != null) {
                 addonSettingsEngineView.render(session)
+                consumePopupSession()
             } else {
                 consumeFrom(requireContext().components.core.store) { state ->
                     state.extensions[webExtensionId]?.let { extState ->
                         extState.popupSession?.let {
                             if (engineSession == null) {
                                 addonSettingsEngineView.render(it)
+                                consumePopupSession()
                                 engineSession = it
                             }
                         }
                     }
                 }
             }
+        }
+
+        override fun onStart() {
+            super.onStart()
+            engineSession?.register(this)
+        }
+
+        override fun onStop() {
+            super.onStop()
+            engineSession?.unregister(this)
+        }
+
+        override fun onWindowRequest(windowRequest: WindowRequest) {
+            if (windowRequest.type == WindowRequest.Type.CLOSE) {
+                activity?.onBackPressed()
+            }
+        }
+
+        private fun consumePopupSession() {
+            requireContext().components.core.store.dispatch(
+                WebExtensionAction.UpdatePopupSessionAction(webExtensionId, popupSession = null)
+            )
         }
 
         companion object {
