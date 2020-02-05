@@ -26,7 +26,7 @@ def add_variants(config, tasks):
     tests = list(tasks)
 
     for dep_task in config.kind_dependencies_tasks:
-        build_type = dep_task.attributes["build-type"]
+        build_type = dep_task.attributes.get("build-type", '')
         if build_type not in only_types:
             continue
 

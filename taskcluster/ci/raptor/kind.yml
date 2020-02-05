@@ -8,6 +8,7 @@ transforms:
 
 kind-dependencies:
     - signing
+    - toolchain
 only-for-build-types:
     - raptor
 only-for-abis:
@@ -39,6 +40,7 @@ job-defaults:
         tier: 2
     dependencies:
         geckoview-nightly: geckoview-nightly
+        linux64-minidump-stackwalk: toolchain-linux64-minidump-stackwalk
     worker:
         max-run-time: 3600
         env:
@@ -67,6 +69,9 @@ job-defaults:
             - '--binary=org.mozilla.reference.browser.raptor'
             - '--activity=org.mozilla.reference.browser.GeckoViewActivity'
             - '--download-symbols=ondemand'
+    fetches:
+        linux64-minidump-stackwalk:
+            - artifact: minidump_stackwalk.tar.xz
 
 jobs:
     speedometer:
