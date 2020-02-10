@@ -38,6 +38,7 @@ class BrowserFragment : BaseBrowserFragment(), UserInteractionHandler {
                 requireComponents.useCases.searchUseCases.defaultSearch,
                 requireComponents.core.client)
             .addSessionProvider(
+                resources,
                 requireComponents.core.sessionManager,
                 requireComponents.useCases.tabsUseCases.selectTab)
             .addHistoryProvider(
