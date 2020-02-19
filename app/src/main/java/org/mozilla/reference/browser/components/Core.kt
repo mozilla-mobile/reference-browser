@@ -91,7 +91,7 @@ class Core(private val context: Context) {
                 .whenSessionsChange()
 
             // Install the "icons" WebExtension to automatically load icons for every visited website.
-            icons.install(engine, sessionManager = this)
+            icons.install(engine, store)
 
             // Show an ongoing notification when recording devices (camera, microphone) are used by web content
             RecordingDevicesNotificationFeature(context, sessionManager = this)
