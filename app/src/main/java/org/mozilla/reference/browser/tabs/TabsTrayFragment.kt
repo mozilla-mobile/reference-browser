@@ -31,7 +31,7 @@ class TabsTrayFragment : Fragment(), UserInteractionHandler {
 
         tabsFeature = TabsFeature(
             tabsTray,
-            requireComponents.core.sessionManager,
+            requireComponents.core.store,
             requireComponents.useCases.tabsUseCases,
             ::closeTabsTray)
 
