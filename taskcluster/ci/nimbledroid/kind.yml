@@ -5,41 +5,52 @@
 loader: taskgraph.loader.transform:loader
 
 transforms:
+    - rb_taskgraph.transforms.nimbledroid:transforms
     - taskgraph.transforms.job:transforms
     - taskgraph.transforms.task:transforms
 
 kind-dependencies:
-    - build
+    - signing
 
 only-for-attributes:
     - nightly
 
 job-defaults:
     description: Upload APKs to Nimbledroid for performance measurement and tracking
-    worker-type: b-android
-    worker:
-        docker-image: {in-tree: nimbledroid}
-        max-run-time: 600
+    run:
+        using: run-commands
+        use-caches: false
+        secrets:
+            by-level:
+                '3':
+                    - name: project/mobile/reference-browser/nimbledroid
+                      key: api_key
+                      path: .nimbledroid_token
+                default: []
+        pre-commands:
+            by-level:
+              '3': []
+              default:
+                - [echo, '--', '>', .nimbledroid_token]
     run-on-tasks-for: []
     treeherder:
         kind: test
-        tier: 2
         platform: android-all/opt
-    scopes:
-        - secrets:get:project/mobile/reference-browser/nimbledroid
-    run:
-        using: run-task
-        use-caches: false
-        command:
-            - python
-            - /builds/worker/checkouts/src/automation/taskcluster/upload_apk_nimbledroid.py
-            - {artifact-reference: "<build/public/target.armeabi-v7a.apk>"}
+        tier: 2
+    worker:
+        docker-image: {in-tree: nimbledroid}
+        max-run-time: 600
+    worker-type: b-android
 
 jobs:
     nightly:
         attributes:
             nightly: true
+        dependencies:
+            signing: signing-nightly
+        run:
+            commands:
+                - [wget, {artifact-reference: "<signing/public/target.armeabi-v7a.apk>"}, '-O', target.apk]
+                - [python, automation/taskcluster/upload_apk_nimbledroid.py, target.apk, .nimbledroid_token]
         treeherder:
             symbol: nimbledroid
-        dependencies:
-            build: build-nightly
