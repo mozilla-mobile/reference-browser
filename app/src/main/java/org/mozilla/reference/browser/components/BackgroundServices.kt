@@ -15,8 +15,6 @@ import mozilla.components.concept.sync.DeviceCapability
 import mozilla.components.concept.sync.DeviceType
 import mozilla.components.feature.accounts.push.FxaPushSupportFeature
 import mozilla.components.feature.accounts.push.SendTabFeature
-import mozilla.components.feature.push.AutoPushFeature
-import mozilla.components.feature.push.PushConfig
 import mozilla.components.feature.syncedtabs.SyncedTabsFeature
 import mozilla.components.service.fxa.DeviceConfig
 import mozilla.components.service.fxa.ServerConfig
@@ -24,8 +22,6 @@ import mozilla.components.service.fxa.SyncConfig
 import mozilla.components.service.fxa.SyncEngine
 import mozilla.components.service.fxa.manager.FxaAccountManager
 import mozilla.components.service.fxa.sync.GlobalSyncableStoreProvider
-import mozilla.components.support.base.log.logger.Logger
-import org.mozilla.reference.browser.push.FirebasePush
 import org.mozilla.reference.browser.NotificationManager
 import org.mozilla.reference.browser.ext.components
 import org.mozilla.reference.browser.tabs.SyncedTabsIntegration
@@ -36,6 +32,7 @@ import org.mozilla.reference.browser.tabs.SyncedTabsIntegration
  */
 class BackgroundServices(
     context: Context,
+    push: Push,
     placesHistoryStorage: PlacesHistoryStorage,
     private val remoteTabsStorage: RemoteTabsStorage = RemoteTabsStorage()
 ) {
@@ -79,7 +76,7 @@ class BackgroundServices(
                 NotificationManager.showReceivedTabs(context, device, tabs)
             }
 
-            pushFeature?.let { push -> FxaPushSupportFeature(context, accountManager, push) }
+            push.feature?.let { push -> FxaPushSupportFeature(context, accountManager, push) }
 
             SyncedTabsIntegration(context, accountManager).also {
                 it.launch()
@@ -88,33 +85,6 @@ class BackgroundServices(
             CoroutineScope(Dispatchers.Main).launch { accountManager.initAsync().await() }
         }
     }
-
-    val pushFeature by lazy {
-        pushConfig?.let { config ->
-            AutoPushFeature(context, pushService, config)
-        }
-    }
-
-    /**
-     * The push configuration data class used to initialize the AutoPushFeature.
-     *
-     * If we have the `project_id` resource, then we know that the Firebase configuration and API
-     * keys are available for the FCM service to be used.
-     */
-    private val pushConfig by lazy {
-        val logger = Logger("AutoPush")
-
-        val resId = context.resources.getIdentifier("project_id", "string", context.packageName)
-        if (resId == 0) {
-            logger.info("No push keys found. Exiting..")
-            return@lazy null
-        }
-        logger.info("Push keys detected, instantiation beginning..")
-        val projectId = context.resources.getString(resId)
-        PushConfig(projectId)
-    }
-
-    private val pushService by lazy { FirebasePush() }
 
     val syncedTabs by lazy { SyncedTabsFeature(accountManager, context.components.core.store, remoteTabsStorage) }
 }

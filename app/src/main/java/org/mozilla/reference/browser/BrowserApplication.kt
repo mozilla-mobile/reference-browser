@@ -16,6 +16,7 @@ import mozilla.components.support.rusthttp.RustHttpConfig
 import mozilla.components.support.rustlog.RustLog
 import mozilla.components.support.webextensions.WebExtensionSupport
 import org.mozilla.reference.browser.ext.isCrashReportActive
+import org.mozilla.reference.browser.push.WebPushEngineIntegration
 
 open class BrowserApplication : Application() {
     val components by lazy { Components(this) }
@@ -62,7 +63,10 @@ open class BrowserApplication : Application() {
         components.analytics.initializeGlean()
         components.analytics.initializeExperiments()
 
-        components.backgroundServices.pushFeature?.let {
+        components.push.feature?.let {
+
+            WebPushEngineIntegration(components.core.engine, it).start()
+
             PushProcessor.install(it)
 
             it.initialize()
