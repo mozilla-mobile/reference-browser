@@ -122,7 +122,7 @@ class AccountSettingsFragment : PreferenceFragmentCompat() {
                 requireComponents.backgroundServices.accountManager.authenticatedAccount()
                         ?.deviceConstellation()?.run {
                             refreshDevicesAsync().await()
-                            pollForEventsAsync().await()
+                            pollForCommandsAsync().await()
                         }
             }
             true
