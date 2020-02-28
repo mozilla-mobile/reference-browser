@@ -13,7 +13,7 @@ import mozilla.components.support.base.log.logger.Logger
 import org.mozilla.reference.browser.push.FirebasePush
 
 /**
- * Component group for push services. These are components use services that strong depend on
+ * Component group for push services. These components use services that strongly depend on
  * push messaging (e.g. WebPush, SendTab).
  */
 class Push(
