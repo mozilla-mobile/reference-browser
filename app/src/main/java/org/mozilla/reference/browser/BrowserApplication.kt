@@ -9,6 +9,7 @@ import mozilla.components.browser.session.Session
 import mozilla.components.concept.push.PushProcessor
 import mozilla.components.feature.addons.update.GlobalAddonDependencyProvider
 import mozilla.components.support.base.log.Log
+import mozilla.components.support.base.log.logger.Logger
 import mozilla.components.support.base.log.sink.AndroidLogSink
 import mozilla.components.support.ktx.android.content.isMainProcess
 import mozilla.components.support.ktx.android.content.runOnlyInMainProcess
@@ -16,6 +17,7 @@ import mozilla.components.support.rusthttp.RustHttpConfig
 import mozilla.components.support.rustlog.RustLog
 import mozilla.components.support.webextensions.WebExtensionSupport
 import org.mozilla.reference.browser.ext.isCrashReportActive
+import org.mozilla.reference.browser.push.PushFxaIntegration
 import org.mozilla.reference.browser.push.WebPushEngineIntegration
 
 open class BrowserApplication : Application() {
@@ -64,11 +66,17 @@ open class BrowserApplication : Application() {
         components.analytics.initializeExperiments()
 
         components.push.feature?.let {
-
-            WebPushEngineIntegration(components.core.engine, it).start()
+            Logger.info("AutoPushFeature is configured, initializing it...")
 
             PushProcessor.install(it)
 
+            // WebPush integration to observe and deliver push messages to engine.
+            WebPushEngineIntegration(components.core.engine, it).start()
+
+            // Perform a one-time initialization of the account manager if a message is received.
+            PushFxaIntegration(it, lazy { components.backgroundServices.accountManager }).launch()
+
+            // Initialize the push feature and service.
             it.initialize()
         }
     }
