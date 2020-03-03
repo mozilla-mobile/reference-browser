@@ -38,5 +38,5 @@ class Components(private val context: Context) {
         Utilities(context, core.sessionManager, useCases.sessionUseCases, useCases.searchUseCases)
     }
     val services by lazy { Services(context, backgroundServices.accountManager, useCases.tabsUseCases) }
-    val push by lazy { Push(context) }
+    val push by lazy { Push(context, analytics.crashReporter) }
 }
