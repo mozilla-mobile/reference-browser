@@ -42,6 +42,7 @@ def add_nightly_version(config, tasks):
 def add_shippable_secrets(config, tasks):
     for task in tasks:
         secrets = task["run"].setdefault("secrets", [])
+        dummy_secrets = task["run"].setdefault("dummy-secrets", [])
 
         if task.pop("include-shippable-secrets", False) and config.params["level"] == "3":
             build_type = task["attributes"]["build-type"]
@@ -55,11 +56,11 @@ def add_shippable_secrets(config, tasks):
                 ('firebase', 'app/src/main/res/values/firebase.xml'),
             )])
         else:
-            task["run"]["pre-gradlew"] = [[
-                "echo", '"{}"'.format(fake_value), ">", target_file
-            ] for fake_value, target_file in (
+            dummy_secrets.extend([{
+                "content": fake_value,
+                "path": target_file,
+            } for fake_value, target_file in (
                 ("https://fake@sentry.prod.mozaws.net/368", ".sentry_token"),
-                # We don't need a fake key for Firebase.
-            )]
+            )])
 
         yield task
