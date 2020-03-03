@@ -33,19 +33,24 @@ class Analytics(private val context: Context) {
      * A generic crash reporter component configured to use both Sentry and Socorro.
      */
     val crashReporter: CrashReporter by lazy {
-        val sentryService = SentryService(
-            context,
-            BuildConfig.SENTRY_TOKEN,
-            mapOf("geckoview" to "$MOZ_APP_VERSION-$MOZ_APP_BUILDID"),
-            sendEventForNativeCrashes = true
-        )
-
         val socorroService = MozillaSocorroService(context, "ReferenceBrowser")
 
         val gleanCrashReporter = GleanCrashReporterService(context)
 
+        val services = mutableListOf(socorroService, gleanCrashReporter)
+
+        if (isSentryEnabled()) {
+            val sentryService = SentryService(
+                context,
+                BuildConfig.SENTRY_TOKEN,
+                mapOf("geckoview" to "$MOZ_APP_VERSION-$MOZ_APP_BUILDID"),
+                sendEventForNativeCrashes = true
+            )
+            services.add(sentryService)
+        }
+
         CrashReporter(
-            services = listOf(sentryService, socorroService, gleanCrashReporter),
+            services = services,
             shouldPrompt = CrashReporter.Prompt.ALWAYS,
             promptConfiguration = CrashReporter.PromptConfiguration(
                 appName = context.getString(R.string.app_name),
@@ -72,3 +77,5 @@ class Analytics(private val context: Context) {
         )
     }
 }
+
+fun isSentryEnabled() = !BuildConfig.SENTRY_TOKEN.isNullOrEmpty()
