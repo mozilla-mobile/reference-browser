@@ -21,7 +21,7 @@ allprojects {
         google()
 
         maven {
-            url "https://snapshots.maven.mozilla.org/maven2"
+            url "https://nightly.maven.mozilla.org/maven2"
 
             content {
                 // Always fetch components from the snapshots repository

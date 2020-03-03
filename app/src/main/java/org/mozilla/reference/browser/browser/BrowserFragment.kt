@@ -39,7 +39,7 @@ class BrowserFragment : BaseBrowserFragment(), UserInteractionHandler {
                 requireComponents.core.client)
             .addSessionProvider(
                 resources,
-                requireComponents.core.sessionManager,
+                requireComponents.core.store,
                 requireComponents.useCases.tabsUseCases.selectTab)
             .addHistoryProvider(
                 requireComponents.core.historyStorage,
