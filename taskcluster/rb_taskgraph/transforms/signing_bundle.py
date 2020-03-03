@@ -23,7 +23,7 @@ def build_signing_task(config, tasks):
             "taskId": {"task-reference": "<build-bundle>"},
             "taskType": "build",
             "paths": [dep.attributes["aab"]],
-            "formats": ["autograph_apk_reference_browser"],
+            "formats": ["autograph_apk"],
         }]
         del task["primary-dependency"]
         yield task
