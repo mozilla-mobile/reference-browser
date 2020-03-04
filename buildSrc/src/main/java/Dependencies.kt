@@ -16,7 +16,7 @@ private object Versions {
 
     const val android_gradle_plugin = "3.4.1"
 
-    const val mozilla_android_components = "+" // Always use the latest snapshot
+    const val mozilla_android_components = AndroidComponents.VERSION
 
     const val thirdparty_sentry = "1.7.10"
 
