@@ -6,12 +6,13 @@
 set -ex
 
 BRANCH="ac-update"
-USER="MickeyMoz"
+GITHUB_USER="MickeyMoz"
 EMAIL="sebastian@mozilla.com"
 REPO="reference-browser"
+URL="https://github.com/$GITHUB_USER/$REPO/"
 
-git config --global user.email $EMAIL
-git config --global user.name $USER
+git config --global user.email "$EMAIL"
+git config --global user.name "$GITHUB_USER"
 
 COMPONENT_TO_WATCH='browser-engine-gecko-nightly'
 MAVEN_URL="https://nightly.maven.mozilla.org/maven2/org/mozilla/components/$COMPONENT_TO_WATCH"
@@ -30,7 +31,7 @@ gpg --verify "$POM_FILE.asc" "component.pom"
 sed -i "s/VERSION = \".*\"/VERSION = \"$LATEST_VERSION\"/g" "buildSrc/src/main/java/AndroidComponents.kt"
 
 # Create a branch and commit local changes
-git checkout -b $BRANCH
+git checkout -b "$BRANCH"
 git add buildSrc/src/main/java/AndroidComponents.kt
 git commit -m \
 	"Update Android Components version to $LATEST_VERSION." \
@@ -39,19 +40,18 @@ git commit -m \
 
 
 # From here on we do not want to print the commands since they contain tokens
-# set +x
+set +x
 
 GITHUB_TOKEN=`cat .github_token`
-URL="https://$USER:$GITHUB_TOKEN@github.com/$USER/$REPO/"
 
 # Push changes to GitHub
 echo "Pushing branch to GitHub"
-git push -f --no-verify --quiet $URL $BRANCH > /dev/null 2>&1 || echo "Failed ($?)"
+hub push --force --no-verify --quiet "$URL" "$BRANCH"
 
 # Open a PR if needed
-if [[ $(hub pr list -h $USER:$BRANCH) ]]; then
+if [[ $(hub pr list --head "$GITHUB_USER:$BRANCH") ]]; then
     echo "There's already an open PR."
 else
     echo "No PR found. Opening new PR."
-    hub pull-request -b master -h MickeyMoz:ac-update --no-edit -m "Update Android Components version"
+    hub pull-request --base master --head "$GITHUB_USER:$BRANCH" --no-edit -m "Update Android Components version"
 fi
