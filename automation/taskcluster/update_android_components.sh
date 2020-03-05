@@ -13,8 +13,18 @@ REPO="reference-browser"
 git config --global user.email $EMAIL
 git config --global user.name $USER
 
-# Fetching latest version
-LATEST_VERSION=`curl https://nightly.maven.mozilla.org/maven2/org/mozilla/components/browser-engine-gecko-nightly/maven-metadata.xml | sed -ne '/latest/{s/.*<latest>\(.*\)<\/latest>.*/\1/p;q;}'`
+COMPONENT_TO_WATCH='browser-engine-gecko-nightly'
+MAVEN_URL="https://nightly.maven.mozilla.org/maven2/org/mozilla/components/$COMPONENT_TO_WATCH"
+
+# Fetch latest version
+LATEST_VERSION=`curl "$MAVEN_URL/maven-metadata.xml" | sed -ne '/latest/{s/.*<latest>\(.*\)<\/latest>.*/\1/p;q;}'`
+
+# Check the latest version was uploaded by Mozilla
+LATEST_POM_URL="$MAVEN_URL/$LATEST_VERSION/$COMPONENT_TO_WATCH-$LATEST_VERSION.pom"
+POM_FILE='component.pom'
+$CURL "$LATEST_POM_URL" --output "$POM_FILE"
+$CURL "$LATEST_POM_URL.asc" --output "$POM_FILE.asc"
+gpg --verify "$POM_FILE.asc" "component.pom"
 
 # Updating version file
 sed -i "s/VERSION = \".*\"/VERSION = \"$LATEST_VERSION\"/g" "buildSrc/src/main/java/AndroidComponents.kt"
