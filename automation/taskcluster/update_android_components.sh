@@ -39,7 +39,7 @@ git commit -m \
 
 
 # From here on we do not want to print the commands since they contain tokens
-set +x
+# set +x
 
 GITHUB_TOKEN=`cat .github_token`
 URL="https://$USER:$GITHUB_TOKEN@github.com/$USER/$REPO/"
