@@ -10,3 +10,9 @@ jobs:
           treeherder-symbol: Nd
           target-tasks-method: nightly
       when: [{hour: 12, minute: 0}]
+    - name: bump-android-components
+      job:
+          type: decision-task
+          treeherder-symbol: bump-ac
+          target-tasks-method: bump_android_components
+      when: [{hour: 14, minute: 0}]
