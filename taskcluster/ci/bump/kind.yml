@@ -27,7 +27,7 @@ job-defaults:
         use-caches: false
     worker-type: b-android
     worker:
-        docker-image: {in-tree: base}
+        docker-image: {in-tree: bump}
         max-run-time: 7200
         chain-of-trust: true
 

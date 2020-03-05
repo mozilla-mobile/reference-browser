@@ -5,10 +5,6 @@
 # If a command fails then do not proceed and fail this script too.
 set -ex
 
-# Install dependencies (TODO: Move to Docker image)
-apt-get install -y brew
-brew install hub
-
 BRANCH="ac-update"
 USER="MickeyMoz"
 EMAIL="sebastian@mozilla.com"
