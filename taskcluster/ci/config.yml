@@ -2,6 +2,7 @@
 trust-domain: mobile
 treeherder:
     group-names:
+        'bump': 'Bump dependencies'
         'I': 'Docker Image Builds'
         'Rap': 'Raptor tests'
         'Rap-P': 'Raptor power tests'
