@@ -5,11 +5,10 @@
 # If a command fails then do not proceed and fail this script too.
 set -ex
 
-BRANCH="ac-update"
-GITHUB_USER="MickeyMoz"
-EMAIL="sebastian@mozilla.com"
-REPO="reference-browser"
-URL="https://github.com/$GITHUB_USER/$REPO/"
+export BRANCH="ac-update"
+export GITHUB_USER="MickeyMoz"
+export EMAIL="sebastian@mozilla.com"
+export REPO="reference-browser"
 
 git config --global user.email "$EMAIL"
 git config --global user.name "$GITHUB_USER"
@@ -18,7 +17,7 @@ COMPONENT_TO_WATCH='browser-engine-gecko-nightly'
 MAVEN_URL="https://nightly.maven.mozilla.org/maven2/org/mozilla/components/$COMPONENT_TO_WATCH"
 
 # Fetch latest version
-LATEST_VERSION=`curl "$MAVEN_URL/maven-metadata.xml" | sed -ne '/latest/{s/.*<latest>\(.*\)<\/latest>.*/\1/p;q;}'`
+LATEST_VERSION=$(curl "$MAVEN_URL/maven-metadata.xml" | sed -ne '/latest/{s/.*<latest>\(.*\)<\/latest>.*/\1/p;q;}')
 
 # Check the latest version was uploaded by Mozilla
 LATEST_POM_URL="$MAVEN_URL/$LATEST_VERSION/$COMPONENT_TO_WATCH-$LATEST_VERSION.pom"
@@ -42,16 +41,19 @@ git commit -m \
 # From here on we do not want to print the commands since they contain tokens
 set +x
 
-GITHUB_TOKEN=`cat .github_token`
+export GITHUB_TOKEN=$(cat .github_token)
 
 # Push changes to GitHub
 echo "Pushing branch to GitHub"
+URL="https://${GITHUB_USER}:${GITHUB_TOKEN}@github.com/$GITHUB_USER/$REPO/"
 hub push --force --no-verify --quiet "$URL" "$BRANCH"
 
 # Open a PR if needed
 if [[ $(hub pr list --head "$GITHUB_USER:$BRANCH") ]]; then
-    echo "There's already an open PR."
+		echo "There's already an open PR."
 else
-    echo "No PR found. Opening new PR."
-    hub pull-request --base master --head "$GITHUB_USER:$BRANCH" --no-edit -m "Update Android Components version"
+		echo "No PR found. Opening new PR."
+		hub pull-request --base master --head "$GITHUB_USER:$BRANCH" --no-edit -m "Update Android Components version"
 fi
+
+unset GITHUB_TOKEN
