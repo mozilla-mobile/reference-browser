@@ -43,6 +43,11 @@ set +x
 
 export GITHUB_TOKEN=$(cat .github_token)
 
+if [[ $GITHUB_TOKEN == 'faketoken' ]]; then
+    echo '"faketoken" detected, not pushing anything'
+    exit 0
+fi
+
 # Push changes to GitHub
 echo "Pushing branch to GitHub"
 URL="https://${GITHUB_USER}:${GITHUB_TOKEN}@github.com/$GITHUB_USER/$REPO/"

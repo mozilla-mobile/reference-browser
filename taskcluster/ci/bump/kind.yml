@@ -7,6 +7,7 @@ loader: taskgraph.loader.transform:loader
 kind-dependencies: []
 
 transforms:
+    - rb_taskgraph.transforms.secrets:transforms
     - taskgraph.transforms.job:transforms
     - taskgraph.transforms.task:transforms
 
@@ -19,10 +20,19 @@ job-defaults:
         platform: android-all/opt
     run-on-tasks-for: []
     run:
+        dummy-secrets:
+            by-level:
+                '3': []
+                default:
+                    - content: "faketoken"
+                      path: .github_token
         secrets:
-            - name: project/mobile/github
-              key: botAccountToken
-              path: .github_token
+            by-level:
+                '3':
+                    - name: project/mobile/github
+                      key: botAccountToken
+                      path: .github_token
+                default: []
         using: run-commands
         use-caches: false
     worker-type: b-android
