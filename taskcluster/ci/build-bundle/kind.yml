@@ -27,7 +27,7 @@ job-defaults:
     aab-artifact-template:
         type: file
         name: public/target.aab
-        path: '/builds/worker/checkouts/src/app/build/outputs/bundle/{variant}/app.aab'
+        path: '/builds/worker/checkouts/src/app/build/outputs/bundle/{variant}/app-{variant}.aab'
 
 jobs:
     nightly:
