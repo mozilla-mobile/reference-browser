@@ -14,7 +14,7 @@ job-defaults:
         code-review: true
     worker-type: b-android
     worker:
-        docker-image: {in-tree: base}
+        docker-image: {in-tree: base-android}
         max-run-time: 7200
     run:
         use-caches: false

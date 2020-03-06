@@ -13,9 +13,12 @@ transforms:
 jobs:
     base:
         symbol: I(base)
+    base-android:
+        parent: base
+        symbol: I(base-android)
     nimbledroid:
         parent: base
         symbol: I(nimbledroid)
     ui-tests:
-        parent: base
+        parent: base-android
         symbol: I(ui-tests)
