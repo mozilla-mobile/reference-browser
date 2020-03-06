@@ -16,6 +16,9 @@ jobs:
     base-android:
         parent: base
         symbol: I(base-android)
+    bump:
+        parent: base
+        symbol: I(bump)
     nimbledroid:
         parent: base
         symbol: I(nimbledroid)
