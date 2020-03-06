@@ -31,11 +31,6 @@ git commit -m \
 	--author="MickeyMoz <sebastian@mozilla.com>" \
 || { echo "No new Android Components version ($LATEST_VERSTION) available"; exit 0; }
 
-# Get token for using GitHub
-python automation/taskcluster/helper/get-secret.py \
-    -s project/mobile/github \
-    -k botAccountToken \
-    -f .github_token \
 
 # From here on we do not want to print the commands since they contain tokens
 set +x
