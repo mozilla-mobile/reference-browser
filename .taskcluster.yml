@@ -73,7 +73,7 @@ tasks:
                       $if: '"github" in tasks_for'
                       then: {$eval: as_slugid("decision_task")}
                       else:
-                          $if: 'tasks_for == "cron"'
+                          $if: 'tasks_for == ["cron", "action"]'
                           then: '${ownTaskId}'
               in:
                   $let:
