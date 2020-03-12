@@ -16,7 +16,9 @@ import mozilla.components.service.glean.Glean
 import mozilla.components.service.glean.config.Configuration
 import mozilla.components.service.glean.net.ConceptFetchHttpUploader
 import org.mozilla.geckoview.BuildConfig.MOZ_APP_BUILDID
+import org.mozilla.geckoview.BuildConfig.MOZ_APP_VENDOR
 import org.mozilla.geckoview.BuildConfig.MOZ_APP_VERSION
+import org.mozilla.geckoview.BuildConfig.MOZ_UPDATE_CHANNEL
 import org.mozilla.reference.browser.BrowserApplication
 import org.mozilla.reference.browser.BuildConfig
 import org.mozilla.reference.browser.R
@@ -33,7 +35,9 @@ class Analytics(private val context: Context) {
      * A generic crash reporter component configured to use both Sentry and Socorro.
      */
     val crashReporter: CrashReporter by lazy {
-        val socorroService = MozillaSocorroService(context, "ReferenceBrowser")
+        val socorroService = MozillaSocorroService(context, appName = "ReferenceBrowser",
+            version = MOZ_APP_VERSION, buildId = MOZ_APP_BUILDID, vendor = MOZ_APP_VENDOR,
+            releaseChannel = MOZ_UPDATE_CHANNEL)
 
         val gleanCrashReporter = GleanCrashReporterService(context)
 
