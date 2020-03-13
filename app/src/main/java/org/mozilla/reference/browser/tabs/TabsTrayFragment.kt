@@ -33,6 +33,7 @@ class TabsTrayFragment : Fragment(), UserInteractionHandler {
             tabsTray,
             requireComponents.core.store,
             requireComponents.useCases.tabsUseCases,
+            { !it.content.private },
             ::closeTabsTray)
 
         tabsPanel.initialize(tabsFeature) { closeTabsTray() }
