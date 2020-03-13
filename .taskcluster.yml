@@ -130,6 +130,10 @@ tasks:
                                 then:
                                     - "tc-treeherder.v2.${project}.${head_sha}"
                                 else: []
+                              - $if: 'tasks_for == "github-push"'
+                                then:
+                                    - "index.${trustDomain}.v2.${project}.revision.${head_sha}.taskgraph.decision"
+                                else: []
                       scopes:
                           # `https://` is 8 characters so, ${repoUrl[8:]} is the repository without the protocol.
                           $if: 'tasks_for == "github-push"'
