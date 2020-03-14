@@ -9,6 +9,7 @@ import android.os.Bundle
 import android.view.View
 import kotlinx.android.synthetic.main.fragment_browser.*
 import mozilla.components.concept.engine.manifest.WebAppManifest
+import mozilla.components.feature.customtabs.CustomTabWindowFeature
 import mozilla.components.feature.pwa.ext.getWebAppManifest
 import mozilla.components.feature.pwa.ext.putWebAppManifest
 import mozilla.components.feature.pwa.feature.WebAppActivityFeature
@@ -16,6 +17,7 @@ import mozilla.components.feature.pwa.feature.WebAppHideToolbarFeature
 import mozilla.components.feature.pwa.feature.WebAppSiteControlsFeature
 import mozilla.components.support.base.feature.UserInteractionHandler
 import mozilla.components.support.base.feature.ViewBoundFeatureWrapper
+import mozilla.components.support.ktx.android.arch.lifecycle.addObservers
 import org.mozilla.reference.browser.ext.requireComponents
 
 /**
@@ -23,6 +25,7 @@ import org.mozilla.reference.browser.ext.requireComponents
  */
 class ExternalAppBrowserFragment : BaseBrowserFragment(), UserInteractionHandler {
     private val customTabsIntegration = ViewBoundFeatureWrapper<CustomTabsIntegration>()
+    private val windowFeature = ViewBoundFeatureWrapper<CustomTabWindowFeature>()
     private val hideToolbarFeature = ViewBoundFeatureWrapper<WebAppHideToolbarFeature>()
 
     private val manifest: WebAppManifest?
@@ -34,6 +37,7 @@ class ExternalAppBrowserFragment : BaseBrowserFragment(), UserInteractionHandler
         super.onViewCreated(view, savedInstanceState)
 
         val manifest = this.manifest
+        val sessionId = this.sessionId
 
         customTabsIntegration.set(
             feature = CustomTabsIntegration(
@@ -49,30 +53,41 @@ class ExternalAppBrowserFragment : BaseBrowserFragment(), UserInteractionHandler
             view = view
         )
 
+        windowFeature.set(
+            feature = CustomTabWindowFeature(
+                requireActivity(),
+                requireComponents.core.store,
+                sessionId
+            ),
+            owner = this,
+            view = view
+        )
+
         hideToolbarFeature.set(
             feature = WebAppHideToolbarFeature(
                 requireComponents.core.sessionManager,
                 toolbar,
-                sessionId!!,
+                sessionId,
                 trustedScopes
             ),
             owner = this,
-            view = toolbar)
+            view = toolbar
+        )
 
         if (manifest != null) {
-            activity?.lifecycle?.addObserver(
+            val activity = requireActivity()
+
+            activity.lifecycle.addObservers(
                 WebAppActivityFeature(
-                    activity!!,
+                    activity,
                     requireComponents.core.icons,
                     manifest
-                )
-            )
-            activity?.lifecycle?.addObserver(
+                ),
                 WebAppSiteControlsFeature(
-                    context?.applicationContext!!,
+                    requireContext().applicationContext,
                     requireComponents.core.sessionManager,
                     requireComponents.useCases.sessionUseCases.reload,
-                    sessionId!!,
+                    sessionId,
                     manifest
                 )
             )
