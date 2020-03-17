@@ -130,7 +130,7 @@ tasks:
                                   then:
                                       kind: cron-task
                       routes:
-                          $flatten:
+                          $flattenDeep:
                               - checks
                               - $if: 'level == "3"'
                                 then:
