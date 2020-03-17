@@ -58,6 +58,11 @@ class TabsPanel @JvmOverloads constructor(
             id = R.id.button_tabs
             contentDescription = "Tabs"
             setImageDrawable(resources.getThemedDrawable(R.drawable.mozac_ic_tab))
+
+            // initial opening of tabs tray should show regular tabs.
+            isChecked = true
+            drawable.colorTint(photonPurple50)
+
             setOnCheckedChangeListener { _, checked ->
                 if (checked) {
                     updateToggleStates(this, privateButton, false)
@@ -106,9 +111,6 @@ class TabsPanel @JvmOverloads constructor(
     fun initialize(tabsFeature: TabsFeature?, closeTabsTray: () -> Unit) {
         this.tabsFeature = tabsFeature
         this.closeTabsTray = closeTabsTray
-
-        // initial opening of tabs tray should show regular tabs.
-        button.isChecked = true
     }
 
     private fun Resources.getThemedDrawable(@DrawableRes resId: Int) = getDrawable(resId, context.theme)
