@@ -81,6 +81,10 @@ tasks:
                           $if: 'tasks_for in ["github-push", "github-release", "action", "cron"] && repoUrl == "https://github.com/mozilla-mobile/reference-browser"'
                           then: '3'
                           else: '1'
+
+                      short_head_branch:
+                          $if: 'head_branch[:11] == "refs/heads/"'
+                          then: {$eval: 'head_branch[11:]'}
                   in:
                       taskId:
                           $if: 'tasks_for != "action"'
