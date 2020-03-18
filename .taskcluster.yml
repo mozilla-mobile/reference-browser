@@ -73,7 +73,7 @@ tasks:
                       $if: '"github" in tasks_for'
                       then: {$eval: as_slugid("decision_task")}
                       else:
-                          $if: 'tasks_for == ["cron", "action"]'
+                          $if: 'tasks_for == "cron"'
                           then: '${ownTaskId}'
               in:
                   $let:
@@ -81,14 +81,8 @@ tasks:
                           $if: 'tasks_for in ["github-push", "github-release", "action", "cron"] && repoUrl == "https://github.com/mozilla-mobile/reference-browser"'
                           then: '3'
                           else: '1'
-
-                      short_head_branch:
-                          $if: 'head_branch[:11] == "refs/heads/"'
-                          then: {$eval: 'head_branch[11:]'}
                   in:
-                      taskId:
-                          $if: 'tasks_for != "action"'
-                          then: '${ownTaskId}'
+                      taskId: '${ownTaskId}'
                       taskGroupId:
                           $if: 'tasks_for == "action"'
                           then:
@@ -130,23 +124,12 @@ tasks:
                                   then:
                                       kind: cron-task
                       routes:
-                          $flattenDeep:
+                          $flatten:
                               - checks
-                              - $if: 'level == "3"'
+                              - $if: 'tasks_for != "github-pull-request"'
                                 then:
-                                    - tc-treeherder.v2.${project}.${head_sha}
-                                    # TODO Bug 1601928: Make this scope fork-friendly once ${project} is better defined. This will enable
-                                    # staging release promotion on forks.
-                                    - $if: 'tasks_for == "github-push"'
-                                      then:
-                                          - index.mobile.${project}.v2.branch.${short_head_branch}.latest.taskgraph.decision
-                                          - index.mobile.${project}.v2.branch.${short_head_branch}.revision.${head_sha}.taskgraph.decision
-                                    - $if: 'tasks_for == "cron"'
-                                      then:
-                                          # cron context provides ${head_branch} as a short one
-                                          - index.mobile.${project}.v2.branch.${head_branch}.latest.taskgraph.decision-${cron.job_name}
-                                          - index.mobile.${project}.v2.branch.${head_branch}.revision.${head_sha}.taskgraph.decision-${cron.job_name}
-                                          - index.mobile.${project}.v2.branch.${head_branch}.revision.${head_sha}.taskgraph.cron.${ownTaskId}
+                                    - "tc-treeherder.v2.${project}.${head_sha}"
+                                else: []
                       scopes:
                           # `https://` is 8 characters so, ${repoUrl[8:]} is the repository without the protocol.
                           $if: 'tasks_for == "github-push"'
