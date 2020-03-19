@@ -67,7 +67,7 @@ job-defaults:
             - '--cfg=mozharness/configs/raptor/android_hw_config.py'
             - '--app=refbrow'
             - '--binary=org.mozilla.reference.browser.raptor'
-            - '--activity=org.mozilla.reference.browser.GeckoViewActivity'
+            - '--activity=org.mozilla.reference.browser.BrowserTestActivity'
             - '--download-symbols=ondemand'
     fetches:
         linux64-minidump-stackwalk:
