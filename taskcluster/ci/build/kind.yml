@@ -10,20 +10,11 @@ transforms:
     - taskgraph.transforms.job:transforms
     - taskgraph.transforms.task:transforms
 
+kind-dependencies:
+    - toolchain
+
+
 job-defaults:
-    description: Build Reference Browser from source code.
-    treeherder:
-        kind: build
-        symbol: B
-        tier: 2
-    worker-type: b-android
-    worker:
-        docker-image: {in-tree: base}
-        max-run-time: 7200
-        chain-of-trust: true
-    run:
-        using: gradlew
-        use-caches: false
     # Builds generate multiple APKs with different ABIs. For each APK described
     # by `gradlew printVariants`, an artifact will be generated. `variant` and
     # the per-apk config from `printVariants` can be used as subsistutions in
@@ -32,6 +23,22 @@ job-defaults:
         type: file
         name: public/target.{abi}.apk
         path: '/builds/worker/checkouts/src/app/build/outputs/apk/{gradle_build_type}/{fileName}'
+    description: Build Reference Browser from source code.
+    fetches:
+        toolchain:
+            - android-sdk-linux
+    treeherder:
+        kind: build
+        symbol: B
+        tier: 2
+    run:
+        using: gradlew
+        use-caches: false
+    worker-type: b-android
+    worker:
+        docker-image: {in-tree: base}
+        max-run-time: 7200
+        chain-of-trust: true
 
 jobs:
     nightly:
