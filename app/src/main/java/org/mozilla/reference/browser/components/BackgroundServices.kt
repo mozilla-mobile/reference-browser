@@ -34,8 +34,8 @@ import org.mozilla.reference.browser.tabs.SyncedTabsIntegration
 class BackgroundServices(
     context: Context,
     push: Push,
-    placesHistoryStorage: PlacesHistoryStorage,
-    private val remoteTabsStorage: RemoteTabsStorage = RemoteTabsStorage()
+    placesHistoryStorage: Lazy<PlacesHistoryStorage>,
+    remoteTabsStorage: Lazy<RemoteTabsStorage>
 ) {
     companion object {
         const val CLIENT_ID = "3c49430b43dfba77"
@@ -87,5 +87,5 @@ class BackgroundServices(
         }
     }
 
-    val syncedTabs by lazy { SyncedTabsFeature(accountManager, context.components.core.store, remoteTabsStorage) }
+    val syncedTabs by lazy { SyncedTabsFeature(accountManager, context.components.core.store, remoteTabsStorage.value) }
 }

@@ -12,6 +12,7 @@ import mozilla.components.browser.session.SessionManager
 import mozilla.components.browser.session.storage.SessionStorage
 import mozilla.components.browser.state.store.BrowserStore
 import mozilla.components.browser.storage.sync.PlacesHistoryStorage
+import mozilla.components.browser.storage.sync.RemoteTabsStorage
 import mozilla.components.concept.engine.DefaultSettings
 import mozilla.components.concept.engine.Engine
 import mozilla.components.concept.engine.EngineSession.TrackingProtectionPolicy
@@ -54,7 +55,7 @@ class Core(private val context: Context) {
             remoteDebuggingEnabled = prefs.getBoolean(context.getPreferenceKey(pref_key_remote_debugging), false),
             testingModeEnabled = prefs.getBoolean(context.getPreferenceKey(R.string.pref_key_testing_mode), false),
             trackingProtectionPolicy = createTrackingProtectionPolicy(prefs),
-            historyTrackingDelegate = HistoryDelegate(historyStorage)
+            historyTrackingDelegate = HistoryDelegate(lazyHistoryStorage)
         )
         EngineProvider.createEngine(context, defaultSettings)
     }
@@ -117,7 +118,17 @@ class Core(private val context: Context) {
      * The storage component to persist browsing history (with the exception of
      * private sessions).
      */
-    val historyStorage by lazy { PlacesHistoryStorage(context) }
+    val lazyHistoryStorage = lazy { PlacesHistoryStorage(context) }
+
+    /**
+     * A convenience accessor to the [PlacesHistoryStorage].
+     */
+    val historyStorage by lazy { lazyHistoryStorage.value }
+
+    /**
+     * The storage component to sync and persist tabs in a Firefox Sync account.
+     */
+    val lazyRemoteTabsStorage = lazy { RemoteTabsStorage() }
 
     /**
      * Icons component for loading, caching and processing website icons.
