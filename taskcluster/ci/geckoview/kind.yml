@@ -1,11 +1,14 @@
 ---
 loader: taskgraph.loader.transform:loader
 transforms:
-    - taskgraph.transforms.index_search:transforms
+    - taskgraph.transforms.job:transforms
     - taskgraph.transforms.task:transforms
 
 jobs:
     nightly:
         description: "upstream nightly job"
-        index-search:
-            - gecko.v2.mozilla-central.nightly.latest.mobile.android-x86_64-opt
+        run:
+            using: index-search
+            index-search:
+                - gecko.v2.mozilla-central.nightly.latest.mobile.android-x86_64-opt
+        worker-type: always-optimized

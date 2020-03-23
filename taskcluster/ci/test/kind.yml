@@ -9,8 +9,18 @@ transforms:
     - taskgraph.transforms.job:transforms
     - taskgraph.transforms.task:transforms
 
+kind-dependencies:
+    - toolchain
+
+
 job-defaults:
     description: Test Reference Browser
+    fetches:
+        toolchain:
+            - android-sdk-linux
+    run:
+        using: gradlew
+        use-caches: false
     treeherder:
         kind: test
         symbol: T
@@ -20,9 +30,7 @@ job-defaults:
         docker-image: {in-tree: base}
         max-run-time: 7200
         chain-of-trust: true
-    run:
-        using: gradlew
-        use-caches: false
+
 
 jobs:
     nightly:

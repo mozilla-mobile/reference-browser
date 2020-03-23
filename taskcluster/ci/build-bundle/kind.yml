@@ -10,8 +10,22 @@ transforms:
     - taskgraph.transforms.job:transforms
     - taskgraph.transforms.task:transforms
 
+kind-dependencies:
+    - toolchain
+
+
 job-defaults:
+    aab-artifact-template:
+        type: file
+        name: public/target.aab
+        path: '/builds/worker/checkouts/src/app/build/outputs/bundle/{variant}/app-{variant}.aab'
     description: Build AAB (Android App Bundle) from source code.
+    fetches:
+        toolchain:
+            - android-sdk-linux
+    run:
+        using: gradlew
+        use-caches: false
     treeherder:
         kind: build
         symbol: AAB
@@ -21,13 +35,7 @@ job-defaults:
         docker-image: {in-tree: base}
         max-run-time: 7200
         chain-of-trust: true
-    run:
-        using: gradlew
-        use-caches: false
-    aab-artifact-template:
-        type: file
-        name: public/target.aab
-        path: '/builds/worker/checkouts/src/app/build/outputs/bundle/{variant}/app-{variant}.aab'
+
 
 jobs:
     nightly:
