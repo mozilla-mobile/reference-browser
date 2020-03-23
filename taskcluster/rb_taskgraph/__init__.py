@@ -18,16 +18,8 @@ def register(graph_config):
     the process.
     """
     _import_modules(["job", "worker_types", "routes", "target_tasks"])
-    extend_parameters_schema({
-        Required("head_tag"): text_type,
-    })
 
 
 def _import_modules(modules):
     for module in modules:
         import_module(".{}".format(module), package=__name__)
-
-
-def get_decision_parameters(graph_config, parameters):
-    head_tag = os.environ.get("MOBILE_HEAD_TAG", "").decode('utf-8')
-    parameters["head_tag"] = head_tag
