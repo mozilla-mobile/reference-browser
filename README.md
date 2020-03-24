@@ -67,6 +67,10 @@ You might be interested in building this project against local versions of some 
 This could be done either by using a [local maven repository](https://mozilla-mobile.github.io/android-components/contributing/testing-components-inside-app) (quite cumbersome), or via Gradle's [dependency substitutions](https://docs.gradle.org/current/userguide/customizing_dependency_resolution_behavior.html) (not at all cumbersome!).
 
 Currently, the substitution flow is streamlined for some of the core dependencies via configuration flags in `local.properties`. You can build against a local checkout of the following dependencies by specifying their local paths:
+- [android-components](https://github.com/mozilla-mobile/android-components), specifying its path via `autoPublish.android-components.dir=../android-components`
+  - This assumes that you have an `android-components` project at the same level in the directory hierarchy as the `reference-browser`.
+  - When enabled, a Reference Browser build will compile android-components locally and publish if it has been modified,
+    and published versions of android-components modules will be automatically used instead of whatever is declared in Dependencies.kt.
 - [application-services](https://github.com/mozilla/application-services), specifying its path via `substitutions.application-services.dir=../application-services`
   - This assumes that you have an `application-services` project at the same level in the directory hierarchy as the `reference-browser`.
 - [GeckoView](https://hg.mozilla.org/mozilla-central), specifying its path via `dependencySubstitutions.geckoviewTopsrcdir=/path/to/mozilla-central` (and, optionally, `dependencySubstitutions.geckoviewTopobjdir=/path/to/topobjdir`). See [Bug 1533465](https://bugzilla.mozilla.org/show_bug.cgi?id=1533465).
