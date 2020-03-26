@@ -7,7 +7,7 @@ tasks:
     - $let:
           taskgraph:
               branch: taskgraph
-              revision: f949fb56d96b9509b071ba55853f2d60e8dbbf57
+              revision: 1777b15a4fb990f2862ddcd9bdc8188c566abefb
           trustDomain: mobile
       in:
           $if: 'tasks_for in ["github-pull-request", "github-push", "action", "cron"]'
