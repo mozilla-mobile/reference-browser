@@ -216,9 +216,11 @@ abstract class BaseBrowserFragment : Fragment(), UserInteractionHandler {
         if (enabled) {
             activity?.enterToImmersiveMode()
             toolbar.visibility = View.GONE
+            engineView.setDynamicToolbarMaxHeight(0)
         } else {
             activity?.exitImmersiveModeIfNeeded()
             toolbar.visibility = View.VISIBLE
+            engineView.setDynamicToolbarMaxHeight(toolbar.measuredHeight)
         }
     }
 
