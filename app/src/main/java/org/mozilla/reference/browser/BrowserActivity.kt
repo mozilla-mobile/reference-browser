@@ -11,6 +11,7 @@ import android.util.AttributeSet
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.snackbar.Snackbar.LENGTH_LONG
 import mozilla.components.browser.session.Session
@@ -23,6 +24,7 @@ import mozilla.components.lib.crash.Crash
 import mozilla.components.support.base.feature.UserInteractionHandler
 import mozilla.components.support.utils.SafeIntent
 import mozilla.components.support.webextensions.WebExtensionPopupFeature
+import mozilla.components.browser.tabstray.TabsAdapter
 import org.mozilla.reference.browser.addons.WebExtensionActionPopupActivity
 import org.mozilla.reference.browser.browser.BrowserFragment
 import org.mozilla.reference.browser.browser.CrashIntegration
@@ -121,7 +123,9 @@ open class BrowserActivity : AppCompatActivity() {
         when (name) {
             EngineView::class.java.name -> components.core.engine.createView(context, attrs).asView()
             TabsTray::class.java.name -> {
-                BrowserTabsTray(context, attrs).also { tray ->
+                val layout = LinearLayoutManager(context)
+                val adapter = TabsAdapter(layoutId = R.layout.browser_tabstray_item)
+                BrowserTabsTray(context, attrs, tabsAdapter = adapter, layout = layout).also { tray ->
                     TabsTouchHelper(tray.tabsAdapter).attachToRecyclerView(tray)
                 }
             }
