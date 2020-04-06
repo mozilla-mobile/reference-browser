@@ -162,6 +162,9 @@
             android:theme="@style/AppTheme"
             android:parentActivityName=".BrowserActivity" />
 
+        <service android:name=".media.MediaService"
+            android:exported="false" />
+
         <service
             android:name=".push.FirebasePush"
             android:exported="false">
