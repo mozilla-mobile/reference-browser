@@ -61,7 +61,6 @@ jobs:
             gradlew: ['clean', 'assembleDebug', 'assembleAndroidTest']
             post-gradlew:
                 - ['automation/taskcluster/androidTest/ui-test.sh', 'aarch64', '-1']
-                - ['automation/taskcluster/androidTest/ui-test.sh', 'arm', '-1']
             secrets:
                 - name: project/mobile/reference-browser/firebase
                   key: firebaseToken

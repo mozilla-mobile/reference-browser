@@ -34,8 +34,8 @@ gcloud:
   performance-metrics: true
 
   device:
-   - model: Nexus6 
-     version: 25
+   - model: Pixel2
+     version: 28
 
 flank:
   project: GOOGLE_PROJECT
