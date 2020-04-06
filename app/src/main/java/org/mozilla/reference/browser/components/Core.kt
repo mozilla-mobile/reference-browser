@@ -24,6 +24,7 @@ import mozilla.components.feature.addons.update.DefaultAddonUpdater
 import mozilla.components.feature.downloads.DownloadsUseCases
 import mozilla.components.feature.media.RecordingDevicesNotificationFeature
 import mozilla.components.feature.media.middleware.MediaMiddleware
+import mozilla.components.feature.readerview.ReaderViewMiddleware
 import mozilla.components.feature.session.HistoryDelegate
 import mozilla.components.feature.webnotifications.WebNotificationFeature
 import org.mozilla.reference.browser.AppRequestInterceptor
@@ -73,7 +74,8 @@ class Core(private val context: Context) {
     val store by lazy {
         BrowserStore(
             middleware = listOf(
-                MediaMiddleware(context, MediaService::class.java)
+                MediaMiddleware(context, MediaService::class.java),
+                ReaderViewMiddleware()
             )
         )
     }
