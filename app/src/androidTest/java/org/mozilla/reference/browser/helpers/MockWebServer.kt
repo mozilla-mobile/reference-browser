@@ -12,7 +12,7 @@ import okhttp3.mockwebserver.Dispatcher
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import okhttp3.mockwebserver.RecordedRequest
-import org.mozilla.reference.browser.ext.toUri
+import org.mozilla.reference.browser.helpers.ext.toUri
 import java.io.IOException
 
 object MockWebServerHelper {
