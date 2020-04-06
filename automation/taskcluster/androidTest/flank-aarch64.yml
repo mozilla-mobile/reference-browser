@@ -34,9 +34,7 @@ gcloud:
   performance-metrics: true
 
   device:
-   - model: sailfish 
-     version: 25
-   - model: sailfish 
+   - model: walleye
      version: 28
 
 flank:
