@@ -22,9 +22,9 @@ import mozilla.components.feature.addons.amo.AddonCollectionProvider
 import mozilla.components.feature.addons.update.AddonUpdater
 import mozilla.components.feature.addons.update.DefaultAddonUpdater
 import mozilla.components.feature.downloads.DownloadsUseCases
-import mozilla.components.feature.media.MediaFeature
 import mozilla.components.feature.media.RecordingDevicesNotificationFeature
-import mozilla.components.feature.media.state.MediaStateMachine
+import mozilla.components.feature.media.middleware.MediaMiddleware
+import mozilla.components.feature.readerview.ReaderViewMiddleware
 import mozilla.components.feature.session.HistoryDelegate
 import mozilla.components.feature.webnotifications.WebNotificationFeature
 import org.mozilla.reference.browser.AppRequestInterceptor
@@ -35,6 +35,7 @@ import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.R.string.pref_key_remote_debugging
 import org.mozilla.reference.browser.R.string.pref_key_tracking_protection_normal
 import org.mozilla.reference.browser.R.string.pref_key_tracking_protection_private
+import org.mozilla.reference.browser.media.MediaService
 import java.util.concurrent.TimeUnit
 
 private const val DAY_IN_MINUTES = 24 * 60L
@@ -71,7 +72,12 @@ class Core(private val context: Context) {
      * The [BrowserStore] holds the global [BrowserState].
      */
     val store by lazy {
-        BrowserStore()
+        BrowserStore(
+            middleware = listOf(
+                MediaMiddleware(context, MediaService::class.java),
+                ReaderViewMiddleware()
+            )
+        )
     }
 
     /**
@@ -97,12 +103,6 @@ class Core(private val context: Context) {
             // Show an ongoing notification when recording devices (camera, microphone) are used by web content
             RecordingDevicesNotificationFeature(context, sessionManager = this)
                 .enable()
-
-            MediaStateMachine.start(this)
-
-            // Enable media features like showing an ongoing notification with media controls when
-            // media in web content is playing.
-            MediaFeature(context).enable()
 
             WebNotificationFeature(context, engine, icons, R.drawable.ic_notification,
                 BrowserActivity::class.java)

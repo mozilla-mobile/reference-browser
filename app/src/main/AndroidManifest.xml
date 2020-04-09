@@ -25,6 +25,17 @@
         android:theme="@style/AppThemeNotActionBar"
         android:name=".BrowserApplication"
         tools:ignore="UnusedAttribute">
+
+        <!-- This needed for some tooling to launch mozilla-based browsers like web-ext. -->
+        <activity-alias
+            android:name="${applicationId}.App"
+            android:targetActivity=".BrowserActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity-alias>
+
         <activity android:name=".BrowserActivity"
             android:launchMode="singleTask"
             android:resizeableActivity="true"
@@ -32,9 +43,6 @@
             android:configChanges="keyboard|keyboardHidden|mcc|mnc|orientation|screenSize|locale|layoutDirection|smallestScreenSize|screenLayout"
             android:windowSoftInputMode="adjustResize">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
@@ -153,6 +161,9 @@
             android:label="@string/synced_tabs"
             android:theme="@style/AppTheme"
             android:parentActivityName=".BrowserActivity" />
+
+        <service android:name=".media.MediaService"
+            android:exported="false" />
 
         <service
             android:name=".push.FirebasePush"
