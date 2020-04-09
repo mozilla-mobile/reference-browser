@@ -5,11 +5,13 @@
 package org.mozilla.reference.browser.browser
 
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.CallSuper
+import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.preference.PreferenceManager
 import kotlinx.android.synthetic.main.fragment_browser.*
@@ -164,9 +166,12 @@ abstract class BaseBrowserFragment : Fragment(), UserInteractionHandler {
 
         fullScreenFeature.set(
             feature = FullScreenFeature(
-                requireComponents.core.sessionManager,
-                requireComponents.useCases.sessionUseCases,
-                sessionId, ::fullScreenChanged),
+                sessionManager = requireComponents.core.sessionManager,
+                sessionUseCases = requireComponents.useCases.sessionUseCases,
+                sessionId = sessionId,
+                viewportFitChanged = ::viewportFitChanged,
+                fullScreenChanged = ::fullScreenChanged
+            ),
             owner = this,
             view = view)
 
@@ -222,6 +227,11 @@ abstract class BaseBrowserFragment : Fragment(), UserInteractionHandler {
             toolbar.visibility = View.VISIBLE
             engineView.setDynamicToolbarMaxHeight(toolbar.measuredHeight)
         }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.P)
+    private fun viewportFitChanged(viewportFit: Int) {
+        requireActivity().window.attributes.layoutInDisplayCutoutMode = viewportFit
     }
 
     @CallSuper
