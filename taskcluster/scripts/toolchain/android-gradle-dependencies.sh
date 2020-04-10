@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
 set -ex
 
 function get_abs_path {
@@ -12,12 +16,11 @@ PROJECT_DIR="$(get_abs_path $CURRENT_DIR/../../../..)"
 
 pushd $PROJECT_DIR
 
-# We build everything to be sure to fetch all dependencies
-./gradlew --no-daemon assemble assembleAndroidTest bundle test lint ktlint detekt
+. taskcluster/scripts/toolchain/android-gradle-dependencies/before.sh
 
-# We only cache dependencies outside of the ones hosted on maven.mozilla.org.
-# caches/modules-2/files-2.1/ is where the pom, jar, and aar files are.
-tar cf - -C "$HOME/.gradle/" --exclude='*mozilla*' --transform='s,^,android-gradle-dependencies/,' 'caches/modules-2/files-2.1/' \
-  | xz > "$HOME/artifacts/android-gradle-dependencies.tar.xz"
+# We build everything to be sure to fetch all dependencies
+./gradlew --no-daemon -PgoogleRepo='http://localhost:8081/nexus/content/repositories/google/' -PjcenterRepo='http://localhost:8081/nexus/content/repositories/jcenter/' assemble assembleAndroidTest bundle test lint ktlint detekt
+
+. taskcluster/scripts/toolchain/android-gradle-dependencies/after.sh
 
 popd
