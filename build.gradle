@@ -2,8 +2,23 @@
 
 buildscript {
     repositories {
-        google()
-        jcenter()
+        if (project.hasProperty("googleRepo")) {
+            maven {
+                name "Google"
+                url project.property("googleRepo")
+            }
+        } else {
+            google()
+        }
+
+        if (project.hasProperty("jcenterRepo")) {
+            maven {
+                name "BintrayJCenter"
+                url project.property("jcenterRepo")
+            }
+        } else {
+            jcenter()
+        }
     }
 
     dependencies {
@@ -18,9 +33,17 @@ plugins {
 
 allprojects {
     repositories {
-        google()
+        if (project.hasProperty("googleRepo")) {
+            maven {
+                name "Google"
+                url project.property("googleRepo")
+            }
+        } else {
+            google()
+        }
 
         maven {
+            name "Mozilla Nightly"
             url "https://nightly.maven.mozilla.org/maven2"
 
             content {
@@ -30,6 +53,7 @@ allprojects {
         }
 
         maven {
+            name "Mozilla"
             url "https://maven.mozilla.org/maven2"
 
             content {
@@ -38,7 +62,14 @@ allprojects {
             }
         }
 
-        jcenter()
+        if (project.hasProperty("jcenterRepo")) {
+            maven {
+                name "BintrayJCenter"
+                url project.property("jcenterRepo")
+            }
+        } else {
+            jcenter()
+        }
     }
 }
 
@@ -134,4 +165,12 @@ task ktlint(type: JavaExec, group: "verification") {
     classpath = configurations.ktlint
     main = "com.github.shyiko.ktlint.Main"
     args "app/**/*.kt"
+}
+
+
+task listRepositories {
+    doLast {
+        println "Repositories:"
+        project.repositories.each { println "Name: " + it.name + "; url: " + it.url }
+   }
 }
