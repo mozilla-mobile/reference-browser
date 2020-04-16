@@ -8,15 +8,6 @@
     android:layout_width="match_parent"
     android:layout_height="72dp">
 
-    <ImageView
-        android:id="@+id/mozac_browser_tabstray_icon"
-        android:layout_width="100dp"
-        android:layout_height="56dp"
-        android:visibility="gone"
-        android:importantForAccessibility="no"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <androidx.cardview.widget.CardView
         android:id="@+id/mozac_browser_tabstray_card"
         android:layout_width="100dp"
