@@ -55,7 +55,8 @@ jobs:
         attributes:
             build-type: debug
         treeherder:
-            symbol: ui
+            platform: 'ui-test/opt'
+            symbol: debug(ui-test-x86)
         run-on-tasks-for: [github-push]
         run:
             # TODO Generate APKs in a build task instead
