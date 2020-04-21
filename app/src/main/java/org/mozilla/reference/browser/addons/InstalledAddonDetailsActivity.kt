@@ -11,8 +11,8 @@ import android.widget.Switch
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 import mozilla.components.feature.addons.Addon
-import mozilla.components.feature.addons.ui.translate
 import mozilla.components.feature.addons.ui.translatedName
 import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.ext.components
@@ -29,7 +29,7 @@ class InstalledAddonDetailsActivity : AppCompatActivity() {
     }
 
     private fun bind(addon: Addon) {
-        title = addon.translatableName.translate()
+        title = addon.translatedName
 
         bindEnableSwitch(addon)
 
@@ -93,12 +93,13 @@ class InstalledAddonDetailsActivity : AppCompatActivity() {
         }
     }
 
-    private fun bindSettings(addOn: Addon) {
+    private fun bindSettings(addon: Addon) {
         val view = findViewById<View>(R.id.settings)
-        view.isEnabled = addOn.installedState?.optionsPageUrl != null
+        view.isVisible = shouldSettingsBeVisible(addon)
+        view.isEnabled = shouldSettingsBeVisible(addon)
         view.setOnClickListener {
             val intent = Intent(this, AddonSettingsActivity::class.java)
-            intent.putExtra("add_on", addOn)
+            intent.putExtra("add_on", addon)
             this.startActivity(intent)
         }
     }
@@ -151,4 +152,6 @@ class InstalledAddonDetailsActivity : AppCompatActivity() {
         setText(text)
         isChecked = checked
     }
+
+    private fun shouldSettingsBeVisible(addon: Addon) = !addon.installedState?.optionsPageUrl.isNullOrEmpty()
 }
