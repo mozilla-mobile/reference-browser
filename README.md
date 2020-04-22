@@ -61,22 +61,32 @@ Before you attempt to make a contribution please read the [Community Participati
 
 # Local Development
 
-## Dependency substitutions
+You might be interested in building this project against local versions of some of the dependencies. Depending on which dependencies you're building against, there are couple of paths.
 
-You might be interested in building this project against local versions of some of the dependencies.
-This could be done either by using a [local maven repository](https://mozilla-mobile.github.io/android-components/contributing/testing-components-inside-app) (quite cumbersome), or via Gradle's [dependency substitutions](https://docs.gradle.org/current/userguide/customizing_dependency_resolution_behavior.html) (not at all cumbersome!).
+## Auto-publication workflow
 
-Currently, the substitution flow is streamlined for some of the core dependencies via configuration flags in `local.properties`. You can build against a local checkout of the following dependencies by specifying their local paths:
-- [android-components](https://github.com/mozilla-mobile/android-components), specifying its path via `autoPublish.android-components.dir=../android-components`
-  - This assumes that you have an `android-components` project at the same level in the directory hierarchy as the `reference-browser`.
-  - When enabled, a Reference Browser build will compile android-components locally and publish if it has been modified,
-    and published versions of android-components modules will be automatically used instead of whatever is declared in Dependencies.kt.
-- [application-services](https://github.com/mozilla/application-services), specifying its path via `substitutions.application-services.dir=../application-services`
-  - This assumes that you have an `application-services` project at the same level in the directory hierarchy as the `reference-browser`.
-- [GeckoView](https://hg.mozilla.org/mozilla-central), specifying its path via `dependencySubstitutions.geckoviewTopsrcdir=/path/to/mozilla-central` (and, optionally, `dependencySubstitutions.geckoviewTopobjdir=/path/to/topobjdir`). See [Bug 1533465](https://bugzilla.mozilla.org/show_bug.cgi?id=1533465).
-  - This assumes that you have built, packaged, and published your local GeckoView -- but don't worry, the dependency substitution script has the latest instructions for doing that.
+This is the most streamlined workflow which fully automates dependency publication. It currently supports [android-components](https://github.com/mozilla-mobile/android-components/) and [application-services](https://github.com/mozilla/application-services) dependencies.
 
-Do not forget to run a Gradle sync in Android Studio after changing `local.properties`. If you specified any substitutions, they will be reflected in the modules list, and you'll be able to modify them from a single Android Studio window.
+In a `local.properties` file in root of the `reference-browser` checkout, specify relative paths to a repository you need (or both):
+```
+# Local workflow
+autoPublish.android-components.dir=../android-components
+autoPublish.application-services.dir=../application-services
+```
+
+That's it! Next build of `reference-browser` will be against your local versions of these repositories. Simply make changes in `android-components` or `application-services`, press Play in `reference-browser` and those changes will be picked-up.
+
+See a [demo of this workflow](https://www.youtube.com/watch?v=qZKlBzVvQGc) in action. Video mentions `Fenix`, but it works in exactly the same with with `reference-browser`.
+
+## Dependency substitutions for [GeckoView](https://hg.mozilla.org/mozilla-central)
+
+GeckoView currently can be configured via a dependency substitution.
+
+In a `local.properties` file in root of the `reference-browser` checkout, specify GeckoView's path via `dependencySubstitutions.geckoviewTopsrcdir=/path/to/mozilla-central` (and, optionally, `dependencySubstitutions.geckoviewTopobjdir=/path/to/topobjdir`). See [Bug 1533465](https://bugzilla.mozilla.org/show_bug.cgi?id=1533465).
+
+This assumes that you have built, packaged, and published your local GeckoView -- but don't worry, the dependency substitution script has the latest instructions for doing that.
+
+Do not forget to run a Gradle sync in Android Studio after changing `local.properties`. If you specified any substitutions (e.g. GeckoView), they will be reflected in the modules list, and you'll be able to modify them from a single Android Studio window. For auto-publication workflow, use seperate Android Studio windows.
 
 # License
 
