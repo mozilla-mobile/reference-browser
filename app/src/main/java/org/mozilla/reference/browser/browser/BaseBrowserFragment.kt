@@ -189,10 +189,11 @@ abstract class BaseBrowserFragment : Fragment(), UserInteractionHandler {
                 context = requireContext(),
                 fragmentManager = requireFragmentManager(),
                 sessionManager = requireComponents.core.sessionManager,
-                sessionId = sessionId
-            ) { permissions ->
-                requestPermissions(permissions, REQUEST_CODE_APP_PERMISSIONS)
-            },
+                sessionId = sessionId,
+                onNeedToRequestPermissions = { permissions ->
+                    requestPermissions(permissions, REQUEST_CODE_APP_PERMISSIONS)
+                },
+                onShouldShowRequestPermissionRationale = { shouldShowRequestPermissionRationale(it) }),
             owner = this,
             view = view
         )
