@@ -70,7 +70,7 @@ class CustomTabsIntegration(
     }
 
     private val menuItems by lazy {
-        listOf(
+        mutableListOf(
             menuToolbar,
             SimpleBrowserMenuItem("Share") {
                 session?.url?.let { context.share(it) }

@@ -10,7 +10,6 @@ import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import mozilla.components.browser.domains.autocomplete.ShippedDomainsProvider
 import mozilla.components.browser.menu.BrowserMenuBuilder
-import mozilla.components.browser.menu.BrowserMenuItem
 import mozilla.components.browser.menu.item.BrowserMenuItemToolbar
 import mozilla.components.browser.menu.item.BrowserMenuSwitch
 import mozilla.components.browser.menu.item.SimpleBrowserMenuItem
@@ -72,8 +71,8 @@ class ToolbarIntegration(
         BrowserMenuItemToolbar(listOf(forward, refresh, stop))
     }
 
-    private val menuItems: List<BrowserMenuItem> by lazy {
-        listOf(
+    private val menuItems by lazy {
+        mutableListOf(
             menuToolbar,
             SimpleBrowserMenuItem("Share") {
                 val url = sessionManager.selectedSession?.url ?: ""
