@@ -9,7 +9,8 @@ jobs:
           type: decision-task
           treeherder-symbol: Nd
           target-tasks-method: nightly
-      when: []  # XXX Nightlies are temporarily disabled until Google Play catches up
+      when:
+          - {hour: 6, minute: 0}
     # Cannot name the following entry "bump-android-component" because the full hookId is larger
     # than 64 characters. For more details see: https://phabricator.services.mozilla.com/D67443
     - name: bump-android-comp
