@@ -8,6 +8,7 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import mozilla.components.lib.crash.CrashReporter
+import mozilla.components.lib.crash.service.CrashReporterService
 import mozilla.components.lib.crash.service.GleanCrashReporterService
 import mozilla.components.lib.crash.service.MozillaSocorroService
 import mozilla.components.lib.crash.service.SentryService
@@ -41,7 +42,7 @@ class Analytics(private val context: Context) {
 
         val gleanCrashReporter = GleanCrashReporterService(context)
 
-        val services = mutableListOf(socorroService, gleanCrashReporter)
+        val services: MutableList<CrashReporterService> = mutableListOf(socorroService)
 
         if (isSentryEnabled()) {
             val sentryService = SentryService(
@@ -55,6 +56,7 @@ class Analytics(private val context: Context) {
 
         CrashReporter(
             services = services,
+            telemetryServices = listOf(gleanCrashReporter),
             shouldPrompt = CrashReporter.Prompt.ALWAYS,
             promptConfiguration = CrashReporter.PromptConfiguration(
                 appName = context.getString(R.string.app_name),
