@@ -16,7 +16,7 @@ import mozilla.components.concept.sync.DeviceCapability
 import mozilla.components.concept.sync.DeviceType
 import mozilla.components.feature.accounts.push.FxaPushSupportFeature
 import mozilla.components.feature.accounts.push.SendTabFeature
-import mozilla.components.feature.syncedtabs.SyncedTabsFeature
+import mozilla.components.feature.syncedtabs.storage.SyncedTabsStorage
 import mozilla.components.service.fxa.DeviceConfig
 import mozilla.components.service.fxa.ServerConfig
 import mozilla.components.service.fxa.SyncConfig
@@ -25,7 +25,7 @@ import mozilla.components.service.fxa.manager.FxaAccountManager
 import mozilla.components.service.fxa.sync.GlobalSyncableStoreProvider
 import org.mozilla.reference.browser.NotificationManager
 import org.mozilla.reference.browser.ext.components
-import org.mozilla.reference.browser.tabs.SyncedTabsIntegration
+import org.mozilla.reference.browser.tabs.synced.SyncedTabsIntegration
 
 /**
  * Component group for background services. These are components that need to be accessed from
@@ -79,13 +79,17 @@ class BackgroundServices(
 
             push.feature?.let { push -> FxaPushSupportFeature(context, accountManager, push) }
 
-            SyncedTabsIntegration(context, accountManager).also {
-                it.launch()
-            }
+            SyncedTabsIntegration(context, accountManager).launch()
 
             CoroutineScope(Dispatchers.Main).launch { accountManager.initAsync().await() }
         }
     }
 
-    val syncedTabs by lazy { SyncedTabsFeature(accountManager, context.components.core.store, remoteTabsStorage.value) }
+    val syncedTabsStorage by lazy {
+        SyncedTabsStorage(
+            accountManager,
+            context.components.core.store,
+            remoteTabsStorage.value
+        )
+    }
 }

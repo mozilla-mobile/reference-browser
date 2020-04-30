@@ -1,10 +1,8 @@
-/*
- * This Source Code Form is subject to the terms of the Mozilla Public
- *  License, v. 2.0. If a copy of the MPL was not distributed with this
- *  file, You can obtain one at http://mozilla.org/MPL/2.0/.
- */
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-package org.mozilla.reference.browser.tabs
+package org.mozilla.reference.browser.tabs.synced
 
 import android.content.Context
 import androidx.lifecycle.ProcessLifecycleOwner
@@ -20,6 +18,7 @@ class SyncedTabsIntegration(
 ) {
     fun launch() {
         val accountObserver = SyncedTabsAccountObserver(context)
+
         accountManager.register(
             accountObserver,
             owner = ProcessLifecycleOwner.get(),
@@ -28,14 +27,12 @@ class SyncedTabsIntegration(
     }
 }
 
-internal class SyncedTabsAccountObserver(
-    private val context: Context
-) : AccountObserver {
+internal class SyncedTabsAccountObserver(private val context: Context) : AccountObserver {
     override fun onAuthenticated(account: OAuthAccount, authType: AuthType) {
-        context.components.backgroundServices.syncedTabs.start()
+        context.components.backgroundServices.syncedTabsStorage.start()
     }
 
     override fun onLoggedOut() {
-        context.components.backgroundServices.syncedTabs.stop()
+        context.components.backgroundServices.syncedTabsStorage.stop()
     }
 }
