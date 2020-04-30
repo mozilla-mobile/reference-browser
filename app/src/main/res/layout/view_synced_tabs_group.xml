@@ -6,15 +6,14 @@
     android:id="@+id/synced_tabs_group"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingTop="10dp"
-    android:paddingBottom="10dp"
-    android:paddingLeft="20dp"
-    android:paddingRight="20dp">
+    android:paddingTop="16dp"
+    android:paddingBottom="8dp"
+    android:paddingStart="16dp"
+    android:paddingEnd="16dp">
     <TextView
         android:id="@+id/synced_tabs_group_name"
-        android:textSize="16sp"
-        android:textStyle="bold"
-        android:textColor="@color/photonGrey90"
+        android:textSize="12sp"
+        android:textColor="@color/photonGrey10"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ellipsize="end"

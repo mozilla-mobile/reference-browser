@@ -30,7 +30,7 @@ import org.mozilla.reference.browser.addons.AddonsActivity
 import org.mozilla.reference.browser.ext.components
 import org.mozilla.reference.browser.ext.share
 import org.mozilla.reference.browser.settings.SettingsActivity
-import org.mozilla.reference.browser.tabs.SyncedTabsActivity
+import org.mozilla.reference.browser.tabs.synced.SyncedTabsActivity
 
 class ToolbarIntegration(
     context: Context,
@@ -109,7 +109,9 @@ class ToolbarIntegration(
             },
 
             SimpleBrowserMenuItem("Synced Tabs") {
-                openSyncedTabsActivity(context)
+                val intent = Intent(context, SyncedTabsActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                context.startActivity(intent)
             },
 
             SimpleBrowserMenuItem("Report issue") {
@@ -118,7 +120,9 @@ class ToolbarIntegration(
             },
 
             SimpleBrowserMenuItem("Settings") {
-                openSettingsActivity(context)
+                val intent = Intent(context, SettingsActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                context.startActivity(intent)
             }
         )
     }
@@ -162,15 +166,5 @@ class ToolbarIntegration(
 
     override fun onBackPressed(): Boolean {
         return toolbarFeature.onBackPressed()
-    }
-
-    private fun openSyncedTabsActivity(context: Context) {
-        val intent = Intent(context, SyncedTabsActivity::class.java)
-        context.startActivity(intent)
-    }
-
-    private fun openSettingsActivity(context: Context) {
-        val intent = Intent(context, SettingsActivity::class.java)
-        context.startActivity(intent)
     }
 }

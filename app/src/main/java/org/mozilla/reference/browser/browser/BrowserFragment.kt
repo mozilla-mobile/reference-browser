@@ -50,7 +50,7 @@ class BrowserFragment : BaseBrowserFragment(), UserInteractionHandler {
         // a dependency on feature-syncedtabs (which depends on Sync).
         awesomeBar.addProviders(
             SyncedTabsStorageSuggestionProvider(
-                requireComponents.backgroundServices.syncedTabs,
+                requireComponents.backgroundServices.syncedTabsStorage,
                 requireComponents.useCases.tabsUseCases.addTab,
                 requireComponents.core.icons
             )

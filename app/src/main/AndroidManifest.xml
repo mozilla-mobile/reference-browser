@@ -156,7 +156,7 @@
           android:parentActivityName=".BrowserActivity" />
 
         <activity
-            android:name=".tabs.SyncedTabsActivity"
+            android:name=".tabs.synced.SyncedTabsActivity"
             android:exported="false"
             android:label="@string/synced_tabs"
             android:theme="@style/AppTheme"
