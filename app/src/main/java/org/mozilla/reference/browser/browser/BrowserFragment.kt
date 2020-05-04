@@ -8,8 +8,8 @@ import android.os.Bundle
 import android.view.View
 import kotlinx.android.synthetic.main.fragment_browser.*
 import kotlinx.android.synthetic.main.fragment_browser.view.*
+import mozilla.components.browser.thumbnails.BrowserThumbnails
 import mozilla.components.feature.awesomebar.AwesomeBarFeature
-import mozilla.components.feature.session.ThumbnailsFeature
 import mozilla.components.feature.syncedtabs.SyncedTabsStorageSuggestionProvider
 import mozilla.components.feature.tabs.toolbar.TabsToolbarFeature
 import mozilla.components.feature.toolbar.WebExtensionToolbarFeature
@@ -24,7 +24,7 @@ import org.mozilla.reference.browser.tabs.TabsTrayFragment
  * Fragment used for browsing the web within the main app.
  */
 class BrowserFragment : BaseBrowserFragment(), UserInteractionHandler {
-    private val thumbnailsFeature = ViewBoundFeatureWrapper<ThumbnailsFeature>()
+    private val thumbnailsFeature = ViewBoundFeatureWrapper<BrowserThumbnails>()
     private val readerViewFeature = ViewBoundFeatureWrapper<ReaderViewIntegration>()
     private val webExtToolbarFeature = ViewBoundFeatureWrapper<WebExtensionToolbarFeature>()
 
@@ -63,7 +63,7 @@ class BrowserFragment : BaseBrowserFragment(), UserInteractionHandler {
             showTabs = ::showTabs)
 
         thumbnailsFeature.set(
-                feature = ThumbnailsFeature(requireContext(),
+                feature = BrowserThumbnails(requireContext(),
                         engineView,
                         requireComponents.core.sessionManager),
                 owner = this,
