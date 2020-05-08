@@ -1,11 +1,10 @@
 #!/usr/bin/env bash
-
 # This Source Code Form is subject to the terms of the Mozilla Public
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 # This script does the following:
-# 1. Retrieves glcoud service account token
+# 1. Retrieves gcloud service account token
 # 2. Activates gcloud service account
 # 3. Connects to google Firebase (using TestArmada's Flank tool)
 # 4. Executes UI tests
@@ -27,115 +26,113 @@ display_help() {
     echo
     echo "Examples:"
     echo "To run UI tests on ARM device shard (1 test / shard)"
-    echo "$ ui-test.sh component arm"
+    echo "$ ui-test.sh arm64-v8a -1"
     echo
     echo "To run UI tests on X86 device (on 3 shards)"
     echo "$ ui-test.sh x86 3"
     echo
 }
 
+get_abs_filename() {
+  relative_filename="$1"
+  echo "$(cd "$(dirname "$relative_filename")" && pwd)/$(basename "$relative_filename")"
+}
+
+
 # Basic parameter check
 if [[ $# -lt 1 ]]; then
-    echo "Your command line contains $# arguments"
+    echo "Error: please provide at least one build variant (arm|x86)"
     display_help
     exit 1
 fi
 
-device_type="$1"  # arm | x86
-if [[ ! -z "$2" ]]; then
-    num_shards=$2
+device_type="$1"  # arm64-v8a | armeabi-v7a | x86_64 | x86 | aarch64
+APK_APP="$2"
+APK_TEST="$3"
+if [[ ! -z "$4" ]]; then
+    num_shards=$4
 fi
 
 JAVA_BIN="/usr/bin/java"
 PATH_TEST="./automation/taskcluster/androidTest"
-PATH_APK="./app/build/outputs/apk/debug"
 FLANK_BIN="/builds/worker/test-tools/flank.jar"
+ARTIFACT_DIR="/builds/worker/artifacts"
+RESULTS_DIR="${ARTIFACT_DIR}/results"
 
 echo
 echo "ACTIVATE SERVICE ACCT"
 echo
 # this is where the Google Testcloud project ID is set
-gcloud config set project "$GOOGLE_PROJECT" 
+gcloud config set project "$GOOGLE_PROJECT"
 echo
 
-gcloud auth activate-service-account --key-file "$GOOGLE_APPLICATION_CREDENTIALS" 
+gcloud auth activate-service-account --key-file "$GOOGLE_APPLICATION_CREDENTIALS"
 echo
 echo
 
-# From now on disable exiting on error. If the tests fail we want to continue
+# Disable exiting on error. If the tests fail we want to continue
 # and try to download the artifacts. We will exit with the actual error code later.
 set +e
 
-if [[ "${device_type,,}" == "aarch64" ]]
-then
-    flank_template="${PATH_TEST}/flank-aarch64.yml"
-    APK_APP="${PATH_APK}/app-arm64-v8a-debug.apk"
-elif [[ "${device_type,,}" == "arm" ]]
-then
-    flank_template="${PATH_TEST}/flank-arm.yml"
-    APK_APP="${PATH_APK}/app-armeabi-v7a-debug.apk"
-elif [[ "${device_type,,}" == "x86_64" ]]
-then
-    flank_template="${PATH_TEST}/flank-x86-64.yml"
-    APK_APP="${PATH_APK}/app-x86_64-debug.apk"
-elif [[ "${device_type,,}" == "x86" ]]
-then
-    flank_template="${PATH_TEST}/flank-x86.yml"
-    APK_APP="${PATH_APK}/app-x86-debug.apk"
+if [[ "${device_type}" =~ ^(arm64-v8a|armeabi-v7a|x86_64|x86|aarch64)$ ]]; then
+    flank_template="${PATH_TEST}/flank-${device_type}.yml"
 else
-     echo "NOT FOUND"
-#    exitcode=1
+    echo "FAILURE: flank config file not found!"
+    exitcode=1
 fi
 
-APK_TEST="./app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk"
-ls -la ./app/build/outputs/apk/androidTest/debug
+APK_APP="$(get_abs_filename $APK_APP)"
+APK_TEST="$(get_abs_filename $APK_TEST)"
+echo "device_type: ${device_type}"
+echo "APK_APP: ${APK_APP}"
+echo "APK_TEST: ${APK_TEST}"
 
-# keep running script on failure, so we can capture the failure and do some
-# final output
-set +e
 # function to exit script with exit code from test run.
 # (Only 0 if all test executions passed)
 function failure_check() {
+    echo
+    echo
     if [[ $exitcode -ne 0 ]]; then
-        echo
-        echo
-	echo "ERROR: UI test run failed, please check above URL"
+        echo "FAILURE: UI test run failed, please check above URL"
+    else
+	      echo "All UI test(s) have passed!"
     fi
-    exit $exitcode
+
+    echo
+    echo "RESULTS"
+    echo
+
+    mkdir -p /builds/worker/artifacts/github
+    chmod +x $PATH_TEST/parse-ui-test.py
+    $PATH_TEST/parse-ui-test.py \
+        --exit-code "${exitcode}" \
+        --log flank.log \
+        --results "${RESULTS_DIR}" \
+        --output-md "${ARTIFACT_DIR}/github/customCheckRunText.md" \
+	      --device-type "${device_type}"
 }
+
+echo
+echo "FLANK VERSION"
+echo
+$JAVA_BIN -jar $FLANK_BIN --version
+echo
+echo
 
 echo
 echo "EXECUTE TEST(S)"
 echo
-$JAVA_BIN -jar $FLANK_BIN android run --config=$flank_template --max-test-shards=$num_shards --app=$APK_APP --test=$APK_TEST --project=$GOOGLE_PROJECT
-exitcode=$?
-echo
-echo
-failure_check
-echo
-echo
+# Note that if --local-results-dir is "results", timestamped sub-directory will
+# contain the results. For any other value, the directory itself will have the results.
+set -o pipefail && $JAVA_BIN -jar $FLANK_BIN android run \
+	--config=$flank_template \
+	--max-test-shards=$num_shards \
+	--app=$APK_APP --test=$APK_TEST \
+	--local-result-dir="${RESULTS_DIR}" \
+	--project=$GOOGLE_PROJECT \
+	| tee flank.log
 
-echo
-echo "COPY ARTIFACTS"
-echo
-cp -r "./results" "./test_artifacts"
 exitcode=$?
 failure_check
-echo
-echo
 
-echo
-echo "RESULTS"
-echo
-ls -la ./results
-echo 
-echo
-
-echo
-echo "RESULTS"
-echo
-ls -la ./test_results
-
-echo "All UI test(s) have passed!"
-echo
-echo
+exit $exitcode
