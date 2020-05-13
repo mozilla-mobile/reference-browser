@@ -55,6 +55,7 @@ class Analytics(private val context: Context) {
         }
 
         CrashReporter(
+            context = context,
             services = services,
             telemetryServices = listOf(gleanCrashReporter),
             shouldPrompt = CrashReporter.Prompt.ALWAYS,
