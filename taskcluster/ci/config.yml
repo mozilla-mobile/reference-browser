@@ -17,7 +17,7 @@ taskgraph:
     repositories:
         mobile:
             name: "reference-browser"
-    cached-task-prefix: project.mobile.reference-browser
+    cached-task-prefix: mobile.v2.reference-browser
 
 workers:
     aliases:
@@ -26,16 +26,26 @@ workers:
             implementation: docker-worker
             os: linux
             worker-type: 'b-linux'
-        images:
-            provisioner: 'mobile-{level}'
-            implementation: docker-worker
-            os: linux
-            worker-type: 'images'
         dep-signing:
             provisioner: scriptworker-k8s
             implementation: scriptworker-signing
             os: scriptworker
             worker-type: mobile-t-signing
+        images:
+            provisioner: 'mobile-{level}'
+            implementation: docker-worker
+            os: linux
+            worker-type: 'images'
+        misc:
+            provisioner: 'mobile-{level}'
+            implementation: docker-worker
+            os: linux
+            worker-type: 'b-linux'
+        push-apk:
+            provisioner: scriptworker-k8s
+            implementation: scriptworker-pushapk
+            os: scriptworker
+            worker-type: 'mobile-{level}-pushapk'
         signing:
             provisioner: scriptworker-k8s
             implementation: scriptworker-signing
@@ -44,11 +54,6 @@ workers:
                 by-level:
                     "3": mobile-3-signing
                     default: mobile-t-signing
-        push-apk:
-            provisioner: scriptworker-k8s
-            implementation: scriptworker-pushapk
-            os: scriptworker
-            worker-type: 'mobile-{level}-pushapk'
         t-bitbar.*:
             provisioner: proj-autophone
             implementation: generic-worker
