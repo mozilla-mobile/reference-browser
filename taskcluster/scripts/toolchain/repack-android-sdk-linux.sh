@@ -17,7 +17,7 @@ yes | "${ANDROID_SDK_ROOT}/tools/bin/sdkmanager" --licenses
 "${ANDROID_SDK_ROOT}/tools/bin/sdkmanager" --list
 
 pushd $PROJECT_DIR
-./gradlew buildEnvironment
+./gradlew androidDependencies
 popd
 
 tar cf - -C "$ANDROID_SDK_ROOT" . --transform 's,^\./,android-sdk-linux/,' | xz > "$UPLOAD_DIR/android-sdk-linux.tar.xz"
