@@ -8,8 +8,8 @@ export ANDROID_SDK_ROOT="$MOZ_FETCHES_DIR"
 yes | "${ANDROID_SDK_ROOT}/tools/bin/sdkmanager" --licenses
 
 pushd $PROJECT_DIR
-# XXX The Android SDK is fully populated by gradle if gradle compiles something.
-./gradlew ':app:preDebugBuild'
+# XXX The Android SDK is fully populated by gradle if it compiles something.
+./gradlew assembleDebug
 popd
 
 # It's nice to have the build logs include the state of the world upon completion.
