@@ -20,10 +20,6 @@ job-defaults:
         name: public/target.aab
         path: '/builds/worker/checkouts/src/app/build/outputs/bundle/{variant}/app-{variant}.aab'
     description: Build AAB (Android App Bundle) from source code.
-    fetches:
-        toolchain:
-            - android-sdk-linux
-            - android-gradle-dependencies
     run:
         using: gradlew
         use-caches: false
