@@ -20,5 +20,4 @@ pushd $PROJECT_DIR
 ./gradlew --debug assemble
 popd
 
-tar cf - -C "$ANDROID_SDK_ROOT" . --transform 's,^\./,android-sdk-linux/,'
-  | xz > "$UPLOAD_DIR/android-sdk-linux.tar.xz"
+tar cf - -C "$ANDROID_SDK_ROOT" . --transform 's,^\./,android-sdk-linux/,' | xz > "$UPLOAD_DIR/android-sdk-linux.tar.xz"
