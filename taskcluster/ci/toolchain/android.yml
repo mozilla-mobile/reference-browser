@@ -7,30 +7,8 @@ job-defaults:
     worker:
         max-run-time: 1800
 
-
-linux64-android-sdk-linux-repack:
-    attributes:
-        artifact_prefix: mobile/android-sdk
-    description: "Android SDK (Linux) repack toolchain build"
-    fetches:
-        fetch:
-            - android-sdk
-    run:
-        script: repack-android-sdk-linux.sh
-        resources: []
-        toolchain-artifact: mobile/android-sdk/android-sdk-linux.tar.xz
-        toolchain-alias: android-sdk-linux
-    treeherder:
-        symbol: TL(android-sdk-linux)
-    worker:
-        docker-image: {in-tree: base}
-
 linux64-android-gradle-repack:
     description: "Android SDK (Linux) repack toolchain build"
-    fetches:
-        toolchain:
-            # Aliases aren't allowed for toolchains depending on toolchains.
-            - linux64-android-sdk-linux-repack
     run:
         script: repack-gradle.sh
         resources: []
@@ -40,8 +18,29 @@ linux64-android-gradle-repack:
         symbol: TL(gradle)
     worker:
         docker-image: {in-tree: base}
+
+
+linux64-android-sdk-linux-repack:
+    attributes:
+        artifact_prefix: mobile/android-sdk
+    description: "Android SDK (Linux) repack toolchain build"
+    fetches:
+        fetch:
+            - android-sdk
+        toolchain:
+            # Aliases aren't allowed for toolchains depending on toolchains.
+            - linux64-android-gradle-repack
+    run:
+        script: repack-android-sdk-linux.sh
+        resources: []
+        toolchain-artifact: mobile/android-sdk/android-sdk-linux.tar.xz
+        toolchain-alias: android-sdk-linux
+    treeherder:
+        symbol: TL(android-sdk-linux)
+    worker:
+        docker-image: {in-tree: base}
         env:
-            ANDROID_SDK_ROOT: /builds/worker/fetches/android-sdk-linux
+            GRADLE_USER_HOME: /builds/worker/fetches/gradle
 
 
 linux64-android-gradle-dependencies:
