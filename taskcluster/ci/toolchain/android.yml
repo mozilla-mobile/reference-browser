@@ -25,6 +25,24 @@ linux64-android-sdk-linux-repack:
     worker:
         docker-image: {in-tree: base}
 
+linux64-android-gradle-repack:
+    description: "Android SDK (Linux) repack toolchain build"
+    fetches:
+        toolchain:
+            # Aliases aren't allowed for toolchains depending on toolchains.
+            - linux64-android-sdk-linux-repack
+    run:
+        script: repack-gradle.sh
+        resources: []
+        toolchain-artifact: public/build/gradle.tar.xz
+        toolchain-alias: android-gradle
+    treeherder:
+        symbol: TL(gradle)
+    worker:
+        docker-image: {in-tree: base}
+        env:
+            ANDROID_SDK_ROOT: /builds/worker/fetches/android-sdk-linux
+
 
 linux64-android-gradle-dependencies:
     description: "Android Gradle dependencies toolchain task"
@@ -32,6 +50,7 @@ linux64-android-gradle-dependencies:
         toolchain:
             # Aliases aren't allowed for toolchains depending on toolchains.
             - linux64-android-sdk-linux-repack
+            - linux64-android-gradle-repack
     run:
         script: android-gradle-dependencies.sh
         sparse-profile: null
@@ -49,3 +68,4 @@ linux64-android-gradle-dependencies:
         env:
             # TODO do no hardcode
             ANDROID_SDK_ROOT: /builds/worker/fetches/android-sdk-linux
+            GRADLE_USER_HOME: /builds/worker/fetches/gradle

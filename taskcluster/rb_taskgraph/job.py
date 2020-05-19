@@ -78,6 +78,7 @@ def configure_gradlew(config, job, taskdesc):
     fetches_dir = path.join(run["workdir"], worker["env"]["MOZ_FETCHES_DIR"])
     worker.setdefault("env", {}).update({
         "ANDROID_SDK_ROOT": path.join(fetches_dir, "android-sdk-linux"),
+        "GRADLE_USER_HOME": path.join(fetches_dir, "gradle"),
     })
 
     run["command"] = _extract_gradlew_command(run, fetches_dir)
