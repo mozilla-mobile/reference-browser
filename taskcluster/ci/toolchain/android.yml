@@ -18,6 +18,7 @@ linux64-android-gradle-repack:
         symbol: TL(gradle)
     worker:
         docker-image: {in-tree: base}
+        env: {}
 
 
 linux64-android-sdk-linux-repack:
