@@ -9,7 +9,7 @@ yes | "${ANDROID_SDK_ROOT}/tools/bin/sdkmanager" --licenses
 
 pushd $PROJECT_DIR
 # XXX The Android SDK is fully populated by gradle if gradle compiles something.
-./gradlew --debug assembleDebug
+./gradlew assembleDebug
 popd
 
 # It's nice to have the build logs include the state of the world upon completion.
