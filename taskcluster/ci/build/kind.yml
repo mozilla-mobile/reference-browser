@@ -24,6 +24,11 @@ job-defaults:
         name: public/target.{abi}.apk
         path: '/builds/worker/checkouts/src/app/build/outputs/apk/{gradle_build_type}/{fileName}'
     description: Build Reference Browser from source code.
+    fetches:
+        toolchain:
+            - android-sdk-linux
+            - android-gradle
+            - android-gradle-dependencies
     treeherder:
         kind: build
         symbol: B

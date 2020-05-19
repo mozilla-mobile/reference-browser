@@ -16,6 +16,11 @@ kind-dependencies:
 job-defaults:
     attributes:
         code-review: true
+    fetches:
+        toolchain:
+            - android-sdk-linux
+            - android-gradle
+            - android-gradle-dependencies
     run:
         use-caches: false
     treeherder:
