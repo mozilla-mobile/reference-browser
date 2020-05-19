@@ -162,6 +162,10 @@
             android:theme="@style/AppTheme"
             android:parentActivityName=".BrowserActivity" />
 
+        <activity
+            android:name=".CrashListActivity"
+            android:exported="false" />
+
         <service android:name=".media.MediaService"
             android:exported="false" />
 
