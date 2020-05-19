@@ -9,5 +9,5 @@ pushd $PROJECT_DIR
 ./gradlew tasks
 popd
 
-tar cf - -C "$HOME/.gradle/" --transform='s,^,gradle/,' '.' \
+tar cf - -C "$HOME/.gradle/" --transform='s,^\./,gradle/,' '.' \
   | xz > "$UPLOAD_DIR/gradle.tar.xz"
