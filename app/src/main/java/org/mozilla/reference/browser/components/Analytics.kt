@@ -80,7 +80,7 @@ class Analytics(private val context: Context) {
     internal fun initializeExperiments() {
         Experiments.initialize(
             context,
-            mozilla.components.service.experiments.Configuration(httpClient = lazy { context.components.core.client })
+            mozilla.components.service.experiments.Configuration(context.components.core.client)
         )
     }
 }
