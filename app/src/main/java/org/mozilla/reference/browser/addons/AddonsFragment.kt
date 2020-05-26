@@ -155,23 +155,27 @@ class AddonsFragment : Fragment(), AddonsManagerAdapterDelegate {
         requireContext().components.core.addonManager.installAddon(
             addon,
             onSuccess = {
-                isInstallationInProgress = false
-                this@AddonsFragment.view?.let { view ->
-                    bindRecyclerView(view)
-                    showInstallationDialog(it)
-                }
+                runIfFragmentIsAttached {
+                    isInstallationInProgress = false
+                    this@AddonsFragment.view?.let { view ->
+                        bindRecyclerView(view)
+                        showInstallationDialog(it)
+                    }
 
-                addonProgressOverlay.visibility = View.GONE
+                    addonProgressOverlay.visibility = View.GONE
+                }
             },
             onError = { _, _ ->
-                Toast.makeText(
-                    requireContext(),
-                    getString(R.string.mozac_feature_addons_failed_to_install, addon.translatedName),
-                    Toast.LENGTH_SHORT
-                ).show()
+                runIfFragmentIsAttached {
+                    Toast.makeText(
+                        requireContext(),
+                        getString(R.string.mozac_feature_addons_failed_to_install, addon.translatedName),
+                        Toast.LENGTH_SHORT
+                    ).show()
 
-                addonProgressOverlay.visibility = View.GONE
-                isInstallationInProgress = false
+                    addonProgressOverlay.visibility = View.GONE
+                    isInstallationInProgress = false
+                }
             }
         )
     }
