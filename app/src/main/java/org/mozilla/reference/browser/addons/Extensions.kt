@@ -4,9 +4,21 @@
 
 package org.mozilla.reference.browser.addons
 
+import androidx.fragment.app.Fragment
 import java.text.NumberFormat
 import java.util.Locale
 
 internal fun getFormattedAmount(amount: Int): String {
     return NumberFormat.getNumberInstance(Locale.getDefault()).format(amount)
+}
+
+/**
+ * Run the [block] only if the [Fragment] is attached.
+ *
+ * @param block A callback to be executed if the container [Fragment] is attached.
+ */
+internal inline fun Fragment.runIfFragmentIsAttached(block: () -> Unit) {
+    context?.let {
+        block()
+    }
 }
