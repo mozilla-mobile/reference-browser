@@ -10,5 +10,5 @@ jobs:
         run:
             using: index-search
             index-search:
-                - gecko.v2.mozilla-central.nightly.latest.mobile.android-x86_64-opt
+                - gecko.v2.mozilla-central.shippable.latest.mobile.android-x86_64-opt
         worker-type: always-optimized
