@@ -21,6 +21,7 @@ import mozilla.components.feature.addons.AddonManager
 import mozilla.components.feature.addons.amo.AddonCollectionProvider
 import mozilla.components.feature.addons.update.AddonUpdater
 import mozilla.components.feature.addons.update.DefaultAddonUpdater
+import mozilla.components.feature.downloads.DownloadMiddleware
 import mozilla.components.feature.downloads.DownloadsUseCases
 import mozilla.components.feature.media.RecordingDevicesNotificationFeature
 import mozilla.components.feature.media.middleware.MediaMiddleware
@@ -35,6 +36,7 @@ import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.R.string.pref_key_remote_debugging
 import org.mozilla.reference.browser.R.string.pref_key_tracking_protection_normal
 import org.mozilla.reference.browser.R.string.pref_key_tracking_protection_private
+import org.mozilla.reference.browser.downloads.DownloadService
 import org.mozilla.reference.browser.media.MediaService
 import java.util.concurrent.TimeUnit
 
@@ -75,6 +77,7 @@ class Core(private val context: Context) {
         BrowserStore(
             middleware = listOf(
                 MediaMiddleware(context, MediaService::class.java),
+                DownloadMiddleware(context, DownloadService::class.java),
                 ReaderViewMiddleware()
             )
         )
