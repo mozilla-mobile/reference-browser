@@ -124,6 +124,7 @@ abstract class BaseBrowserFragment : Fragment(), UserInteractionHandler {
                 fragmentManager = childFragmentManager,
                 downloadManager = FetchDownloadManager(
                     requireContext().applicationContext,
+                    requireComponents.core.store,
                     DownloadService::class
                 ),
                 onNeedToRequestPermissions = { permissions ->
