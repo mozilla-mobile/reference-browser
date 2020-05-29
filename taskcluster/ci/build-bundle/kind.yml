@@ -47,7 +47,3 @@ jobs:
         include-shippable-secrets: true
         run:
             gradlew: ["-PcrashReportEnabled=true", "-Ptelemetry=true", "bundleNightly"]
-    debug:
-        run-on-tasks-for: [github-push, github-pull-request]
-        run:
-            gradlew: ["bundleDebug"]
