@@ -33,6 +33,7 @@ class TabsTrayFragment : Fragment(), UserInteractionHandler {
             tabsTray,
             requireComponents.core.store,
             requireComponents.useCases.tabsUseCases,
+            requireComponents.useCases.thumbnailUseCases,
             { !it.content.private },
             ::closeTabsTray)
 

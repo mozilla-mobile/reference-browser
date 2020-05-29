@@ -8,9 +8,12 @@ import android.content.Context
 import mozilla.components.browser.search.SearchEngineManager
 import mozilla.components.browser.session.SessionManager
 import mozilla.components.browser.state.store.BrowserStore
+import mozilla.components.browser.thumbnails.ThumbnailsUseCases
+import mozilla.components.browser.thumbnails.storage.ThumbnailStorage
 import mozilla.components.concept.engine.Settings
 import mozilla.components.concept.fetch.Client
 import mozilla.components.feature.contextmenu.ContextMenuUseCases
+import mozilla.components.feature.downloads.DownloadsUseCases
 import mozilla.components.feature.pwa.WebAppUseCases
 import mozilla.components.feature.search.SearchUseCases
 import mozilla.components.feature.session.SessionUseCases
@@ -27,7 +30,8 @@ class UseCases(
     private val store: BrowserStore,
     private val engineSettings: Settings,
     private val searchEngineManager: SearchEngineManager,
-    private val client: Client
+    private val client: Client,
+    private val thumbnailStorage: ThumbnailStorage
 ) {
     /**
      * Use cases that provide engine interactions for a given browser session.
@@ -58,4 +62,19 @@ class UseCases(
      * Uses cases that provides context menu
      */
     val contextMenuUseCases: ContextMenuUseCases by lazy { ContextMenuUseCases(sessionManager, store) }
+
+    /**
+     * Use cases related to the downloads feature.
+     */
+    val downloadsUseCases: DownloadsUseCases by lazy { DownloadsUseCases(store) }
+
+    /**
+     * Use cases related to getting thumbnails for tabs or sessions.
+     */
+    val thumbnailUseCases: ThumbnailsUseCases by lazy {
+        ThumbnailsUseCases(
+            store,
+            thumbnailStorage
+        )
+    }
 }
