@@ -13,6 +13,8 @@ import mozilla.components.browser.session.storage.SessionStorage
 import mozilla.components.browser.state.store.BrowserStore
 import mozilla.components.browser.storage.sync.PlacesHistoryStorage
 import mozilla.components.browser.storage.sync.RemoteTabsStorage
+import mozilla.components.browser.thumbnails.ThumbnailsMiddleware
+import mozilla.components.browser.thumbnails.storage.ThumbnailStorage
 import mozilla.components.concept.engine.DefaultSettings
 import mozilla.components.concept.engine.Engine
 import mozilla.components.concept.engine.EngineSession.TrackingProtectionPolicy
@@ -22,7 +24,6 @@ import mozilla.components.feature.addons.amo.AddonCollectionProvider
 import mozilla.components.feature.addons.update.AddonUpdater
 import mozilla.components.feature.addons.update.DefaultAddonUpdater
 import mozilla.components.feature.downloads.DownloadMiddleware
-import mozilla.components.feature.downloads.DownloadsUseCases
 import mozilla.components.feature.media.RecordingDevicesNotificationFeature
 import mozilla.components.feature.media.middleware.MediaMiddleware
 import mozilla.components.feature.readerview.ReaderViewMiddleware
@@ -78,6 +79,7 @@ class Core(private val context: Context) {
             middleware = listOf(
                 MediaMiddleware(context, MediaService::class.java),
                 DownloadMiddleware(context, DownloadService::class.java),
+                ThumbnailsMiddleware(thumbnailStorage),
                 ReaderViewMiddleware()
             )
         )
@@ -113,11 +115,6 @@ class Core(private val context: Context) {
     }
 
     /**
-     * Contains use cases related to the downloads feature.
-     */
-    val downloadsUseCases: DownloadsUseCases by lazy { DownloadsUseCases(store) }
-
-    /**
      * The storage component to persist browsing history (with the exception of
      * private sessions).
      */
@@ -132,6 +129,11 @@ class Core(private val context: Context) {
      * The storage component to sync and persist tabs in a Firefox Sync account.
      */
     val lazyRemoteTabsStorage = lazy { RemoteTabsStorage() }
+
+    /**
+     * A storage component for persisting thumbnail images of tabs.
+     */
+    val thumbnailStorage by lazy { ThumbnailStorage(context) }
 
     /**
      * Icons component for loading, caching and processing website icons.

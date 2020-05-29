@@ -120,7 +120,7 @@ abstract class BaseBrowserFragment : Fragment(), UserInteractionHandler {
             feature = DownloadsFeature(
                 requireContext(),
                 store = requireComponents.core.store,
-                useCases = requireComponents.core.downloadsUseCases,
+                useCases = requireComponents.useCases.downloadsUseCases,
                 fragmentManager = childFragmentManager,
                 downloadManager = FetchDownloadManager(
                     requireContext().applicationContext,
