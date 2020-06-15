@@ -7,48 +7,43 @@
 package org.mozilla.reference.browser.pip
 
 import android.app.Activity
-import mozilla.components.browser.session.SelectionAwareSessionObserver
-import mozilla.components.browser.session.Session
-import mozilla.components.browser.session.SessionManager
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.mapNotNull
+import mozilla.components.browser.state.selector.findTabOrCustomTabOrSelectedTab
+import mozilla.components.browser.state.store.BrowserStore
 import mozilla.components.feature.session.PictureInPictureFeature
+import mozilla.components.lib.state.ext.flowScoped
 import mozilla.components.support.base.feature.LifecycleAwareFeature
+import mozilla.components.support.ktx.kotlinx.coroutines.flow.ifChanged
 
 class PictureInPictureIntegration(
-    sessionManager: SessionManager,
-    activity: Activity
+    private val store: BrowserStore,
+    activity: Activity,
+    private val customTabId: String?,
+    private val whiteList: List<String> = listOf("youtube.com/tv")
 ) : LifecycleAwareFeature {
-    private val pictureFeature = PictureInPictureFeature(sessionManager, activity)
-    private val observer = PictureInPictureObserver(sessionManager) { whiteListed = it }
+    private var scope: CoroutineScope? = null
+    private val pictureFeature = PictureInPictureFeature(store, activity)
     private var whiteListed = false
 
     override fun start() {
-        observer.observeSelected()
+        scope = store.flowScoped { flow ->
+            flow.mapNotNull { state -> state.findTabOrCustomTabOrSelectedTab(customTabId) }
+                .ifChanged { it.content.url }
+                .collect { whiteListed = isWhitelisted(it.content.url) }
+        }
     }
 
     override fun stop() {
-        observer.stop()
+        scope?.cancel()
     }
 
     fun onHomePressed() = if (whiteListed) {
         pictureFeature.enterPipModeCompat()
     } else {
         pictureFeature.onHomePressed()
-    }
-}
-
-internal class PictureInPictureObserver(
-    sessionManager: SessionManager,
-    private val whiteListed: (Boolean) -> Unit
-) : SelectionAwareSessionObserver(sessionManager) {
-    private val whiteList = listOf("youtube.com/tv")
-
-    override fun onSessionSelected(session: Session) {
-        super.onSessionSelected(session)
-        whiteListed(isWhitelisted(session.url))
-    }
-
-    override fun onUrlChanged(session: Session, url: String) {
-        whiteListed(isWhitelisted(session.url))
     }
 
     private fun isWhitelisted(url: String): Boolean {

@@ -70,6 +70,8 @@ abstract class BaseBrowserFragment : Fragment(), UserInteractionHandler {
     protected val sessionId: String?
         get() = arguments?.getString(SESSION_ID)
 
+    protected var webAppToolbarShouldBeVisible = true
+
     final override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -201,8 +203,9 @@ abstract class BaseBrowserFragment : Fragment(), UserInteractionHandler {
 
         pictureInPictureIntegration.set(
             feature = PictureInPictureIntegration(
-                requireComponents.core.sessionManager,
-                requireActivity()
+                requireComponents.core.store,
+                requireActivity(),
+                sessionId
             ),
             owner = this,
             view = view
