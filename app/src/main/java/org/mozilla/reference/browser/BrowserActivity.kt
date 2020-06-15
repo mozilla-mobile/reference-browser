@@ -27,6 +27,7 @@ import mozilla.components.support.base.feature.UserInteractionHandler
 import mozilla.components.support.utils.SafeIntent
 import mozilla.components.support.webextensions.WebExtensionPopupFeature
 import mozilla.components.browser.tabstray.TabsAdapter
+import mozilla.components.browser.thumbnails.loader.ThumbnailLoader
 import org.mozilla.reference.browser.addons.WebExtensionActionPopupActivity
 import org.mozilla.reference.browser.browser.BrowserFragment
 import org.mozilla.reference.browser.browser.CrashIntegration
@@ -145,12 +146,15 @@ open class BrowserActivity : AppCompatActivity() {
 
     private fun createTabsTray(context: Context, attrs: AttributeSet): BrowserTabsTray {
         val layout = LinearLayoutManager(context)
-        val adapter = TabsAdapter { viewGroup, tabsTray ->
-            val view = LayoutInflater.from(context)
-                .inflate(R.layout.browser_tabstray_item, viewGroup, false)
+        val thumbnailLoader = ThumbnailLoader(components.core.thumbnailStorage)
+        val adapter = TabsAdapter(
+            viewHolderProvider = { viewGroup, tabsTray ->
+                val view = LayoutInflater.from(context)
+                    .inflate(R.layout.browser_tabstray_item, viewGroup, false)
 
-            DefaultTabViewHolder(view, tabsTray)
-        }
+                DefaultTabViewHolder(view, tabsTray, thumbnailLoader)
+            }
+        )
         val tray = BrowserTabsTray(context, attrs, tabsAdapter = adapter, layout = layout)
 
         TabsTouchHelper(tray.tabsAdapter).attachToRecyclerView(tray)

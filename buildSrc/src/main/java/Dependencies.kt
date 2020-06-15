@@ -95,6 +95,7 @@ object Deps {
     const val mozilla_service_glean = "org.mozilla.components:service-glean:${Versions.mozilla_android_components}"
     const val mozilla_service_experiments = "org.mozilla.components:service-experiments:${Versions.mozilla_android_components}"
 
+    const val mozilla_support_images = "org.mozilla.components:support-images:${Versions.mozilla_android_components}"
     const val mozilla_support_utils = "org.mozilla.components:support-utils:${Versions.mozilla_android_components}"
     const val mozilla_support_ktx= "org.mozilla.components:support-ktx:${Versions.mozilla_android_components}"
     const val mozilla_support_rustlog = "org.mozilla.components:support-rustlog:${Versions.mozilla_android_components}"

@@ -7,6 +7,7 @@ package org.mozilla.reference.browser.browser
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
+import androidx.core.view.isVisible
 import kotlinx.android.synthetic.main.fragment_browser.*
 import mozilla.components.concept.engine.manifest.WebAppManifest
 import mozilla.components.feature.customtabs.CustomTabWindowFeature
@@ -67,11 +68,15 @@ class ExternalAppBrowserFragment : BaseBrowserFragment(), UserInteractionHandler
 
         hideToolbarFeature.set(
             feature = WebAppHideToolbarFeature(
-                requireComponents.core.sessionManager,
-                toolbar,
+                requireComponents.core.store,
+                requireComponents.core.customTabsStore,
                 sessionId,
-                trustedScopes
-            ),
+                manifest
+            ) { toolbarVisible ->
+                toolbar.isVisible = toolbarVisible
+                webAppToolbarShouldBeVisible = toolbarVisible
+                if (!toolbarVisible) { engineView.setDynamicToolbarMaxHeight(0) }
+            },
             owner = this,
             view = toolbar
         )
