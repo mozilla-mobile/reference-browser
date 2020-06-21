@@ -49,7 +49,7 @@
     <mozilla.components.browser.toolbar.BrowserToolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="56dp"
+        android:layout_height="@dimen/browser_toolbar_height"
         android:layout_gravity="bottom"
         android:background="@color/toolbarBackgroundColor"
         app:layout_behavior="mozilla.components.browser.toolbar.behavior.BrowserToolbarBottomBehavior"
