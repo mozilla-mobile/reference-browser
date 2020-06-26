@@ -8,7 +8,6 @@ import android.content.Context
 import mozilla.components.browser.search.SearchEngineManager
 import mozilla.components.browser.session.SessionManager
 import mozilla.components.browser.state.store.BrowserStore
-import mozilla.components.browser.thumbnails.ThumbnailsUseCases
 import mozilla.components.browser.thumbnails.storage.ThumbnailStorage
 import mozilla.components.concept.fetch.Client
 import mozilla.components.concept.engine.Engine
@@ -67,14 +66,4 @@ class UseCases(
      * Use cases related to the downloads feature.
      */
     val downloadsUseCases: DownloadsUseCases by lazy { DownloadsUseCases(store) }
-
-    /**
-     * Use cases related to getting thumbnails for tabs or sessions.
-     */
-    val thumbnailUseCases: ThumbnailsUseCases by lazy {
-        ThumbnailsUseCases(
-            store,
-            thumbnailStorage
-        )
-    }
 }

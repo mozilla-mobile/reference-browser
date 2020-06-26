@@ -34,7 +34,6 @@ class TabsTrayFragment : Fragment(), UserInteractionHandler {
             requireComponents.core.store,
             requireComponents.useCases.tabsUseCases.selectTab,
             requireComponents.useCases.tabsUseCases.removeTab,
-            requireComponents.useCases.thumbnailUseCases,
             { !it.content.private },
             ::closeTabsTray)
 
