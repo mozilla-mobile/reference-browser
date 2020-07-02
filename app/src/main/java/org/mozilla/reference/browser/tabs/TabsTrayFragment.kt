@@ -38,7 +38,7 @@ class TabsTrayFragment : Fragment(), UserInteractionHandler {
             { !it.content.private },
             ::closeTabsTray)
 
-        tabsPanel.initialize(tabsFeature)
+        tabsPanel.initialize(tabsFeature, updateTabsToolbar = ::updateTabsToolbar)
         tabsToolbar.initialize(tabsFeature) { closeTabsTray() }
     }
 
@@ -64,5 +64,9 @@ class TabsTrayFragment : Fragment(), UserInteractionHandler {
             replace(R.id.container, BrowserFragment.create())
             commit()
         }
+    }
+
+    private fun updateTabsToolbar(isPrivate: Boolean) {
+        tabsToolbar.updateToolbar(isPrivate)
     }
 }

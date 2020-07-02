@@ -23,6 +23,7 @@ class TabsPanel @JvmOverloads constructor(
     private var normalTab: Tab
     private var privateTab: Tab
     private var tabsFeature: TabsFeature? = null
+    private var updateTabsToolbar: ((isPrivate: Boolean) -> Unit)? = null
 
     init {
         normalTab = newTab().apply {
@@ -41,8 +42,9 @@ class TabsPanel @JvmOverloads constructor(
         addTab(privateTab)
     }
 
-    fun initialize(tabsFeature: TabsFeature?) {
+    fun initialize(tabsFeature: TabsFeature?, updateTabsToolbar: (isPrivate: Boolean) -> Unit) {
         this.tabsFeature = tabsFeature
+        this.updateTabsToolbar = updateTabsToolbar
     }
 
     override fun onTabSelected(tab: Tab?) {
@@ -56,6 +58,8 @@ class TabsPanel @JvmOverloads constructor(
                 tabSessionState.content.private
             }
         }
+
+        updateTabsToolbar?.invoke(tab == privateTab)
     }
 
     override fun onTabReselected(tab: Tab?) {
