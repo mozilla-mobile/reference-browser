@@ -1,8 +1,6 @@
-/*
- * This Source Code Form is subject to the terms of the Mozilla Public
- *  License, v. 2.0. If a copy of the MPL was not distributed with this
- *  file, You can obtain one at http://mozilla.org/MPL/2.0/.
- */
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 package org.mozilla.reference.browser.tabs
 
@@ -20,7 +18,7 @@ import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.ext.components
 import org.mozilla.reference.browser.view.ToggleImageButton
 
-class TabsPanel @JvmOverloads constructor(
+class TabsToolbar @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null
 ) : androidx.appcompat.widget.Toolbar(context, attrs) {

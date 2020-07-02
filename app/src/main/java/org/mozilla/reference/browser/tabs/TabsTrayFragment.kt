@@ -9,8 +9,8 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import kotlinx.android.synthetic.main.fragment_tabstray.tabsPanel
 import kotlinx.android.synthetic.main.fragment_tabstray.tabsTray
+import kotlinx.android.synthetic.main.fragment_tabstray.tabsToolbar
 import mozilla.components.feature.tabs.tabstray.TabsFeature
 import mozilla.components.support.base.feature.UserInteractionHandler
 import org.mozilla.reference.browser.R
@@ -37,7 +37,7 @@ class TabsTrayFragment : Fragment(), UserInteractionHandler {
             { !it.content.private },
             ::closeTabsTray)
 
-        tabsPanel.initialize(tabsFeature) { closeTabsTray() }
+        tabsToolbar.initialize(tabsFeature) { closeTabsTray() }
     }
 
     override fun onStart() {
