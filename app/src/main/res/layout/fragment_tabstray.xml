@@ -8,6 +8,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <org.mozilla.reference.browser.tabs.TabsPanel
+        android:id="@+id/tabsPanel"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:tabIndicatorColor="@color/photonPurple50">
+    </org.mozilla.reference.browser.tabs.TabsPanel>
+
     <mozilla.components.concept.tabstray.TabsTray
         android:id="@+id/tabsTray"
         android:layout_width="match_parent"
@@ -15,7 +24,7 @@
         app:layout_constraintBottom_toTopOf="@+id/tabsToolbar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tabsPanel"
         mozac:tabsTrayItemBackgroundColor="@android:color/transparent"
         mozac:tabsTrayItemTextColor="#ffffff" />
 
@@ -23,10 +32,10 @@
         android:id="@+id/tabsToolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:background="@color/toolbarBackgroundColor"
         android:elevation="4dp"
-        android:background="@color/toolbarBackgroundColor" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
