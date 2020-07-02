@@ -29,6 +29,7 @@ import mozilla.components.feature.media.RecordingDevicesNotificationFeature
 import mozilla.components.feature.media.middleware.MediaMiddleware
 import mozilla.components.feature.readerview.ReaderViewMiddleware
 import mozilla.components.feature.session.HistoryDelegate
+import mozilla.components.feature.sitepermissions.SitePermissionsStorage
 import mozilla.components.feature.webnotifications.WebNotificationFeature
 import org.mozilla.reference.browser.AppRequestInterceptor
 import org.mozilla.reference.browser.BrowserActivity
@@ -116,7 +117,7 @@ class Core(private val context: Context) {
                 .enable()
 
             WebNotificationFeature(context, engine, icons, R.drawable.ic_notification,
-                BrowserActivity::class.java)
+                sitePermissionsStorage, BrowserActivity::class.java)
         }
     }
 
@@ -140,6 +141,11 @@ class Core(private val context: Context) {
      * A storage component for persisting thumbnail images of tabs.
      */
     val thumbnailStorage by lazy { ThumbnailStorage(context) }
+
+    /**
+     * A storage component for site permissions.
+     */
+    val sitePermissionsStorage by lazy { SitePermissionsStorage(context) }
 
     /**
      * Icons component for loading, caching and processing website icons.

@@ -24,7 +24,8 @@ class AppRequestInterceptor(private val context: Context) : RequestInterceptor {
         engineSession: EngineSession,
         uri: String,
         hasUserGesture: Boolean,
-        isSameDomain: Boolean
+        isSameDomain: Boolean,
+        isRedirect: Boolean
     ): RequestInterceptor.InterceptionResponse? {
         return when (uri) {
             "about:privatebrowsing" -> {
@@ -42,9 +43,9 @@ class AppRequestInterceptor(private val context: Context) : RequestInterceptor {
 
             else -> {
                 context.components.services.accountsAuthFeature.interceptor.onLoadRequest(
-                    engineSession, uri, hasUserGesture, isSameDomain
+                    engineSession, uri, hasUserGesture, isSameDomain, isRedirect
                 ) ?: context.components.services.appLinksInterceptor.onLoadRequest(
-                    engineSession, uri, hasUserGesture, isSameDomain
+                    engineSession, uri, hasUserGesture, isSameDomain, isRedirect
                 )
             }
         }
