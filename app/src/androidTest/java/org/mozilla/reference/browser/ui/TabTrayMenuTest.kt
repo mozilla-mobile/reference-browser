@@ -58,8 +58,8 @@ class TabTrayMenuTest {
     fun tabTrayUITest() {
         navigationToolbar {
         }.openTabTrayMenu {
-            verifyRegularBrowsingButton()
-            verifyPrivateBrowsingButton()
+            verifyRegularBrowsingTab()
+            verifyPrivateBrowsingTab()
             verifyGoBackButton()
             verifyNewTabButton()
             verifyMenuButton()
@@ -121,11 +121,11 @@ class TabTrayMenuTest {
         navigationToolbar {
         }.openTabTrayMenu {
             openPrivateBrowsing()
-            verifyPrivateBrowsingButton(true)
-            verifyRegularBrowsingButton(false)
+            verifyPrivateBrowsingTab(true)
+            verifyRegularBrowsingTab(false)
             openRegularBrowsing()
-            verifyPrivateBrowsingButton(false)
-            verifyRegularBrowsingButton(true)
+            verifyPrivateBrowsingTab(false)
+            verifyRegularBrowsingTab(true)
             goBackFromTabTrayTest()
         }
     }
