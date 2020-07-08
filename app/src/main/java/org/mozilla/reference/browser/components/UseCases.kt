@@ -7,12 +7,13 @@ package org.mozilla.reference.browser.components
 import android.content.Context
 import mozilla.components.browser.search.SearchEngineManager
 import mozilla.components.browser.session.SessionManager
+import mozilla.components.browser.session.usecases.EngineSessionUseCases
 import mozilla.components.browser.state.store.BrowserStore
-import mozilla.components.browser.thumbnails.storage.ThumbnailStorage
-import mozilla.components.concept.fetch.Client
 import mozilla.components.concept.engine.Engine
+import mozilla.components.concept.engine.EngineSession
 import mozilla.components.feature.contextmenu.ContextMenuUseCases
 import mozilla.components.feature.downloads.DownloadsUseCases
+import mozilla.components.feature.pwa.WebAppShortcutManager
 import mozilla.components.feature.pwa.WebAppUseCases
 import mozilla.components.feature.search.SearchUseCases
 import mozilla.components.feature.session.SessionUseCases
@@ -29,8 +30,7 @@ class UseCases(
     private val sessionManager: SessionManager,
     private val store: BrowserStore,
     private val searchEngineManager: SearchEngineManager,
-    private val client: Client,
-    private val thumbnailStorage: ThumbnailStorage
+    private val shortcutManager: WebAppShortcutManager
 ) {
     /**
      * Use cases that provide engine interactions for a given browser session.
@@ -38,9 +38,14 @@ class UseCases(
     val sessionUseCases by lazy { SessionUseCases(sessionManager) }
 
     /**
+     * Use cases for getting and creating [EngineSession] instances for tabs.
+     */
+    val engineSessionUseCases by lazy { EngineSessionUseCases(sessionManager) }
+
+    /**
      * Use cases that provide tab management.
      */
-    val tabsUseCases: TabsUseCases by lazy { TabsUseCases(sessionManager) }
+    val tabsUseCases: TabsUseCases by lazy { TabsUseCases(store, sessionManager) }
 
     /**
      * Use cases that provide search engine integration.
@@ -50,12 +55,12 @@ class UseCases(
     /**
      * Use cases that provide settings management.
      */
-    val settingsUseCases by lazy { SettingsUseCases(engine, sessionManager) }
+    val settingsUseCases by lazy { SettingsUseCases(engine, store) }
 
     /**
      * Use cases that provide shortcut and progressive web app management.
      */
-    val webAppUseCases by lazy { WebAppUseCases(context, sessionManager, client) }
+    val webAppUseCases by lazy { WebAppUseCases(context, sessionManager, shortcutManager) }
 
     /**
      * Uses cases that provides context menu
