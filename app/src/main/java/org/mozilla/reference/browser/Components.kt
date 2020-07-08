@@ -27,8 +27,7 @@ class Components(private val context: Context) {
             core.sessionManager,
             core.store,
             search.searchEngineManager,
-            core.client,
-            core.thumbnailStorage
+            core.shortcutManager
         )
     }
 
