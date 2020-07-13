@@ -11,7 +11,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.CallSuper
-import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.preference.PreferenceManager
 import kotlinx.android.synthetic.main.fragment_browser.*
@@ -236,9 +235,10 @@ abstract class BaseBrowserFragment : Fragment(), UserInteractionHandler {
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.P)
     private fun viewportFitChanged(viewportFit: Int) {
-        requireActivity().window.attributes.layoutInDisplayCutoutMode = viewportFit
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            requireActivity().window.attributes.layoutInDisplayCutoutMode = viewportFit
+        }
     }
 
     @CallSuper
