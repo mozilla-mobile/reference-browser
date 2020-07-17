@@ -15,7 +15,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.snackbar.Snackbar.LENGTH_LONG
-import mozilla.components.browser.session.Session
+import mozilla.components.browser.state.state.SessionState
 import mozilla.components.browser.state.state.WebExtensionState
 import mozilla.components.browser.tabstray.BrowserTabsTray
 import mozilla.components.browser.tabstray.DefaultTabViewHolder
@@ -107,7 +107,7 @@ open class BrowserActivity : AppCompatActivity() {
             sessionManager.selectedSession
         }) ?: return
 
-        if (session.source == Session.Source.ACTION_VIEW || session.source == Session.Source.CUSTOM_TAB) {
+        if (session.source == SessionState.Source.ACTION_VIEW || session.source == SessionState.Source.CUSTOM_TAB) {
             sessionManager.remove(session)
         }
     }
