@@ -15,6 +15,7 @@ import androidx.fragment.app.Fragment
 import androidx.preference.PreferenceManager
 import kotlinx.android.synthetic.main.fragment_browser.*
 import kotlinx.android.synthetic.main.fragment_browser.view.*
+import mozilla.components.browser.state.selector.selectedTab
 import mozilla.components.feature.app.links.AppLinksFeature
 import mozilla.components.feature.downloads.DownloadsFeature
 import mozilla.components.feature.downloads.manager.FetchDownloadManager
@@ -251,8 +252,8 @@ abstract class BaseBrowserFragment : Fragment(), UserInteractionHandler {
     }
 
     final override fun onPictureInPictureModeChanged(enabled: Boolean) {
-        val session = requireComponents.core.sessionManager.selectedSession
-        val fullScreenMode = session?.fullScreenMode ?: false
+        val session = requireComponents.core.store.state.selectedTab
+        val fullScreenMode = session?.content?.fullScreen ?: false
         // If we're exiting PIP mode and we're in fullscreen mode, then we should exit fullscreen mode as well.
         if (!enabled && fullScreenMode) {
             onBackPressed()
