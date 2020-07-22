@@ -36,10 +36,10 @@ Make sure you use the same Google Account for both steps.
 
 Signed Nightly builds can be downloaded from:
 
-* [⬇️ ARM64/Aarch64 devices (64 bit; Android 5+)](https://firefox-ci-tc.services.mozilla.com/api/index/v1/task/project.mobile.reference-browser.v3.nightly.latest/artifacts/public/target.arm64-v8a.apk)
-* [⬇️ ARM devices (32 bit; Android 5+)](https://firefox-ci-tc.services.mozilla.com/api/index/v1/task/project.mobile.reference-browser.v3.nightly.latest/artifacts/public/target.armeabi-v7a.apk)
-* [⬇️ x86_64  devices (64 bit; Android 5+)](https://firefox-ci-tc.services.mozilla.com/api/index/v1/task/project.mobile.reference-browser.v3.nightly.latest/artifacts/public/target.x86_64.apk)
-* [⬇️ x86  devices (32 bit; Android 5+)](https://firefox-ci-tc.services.mozilla.com/api/index/v1/task/project.mobile.reference-browser.v3.nightly.latest/artifacts/public/target.x86.apk)
+* [⬇️ ARM64/Aarch64 devices (64 bit; Android 5+)](https://firefox-ci-tc.services.mozilla.com/api/index/v1/task/mobile.v2.reference-browser.nightly.latest.arm64-v8a/artifacts/public/target.arm64-v8a.apk)
+* [⬇️ ARM devices (32 bit; Android 5+)](https://firefox-ci-tc.services.mozilla.com/api/index/v1/task/mobile.v2.reference-browser.nightly.latest.armeabi-v7a/artifacts/public/target.armeabi-v7a.apk)
+* [⬇️ x86_64  devices (64 bit; Android 5+)](https://firefox-ci-tc.services.mozilla.com/api/index/v1/task/mobile.v2.reference-browser.nightly.latest.x86_64/artifacts/public/target.x86_64.apk)
+* [⬇️ x86  devices (32 bit; Android 5+)](https://firefox-ci-tc.services.mozilla.com/api/index/v1/task/mobile.v2.reference-browser.nightly.latest.x86/artifacts/public/target.x86.apk)
 
 > Please note that these builds do not auto-update, you will have to keep up to date manually.
 
