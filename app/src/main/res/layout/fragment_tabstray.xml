@@ -4,7 +4,6 @@
    - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:mozac="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -17,16 +16,14 @@
         app:tabIndicatorColor="@color/photonPurple50">
     </org.mozilla.reference.browser.tabs.TabsPanel>
 
-    <mozilla.components.concept.tabstray.TabsTray
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/tabsTray"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintBottom_toTopOf="@+id/tabsToolbar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tabsPanel"
-        mozac:tabsTrayItemBackgroundColor="@android:color/transparent"
-        mozac:tabsTrayItemTextColor="#ffffff" />
+        app:layout_constraintTop_toBottomOf="@+id/tabsPanel"/>
 
     <org.mozilla.reference.browser.tabs.TabsToolbar
         android:id="@+id/tabsToolbar"
