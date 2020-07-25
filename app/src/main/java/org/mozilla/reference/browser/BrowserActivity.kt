@@ -8,32 +8,24 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.AttributeSet
-import android.view.LayoutInflater
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.snackbar.Snackbar.LENGTH_LONG
 import mozilla.components.browser.state.state.SessionState
 import mozilla.components.browser.state.state.WebExtensionState
-import mozilla.components.browser.tabstray.BrowserTabsTray
-import mozilla.components.browser.tabstray.DefaultTabViewHolder
 import mozilla.components.concept.engine.EngineView
-import mozilla.components.concept.tabstray.TabsTray
 import mozilla.components.feature.intent.ext.EXTRA_SESSION_ID
 import mozilla.components.lib.crash.Crash
 import mozilla.components.support.base.feature.UserInteractionHandler
 import mozilla.components.support.utils.SafeIntent
 import mozilla.components.support.webextensions.WebExtensionPopupFeature
-import mozilla.components.browser.tabstray.TabsAdapter
-import mozilla.components.browser.thumbnails.loader.ThumbnailLoader
 import org.mozilla.reference.browser.addons.WebExtensionActionPopupActivity
 import org.mozilla.reference.browser.browser.BrowserFragment
 import org.mozilla.reference.browser.browser.CrashIntegration
 import org.mozilla.reference.browser.ext.components
 import org.mozilla.reference.browser.ext.isCrashReportActive
-import org.mozilla.reference.browser.tabs.TabsTouchHelper
 
 /**
  * Activity that holds the [BrowserFragment].
@@ -125,7 +117,6 @@ open class BrowserActivity : AppCompatActivity() {
     override fun onCreateView(parent: View?, name: String, context: Context, attrs: AttributeSet): View? =
         when (name) {
             EngineView::class.java.name -> components.core.engine.createView(context, attrs).asView()
-            TabsTray::class.java.name -> createTabsTray(context, attrs)
             else -> super.onCreateView(parent, name, context, attrs)
         }
 
@@ -142,23 +133,5 @@ open class BrowserActivity : AppCompatActivity() {
         intent.putExtra("web_extension_name", webExtensionState.name)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
         startActivity(intent)
-    }
-
-    private fun createTabsTray(context: Context, attrs: AttributeSet): BrowserTabsTray {
-        val layout = LinearLayoutManager(context)
-        val thumbnailLoader = ThumbnailLoader(components.core.thumbnailStorage)
-        val adapter = TabsAdapter(
-            viewHolderProvider = { viewGroup, tabsTray ->
-                val view = LayoutInflater.from(context)
-                    .inflate(R.layout.browser_tabstray_item, viewGroup, false)
-
-                DefaultTabViewHolder(view, tabsTray, thumbnailLoader)
-            }
-        )
-        val tray = BrowserTabsTray(context, attrs, tabsAdapter = adapter, layout = layout)
-
-        TabsTouchHelper(tray.tabsAdapter).attachToRecyclerView(tray)
-
-        return tray
     }
 }

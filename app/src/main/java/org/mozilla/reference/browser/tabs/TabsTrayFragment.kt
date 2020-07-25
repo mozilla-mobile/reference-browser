@@ -4,18 +4,28 @@
 
 package org.mozilla.reference.browser.tabs
 
+import android.content.Context
+import android.graphics.Color
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_tabstray.tabsPanel
 import kotlinx.android.synthetic.main.fragment_tabstray.tabsTray
 import kotlinx.android.synthetic.main.fragment_tabstray.tabsToolbar
+import mozilla.components.browser.tabstray.DefaultTabViewHolder
+import mozilla.components.browser.tabstray.TabsAdapter
+import mozilla.components.browser.tabstray.TabsTrayStyling
+import mozilla.components.browser.tabstray.ViewHolderProvider
+import mozilla.components.browser.thumbnails.loader.ThumbnailLoader
+import mozilla.components.concept.tabstray.TabsTray
 import mozilla.components.feature.tabs.tabstray.TabsFeature
 import mozilla.components.support.base.feature.UserInteractionHandler
 import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.browser.BrowserFragment
+import org.mozilla.reference.browser.ext.components
 import org.mozilla.reference.browser.ext.requireComponents
 
 /**
@@ -30,8 +40,10 @@ class TabsTrayFragment : Fragment(), UserInteractionHandler {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        val trayAdapter = createAndSetupTabsTray(requireContext())
+
         tabsFeature = TabsFeature(
-            tabsTray,
+            trayAdapter,
             requireComponents.core.store,
             requireComponents.useCases.tabsUseCases.selectTab,
             requireComponents.useCases.tabsUseCases.removeTab,
@@ -68,5 +80,27 @@ class TabsTrayFragment : Fragment(), UserInteractionHandler {
 
     private fun updateTabsToolbar(isPrivate: Boolean) {
         tabsToolbar.updateToolbar(isPrivate)
+    }
+
+    private fun createAndSetupTabsTray(context: Context): TabsTray {
+        val layoutManager = LinearLayoutManager(context)
+        val thumbnailLoader = ThumbnailLoader(context.components.core.thumbnailStorage)
+        val trayStyling = TabsTrayStyling(itemBackgroundColor = Color.TRANSPARENT, itemTextColor = Color.WHITE)
+        val viewHolderProvider: ViewHolderProvider = { viewGroup ->
+            val view = LayoutInflater.from(context)
+                .inflate(R.layout.browser_tabstray_item, viewGroup, false)
+
+            DefaultTabViewHolder(view, thumbnailLoader)
+        }
+        val tabsAdapter = TabsAdapter(thumbnailLoader, viewHolderProvider).apply {
+            styling = trayStyling
+        }
+
+        tabsTray.layoutManager = layoutManager
+        tabsTray.adapter = tabsAdapter
+
+        TabsTouchHelper(tabsAdapter).attachToRecyclerView(tabsTray)
+
+        return tabsAdapter
     }
 }
