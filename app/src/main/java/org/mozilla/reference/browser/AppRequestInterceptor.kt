@@ -23,6 +23,7 @@ class AppRequestInterceptor(private val context: Context) : RequestInterceptor {
     override fun onLoadRequest(
         engineSession: EngineSession,
         uri: String,
+        lastUri: String?,
         hasUserGesture: Boolean,
         isSameDomain: Boolean,
         isRedirect: Boolean,
@@ -45,10 +46,10 @@ class AppRequestInterceptor(private val context: Context) : RequestInterceptor {
 
             else -> {
                 context.components.services.accountsAuthFeature.interceptor.onLoadRequest(
-                    engineSession, uri, hasUserGesture, isSameDomain, isRedirect, isDirectNavigation,
+                    engineSession, uri, lastUri, hasUserGesture, isSameDomain, isRedirect, isDirectNavigation,
                     isSubframeRequest
                 ) ?: context.components.services.appLinksInterceptor.onLoadRequest(
-                    engineSession, uri, hasUserGesture, isSameDomain, isRedirect, isDirectNavigation,
+                    engineSession, uri, lastUri, hasUserGesture, isSameDomain, isRedirect, isDirectNavigation,
                     isSubframeRequest
                 )
             }
