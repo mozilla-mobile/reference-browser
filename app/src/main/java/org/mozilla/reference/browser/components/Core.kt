@@ -8,7 +8,9 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.preference.PreferenceManager
 import mozilla.components.browser.icons.BrowserIcons
+import mozilla.components.browser.session.Session
 import mozilla.components.browser.session.SessionManager
+import mozilla.components.browser.session.engine.EngineMiddleware
 import mozilla.components.browser.session.storage.SessionStorage
 import mozilla.components.browser.state.store.BrowserStore
 import mozilla.components.browser.storage.sync.PlacesHistoryStorage
@@ -85,8 +87,12 @@ class Core(private val context: Context) {
                 DownloadMiddleware(context, DownloadService::class.java),
                 ThumbnailsMiddleware(thumbnailStorage),
                 ReaderViewMiddleware()
-            )
+            ) + EngineMiddleware.create(engine, ::findSessionById)
         )
+    }
+
+    private fun findSessionById(tabId: String): Session? {
+        return sessionManager.findSessionById(tabId)
     }
 
     /**
@@ -106,7 +112,7 @@ class Core(private val context: Context) {
         SessionManager(engine, store).apply {
             sessionStorage.restore()?.let { snapshot -> restore(snapshot) }
 
-            sessionStorage.autoSave(this)
+            sessionStorage.autoSave(store)
                 .periodicallyInForeground(interval = 30, unit = TimeUnit.SECONDS)
                 .whenGoingToBackground()
                 .whenSessionsChange()

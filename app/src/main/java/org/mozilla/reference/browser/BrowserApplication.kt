@@ -6,6 +6,7 @@ package org.mozilla.reference.browser
 
 import android.app.Application
 import mozilla.components.browser.session.Session
+import mozilla.components.browser.state.action.SystemAction
 import mozilla.components.concept.push.PushProcessor
 import mozilla.components.feature.addons.update.GlobalAddonDependencyProvider
 import mozilla.components.support.base.log.Log
@@ -84,7 +85,8 @@ open class BrowserApplication : Application() {
     override fun onTrimMemory(level: Int) {
         super.onTrimMemory(level)
         runOnlyInMainProcess {
-            components.core.sessionManager.onTrimMemory(level)
+            components.core.store.dispatch(SystemAction.LowMemoryAction(level))
+            components.core.icons.onTrimMemory(level)
         }
     }
 
