@@ -44,6 +44,7 @@ class ExternalAppBrowserFragment : BaseBrowserFragment(), UserInteractionHandler
             feature = CustomTabsIntegration(
                 requireContext(),
                 requireComponents.core.sessionManager,
+                requireComponents.core.store,
                 toolbar,
                 engineView,
                 requireComponents.useCases.sessionUseCases,

@@ -178,6 +178,7 @@ if (project.hasProperty("telemetry") && project.property("telemetry") == "true")
 
 dependencies {
     implementation Deps.mozilla_concept_engine
+    implementation Deps.mozilla_concept_menu
     implementation Deps.mozilla_concept_tabstray
     implementation Deps.mozilla_concept_toolbar
     implementation Deps.mozilla_concept_storage
@@ -192,6 +193,7 @@ dependencies {
     implementation Deps.mozilla_browser_tabstray
     implementation Deps.mozilla_browser_toolbar
     implementation Deps.mozilla_browser_menu
+    implementation Deps.mozilla_browser_menu2
     implementation Deps.mozilla_browser_session
     implementation Deps.mozilla_browser_state
     implementation Deps.mozilla_browser_storage_sync
