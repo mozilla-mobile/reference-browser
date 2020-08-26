@@ -6,25 +6,38 @@ package org.mozilla.reference.browser.browser
 
 import android.content.Context
 import android.content.Intent
+import androidx.core.content.ContextCompat
 import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import mozilla.components.browser.domains.autocomplete.ShippedDomainsProvider
-import mozilla.components.browser.menu.BrowserMenuBuilder
-import mozilla.components.browser.menu.BrowserMenuItem
-import mozilla.components.browser.menu.item.BrowserMenuItemToolbar
-import mozilla.components.browser.menu.item.BrowserMenuSwitch
-import mozilla.components.browser.menu.item.SimpleBrowserMenuItem
+import mozilla.components.browser.menu2.BrowserMenuController
+import mozilla.components.browser.session.Session
 import mozilla.components.browser.session.SessionManager
+import mozilla.components.browser.state.selector.selectedTab
+import mozilla.components.browser.state.state.SessionState
+import mozilla.components.browser.state.store.BrowserStore
 import mozilla.components.browser.toolbar.BrowserToolbar
 import mozilla.components.browser.toolbar.display.DisplayToolbar
+import mozilla.components.concept.menu.MenuController
+import mozilla.components.concept.menu.candidate.CompoundMenuCandidate
+import mozilla.components.concept.menu.candidate.ContainerStyle
+import mozilla.components.concept.menu.candidate.DrawableMenuIcon
+import mozilla.components.concept.menu.candidate.MenuCandidate
+import mozilla.components.concept.menu.candidate.RowMenuCandidate
+import mozilla.components.concept.menu.candidate.SmallMenuCandidate
+import mozilla.components.concept.menu.candidate.TextMenuCandidate
 import mozilla.components.concept.storage.HistoryStorage
 import mozilla.components.feature.pwa.WebAppUseCases
 import mozilla.components.feature.session.SessionUseCases
 import mozilla.components.feature.tabs.TabsUseCases
 import mozilla.components.feature.toolbar.ToolbarAutocompleteFeature
 import mozilla.components.feature.toolbar.ToolbarFeature
+import mozilla.components.lib.state.ext.flow
 import mozilla.components.support.base.feature.LifecycleAwareFeature
 import mozilla.components.support.base.feature.UserInteractionHandler
+import mozilla.components.support.ktx.kotlinx.coroutines.flow.ifChanged
 import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.addons.AddonsActivity
 import org.mozilla.reference.browser.ext.components
@@ -33,93 +46,129 @@ import org.mozilla.reference.browser.settings.SettingsActivity
 import org.mozilla.reference.browser.tabs.synced.SyncedTabsActivity
 
 class ToolbarIntegration(
-    context: Context,
+    private val context: Context,
     toolbar: BrowserToolbar,
     historyStorage: HistoryStorage,
     sessionManager: SessionManager,
-    sessionUseCases: SessionUseCases,
-    tabsUseCases: TabsUseCases,
-    webAppUseCases: WebAppUseCases,
+    store: BrowserStore,
+    private val sessionUseCases: SessionUseCases,
+    private val tabsUseCases: TabsUseCases,
+    private val webAppUseCases: WebAppUseCases,
     sessionId: String? = null
 ) : LifecycleAwareFeature, UserInteractionHandler {
     private val shippedDomainsProvider = ShippedDomainsProvider().also {
         it.initialize(context)
     }
 
-    private val menuToolbar by lazy {
-        val forward = BrowserMenuItemToolbar.Button(
-            mozilla.components.ui.icons.R.drawable.mozac_ic_forward,
-            iconTintColorResource = R.color.icons,
+    private val scope = MainScope()
+
+    private fun menuToolbar(session: SessionState?): RowMenuCandidate {
+        val tint = ContextCompat.getColor(context, R.color.icons)
+
+        val forward = SmallMenuCandidate(
             contentDescription = "Forward",
-            isEnabled = { sessionManager.selectedSession?.canGoForward == true }) {
+            icon = DrawableMenuIcon(
+                context,
+                mozilla.components.ui.icons.R.drawable.mozac_ic_forward,
+                tint = tint
+            ),
+            containerStyle = ContainerStyle(
+                isEnabled = session?.content?.canGoForward == true
+            )
+        ) {
             sessionUseCases.goForward.invoke()
         }
 
-        val refresh = BrowserMenuItemToolbar.Button(
-            mozilla.components.ui.icons.R.drawable.mozac_ic_refresh,
-            iconTintColorResource = R.color.icons,
-            contentDescription = "Refresh") {
+        val refresh = SmallMenuCandidate(
+            contentDescription = "Refresh",
+            icon = DrawableMenuIcon(
+                context,
+                mozilla.components.ui.icons.R.drawable.mozac_ic_refresh,
+                tint = tint
+            )
+        ) {
             sessionUseCases.reload.invoke()
         }
 
-        val stop = BrowserMenuItemToolbar.Button(
-            mozilla.components.ui.icons.R.drawable.mozac_ic_stop,
-            iconTintColorResource = R.color.icons,
-            contentDescription = "Stop") {
+        val stop = SmallMenuCandidate(
+            contentDescription = "Stop",
+            icon = DrawableMenuIcon(
+                context,
+                mozilla.components.ui.icons.R.drawable.mozac_ic_stop,
+                tint = tint
+            )
+        ) {
             sessionUseCases.stopLoading.invoke()
         }
 
-        BrowserMenuItemToolbar(listOf(forward, refresh, stop))
+        return RowMenuCandidate(listOf(forward, refresh, stop))
     }
 
-    private val menuItems: List<BrowserMenuItem> by lazy {
-        listOf(
-            menuToolbar,
-            SimpleBrowserMenuItem("Share") {
-                val url = sessionManager.selectedSession?.url ?: ""
+    private fun sessionMenuItems(session: Session, sessionState: SessionState): List<MenuCandidate> {
+        return listOfNotNull(
+            menuToolbar(sessionState),
+
+            TextMenuCandidate("Share") {
+                val url = sessionState.content.url
                 context.share(url)
-            }.apply {
-                visible = { sessionManager.selectedSession != null }
             },
 
-            BrowserMenuSwitch("Request desktop site", {
-                sessionManager.selectedSessionOrThrow.desktopMode
-            }) { checked ->
+            CompoundMenuCandidate(
+                text = "Request desktop site",
+                isChecked = session.desktopMode,
+                end = CompoundMenuCandidate.ButtonType.SWITCH
+            ) { checked ->
                 sessionUseCases.requestDesktopSite.invoke(checked)
-            }.apply {
-                visible = { sessionManager.selectedSession != null }
             },
 
-            SimpleBrowserMenuItem("Add to homescreen") {
-                MainScope().launch { webAppUseCases.addToHomescreen() }
-            }.apply {
-                visible = { webAppUseCases.isPinningSupported() }
+            if (webAppUseCases.isPinningSupported()) {
+                TextMenuCandidate(
+                    text = "Add to homescreen",
+                    containerStyle = ContainerStyle(
+                        isVisible = webAppUseCases.isPinningSupported()
+                    )
+                ) {
+                    scope.launch { webAppUseCases.addToHomescreen() }
+                }
+            } else {
+                null
             },
 
-            SimpleBrowserMenuItem("Find in Page") {
+            TextMenuCandidate(
+                text = "Find in Page"
+            ) {
                 FindInPageIntegration.launch?.invoke()
-            }.apply {
-                visible = { sessionManager.selectedSession != null }
-            },
+            }
+        )
+    }
 
-            SimpleBrowserMenuItem("Add-ons") {
+    private fun menuItems(session: Session?, sessionState: SessionState?): List<MenuCandidate> {
+        val sessionMenuItems = if (session != null && sessionState != null) {
+            sessionMenuItems(session, sessionState)
+        } else {
+            emptyList()
+        }
+
+        return sessionMenuItems + listOf(
+            TextMenuCandidate(text = "Add-ons") {
                 val intent = Intent(context, AddonsActivity::class.java)
                 intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
                 context.startActivity(intent)
             },
 
-            SimpleBrowserMenuItem("Synced Tabs") {
+            TextMenuCandidate(text = "Synced Tabs") {
                 val intent = Intent(context, SyncedTabsActivity::class.java)
                 intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
                 context.startActivity(intent)
             },
 
-            SimpleBrowserMenuItem("Report issue") {
-                tabsUseCases.addTab.invoke(
-                    "https://github.com/mozilla-mobile/reference-browser/issues/new")
+            TextMenuCandidate(text = "Report issue") {
+                tabsUseCases.addTab(
+                    url = "https://github.com/mozilla-mobile/reference-browser/issues/new"
+                )
             },
 
-            SimpleBrowserMenuItem("Settings") {
+            TextMenuCandidate(text = "Settings") {
                 val intent = Intent(context, SettingsActivity::class.java)
                 intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
                 context.startActivity(intent)
@@ -127,7 +176,7 @@ class ToolbarIntegration(
         )
     }
 
-    private val menuBuilder = BrowserMenuBuilder(menuItems)
+    private val menuController: MenuController = BrowserMenuController()
 
     init {
         toolbar.display.indicators = listOf(
@@ -135,7 +184,7 @@ class ToolbarIntegration(
             DisplayToolbar.Indicators.TRACKING_PROTECTION
         )
         toolbar.display.displayIndicatorSeparator = true
-        toolbar.display.menuBuilder = menuBuilder
+        toolbar.display.menuController = menuController
 
         toolbar.display.hint = context.getString(R.string.toolbar_hint)
         toolbar.edit.hint = context.getString(R.string.toolbar_hint)
@@ -146,6 +195,15 @@ class ToolbarIntegration(
         }
 
         toolbar.display.setUrlBackground(context.resources.getDrawable(R.drawable.url_background, context.theme))
+
+        scope.launch {
+            store.flow()
+                .map { state -> state.selectedTab }
+                .ifChanged()
+                .collect { tab ->
+                    menuController.submitList(menuItems(sessionManager.selectedSession, tab))
+                }
+        }
     }
 
     private val toolbarFeature: ToolbarFeature = ToolbarFeature(

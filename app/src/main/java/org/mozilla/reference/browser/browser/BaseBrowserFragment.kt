@@ -100,6 +100,7 @@ abstract class BaseBrowserFragment : Fragment(), UserInteractionHandler {
                 toolbar,
                 requireComponents.core.historyStorage,
                 requireComponents.core.sessionManager,
+                requireComponents.core.store,
                 requireComponents.useCases.sessionUseCases,
                 requireComponents.useCases.tabsUseCases,
                 requireComponents.useCases.webAppUseCases,

@@ -7,30 +7,45 @@ package org.mozilla.reference.browser.browser
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import mozilla.components.browser.menu.BrowserMenuBuilder
-import mozilla.components.browser.menu.item.BrowserMenuItemToolbar
-import mozilla.components.browser.menu.item.BrowserMenuSwitch
-import mozilla.components.browser.menu.item.SimpleBrowserMenuItem
+import androidx.core.content.ContextCompat
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.map
+import mozilla.components.browser.menu2.BrowserMenuController
+import mozilla.components.browser.session.Session
 import mozilla.components.browser.session.SessionManager
+import mozilla.components.browser.state.selector.findCustomTab
+import mozilla.components.browser.state.state.SessionState
+import mozilla.components.browser.state.store.BrowserStore
 import mozilla.components.browser.toolbar.BrowserToolbar
 import mozilla.components.concept.engine.EngineView
+import mozilla.components.concept.menu.MenuController
+import mozilla.components.concept.menu.candidate.CompoundMenuCandidate
+import mozilla.components.concept.menu.candidate.DrawableMenuIcon
+import mozilla.components.concept.menu.candidate.MenuCandidate
+import mozilla.components.concept.menu.candidate.RowMenuCandidate
+import mozilla.components.concept.menu.candidate.SmallMenuCandidate
+import mozilla.components.concept.menu.candidate.TextMenuCandidate
 import mozilla.components.feature.customtabs.CustomTabsToolbarFeature
+import mozilla.components.feature.customtabs.menu.createCustomTabMenuCandidates
 import mozilla.components.feature.session.SessionUseCases
+import mozilla.components.lib.state.ext.flowScoped
 import mozilla.components.support.base.feature.LifecycleAwareFeature
 import mozilla.components.support.base.feature.UserInteractionHandler
 import mozilla.components.support.base.log.logger.Logger
+import mozilla.components.support.ktx.kotlinx.coroutines.flow.ifChanged
 import org.mozilla.reference.browser.BrowserActivity
 import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.ext.share
 
 class CustomTabsIntegration(
-    context: Context,
-    sessionManager: SessionManager,
+    private val context: Context,
+    private val sessionManager: SessionManager,
+    store: BrowserStore,
     toolbar: BrowserToolbar,
-    engineView: EngineView,
-    sessionUseCases: SessionUseCases,
+    private val engineView: EngineView,
+    private val sessionUseCases: SessionUseCases,
     sessionId: String,
-    activity: Activity?
+    private val activity: Activity?
 ) : LifecycleAwareFeature, UserInteractionHandler {
 
     private val session = sessionManager.findSessionById(sessionId)
@@ -44,54 +59,72 @@ class CustomTabsIntegration(
         toolbar.display.setUrlBackground(null)
     }
 
-    private val menuToolbar by lazy {
-        val forward = BrowserMenuItemToolbar.Button(
-            mozilla.components.ui.icons.R.drawable.mozac_ic_forward,
-            iconTintColorResource = R.color.icons,
-            contentDescription = "Forward") {
+    private fun menuToolbar(session: Session?): RowMenuCandidate {
+        val tint = ContextCompat.getColor(context, R.color.icons)
+
+        val forward = SmallMenuCandidate(
+            contentDescription = "Forward",
+            icon = DrawableMenuIcon(
+                context,
+                mozilla.components.ui.icons.R.drawable.mozac_ic_forward,
+                tint = tint
+            )
+        ) {
             sessionUseCases.goForward.invoke(session)
         }
 
-        val refresh = BrowserMenuItemToolbar.Button(
-            mozilla.components.ui.icons.R.drawable.mozac_ic_refresh,
-            iconTintColorResource = R.color.icons,
-            contentDescription = "Refresh") {
+        val refresh = SmallMenuCandidate(
+            contentDescription = "Refresh",
+            icon = DrawableMenuIcon(
+                context,
+                mozilla.components.ui.icons.R.drawable.mozac_ic_refresh,
+                tint = tint
+            )
+        ) {
             sessionUseCases.reload.invoke(session)
         }
 
-        val stop = BrowserMenuItemToolbar.Button(
-            mozilla.components.ui.icons.R.drawable.mozac_ic_stop,
-            iconTintColorResource = R.color.icons,
-            contentDescription = "Stop") {
+        val stop = SmallMenuCandidate(
+            contentDescription = "Stop",
+            icon = DrawableMenuIcon(
+                context,
+                mozilla.components.ui.icons.R.drawable.mozac_ic_stop,
+                tint = tint
+            )
+        ) {
             sessionUseCases.stopLoading.invoke(session)
         }
 
-        BrowserMenuItemToolbar(listOf(forward, refresh, stop))
+        return RowMenuCandidate(listOf(forward, refresh, stop))
     }
 
-    private val menuItems by lazy {
-        listOf(
-            menuToolbar,
-            SimpleBrowserMenuItem("Share") {
-                session?.url?.let { context.share(it) }
+    private fun menuItems(session: Session?, sessionState: SessionState?): List<MenuCandidate> {
+        return listOf(
+            menuToolbar(session),
+
+            TextMenuCandidate("Share") {
+                val url = sessionState?.content?.url.orEmpty()
+                context.share(url)
             },
 
-            BrowserMenuSwitch("Request desktop site", {
-                session?.desktopMode ?: false
-            }) { checked ->
+            CompoundMenuCandidate(
+                text = "Request desktop site",
+                isChecked = session?.desktopMode == true,
+                end = CompoundMenuCandidate.ButtonType.SWITCH
+            ) { checked ->
                 sessionUseCases.requestDesktopSite.invoke(checked, session)
             },
 
-            SimpleBrowserMenuItem("Find in Page") {
+            TextMenuCandidate("Find in Page") {
                 FindInPageIntegration.launch?.invoke()
             },
 
-            SimpleBrowserMenuItem("Open in Browser") {
+            TextMenuCandidate("Open in Browser") {
                 // Release the session from this view so that it can immediately be rendered by a different view
                 engineView.release()
 
                 // Stip the CustomTabConfig to turn this Session into a regular tab and then select it
-                sessionManager.findSessionById(sessionId)?.let { session ->
+                session?.let { session ->
                     session.customTabConfig = null
                     sessionManager.select(session)
                 }
@@ -106,16 +139,30 @@ class CustomTabsIntegration(
         )
     }
 
-    private val menuBuilder = BrowserMenuBuilder(menuItems)
+    private val menuController: MenuController = BrowserMenuController()
 
     private val feature = CustomTabsToolbarFeature(
         sessionManager,
         toolbar,
         sessionId,
-        menuBuilder,
         window = activity?.window,
         closeListener = { activity?.finish() }
     )
+
+    init {
+        toolbar.display.menuController = menuController
+
+        store.flowScoped { flow ->
+            flow.map { state -> state.findCustomTab(sessionId) }
+                .ifChanged()
+                .collect { tab ->
+                    val session = sessionManager.findSessionById(sessionId)
+                    val items = menuItems(session, tab)
+                    val customTabItems = tab?.createCustomTabMenuCandidates(context).orEmpty()
+                    menuController.submitList(items + customTabItems)
+                }
+        }
+    }
 
     override fun start() {
         feature.start()
