@@ -1,0 +1,18 @@
+pull_request_rules:
+  - name: MickeyMoz - Merge
+    conditions:
+      - author=MickeyMoz
+      - status-success=pr-complete
+    actions:
+      merge:
+        method: rebase
+        strict: true
+  - name: Needs landing - Merge
+    conditions:
+      - status-success=pr-complete
+      - label=needs landing
+      - "#approved-reviews-by>=1"
+    actions:
+      merge:
+        method: rebase
+        strict: true
