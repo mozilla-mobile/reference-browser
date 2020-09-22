@@ -36,7 +36,10 @@ class TabsToolbar @JvmOverloads constructor(
                     closeTabsTray?.invoke()
                 }
                 R.id.closeTab -> {
-                    tabsUseCases.removePrivateTabs.invoke()
+                    when (isPrivateTray) {
+                        true -> tabsUseCases.removePrivateTabs.invoke()
+                        false -> tabsUseCases.removeNormalTabs.invoke()
+                    }
                 }
             }
             true
