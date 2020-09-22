@@ -51,9 +51,9 @@ class FirstRunTest {
         }.openThreeDotMenu {
             verifyThreeDotMenuExists()
 
-            verifyForwardButtonExists()
-            verifyReloadButtonExists()
-            verifyStopButtonExists()
+            verifyForwardButtonDoesntExist()
+            verifyReloadButtonDoesntExist()
+            verifyStopButtonDoesntExist()
 
             // first run: these should not exist
             verifyShareButtonDoesntExist()
