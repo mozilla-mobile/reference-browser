@@ -35,6 +35,9 @@ class ThreeDotMenuRobot {
     fun verifyShareButtonDoesntExist() = assertShareButtonDoesntExist()
     fun verifyRequestDesktopSiteToggleDoesntExist() = assertRequestDesktopSiteToggleDoesntExist()
     fun verifyFindInPageButtonDoesntExist() = assertFindInPageButtonDoesntExist()
+    fun verifyForwardButtonDoesntExist() = assertForwardButtonDoesntExist()
+    fun verifyReloadButtonDoesntExist() = assertRefreshButtonDoesntExist()
+    fun verifyStopButtonDoesntExist() = assertStopButtonDoesntExist()
 
     class Transition {
 
@@ -108,6 +111,9 @@ private fun assertShareButtonDoesntExist() = shareButton().check(ViewAssertions.
 private fun assertRequestDesktopSiteToggleDoesntExist() =
         requestDesktopSiteToggle().check(ViewAssertions.doesNotExist())
 private fun assertFindInPageButtonDoesntExist() = findInPageButton().check(ViewAssertions.doesNotExist())
+private fun assertForwardButtonDoesntExist() = forwardButton().check(ViewAssertions.doesNotExist())
+private fun assertRefreshButtonDoesntExist() = refreshButton().check(ViewAssertions.doesNotExist())
+private fun assertStopButtonDoesntExist() = stopButton().check(ViewAssertions.doesNotExist())
 
 private fun assertForwardButton() = forwardButton()
         .check(ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
