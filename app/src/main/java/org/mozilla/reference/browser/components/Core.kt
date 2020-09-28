@@ -178,7 +178,7 @@ class Core(private val context: Context) {
         AddonCollectionProvider(
             context = context,
             client = client,
-            collectionName = "16f6e5d9a40448b8955db57ced6d75",
+            collectionName = "7dfae8669acc4312a65e8ba5553036",
             maxCacheAgeInMinutes = DAY_IN_MINUTES
         )
     }
