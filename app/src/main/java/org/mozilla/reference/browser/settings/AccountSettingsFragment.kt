@@ -106,7 +106,7 @@ class AccountSettingsFragment : PreferenceFragmentCompat() {
     private fun getClickListenerForSignOut(): OnPreferenceClickListener {
         return OnPreferenceClickListener {
             CoroutineScope(Dispatchers.Main).launch {
-                requireComponents.backgroundServices.accountManager.logoutAsync().await()
+                requireComponents.backgroundServices.accountManager.logout()
                 activity?.onBackPressed()
             }
             true
@@ -117,12 +117,12 @@ class AccountSettingsFragment : PreferenceFragmentCompat() {
         return OnPreferenceClickListener {
             CoroutineScope(Dispatchers.Main).launch {
                 // Trigger a sync & update devices.
-                requireComponents.backgroundServices.accountManager.syncNowAsync(SyncReason.User).await()
+                requireComponents.backgroundServices.accountManager.syncNow(SyncReason.User)
                 // Poll for device events.
                 requireComponents.backgroundServices.accountManager.authenticatedAccount()
                         ?.deviceConstellation()?.run {
-                            refreshDevicesAsync().await()
-                            pollForCommandsAsync().await()
+                            refreshDevices()
+                            pollForCommands()
                         }
             }
             true
