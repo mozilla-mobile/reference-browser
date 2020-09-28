@@ -121,11 +121,11 @@ internal class OneTimeMessageDeliveryObserver(
         account: OAuthAccount,
         authType: AuthType
     ) {
-        lazyAccount.value.withConstellation {
-            processRawEventAsync(String(message))
-        }
-
         MainScope().launch {
+            lazyAccount.value.withConstellation {
+                processRawEvent(String(message))
+            }
+
             lazyAccount.value.unregister(this@OneTimeMessageDeliveryObserver)
         }
     }

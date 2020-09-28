@@ -13,11 +13,12 @@ import mozilla.appservices.fxaclient.Config.Server
 import mozilla.components.browser.storage.sync.PlacesHistoryStorage
 import mozilla.components.browser.storage.sync.RemoteTabsStorage
 import mozilla.components.concept.sync.DeviceCapability
+import mozilla.components.concept.sync.DeviceConfig
 import mozilla.components.concept.sync.DeviceType
 import mozilla.components.feature.accounts.push.FxaPushSupportFeature
 import mozilla.components.feature.accounts.push.SendTabFeature
 import mozilla.components.feature.syncedtabs.storage.SyncedTabsStorage
-import mozilla.components.service.fxa.DeviceConfig
+import mozilla.components.service.fxa.PeriodicSyncConfig
 import mozilla.components.service.fxa.ServerConfig
 import mozilla.components.service.fxa.SyncConfig
 import mozilla.components.service.fxa.SyncEngine
@@ -56,7 +57,7 @@ class BackgroundServices(
     )
     private val syncConfig = SyncConfig(
         supportedEngines = setOf(SyncEngine.History, SyncEngine.Tabs),
-        syncPeriodInMinutes = 240L
+        periodicSyncConfig = PeriodicSyncConfig()
     ) // four hours
 
     val accountManager by lazy {
@@ -81,7 +82,7 @@ class BackgroundServices(
 
             SyncedTabsIntegration(context, accountManager).launch()
 
-            CoroutineScope(Dispatchers.Main).launch { accountManager.initAsync().await() }
+            CoroutineScope(Dispatchers.Main).launch { accountManager.start() }
         }
     }
 
