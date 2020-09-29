@@ -9,6 +9,7 @@ import androidx.test.uiautomator.UiDevice
 import okhttp3.mockwebserver.MockWebServer
 import org.junit.After
 import org.junit.Before
+import org.junit.Ignore
 import org.junit.Rule
 import org.junit.Test
 import org.mozilla.reference.browser.helpers.AndroidAssetDispatcher
@@ -109,6 +110,7 @@ class ThreeDotMenuTest {
     }
 
     @Test
+    @Ignore("https://github.com/mozilla-mobile/reference-browser/issues/1314")
     // need to add clear cache setup to ensure correct starting page
     // also, investigate why this periodically causes mockWebServer to crash
     fun refreshPageTest() {
