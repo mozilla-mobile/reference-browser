@@ -45,6 +45,7 @@ import org.mozilla.reference.browser.R.string.pref_key_tracking_protection_norma
 import org.mozilla.reference.browser.R.string.pref_key_tracking_protection_private
 import org.mozilla.reference.browser.downloads.DownloadService
 import org.mozilla.reference.browser.media.MediaService
+import org.mozilla.reference.browser.settings.Settings
 import java.util.concurrent.TimeUnit
 
 private const val DAY_IN_MINUTES = 24 * 60L
@@ -175,11 +176,28 @@ class Core(private val context: Context) {
     }
 
     val addonCollectionProvider by lazy {
-        AddonCollectionProvider(
+        if (Settings.isAmoCollectionOverrideConfigured(context)) {
+            provideCustomAddonCollectionProvider()
+        } else {
+            provideDefaultAddonCollectionProvider()
+        }
+    }
+
+    private fun provideDefaultAddonCollectionProvider(): AddonCollectionProvider {
+        return AddonCollectionProvider(
             context = context,
             client = client,
             collectionName = "7dfae8669acc4312a65e8ba5553036",
             maxCacheAgeInMinutes = DAY_IN_MINUTES
+        )
+    }
+
+    private fun provideCustomAddonCollectionProvider(): AddonCollectionProvider {
+        return AddonCollectionProvider(
+            context,
+            client,
+            collectionUser = Settings.getOverrideAmoUser(context),
+            collectionName = Settings.getOverrideAmoCollection(context)
         )
     }
 
