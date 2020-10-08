@@ -41,6 +41,10 @@
             android:defaultValue="false"
             android:title="@string/preferences_remote_debugging" />
 
+        <androidx.preference.Preference
+            android:key="@string/pref_key_override_amo_collection"
+            android:title="@string/preferences_customize_amo_collection"/>
+
     </PreferenceCategory>
 
     <PreferenceCategory

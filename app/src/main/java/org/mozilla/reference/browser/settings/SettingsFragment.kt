@@ -4,14 +4,21 @@
 
 package org.mozilla.reference.browser.settings
 
+import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
 import android.provider.Settings
+import android.view.View
 import androidx.preference.Preference.OnPreferenceChangeListener
 import androidx.preference.Preference.OnPreferenceClickListener
 import androidx.preference.PreferenceFragmentCompat
 import android.widget.Toast
 import android.widget.Toast.LENGTH_SHORT
+import androidx.appcompat.app.AlertDialog
+import kotlinx.android.synthetic.main.amo_collection_override_dialog.view.custom_amo_collection
+import kotlinx.android.synthetic.main.amo_collection_override_dialog.view.custom_amo_user
+import mozilla.components.support.ktx.android.view.showKeyboard
 import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.R.string.pref_key_firefox_account
 import org.mozilla.reference.browser.ext.getPreferenceKey
@@ -21,7 +28,11 @@ import org.mozilla.reference.browser.R.string.pref_key_make_default_browser
 import org.mozilla.reference.browser.R.string.pref_key_remote_debugging
 import org.mozilla.reference.browser.R.string.pref_key_about_page
 import org.mozilla.reference.browser.R.string.pref_key_privacy
+import org.mozilla.reference.browser.R.string.pref_key_override_amo_collection
 import org.mozilla.reference.browser.ext.requireComponents
+import kotlin.system.exitProcess
+
+private typealias RBSettings = org.mozilla.reference.browser.settings.Settings
 
 @Suppress("TooManyFunctions")
 class SettingsFragment : PreferenceFragmentCompat() {
@@ -57,6 +68,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
         val remoteDebuggingKey = context?.getPreferenceKey(pref_key_remote_debugging)
         val aboutPageKey = context?.getPreferenceKey(pref_key_about_page)
         val privacyKey = context?.getPreferenceKey(pref_key_privacy)
+        val customAddonsKey = context?.getPreferenceKey(pref_key_override_amo_collection)
 
         val preferenceSignIn = findPreference(signInKey)
         val preferencePairSignIn = findPreference(signInPairKey)
@@ -65,6 +77,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
         val preferenceRemoteDebugging = findPreference(remoteDebuggingKey)
         val preferenceAboutPage = findPreference(aboutPageKey)
         val preferencePrivacy = findPreference(privacyKey)
+        val preferenceCustomAddons = findPreference(customAddonsKey)
 
         val accountManager = requireComponents.backgroundServices.accountManager
         if (accountManager.authenticatedAccount() != null) {
@@ -85,6 +98,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
         preferenceRemoteDebugging.onPreferenceChangeListener = getChangeListenerForRemoteDebugging()
         preferenceAboutPage.onPreferenceClickListener = getAboutPageListener()
         preferencePrivacy.onPreferenceClickListener = getClickListenerForPrivacy()
+        preferenceCustomAddons.onPreferenceClickListener = getClickListenerForCustomAddons()
     }
 
     private fun getClickListenerForMakeDefaultBrowser(): OnPreferenceClickListener {
@@ -166,4 +180,45 @@ class SettingsFragment : PreferenceFragmentCompat() {
     }
 
     private fun getActionBarUpdater() = activity as ActionBarUpdater
+
+    private fun getClickListenerForCustomAddons(): OnPreferenceClickListener {
+
+        return OnPreferenceClickListener {
+            val context = requireContext()
+            val dialogView = View.inflate(context, R.layout.amo_collection_override_dialog, null)
+
+            AlertDialog.Builder(context).apply {
+                setTitle(context.getString(R.string.preferences_customize_amo_collection))
+                setView(dialogView)
+                setNegativeButton(R.string.customize_addon_collection_cancel) { dialog: DialogInterface, _ ->
+                    dialog.cancel()
+                }
+
+                setPositiveButton(R.string.customize_addon_collection_ok) { _, _ ->
+                    RBSettings.setOverrideAmoUser(context, dialogView.custom_amo_user.text.toString())
+                    RBSettings.setOverrideAmoCollection(context, dialogView.custom_amo_collection.text.toString())
+
+                    Toast.makeText(
+                            context,
+                            getString(R.string.toast_customize_addon_collection_done),
+                            Toast.LENGTH_LONG
+                    ).show()
+
+                    Handler().postDelayed({
+                        exitProcess(0)
+                    }, AMO_COLLECTION_OVERRIDE_EXIT_DELAY)
+                }
+
+                dialogView.custom_amo_collection.setText(RBSettings.getOverrideAmoCollection(context))
+                dialogView.custom_amo_user.setText(RBSettings.getOverrideAmoUser(context))
+                dialogView.custom_amo_user.requestFocus()
+                dialogView.custom_amo_user.showKeyboard()
+                create()
+            }.show()
+            true
+        }
+    }
+    companion object {
+        private const val AMO_COLLECTION_OVERRIDE_EXIT_DELAY = 3000L
+    }
 }

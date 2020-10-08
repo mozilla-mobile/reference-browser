@@ -19,4 +19,6 @@
     <string name="pref_key_tracking_protection_normal" translatable="false">pref_key_tracking_protection_normal</string>
     <string name="pref_key_tracking_protection_private" translatable="false">pref_key_tracking_protection_private</string>
     <string name="pref_key_launch_external_app" translatable="false">pref_key_launch_external_app</string>
+    <string name="pref_key_override_amo_collection" translatable="false">pref_key_override_amo_collection</string>
+    <string name="pref_key_override_amo_user" translatable="false">pref_key_override_amo_user</string>
 </resources>
