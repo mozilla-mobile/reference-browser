@@ -23,7 +23,7 @@ import mozilla.components.feature.addons.ui.AddonInstallationDialogFragment
 import mozilla.components.feature.addons.ui.AddonsManagerAdapter
 import mozilla.components.feature.addons.ui.AddonsManagerAdapterDelegate
 import mozilla.components.feature.addons.ui.PermissionsDialogFragment
-import mozilla.components.feature.addons.ui.translatedName
+import mozilla.components.feature.addons.ui.translateName
 import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.ext.components
 
@@ -167,12 +167,13 @@ class AddonsFragment : Fragment(), AddonsManagerAdapterDelegate {
             },
             onError = { _, _ ->
                 runIfFragmentIsAttached {
-                    Toast.makeText(
-                        requireContext(),
-                        getString(R.string.mozac_feature_addons_failed_to_install, addon.translatedName),
-                        Toast.LENGTH_SHORT
-                    ).show()
-
+                    context?.let {
+                        Toast.makeText(
+                            requireContext(),
+                            getString(R.string.mozac_feature_addons_failed_to_install, addon.translateName(it)),
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
                     addonProgressOverlay.visibility = View.GONE
                     isInstallationInProgress = false
                 }
