@@ -10,6 +10,8 @@ import kotlinx.android.synthetic.main.fragment_browser.*
 import kotlinx.android.synthetic.main.fragment_browser.view.*
 import mozilla.components.browser.thumbnails.BrowserThumbnails
 import mozilla.components.feature.awesomebar.AwesomeBarFeature
+import mozilla.components.feature.awesomebar.provider.SearchSuggestionProvider
+import mozilla.components.feature.search.ext.toDefaultSearchEngineProvider
 import mozilla.components.feature.syncedtabs.SyncedTabsStorageSuggestionProvider
 import mozilla.components.feature.tabs.toolbar.TabsToolbarFeature
 import mozilla.components.feature.toolbar.WebExtensionToolbarFeature
@@ -34,9 +36,13 @@ class BrowserFragment : BaseBrowserFragment(), UserInteractionHandler {
         AwesomeBarFeature(awesomeBar, toolbar, engineView)
             .addSearchProvider(
                 requireContext(),
-                requireComponents.search.searchEngineManager,
+                requireComponents.core.store.toDefaultSearchEngineProvider(),
                 requireComponents.useCases.searchUseCases.defaultSearch,
-                requireComponents.core.client)
+                fetchClient = requireComponents.core.client,
+                mode = SearchSuggestionProvider.Mode.MULTIPLE_SUGGESTIONS,
+                engine = requireComponents.core.engine,
+                filterExactMatch = true
+            )
             .addSessionProvider(
                 resources,
                 requireComponents.core.store,

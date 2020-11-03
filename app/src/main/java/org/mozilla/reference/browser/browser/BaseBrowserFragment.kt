@@ -198,7 +198,8 @@ abstract class BaseBrowserFragment : Fragment(), UserInteractionHandler {
                 onNeedToRequestPermissions = { permissions ->
                     requestPermissions(permissions, REQUEST_CODE_APP_PERMISSIONS)
                 },
-                onShouldShowRequestPermissionRationale = { shouldShowRequestPermissionRationale(it) }),
+                onShouldShowRequestPermissionRationale = { shouldShowRequestPermissionRationale(it) },
+                store = requireComponents.core.store),
             owner = this,
             view = view
         )
