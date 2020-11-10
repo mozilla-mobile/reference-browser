@@ -192,7 +192,6 @@ abstract class BaseBrowserFragment : Fragment(), UserInteractionHandler {
             feature = SitePermissionsFeature(
                 context = requireContext(),
                 fragmentManager = requireFragmentManager(),
-                sessionManager = requireComponents.core.sessionManager,
                 sessionId = sessionId,
                 storage = requireComponents.core.sitePermissionsStorage,
                 onNeedToRequestPermissions = { permissions ->
