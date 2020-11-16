@@ -66,12 +66,13 @@ class AboutFragment : Fragment() {
         about_content.text = content
         version_info.text = versionInfo
 
-        version_info.setOnTouchListener { _, _ ->
+        version_info.setOnTouchListener { v, _ ->
             val clipBoard = requireContext().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-            clipBoard.primaryClip = ClipData.newPlainText(versionInfo, versionInfo)
+            clipBoard.setPrimaryClip(ClipData.newPlainText(versionInfo, versionInfo))
 
             Toast.makeText(requireContext(), getString(R.string.toast_copied), Toast.LENGTH_SHORT).show()
-            true
+
+            v.performClick()
         }
     }
 }
