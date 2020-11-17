@@ -74,7 +74,6 @@ class InstalledAddonDetailsActivity : AppCompatActivity() {
         bindPermissions(addon)
 
         bindAllowInPrivateBrowsingSwitch(addon)
-        bindVersion(addon)
 
         bindRemoveButton(addon)
     }
