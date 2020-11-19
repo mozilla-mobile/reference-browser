@@ -27,8 +27,8 @@ import mozilla.components.feature.addons.update.AddonUpdater
 import mozilla.components.feature.addons.update.DefaultAddonUpdater
 import mozilla.components.feature.customtabs.store.CustomTabsServiceStore
 import mozilla.components.feature.downloads.DownloadMiddleware
+import mozilla.components.feature.media.MediaSessionFeature
 import mozilla.components.feature.media.RecordingDevicesNotificationFeature
-import mozilla.components.feature.media.middleware.MediaMiddleware
 import mozilla.components.feature.pwa.ManifestStorage
 import mozilla.components.feature.pwa.WebAppShortcutManager
 import mozilla.components.feature.readerview.ReaderViewMiddleware
@@ -44,7 +44,7 @@ import org.mozilla.reference.browser.R.string.pref_key_remote_debugging
 import org.mozilla.reference.browser.R.string.pref_key_tracking_protection_normal
 import org.mozilla.reference.browser.R.string.pref_key_tracking_protection_private
 import org.mozilla.reference.browser.downloads.DownloadService
-import org.mozilla.reference.browser.media.MediaService
+import org.mozilla.reference.browser.media.MediaSessionService
 import org.mozilla.reference.browser.settings.Settings
 import java.util.concurrent.TimeUnit
 
@@ -84,7 +84,6 @@ class Core(private val context: Context) {
     val store by lazy {
         BrowserStore(
             middleware = listOf(
-                MediaMiddleware(context, MediaService::class.java),
                 DownloadMiddleware(context, DownloadService::class.java),
                 ThumbnailsMiddleware(thumbnailStorage),
                 ReaderViewMiddleware()
@@ -127,6 +126,8 @@ class Core(private val context: Context) {
 
             WebNotificationFeature(context, engine, icons, R.drawable.ic_notification,
                 sitePermissionsStorage, BrowserActivity::class.java)
+
+            MediaSessionFeature(context, MediaSessionService::class.java, store).start()
         }
     }
 
