@@ -28,7 +28,7 @@ class PairSettingsFragment : Fragment(), UserInteractionHandler {
         qrFeature.set(
             feature = QrFeature(
                 requireContext(),
-                fragmentManager = fragmentManager!!,
+                fragmentManager = parentFragmentManager,
                 onNeedToRequestPermissions = { permissions ->
                     requestPermissions(permissions, REQUEST_CODE_CAMERA_PERMISSIONS)
                 },

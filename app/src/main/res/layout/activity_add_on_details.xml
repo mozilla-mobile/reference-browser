@@ -3,6 +3,7 @@
    - License, v. 2.0. If a copy of the MPL was not distributed with this
    - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -113,7 +114,7 @@
                 android:layout_alignParentEnd="true"
                 android:contentDescription="@string/mozac_feature_addons_home_page"
                 android:src="@drawable/mozac_ic_link"
-                android:tint="@android:color/black" />
+                app:tint="@android:color/black" />
 
         <View
                 android:id="@+id/home_page_divider"
