@@ -28,7 +28,7 @@ import mozilla.components.feature.addons.update.DefaultAddonUpdater
 import mozilla.components.feature.customtabs.store.CustomTabsServiceStore
 import mozilla.components.feature.downloads.DownloadMiddleware
 import mozilla.components.feature.media.MediaSessionFeature
-import mozilla.components.feature.media.RecordingDevicesNotificationFeature
+import mozilla.components.feature.media.middleware.RecordingDevicesMiddleware
 import mozilla.components.feature.pwa.ManifestStorage
 import mozilla.components.feature.pwa.WebAppShortcutManager
 import mozilla.components.feature.readerview.ReaderViewMiddleware
@@ -86,7 +86,8 @@ class Core(private val context: Context) {
             middleware = listOf(
                 DownloadMiddleware(context, DownloadService::class.java),
                 ThumbnailsMiddleware(thumbnailStorage),
-                ReaderViewMiddleware()
+                ReaderViewMiddleware(),
+                RecordingDevicesMiddleware(context)
             ) + EngineMiddleware.create(engine, ::findSessionById)
         )
     }
@@ -119,10 +120,6 @@ class Core(private val context: Context) {
 
             // Install the "icons" WebExtension to automatically load icons for every visited website.
             icons.install(engine, store)
-
-            // Show an ongoing notification when recording devices (camera, microphone) are used by web content
-            RecordingDevicesNotificationFeature(context, sessionManager = this)
-                .enable()
 
             WebNotificationFeature(context, engine, icons, R.drawable.ic_notification,
                 sitePermissionsStorage, BrowserActivity::class.java)

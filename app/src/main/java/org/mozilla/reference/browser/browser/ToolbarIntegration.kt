@@ -7,6 +7,7 @@ package org.mozilla.reference.browser.browser
 import android.content.Context
 import android.content.Intent
 import androidx.core.content.ContextCompat
+import androidx.core.content.res.ResourcesCompat
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.map
@@ -194,7 +195,9 @@ class ToolbarIntegration(
             addDomainProvider(shippedDomainsProvider)
         }
 
-        toolbar.display.setUrlBackground(context.resources.getDrawable(R.drawable.url_background, context.theme))
+        toolbar.display.setUrlBackground(
+            ResourcesCompat.getDrawable(context.resources, R.drawable.url_background, context.theme)
+        )
 
         scope.launch {
             store.flow()
@@ -214,7 +217,7 @@ class ToolbarIntegration(
             context.components.useCases.searchUseCases.defaultSearch.invoke(
                 searchTerms = searchTerms,
                 searchEngine = null,
-                parentSession = null
+                parentSessionId = null
             )
         },
         sessionId

@@ -65,8 +65,10 @@ class BrowserFragment : BaseBrowserFragment(), UserInteractionHandler {
         TabsToolbarFeature(
             toolbar = toolbar,
             sessionId = sessionId,
-            sessionManager = requireComponents.core.sessionManager,
-            showTabs = ::showTabs)
+            store = requireComponents.core.store,
+            showTabs = ::showTabs,
+            lifecycleOwner = this
+        )
 
         thumbnailsFeature.set(
                 feature = BrowserThumbnails(requireContext(),

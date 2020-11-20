@@ -66,7 +66,7 @@ class AccountSettingsFragment : PreferenceFragmentCompat() {
 
         // Sync Now
         val preferenceSyncNow = findPreference(syncNowKey)
-        updateLastSyncedTimePref(context!!, preferenceSyncNow)
+        updateLastSyncedTimePref(requireContext(), preferenceSyncNow)
 
         preferenceSyncNow.onPreferenceClickListener = getClickListenerForSyncNow()
 

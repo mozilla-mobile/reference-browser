@@ -234,6 +234,7 @@ dependencies {
     implementation Deps.mozilla_ui_autocomplete
     implementation Deps.mozilla_ui_colors
     implementation Deps.mozilla_ui_icons
+    implementation Deps.mozilla_ui_tabcounter
 
     implementation Deps.mozilla_service_firefox_accounts
     implementation Deps.mozilla_service_glean
