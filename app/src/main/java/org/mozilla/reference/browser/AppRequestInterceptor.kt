@@ -61,8 +61,8 @@ class AppRequestInterceptor(private val context: Context) : RequestInterceptor {
         errorType: ErrorType,
         uri: String?
     ): RequestInterceptor.ErrorResponse? {
-        val errorPage = ErrorPages.createErrorPage(context, errorType, uri)
-        return RequestInterceptor.ErrorResponse.Content(errorPage)
+        val errorPage = ErrorPages.createUrlEncodedErrorPage(context, errorType, uri)
+        return RequestInterceptor.ErrorResponse(errorPage)
     }
 
     override fun interceptsAppInitiatedRequests() = true
