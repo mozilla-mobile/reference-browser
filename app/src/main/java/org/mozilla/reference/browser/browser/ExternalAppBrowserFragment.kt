@@ -93,7 +93,7 @@ class ExternalAppBrowserFragment : BaseBrowserFragment(), UserInteractionHandler
                 ),
                 WebAppSiteControlsFeature(
                     requireContext().applicationContext,
-                    requireComponents.core.sessionManager,
+                    requireComponents.core.store,
                     requireComponents.useCases.sessionUseCases.reload,
                     sessionId,
                     manifest
