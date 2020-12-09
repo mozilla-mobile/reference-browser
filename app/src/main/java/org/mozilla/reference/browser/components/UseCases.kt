@@ -45,7 +45,7 @@ class UseCases(
      * Use cases that provide search engine integration.
      */
     val searchUseCases by lazy {
-        SearchUseCases(store, store.toDefaultSearchEngineProvider(), sessionManager)
+        SearchUseCases(store, store.toDefaultSearchEngineProvider(), tabsUseCases)
     }
 
     /**
@@ -56,7 +56,7 @@ class UseCases(
     /**
      * Use cases that provide shortcut and progressive web app management.
      */
-    val webAppUseCases by lazy { WebAppUseCases(context, sessionManager, shortcutManager) }
+    val webAppUseCases by lazy { WebAppUseCases(context, store, shortcutManager) }
 
     /**
      * Uses cases that provides context menu
