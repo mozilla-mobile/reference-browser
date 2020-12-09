@@ -109,7 +109,7 @@ class CustomTabsIntegration(
 
             CompoundMenuCandidate(
                 text = "Request desktop site",
-                isChecked = session?.desktopMode == true,
+                isChecked = sessionState?.content?.desktopMode == true,
                 end = CompoundMenuCandidate.ButtonType.SWITCH
             ) { checked ->
                 sessionUseCases.requestDesktopSite.invoke(checked, session)

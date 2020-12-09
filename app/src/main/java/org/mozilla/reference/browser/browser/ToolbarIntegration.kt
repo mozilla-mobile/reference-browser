@@ -116,7 +116,7 @@ class ToolbarIntegration(
 
             CompoundMenuCandidate(
                 text = "Request desktop site",
-                isChecked = session.desktopMode,
+                isChecked = sessionState.content.desktopMode,
                 end = CompoundMenuCandidate.ButtonType.SWITCH
             ) { checked ->
                 sessionUseCases.requestDesktopSite.invoke(checked)
