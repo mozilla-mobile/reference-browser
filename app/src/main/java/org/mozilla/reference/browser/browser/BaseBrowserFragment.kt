@@ -139,7 +139,7 @@ abstract class BaseBrowserFragment : Fragment(), UserInteractionHandler {
         appLinksFeature.set(
             feature = AppLinksFeature(
                 requireContext(),
-                sessionManager = requireComponents.core.sessionManager,
+                store = requireComponents.core.store,
                 sessionId = sessionId,
                 fragmentManager = requireFragmentManager(),
                 launchInApp = {

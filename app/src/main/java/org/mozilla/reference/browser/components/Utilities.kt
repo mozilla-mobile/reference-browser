@@ -43,6 +43,6 @@ class Utilities(
      */
     val intentProcessors by lazy {
         externalIntentProcessors +
-            TabIntentProcessor(sessionManager, sessionUseCases.loadUrl, searchUseCases.newTabSearch)
+            TabIntentProcessor(tabsUseCases, sessionUseCases.loadUrl, searchUseCases.newTabSearch)
     }
 }

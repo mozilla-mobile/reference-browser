@@ -5,6 +5,9 @@
 package org.mozilla.reference.browser
 
 import android.app.Application
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import mozilla.components.browser.session.Session
 import mozilla.components.browser.state.action.SystemAction
 import mozilla.components.concept.push.PushProcessor
@@ -20,6 +23,7 @@ import mozilla.components.support.webextensions.WebExtensionSupport
 import org.mozilla.reference.browser.ext.isCrashReportActive
 import org.mozilla.reference.browser.push.PushFxaIntegration
 import org.mozilla.reference.browser.push.WebPushEngineIntegration
+import java.util.concurrent.TimeUnit
 
 open class BrowserApplication : Application() {
     val components by lazy { Components(this) }
@@ -41,6 +45,9 @@ open class BrowserApplication : Application() {
         }
 
         components.core.engine.warmUp()
+
+        restoreBrowserState()
+
         GlobalAddonDependencyProvider.initialize(
                 components.core.addonManager,
                 components.core.addonUpdater
@@ -62,7 +69,6 @@ open class BrowserApplication : Application() {
             },
             onUpdatePermissionRequest = components.core.addonUpdater::onUpdatePermissionRequest
         )
-
         components.analytics.initializeGlean()
         components.analytics.initializeExperiments()
 
@@ -88,6 +94,20 @@ open class BrowserApplication : Application() {
             components.core.store.dispatch(SystemAction.LowMemoryAction(level))
             components.core.icons.onTrimMemory(level)
         }
+    }
+
+    private fun restoreBrowserState() = GlobalScope.launch(Dispatchers.Main) {
+        val store = components.core.store
+        val sessionStorage = components.core.sessionStorage
+
+        components.useCases.tabsUseCases.restore(sessionStorage)
+
+        // Now that we have restored our previous state (if there's one) let's setup auto saving the state while
+        // the app is used.
+        sessionStorage.autoSave(store)
+            .periodicallyInForeground(interval = 30, unit = TimeUnit.SECONDS)
+            .whenGoingToBackground()
+            .whenSessionsChange()
     }
 
     companion object {
