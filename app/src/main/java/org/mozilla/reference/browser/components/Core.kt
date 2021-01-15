@@ -32,9 +32,12 @@ import mozilla.components.feature.media.middleware.RecordingDevicesMiddleware
 import mozilla.components.feature.pwa.ManifestStorage
 import mozilla.components.feature.pwa.WebAppShortcutManager
 import mozilla.components.feature.readerview.ReaderViewMiddleware
+import mozilla.components.feature.search.middleware.SearchMiddleware
+import mozilla.components.feature.search.region.RegionMiddleware
 import mozilla.components.feature.session.HistoryDelegate
 import mozilla.components.feature.sitepermissions.SitePermissionsStorage
 import mozilla.components.feature.webnotifications.WebNotificationFeature
+import mozilla.components.service.location.LocationService
 import org.mozilla.reference.browser.AppRequestInterceptor
 import org.mozilla.reference.browser.BrowserActivity
 import org.mozilla.reference.browser.EngineProvider
@@ -87,6 +90,11 @@ class Core(private val context: Context) {
                 DownloadMiddleware(context, DownloadService::class.java),
                 ThumbnailsMiddleware(thumbnailStorage),
                 ReaderViewMiddleware(),
+                RegionMiddleware(
+                    context,
+                    LocationService.default()
+                ),
+                SearchMiddleware(context),
                 RecordingDevicesMiddleware(context)
             ) + EngineMiddleware.create(engine, ::findSessionById)
         )
