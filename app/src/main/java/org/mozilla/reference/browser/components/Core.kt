@@ -108,15 +108,7 @@ class Core(private val context: Context) {
      * case all sessions/tabs are closed.
      */
     val sessionManager by lazy {
-        val sessionStorage = SessionStorage(context, engine)
-
         SessionManager(engine, store).apply {
-            sessionStorage.restore()?.let { snapshot -> restore(snapshot) }
-
-            sessionStorage.autoSave(store)
-                .periodicallyInForeground(interval = 30, unit = TimeUnit.SECONDS)
-                .whenGoingToBackground()
-                .whenSessionsChange()
 
             // Install the "icons" WebExtension to automatically load icons for every visited website.
             icons.install(engine, store)
@@ -126,6 +118,10 @@ class Core(private val context: Context) {
 
             MediaSessionFeature(context, MediaSessionService::class.java, store).start()
         }
+    }
+
+    val sessionStorage: SessionStorage by lazy {
+        SessionStorage(context, engine)
     }
 
     /**
