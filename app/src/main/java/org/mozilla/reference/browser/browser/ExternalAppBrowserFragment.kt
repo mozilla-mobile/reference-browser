@@ -48,6 +48,7 @@ class ExternalAppBrowserFragment : BaseBrowserFragment(), UserInteractionHandler
                 toolbar,
                 engineView,
                 requireComponents.useCases.sessionUseCases,
+                requireComponents.useCases.customTabsUseCases,
                 sessionId!!,
                 activity
             ),

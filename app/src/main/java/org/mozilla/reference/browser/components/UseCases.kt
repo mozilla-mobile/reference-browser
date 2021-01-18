@@ -5,7 +5,6 @@
 package org.mozilla.reference.browser.components
 
 import android.content.Context
-import mozilla.components.browser.search.SearchEngineManager
 import mozilla.components.browser.session.SessionManager
 import mozilla.components.browser.state.store.BrowserStore
 import mozilla.components.concept.engine.Engine
@@ -17,6 +16,7 @@ import mozilla.components.feature.search.SearchUseCases
 import mozilla.components.feature.search.ext.toDefaultSearchEngineProvider
 import mozilla.components.feature.session.SessionUseCases
 import mozilla.components.feature.session.SettingsUseCases
+import mozilla.components.feature.tabs.CustomTabsUseCases
 import mozilla.components.feature.tabs.TabsUseCases
 
 /**
@@ -28,7 +28,6 @@ class UseCases(
     private val engine: Engine,
     private val sessionManager: SessionManager,
     private val store: BrowserStore,
-    private val searchEngineManager: SearchEngineManager,
     private val shortcutManager: WebAppShortcutManager
 ) {
     /**
@@ -67,4 +66,9 @@ class UseCases(
      * Use cases related to the downloads feature.
      */
     val downloadsUseCases: DownloadsUseCases by lazy { DownloadsUseCases(store) }
+
+    /**
+     * Use cases related to Custom Tabs.
+     */
+    val customTabsUseCases: CustomTabsUseCases by lazy { CustomTabsUseCases(sessionManager, sessionUseCases.loadUrl) }
 }

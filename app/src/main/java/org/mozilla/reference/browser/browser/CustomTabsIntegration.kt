@@ -28,6 +28,7 @@ import mozilla.components.concept.menu.candidate.TextMenuCandidate
 import mozilla.components.feature.customtabs.CustomTabsToolbarFeature
 import mozilla.components.feature.customtabs.menu.createCustomTabMenuCandidates
 import mozilla.components.feature.session.SessionUseCases
+import mozilla.components.feature.tabs.CustomTabsUseCases
 import mozilla.components.lib.state.ext.flowScoped
 import mozilla.components.support.base.feature.LifecycleAwareFeature
 import mozilla.components.support.base.feature.UserInteractionHandler
@@ -44,6 +45,7 @@ class CustomTabsIntegration(
     toolbar: BrowserToolbar,
     private val engineView: EngineView,
     private val sessionUseCases: SessionUseCases,
+    private val customTabsUseCases: CustomTabsUseCases,
     sessionId: String,
     private val activity: Activity?
 ) : LifecycleAwareFeature, UserInteractionHandler {
@@ -142,9 +144,10 @@ class CustomTabsIntegration(
     private val menuController: MenuController = BrowserMenuController()
 
     private val feature = CustomTabsToolbarFeature(
-        sessionManager,
+        store,
         toolbar,
         sessionId,
+        customTabsUseCases,
         window = activity?.window,
         closeListener = { activity?.finish() }
     )
