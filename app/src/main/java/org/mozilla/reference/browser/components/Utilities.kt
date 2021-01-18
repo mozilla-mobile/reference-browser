@@ -5,7 +5,6 @@
 package org.mozilla.reference.browser.components
 
 import android.content.Context
-import mozilla.components.browser.session.SessionManager
 import mozilla.components.browser.state.store.BrowserStore
 import mozilla.components.feature.customtabs.CustomTabIntentProcessor
 import mozilla.components.feature.intent.processing.TabIntentProcessor
@@ -13,6 +12,7 @@ import mozilla.components.feature.pwa.ManifestStorage
 import mozilla.components.feature.pwa.intent.WebAppIntentProcessor
 import mozilla.components.feature.search.SearchUseCases
 import mozilla.components.feature.session.SessionUseCases
+import mozilla.components.feature.tabs.CustomTabsUseCases
 import mozilla.components.feature.tabs.TabsUseCases
 
 /**
@@ -21,10 +21,10 @@ import mozilla.components.feature.tabs.TabsUseCases
 class Utilities(
     private val context: Context,
     private val store: BrowserStore,
-    private val sessionManager: SessionManager,
     private val sessionUseCases: SessionUseCases,
     private val searchUseCases: SearchUseCases,
-    private val tabsUseCases: TabsUseCases
+    private val tabsUseCases: TabsUseCases,
+    private val customTabsUseCases: CustomTabsUseCases
 ) {
 
     /**
@@ -32,7 +32,7 @@ class Utilities(
      */
     val externalIntentProcessors by lazy {
         listOf(
-            CustomTabIntentProcessor(sessionManager, sessionUseCases.loadUrl, context.resources),
+            CustomTabIntentProcessor(customTabsUseCases.add, context.resources),
             WebAppIntentProcessor(store, tabsUseCases.addTab, sessionUseCases.loadUrl, ManifestStorage(context))
         )
     }

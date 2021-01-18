@@ -26,7 +26,6 @@ class Components(private val context: Context) {
             core.engine,
             core.sessionManager,
             core.store,
-            search.searchEngineManager,
             core.shortcutManager
         )
     }
@@ -45,10 +44,10 @@ class Components(private val context: Context) {
         Utilities(
             context,
             core.store,
-            core.sessionManager,
             useCases.sessionUseCases,
             useCases.searchUseCases,
-            useCases.tabsUseCases
+            useCases.tabsUseCases,
+            useCases.customTabsUseCases
         )
     }
     val services by lazy { Services(context, backgroundServices.accountManager, useCases.tabsUseCases) }
