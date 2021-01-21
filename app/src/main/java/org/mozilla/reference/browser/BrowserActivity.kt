@@ -18,6 +18,7 @@ import mozilla.components.browser.state.state.WebExtensionState
 import mozilla.components.concept.engine.EngineView
 import mozilla.components.feature.intent.ext.EXTRA_SESSION_ID
 import mozilla.components.lib.crash.Crash
+import mozilla.components.support.base.feature.ActivityResultHandler
 import mozilla.components.support.base.feature.UserInteractionHandler
 import mozilla.components.support.base.log.logger.Logger
 import mozilla.components.support.utils.SafeIntent
@@ -82,6 +83,19 @@ open class BrowserActivity : AppCompatActivity() {
         removeSessionIfNeeded()
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        Logger.info("Activity onActivityResult received with " +
+            "requestCode: $requestCode, resultCode: $resultCode, data: $data")
+
+        supportFragmentManager.fragments.forEach {
+            if (it is ActivityResultHandler && it.onActivityResult(requestCode, data, resultCode)) {
+                return
+            }
+        }
+
+        super.onActivityResult(requestCode, resultCode, data)
+    }
+
     /**
      * If needed remove the current session.
      *
@@ -120,13 +134,6 @@ open class BrowserActivity : AppCompatActivity() {
             EngineView::class.java.name -> components.core.engine.createView(context, attrs).asView()
             else -> super.onCreateView(parent, name, context, attrs)
         }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        Logger.info("Activity onActivityResult received with " +
-            "requestCode: $requestCode, resultCode: $resultCode, data: $data")
-
-        super.onActivityResult(requestCode, resultCode, data)
-    }
 
     private fun onNonFatalCrash(crash: Crash) {
         Snackbar.make(findViewById(android.R.id.content), R.string.crash_report_non_fatal_message, LENGTH_LONG)

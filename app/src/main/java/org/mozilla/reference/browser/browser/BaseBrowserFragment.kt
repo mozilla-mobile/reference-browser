@@ -26,6 +26,7 @@ import mozilla.components.feature.session.SessionFeature
 import mozilla.components.feature.session.SwipeRefreshFeature
 import mozilla.components.feature.tabs.WindowFeature
 import mozilla.components.feature.sitepermissions.SitePermissionsFeature
+import mozilla.components.support.base.feature.ActivityResultHandler
 import mozilla.components.support.base.feature.PermissionsFeature
 import mozilla.components.support.base.feature.UserInteractionHandler
 import mozilla.components.support.base.feature.ViewBoundFeatureWrapper
@@ -47,7 +48,7 @@ import org.mozilla.reference.browser.pip.PictureInPictureIntegration
  * UI code specific to the app or to custom tabs can be found in the subclasses.
  */
 @Suppress("TooManyFunctions")
-abstract class BaseBrowserFragment : Fragment(), UserInteractionHandler {
+abstract class BaseBrowserFragment : Fragment(), UserInteractionHandler, ActivityResultHandler {
     private val sessionFeature = ViewBoundFeatureWrapper<SessionFeature>()
     private val toolbarIntegration = ViewBoundFeatureWrapper<ToolbarIntegration>()
     private val contextMenuIntegration = ViewBoundFeatureWrapper<ContextMenuIntegration>()
@@ -300,10 +301,10 @@ abstract class BaseBrowserFragment : Fragment(), UserInteractionHandler {
         }
     }
 
-    final override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+    override fun onActivityResult(requestCode: Int, data: Intent?, resultCode: Int): Boolean {
         Logger.info("Fragment onActivityResult received with " +
             "requestCode: $requestCode, resultCode: $resultCode, data: $data")
 
-        activityResultHandler.any { it.onActivityResult(requestCode, resultCode, data) }
+        return activityResultHandler.any { it.onActivityResult(requestCode, data, resultCode) }
     }
 }

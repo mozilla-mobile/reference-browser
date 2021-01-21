@@ -42,7 +42,7 @@ class WebAuthnFeature(
         engine.unregisterActivityDelegate()
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?): Boolean {
+    override fun onActivityResult(requestCode: Int, data: Intent?, resultCode: Int): Boolean {
         logger.info("Received activity result with code: $requestCode\ndata: $data")
         if (this.requestCode == requestCode) {
             logger.info("Invoking callback!")
