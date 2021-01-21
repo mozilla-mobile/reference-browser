@@ -29,6 +29,7 @@ import mozilla.components.feature.sitepermissions.SitePermissionsFeature
 import mozilla.components.support.base.feature.PermissionsFeature
 import mozilla.components.support.base.feature.UserInteractionHandler
 import mozilla.components.support.base.feature.ViewBoundFeatureWrapper
+import mozilla.components.support.base.log.logger.Logger
 import mozilla.components.support.ktx.android.view.enterToImmersiveMode
 import mozilla.components.support.ktx.android.view.exitImmersiveModeIfNeeded
 import org.mozilla.reference.browser.AppPermissionCodes.REQUEST_CODE_APP_PERMISSIONS
@@ -59,12 +60,18 @@ abstract class BaseBrowserFragment : Fragment(), UserInteractionHandler {
     private val pictureInPictureIntegration = ViewBoundFeatureWrapper<PictureInPictureIntegration>()
     private val swipeRefreshFeature = ViewBoundFeatureWrapper<SwipeRefreshFeature>()
     private val windowFeature = ViewBoundFeatureWrapper<WindowFeature>()
+    private val webAuthnFeature = ViewBoundFeatureWrapper<WebAuthnFeature>()
 
     private val backButtonHandler: List<ViewBoundFeatureWrapper<*>> = listOf(
         fullScreenFeature,
         findInPageIntegration,
         toolbarIntegration,
         sessionFeature
+    )
+
+    private val activityResultHandler: List<ViewBoundFeatureWrapper<*>> = listOf(
+        webAuthnFeature,
+        promptsFeature
     )
 
     protected val sessionId: String?
@@ -222,6 +229,15 @@ abstract class BaseBrowserFragment : Fragment(), UserInteractionHandler {
             owner = this,
             view = view
         )
+
+        webAuthnFeature.set(
+            feature = WebAuthnFeature(
+                requireComponents.core.engine,
+                requireActivity()
+            ),
+            owner = this,
+            view = view
+        )
     }
 
     private fun fullScreenChanged(enabled: Boolean) {
@@ -285,6 +301,9 @@ abstract class BaseBrowserFragment : Fragment(), UserInteractionHandler {
     }
 
     final override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        promptsFeature.withFeature { it.onActivityResult(requestCode, resultCode, data) }
+        Logger.info("Fragment onActivityResult received with " +
+            "requestCode: $requestCode, resultCode: $resultCode, data: $data")
+
+        activityResultHandler.any { it.onActivityResult(requestCode, resultCode, data) }
     }
 }
