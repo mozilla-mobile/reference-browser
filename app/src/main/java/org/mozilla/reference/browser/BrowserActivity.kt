@@ -19,6 +19,7 @@ import mozilla.components.concept.engine.EngineView
 import mozilla.components.feature.intent.ext.EXTRA_SESSION_ID
 import mozilla.components.lib.crash.Crash
 import mozilla.components.support.base.feature.UserInteractionHandler
+import mozilla.components.support.base.log.logger.Logger
 import mozilla.components.support.utils.SafeIntent
 import mozilla.components.support.webextensions.WebExtensionPopupFeature
 import org.mozilla.reference.browser.addons.WebExtensionActionPopupActivity
@@ -119,6 +120,13 @@ open class BrowserActivity : AppCompatActivity() {
             EngineView::class.java.name -> components.core.engine.createView(context, attrs).asView()
             else -> super.onCreateView(parent, name, context, attrs)
         }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        Logger.info("Activity onActivityResult received with " +
+            "requestCode: $requestCode, resultCode: $resultCode, data: $data")
+
+        super.onActivityResult(requestCode, resultCode, data)
+    }
 
     private fun onNonFatalCrash(crash: Crash) {
         Snackbar.make(findViewById(android.R.id.content), R.string.crash_report_non_fatal_message, LENGTH_LONG)
