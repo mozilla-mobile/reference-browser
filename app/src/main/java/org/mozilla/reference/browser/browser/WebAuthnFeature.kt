@@ -25,7 +25,7 @@ class WebAuthnFeature(
     var resultCallback: ((Intent?) -> Unit)? = null
     private val delegate = object : ActivityDelegate {
         override fun startIntentSenderForResult(intent: IntentSender, onResult: (Intent?) -> Unit) {
-            val code = requestCode++
+            val code = requestCode
             logger.info("Received activity delegate request with code: $code intent: $intent")
             activity.startIntentSenderForResult(intent, code, null, 0, 0, 0)
             resultCallback = onResult
@@ -43,13 +43,18 @@ class WebAuthnFeature(
     }
 
     override fun onActivityResult(requestCode: Int, data: Intent?, resultCode: Int): Boolean {
-        logger.info("Received activity result with code: $requestCode\ndata: $data")
+        logger.info("Received activity result with " +
+            "code: $requestCode " +
+            "data: $data " +
+            "and original request code: ${this.requestCode}")
         if (this.requestCode == requestCode) {
             logger.info("Invoking callback!")
             resultCallback?.invoke(data)
+            this.requestCode++
             return true
         }
 
+        this.requestCode++
         return false
     }
 
