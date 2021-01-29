@@ -180,6 +180,16 @@ if (project.hasProperty("telemetry") && project.property("telemetry") == "true")
             }
         }
     }
+
+// -------------------------------------------------------------------------------------------------
+// BuildConfig: Set flag for official builds; similar to MOZILLA_OFFICIAL in mozilla-central.
+// -------------------------------------------------------------------------------------------------
+
+    if (project.hasProperty("official") || gradle.hasProperty("localProperties.official")) {
+        buildConfigField 'Boolean', 'MOZILLA_OFFICIAL', 'true'
+    } else {
+        buildConfigField 'Boolean', 'MOZILLA_OFFICIAL', 'false'
+    }
 }
 
 dependencies {

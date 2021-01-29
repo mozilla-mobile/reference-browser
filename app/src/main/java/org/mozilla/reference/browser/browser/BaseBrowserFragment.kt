@@ -36,6 +36,7 @@ import mozilla.components.support.ktx.android.view.exitImmersiveModeIfNeeded
 import org.mozilla.reference.browser.AppPermissionCodes.REQUEST_CODE_APP_PERMISSIONS
 import org.mozilla.reference.browser.AppPermissionCodes.REQUEST_CODE_DOWNLOAD_PERMISSIONS
 import org.mozilla.reference.browser.AppPermissionCodes.REQUEST_CODE_PROMPT_PERMISSIONS
+import org.mozilla.reference.browser.BuildConfig
 import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.downloads.DownloadService
 import org.mozilla.reference.browser.ext.getPreferenceKey
