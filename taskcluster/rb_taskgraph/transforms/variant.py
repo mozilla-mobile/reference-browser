@@ -33,9 +33,10 @@ def add_nightly_version(config, tasks):
 
     for task in tasks:
         if task.pop("include-nightly-version", False):
-            task["run"]["gradlew"].append(
-                "-PversionName={}".format(version_name)
-            )
+            task["run"]["gradlew"].extend([
+                "-PversionName={}".format(version_name),
+                "-Pofficial"
+            ])
         yield task
 
 @transforms.add
