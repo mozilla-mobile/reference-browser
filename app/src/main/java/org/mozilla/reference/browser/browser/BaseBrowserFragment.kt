@@ -26,6 +26,7 @@ import mozilla.components.feature.session.SessionFeature
 import mozilla.components.feature.session.SwipeRefreshFeature
 import mozilla.components.feature.tabs.WindowFeature
 import mozilla.components.feature.sitepermissions.SitePermissionsFeature
+import mozilla.components.feature.webauthn.WebAuthnFeature
 import mozilla.components.support.base.feature.ActivityResultHandler
 import mozilla.components.support.base.feature.PermissionsFeature
 import mozilla.components.support.base.feature.UserInteractionHandler
@@ -232,14 +233,16 @@ abstract class BaseBrowserFragment : Fragment(), UserInteractionHandler, Activit
             view = view
         )
 
-        webAuthnFeature.set(
-            feature = WebAuthnFeature(
-                requireComponents.core.engine,
-                requireActivity()
-            ),
-            owner = this,
-            view = view
-        )
+        if (BuildConfig.MOZILLA_OFFICIAL) {
+            webAuthnFeature.set(
+                feature = WebAuthnFeature(
+                    requireComponents.core.engine,
+                    requireActivity()
+                ),
+                owner = this,
+                view = view
+            )
+        }
     }
 
     private fun fullScreenChanged(enabled: Boolean) {
