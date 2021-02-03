@@ -12,7 +12,6 @@ import mozilla.components.lib.crash.service.CrashReporterService
 import mozilla.components.lib.crash.service.GleanCrashReporterService
 import mozilla.components.lib.crash.service.MozillaSocorroService
 import mozilla.components.lib.crash.service.SentryService
-import mozilla.components.service.experiments.Experiments
 import mozilla.components.service.glean.Glean
 import mozilla.components.service.glean.config.Configuration
 import mozilla.components.service.glean.net.ConceptFetchHttpUploader
@@ -75,13 +74,6 @@ class Analytics(private val context: Context) {
         Glean.initialize(context, enableUpload, Configuration(
             httpClient = ConceptFetchHttpUploader(lazy { context.components.core.client })
         ))
-    }
-
-    internal fun initializeExperiments() {
-        Experiments.initialize(
-            context,
-            mozilla.components.service.experiments.Configuration(context.components.core.client)
-        )
     }
 }
 

@@ -70,7 +70,6 @@ open class BrowserApplication : Application() {
             onUpdatePermissionRequest = components.core.addonUpdater::onUpdatePermissionRequest
         )
         components.analytics.initializeGlean()
-        components.analytics.initializeExperiments()
 
         components.push.feature?.let {
             Logger.info("AutoPushFeature is configured, initializing it...")
