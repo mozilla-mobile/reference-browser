@@ -65,7 +65,7 @@ open class BrowserApplication : Application() {
             },
             onSelectTabOverride = { _, sessionId ->
                 val selected = components.core.sessionManager.findSessionById(sessionId)
-                selected?.let { components.useCases.tabsUseCases.selectTab(it) }
+                selected?.let { components.useCases.tabsUseCases.selectTab(it.id) }
             },
             onUpdatePermissionRequest = components.core.addonUpdater::onUpdatePermissionRequest
         )
