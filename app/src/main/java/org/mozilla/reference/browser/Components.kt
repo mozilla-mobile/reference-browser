@@ -36,7 +36,8 @@ class Components(private val context: Context) {
             context,
             push,
             core.lazyHistoryStorage,
-            core.lazyRemoteTabsStorage
+            core.lazyRemoteTabsStorage,
+            core.lazyLoginsStorage
         )
     }
     val analytics by lazy { Analytics(context) }

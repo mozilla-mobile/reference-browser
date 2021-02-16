@@ -24,6 +24,7 @@ import mozilla.components.service.fxa.SyncConfig
 import mozilla.components.service.fxa.SyncEngine
 import mozilla.components.service.fxa.manager.FxaAccountManager
 import mozilla.components.service.fxa.sync.GlobalSyncableStoreProvider
+import mozilla.components.service.sync.logins.SyncableLoginsStorage
 import org.mozilla.reference.browser.NotificationManager
 import org.mozilla.reference.browser.ext.components
 import org.mozilla.reference.browser.tabs.synced.SyncedTabsIntegration
@@ -36,7 +37,8 @@ class BackgroundServices(
     context: Context,
     push: Push,
     placesHistoryStorage: Lazy<PlacesHistoryStorage>,
-    remoteTabsStorage: Lazy<RemoteTabsStorage>
+    remoteTabsStorage: Lazy<RemoteTabsStorage>,
+    loginsStorage: Lazy<SyncableLoginsStorage>
 ) {
     companion object {
         const val CLIENT_ID = "3c49430b43dfba77"
@@ -47,6 +49,7 @@ class BackgroundServices(
         // Make the sync stores accessible to workers spawned by the sync manager.
         GlobalSyncableStoreProvider.configureStore(SyncEngine.History to placesHistoryStorage)
         GlobalSyncableStoreProvider.configureStore(SyncEngine.Tabs to remoteTabsStorage)
+        GlobalSyncableStoreProvider.configureStore(SyncEngine.Passwords to loginsStorage)
     }
 
     private val serverConfig = ServerConfig(Server.RELEASE, CLIENT_ID, REDIRECT_URL)
@@ -56,7 +59,7 @@ class BackgroundServices(
         capabilities = setOf(DeviceCapability.SEND_TAB)
     )
     private val syncConfig = SyncConfig(
-        supportedEngines = setOf(SyncEngine.History, SyncEngine.Tabs),
+        supportedEngines = setOf(SyncEngine.History, SyncEngine.Tabs, SyncEngine.Passwords),
         periodicSyncConfig = PeriodicSyncConfig()
     ) // four hours
 

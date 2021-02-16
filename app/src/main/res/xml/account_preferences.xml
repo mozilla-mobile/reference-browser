@@ -24,6 +24,12 @@
             android:defaultValue="true"
             android:enabled="false"
             android:title="@string/preferences_sync_tabs" />
+
+        <CheckBoxPreference
+            android:key="@string/pref_key_sync_passwords"
+            android:defaultValue="true"
+            android:enabled="false"
+            android:title="@string/preferences_sync_passwords" />
     </PreferenceCategory>
 
     <org.mozilla.reference.browser.settings.CustomColorPreference

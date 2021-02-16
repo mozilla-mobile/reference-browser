@@ -33,6 +33,9 @@
     <!-- Preference enables sync for synced tabs -->
     <string name="preferences_sync_tabs">Open tabs</string>
 
+    <!-- Preference enables sync for synced tabs -->
+    <string name="preferences_sync_passwords">Passwords</string>
+
     <!-- Preference enabling remote debugging -->
     <string name="preferences_remote_debugging">Remote debugging via USB</string>
 
