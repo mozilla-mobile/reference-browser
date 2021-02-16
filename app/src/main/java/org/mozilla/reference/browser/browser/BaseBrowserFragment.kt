@@ -11,11 +11,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.CallSuper
+import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.fragment.app.Fragment
 import androidx.preference.PreferenceManager
 import kotlinx.android.synthetic.main.fragment_browser.*
 import kotlinx.android.synthetic.main.fragment_browser.view.*
 import mozilla.components.browser.state.selector.selectedTab
+import mozilla.components.browser.toolbar.behavior.BrowserToolbarBehavior
 import mozilla.components.feature.app.links.AppLinksFeature
 import mozilla.components.feature.downloads.DownloadsFeature
 import mozilla.components.feature.downloads.manager.FetchDownloadManager
@@ -24,6 +26,7 @@ import mozilla.components.feature.prompts.PromptFeature
 import mozilla.components.feature.session.FullScreenFeature
 import mozilla.components.feature.session.SessionFeature
 import mozilla.components.feature.session.SwipeRefreshFeature
+import mozilla.components.feature.session.behavior.EngineViewBrowserToolbarBehavior
 import mozilla.components.feature.tabs.WindowFeature
 import mozilla.components.feature.sitepermissions.SitePermissionsFeature
 import mozilla.components.feature.webauthn.WebAuthnFeature
@@ -43,6 +46,8 @@ import org.mozilla.reference.browser.downloads.DownloadService
 import org.mozilla.reference.browser.ext.getPreferenceKey
 import org.mozilla.reference.browser.ext.requireComponents
 import org.mozilla.reference.browser.pip.PictureInPictureIntegration
+import mozilla.components.feature.session.behavior.ToolbarPosition as MozacEngineBehaviorToolbarPosition
+import mozilla.components.browser.toolbar.behavior.ToolbarPosition as MozacToolbarBehaviorToolbarPosition
 
 /**
  * Base fragment extended by [BrowserFragment] and [ExternalAppBrowserFragment].
@@ -103,6 +108,13 @@ abstract class BaseBrowserFragment : Fragment(), UserInteractionHandler, Activit
             owner = this,
             view = view)
 
+        (toolbar.layoutParams as? CoordinatorLayout.LayoutParams)?.apply {
+            behavior = BrowserToolbarBehavior(
+                view.context,
+                null,
+                MozacToolbarBehaviorToolbarPosition.BOTTOM
+            )
+        }
         toolbarIntegration.set(
             feature = ToolbarIntegration(
                 requireContext(),
@@ -223,6 +235,15 @@ abstract class BaseBrowserFragment : Fragment(), UserInteractionHandler, Activit
             view = view
         )
 
+        (swipeRefresh.layoutParams as? CoordinatorLayout.LayoutParams)?.apply {
+            behavior = EngineViewBrowserToolbarBehavior(
+                context,
+                null,
+                swipeRefresh,
+                toolbar.height,
+                MozacEngineBehaviorToolbarPosition.BOTTOM
+            )
+        }
         swipeRefreshFeature.set(
             feature = SwipeRefreshFeature(
                 requireComponents.core.store,
