@@ -99,6 +99,7 @@ object Deps {
     const val mozilla_service_firefox_accounts = "org.mozilla.components:service-firefox-accounts:${Versions.mozilla_android_components}"
     const val mozilla_service_glean = "org.mozilla.components:service-glean:${Versions.mozilla_android_components}"
     const val mozilla_service_location = "org.mozilla.components:service-location:${Versions.mozilla_android_components}"
+    const val mozilla_service_sync_logins = "org.mozilla.components:service-sync-logins:${Versions.mozilla_android_components}"
 
     const val mozilla_support_images = "org.mozilla.components:support-images:${Versions.mozilla_android_components}"
     const val mozilla_support_utils = "org.mozilla.components:support-utils:${Versions.mozilla_android_components}"

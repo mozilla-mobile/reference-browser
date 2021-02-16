@@ -15,6 +15,7 @@ import mozilla.components.browser.session.storage.SessionStorage
 import mozilla.components.browser.state.store.BrowserStore
 import mozilla.components.browser.storage.sync.PlacesHistoryStorage
 import mozilla.components.browser.storage.sync.RemoteTabsStorage
+import mozilla.components.service.sync.logins.SyncableLoginsStorage
 import mozilla.components.browser.thumbnails.ThumbnailsMiddleware
 import mozilla.components.browser.thumbnails.storage.ThumbnailStorage
 import mozilla.components.concept.engine.DefaultSettings
@@ -142,6 +143,16 @@ class Core(private val context: Context) {
      * A convenience accessor to the [PlacesHistoryStorage].
      */
     val historyStorage by lazy { lazyHistoryStorage.value }
+
+    /**
+     * The storage component to persist logins data (username/password) for websites.
+     */
+    val lazyLoginsStorage = lazy { SyncableLoginsStorage(context, "key") }
+
+    /**
+     * A convenience accessor to the [SyncableLoginsStorage].
+     */
+    val loginsStorage by lazy { lazyLoginsStorage.value }
 
     /**
      * The storage component to sync and persist tabs in a Firefox Sync account.
