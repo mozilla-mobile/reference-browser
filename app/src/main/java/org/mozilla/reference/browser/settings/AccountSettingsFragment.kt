@@ -7,18 +7,25 @@ package org.mozilla.reference.browser.settings
 import android.content.Context
 import android.os.Bundle
 import android.text.format.DateUtils
+import androidx.preference.CheckBoxPreference
 import androidx.preference.Preference
 import androidx.preference.Preference.OnPreferenceClickListener
 import androidx.preference.PreferenceFragmentCompat
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import mozilla.components.service.fxa.SyncEngine
+import mozilla.components.service.fxa.manager.SyncEnginesStorage
 import mozilla.components.service.fxa.sync.SyncReason
 import mozilla.components.service.fxa.sync.SyncStatusObserver
 import mozilla.components.service.fxa.sync.getLastSynced
 import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.R.string.pref_key_sign_out
 import org.mozilla.reference.browser.R.string.pref_key_sync_now
+import org.mozilla.reference.browser.R.string.pref_key_sync_history
+import org.mozilla.reference.browser.R.string.pref_key_sync_tabs
+import org.mozilla.reference.browser.R.string.pref_key_sync_passwords
+import org.mozilla.reference.browser.components.BackgroundServices.Companion.SUPPORTED_SYNC_ENGINES
 import org.mozilla.reference.browser.ext.getPreferenceKey
 import org.mozilla.reference.browser.ext.requireComponents
 
@@ -40,6 +47,7 @@ class AccountSettingsFragment : PreferenceFragmentCompat() {
                 pref.title = getString(R.string.sync_now)
                 pref.isEnabled = true
                 updateLastSyncedTimePref(context!!, pref, failed = false)
+                updateSyncEngineStates()
             }
         }
 
@@ -69,6 +77,17 @@ class AccountSettingsFragment : PreferenceFragmentCompat() {
         updateLastSyncedTimePref(requireContext(), preferenceSyncNow)
 
         preferenceSyncNow.onPreferenceClickListener = getClickListenerForSyncNow()
+
+        SUPPORTED_SYNC_ENGINES.forEach {
+            (findPreference(context?.getPreferenceKey(it.prefId())) as CheckBoxPreference).apply {
+                setOnPreferenceChangeListener { _, newValue ->
+                    updateSyncEngineState(context, it, newValue as Boolean)
+                    true
+                }
+            }
+        }
+
+        updateSyncEngineStates()
 
         // NB: ObserverRegistry will take care of cleaning up internal references to 'observer' and
         // 'owner' when appropriate.
@@ -127,5 +146,29 @@ class AccountSettingsFragment : PreferenceFragmentCompat() {
             }
             true
         }
+    }
+
+    private fun updateSyncEngineState(context: Context, engine: SyncEngine, newState: Boolean) {
+        SyncEnginesStorage(context).setStatus(engine, newState)
+        CoroutineScope(Dispatchers.Main).launch {
+            requireComponents.backgroundServices.accountManager.syncNow(SyncReason.EngineChange)
+        }
+    }
+
+    private fun updateSyncEngineStates() {
+        val syncEnginesStatus = SyncEnginesStorage(requireContext()).getStatus()
+        SUPPORTED_SYNC_ENGINES.forEach { engine ->
+            (findPreference(context?.getPreferenceKey(engine.prefId())) as CheckBoxPreference).apply {
+                isEnabled = syncEnginesStatus.containsKey(engine)
+                isChecked = syncEnginesStatus.getOrElse(engine) { true }
+            }
+        }
+    }
+
+    private fun SyncEngine.prefId(): Int = when (this) {
+        SyncEngine.History -> pref_key_sync_history
+        SyncEngine.Passwords -> pref_key_sync_passwords
+        SyncEngine.Tabs -> pref_key_sync_tabs
+        else -> throw IllegalStateException("Accessing unsupported sync engines")
     }
 }

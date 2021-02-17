@@ -43,6 +43,7 @@ class BackgroundServices(
     companion object {
         const val CLIENT_ID = "3c49430b43dfba77"
         const val REDIRECT_URL = "https://accounts.firefox.com/oauth/success/$CLIENT_ID"
+        val SUPPORTED_SYNC_ENGINES = setOf(SyncEngine.History, SyncEngine.Tabs, SyncEngine.Passwords)
     }
 
     init {
@@ -59,7 +60,7 @@ class BackgroundServices(
         capabilities = setOf(DeviceCapability.SEND_TAB)
     )
     private val syncConfig = SyncConfig(
-        supportedEngines = setOf(SyncEngine.History, SyncEngine.Tabs, SyncEngine.Passwords),
+        supportedEngines = SUPPORTED_SYNC_ENGINES,
         periodicSyncConfig = PeriodicSyncConfig()
     ) // four hours
 
