@@ -33,6 +33,11 @@
             android:key="@string/pref_key_make_default_browser"
             android:title="@string/preferences_make_default_browser"/>
 
+    <org.mozilla.reference.browser.autofill.AutofillPreference
+        android:key="@string/pref_key_autofill"
+        android:title="@string/preferences_autofill"
+        android:summary="@string/preferences_autofill_summary" />
+
     <PreferenceCategory
         android:title="@string/developer_tools_category">
 

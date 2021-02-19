@@ -27,6 +27,9 @@
     <!-- Preference for settings related to changing the default browser -->
     <string name="preferences_make_default_browser">Make default browser</string>
 
+    <string name="preferences_autofill">Autofill apps</string>
+    <string name="preferences_autofill_summary">Autofill logins and passwords in other apps</string>
+
     <!-- Preference enables sync for history -->
     <string name="preferences_sync_history">History</string>
 
