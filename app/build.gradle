@@ -222,6 +222,7 @@ dependencies {
     implementation Deps.mozilla_feature_addons
     implementation Deps.mozilla_feature_app_links
     implementation Deps.mozilla_feature_awesomebar
+    implementation Deps.mozilla_feature_autofill
     implementation Deps.mozilla_feature_contextmenu
     implementation Deps.mozilla_feature_customtabs
     implementation Deps.mozilla_feature_findinpage
@@ -262,6 +263,7 @@ dependencies {
 
     implementation Deps.mozilla_lib_crash
     implementation Deps.mozilla_lib_push_firebase
+    implementation Deps.mozilla_lib_publicsuffixlist
     implementation Deps.mozilla_lib_dataprotect
 
     implementation Deps.thirdparty_sentry
