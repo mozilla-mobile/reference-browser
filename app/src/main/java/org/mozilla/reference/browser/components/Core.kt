@@ -38,6 +38,8 @@ import mozilla.components.feature.search.region.RegionMiddleware
 import mozilla.components.feature.session.HistoryDelegate
 import mozilla.components.feature.sitepermissions.SitePermissionsStorage
 import mozilla.components.feature.webnotifications.WebNotificationFeature
+import mozilla.components.lib.dataprotect.SecureAbove22Preferences
+import mozilla.components.lib.dataprotect.generateEncryptionKey
 import mozilla.components.service.location.LocationService
 import org.mozilla.reference.browser.AppRequestInterceptor
 import org.mozilla.reference.browser.BrowserActivity
@@ -147,7 +149,7 @@ class Core(private val context: Context) {
     /**
      * The storage component to persist logins data (username/password) for websites.
      */
-    val lazyLoginsStorage = lazy { SyncableLoginsStorage(context, "key") }
+    val lazyLoginsStorage = lazy { SyncableLoginsStorage(context, loginsEncryptionKey) }
 
     /**
      * A convenience accessor to the [SyncableLoginsStorage].
@@ -238,5 +240,18 @@ class Core(private val context: Context) {
             !normalMode && privateMode -> trackingPolicy.forPrivateSessionsOnly()
             else -> TrackingProtectionPolicy.none()
         }
+    }
+
+    private val loginsEncryptionKey by lazy {
+        val securePrefs = SecureAbove22Preferences(context, KEY_STORAGE_NAME)
+        securePrefs.getString(LOGINS_STORAGE_KEY) ?: generateEncryptionKey(KEY_STRENGTH).also {
+            securePrefs.putString(LOGINS_STORAGE_KEY, it)
+        }
+    }
+
+    companion object {
+        private const val KEY_STRENGTH = 256
+        private const val KEY_STORAGE_NAME = "core_prefs"
+        private const val LOGINS_STORAGE_KEY = "logins_storage"
     }
 }
