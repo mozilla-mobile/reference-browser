@@ -19,7 +19,6 @@ import org.mozilla.reference.browser.components.UseCases
  */
 class Components(private val context: Context) {
     val core by lazy { Core(context) }
-    val search by lazy { Search(context) }
     val useCases by lazy {
         UseCases(
             context,
