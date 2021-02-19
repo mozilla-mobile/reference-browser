@@ -29,6 +29,7 @@ import org.mozilla.reference.browser.R.string.pref_key_remote_debugging
 import org.mozilla.reference.browser.R.string.pref_key_about_page
 import org.mozilla.reference.browser.R.string.pref_key_privacy
 import org.mozilla.reference.browser.R.string.pref_key_override_amo_collection
+import org.mozilla.reference.browser.autofill.AutofillPreference
 import org.mozilla.reference.browser.ext.requireComponents
 import kotlin.system.exitProcess
 
@@ -69,6 +70,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
         val aboutPageKey = context?.getPreferenceKey(pref_key_about_page)
         val privacyKey = context?.getPreferenceKey(pref_key_privacy)
         val customAddonsKey = context?.getPreferenceKey(pref_key_override_amo_collection)
+        val autofillPreferenceKey = context?.getPreferenceKey(R.string.pref_key_autofill)
 
         val preferenceSignIn = findPreference(signInKey)
         val preferencePairSignIn = findPreference(signInPairKey)
@@ -78,6 +80,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
         val preferenceAboutPage = findPreference(aboutPageKey)
         val preferencePrivacy = findPreference(privacyKey)
         val preferenceCustomAddons = findPreference(customAddonsKey)
+        val preferenceAutofill = findPreference(autofillPreferenceKey)
 
         val accountManager = requireComponents.backgroundServices.accountManager
         if (accountManager.authenticatedAccount() != null) {
@@ -92,6 +95,12 @@ class SettingsFragment : PreferenceFragmentCompat() {
             preferenceSignIn.onPreferenceClickListener = getClickListenerForSignIn()
             preferencePairSignIn.isVisible = true
             preferencePairSignIn.onPreferenceClickListener = getClickListenerForPairingSignIn()
+        }
+
+        if (!AutofillPreference.isSupported(requireContext())) {
+            preferenceAutofill.isVisible = false
+        } else {
+            (preferenceAutofill as AutofillPreference).updateSwitch()
         }
 
         preferenceMakeDefaultBrowser.onPreferenceClickListener = getClickListenerForMakeDefaultBrowser()
