@@ -5,12 +5,13 @@
 package org.mozilla.reference.browser
 
 import android.content.Context
+import mozilla.components.feature.autofill.AutofillConfiguration
+import org.mozilla.reference.browser.autofill.AutofillUnlockActivity
 import org.mozilla.reference.browser.components.Core
 import org.mozilla.reference.browser.components.Analytics
 import org.mozilla.reference.browser.components.BackgroundServices
 import org.mozilla.reference.browser.components.Push
 import org.mozilla.reference.browser.components.Services
-import org.mozilla.reference.browser.components.Search
 import org.mozilla.reference.browser.components.Utilities
 import org.mozilla.reference.browser.components.UseCases
 
@@ -52,4 +53,13 @@ class Components(private val context: Context) {
     }
     val services by lazy { Services(context, backgroundServices.accountManager, useCases.tabsUseCases) }
     val push by lazy { Push(context, analytics.crashReporter) }
+
+    val autofillConfiguration by lazy {
+        AutofillConfiguration(
+            storage = core.loginsStorage,
+            publicSuffixList = utils.publicSuffixList,
+            unlockActivity = AutofillUnlockActivity::class.java,
+            applicationName = context.getString(R.string.app_name)
+        )
+    }
 }

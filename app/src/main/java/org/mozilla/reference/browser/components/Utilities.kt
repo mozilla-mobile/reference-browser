@@ -14,6 +14,7 @@ import mozilla.components.feature.search.SearchUseCases
 import mozilla.components.feature.session.SessionUseCases
 import mozilla.components.feature.tabs.CustomTabsUseCases
 import mozilla.components.feature.tabs.TabsUseCases
+import mozilla.components.lib.publicsuffixlist.PublicSuffixList
 
 /**
  * Component group for miscellaneous components.
@@ -44,5 +45,9 @@ class Utilities(
     val intentProcessors by lazy {
         externalIntentProcessors +
             TabIntentProcessor(tabsUseCases, sessionUseCases.loadUrl, searchUseCases.newTabSearch)
+    }
+
+    val publicSuffixList by lazy {
+        PublicSuffixList(context)
     }
 }
