@@ -58,6 +58,27 @@ class ThreeDotMenuTest {
 
     /* ktlint-disable no-blank-line-before-rbrace */ // This imposes unreadable grouping.
     @Test
+    fun homeScreenMenuTest() {
+        navigationToolbar {
+        }.openThreeDotMenu {
+            verifyThreeDotMenuExists()
+            // These items should not exist in the home screen menu
+            verifyForwardButtonDoesntExist()
+            verifyReloadButtonDoesntExist()
+            verifyStopButtonDoesntExist()
+            verifyShareButtonDoesntExist()
+            verifyRequestDesktopSiteToggleDoesntExist()
+            verifyAddToHomescreenButtonDoesntExist()
+            verifyFindInPageButtonDoesntExist()
+            // Only these items should exist in the home screen menu
+            verifyAddOnsButtonExists()
+            verifySyncedTabsButtonExists()
+            verifyReportIssueExists()
+            verifyOpenSettingsExists()
+        }
+    }
+
+    @Test
     fun threeDotMenuItemsTest() {
 
         val defaultWebPage = TestAssetHelper.getGenericAsset(mockWebServer, 1)

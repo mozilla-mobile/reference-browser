@@ -33,6 +33,9 @@ gcloud:
     - /sdcard/screenshots
   performance-metrics: true
 
+  test-targets:
+    - class org.mozilla.reference.browser.ui.ThreeDotMenuTest#homeScreenMenuTest
+
   device:
    - model: Pixel2
      version: 28

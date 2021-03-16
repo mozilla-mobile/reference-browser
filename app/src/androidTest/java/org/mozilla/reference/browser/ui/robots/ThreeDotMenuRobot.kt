@@ -7,12 +7,10 @@
 package org.mozilla.reference.browser.ui.robots
 
 import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.matcher.ViewMatchers
-import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.assertion.ViewAssertions.matches
-import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
+import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.uiautomator.UiDevice
 import org.mozilla.reference.browser.helpers.click
 import org.mozilla.reference.browser.R
@@ -29,15 +27,20 @@ class ThreeDotMenuRobot {
     fun verifyStopButtonExists() = assertStopButton()
     fun verifyShareButtonExists() = assertShareButton()
     fun verifyRequestDesktopSiteToggleExists() = assertRequestDesktopSiteToggle()
+    fun verifyAddToHomescreenButtonExists() = assertAddToHomescreenButton()
     fun verifyFindInPageButtonExists() = assertFindInPageButton()
+    fun verifyAddOnsButtonExists() = assertAddOnsButton()
+    fun verifySyncedTabsButtonExists() = assertSyncedTabsButton()
     fun verifyReportIssueExists() = assertReportIssueButton()
     fun verifyOpenSettingsExists() = assertSettingsButton()
+
     fun verifyShareButtonDoesntExist() = assertShareButtonDoesntExist()
     fun verifyRequestDesktopSiteToggleDoesntExist() = assertRequestDesktopSiteToggleDoesntExist()
     fun verifyFindInPageButtonDoesntExist() = assertFindInPageButtonDoesntExist()
     fun verifyForwardButtonDoesntExist() = assertForwardButtonDoesntExist()
     fun verifyReloadButtonDoesntExist() = assertRefreshButtonDoesntExist()
     fun verifyStopButtonDoesntExist() = assertStopButtonDoesntExist()
+    fun verifyAddToHomescreenButtonDoesntExist() = assertAddToHomescreenButtonDoesntExist()
 
     class Transition {
 
@@ -95,39 +98,56 @@ class ThreeDotMenuRobot {
 }
 
 private fun threeDotMenuRecyclerViewExists() {
-    onView(withId(R.id.mozac_browser_menu_recyclerView)).check(matches(isDisplayed()))
-    reportIssueButton()
+    onView(withId(R.id.mozac_browser_menu_recyclerView))
+            .check(matches(isDisplayed()))
 }
 
-private fun forwardButton() = onView(ViewMatchers.withContentDescription("Forward"))
-private fun refreshButton() = onView(ViewMatchers.withContentDescription("Refresh"))
-private fun stopButton() = onView(ViewMatchers.withContentDescription("Stop"))
-private fun shareButton() = onView(ViewMatchers.withText("Share"))
-private fun requestDesktopSiteToggle() = onView(ViewMatchers.withText("Request desktop site"))
-private fun findInPageButton() = onView(ViewMatchers.withText("Find in Page"))
-private fun reportIssueButton() = onView(ViewMatchers.withText("Report issue"))
-private fun settingsButton() = onView(ViewMatchers.withText("Settings"))
-private fun assertShareButtonDoesntExist() = shareButton().check(ViewAssertions.doesNotExist())
-private fun assertRequestDesktopSiteToggleDoesntExist() =
-        requestDesktopSiteToggle().check(ViewAssertions.doesNotExist())
-private fun assertFindInPageButtonDoesntExist() = findInPageButton().check(ViewAssertions.doesNotExist())
-private fun assertForwardButtonDoesntExist() = forwardButton().check(ViewAssertions.doesNotExist())
-private fun assertRefreshButtonDoesntExist() = refreshButton().check(ViewAssertions.doesNotExist())
-private fun assertStopButtonDoesntExist() = stopButton().check(ViewAssertions.doesNotExist())
+private fun forwardButton() = onView(withContentDescription("Forward"))
+private fun refreshButton() = onView(withContentDescription("Refresh"))
+private fun stopButton() = onView(withContentDescription("Stop"))
+private fun shareButton() = onView(withText("Share"))
+private fun requestDesktopSiteToggle() = onView(withText("Request desktop site"))
+private fun findInPageButton() = onView(withText("Find in Page"))
+private fun reportIssueButton() = onView(withText("Report issue"))
+private fun settingsButton() = onView(withText("Settings"))
+private fun addToHomescreenButton() = onView(withText("Add to homescreen"))
+private fun addOnsButton() = onView(withText("Add-ons"))
+private fun syncedTabsButton() = onView(withText("Synced Tabs"))
+
+private fun assertShareButtonDoesntExist() = shareButton()
+        .check(ViewAssertions.doesNotExist())
+private fun assertRequestDesktopSiteToggleDoesntExist() = requestDesktopSiteToggle()
+        .check(ViewAssertions.doesNotExist())
+private fun assertFindInPageButtonDoesntExist() = findInPageButton()
+        .check(ViewAssertions.doesNotExist())
+private fun assertForwardButtonDoesntExist() = forwardButton()
+        .check(ViewAssertions.doesNotExist())
+private fun assertRefreshButtonDoesntExist() = refreshButton()
+        .check(ViewAssertions.doesNotExist())
+private fun assertStopButtonDoesntExist() = stopButton()
+        .check(ViewAssertions.doesNotExist())
+private fun assertAddToHomescreenButtonDoesntExist() = addToHomescreenButton()
+        .check(ViewAssertions.doesNotExist())
 
 private fun assertForwardButton() = forwardButton()
-        .check(ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+        .check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
 private fun assertRefreshButton() = refreshButton()
-        .check(ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+        .check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
 private fun assertStopButton() = stopButton()
-        .check(ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+        .check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
 private fun assertShareButton() = shareButton()
-        .check(ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+        .check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
 private fun assertRequestDesktopSiteToggle() = requestDesktopSiteToggle()
-        .check(ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+        .check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
+private fun assertAddToHomescreenButton() = addToHomescreenButton()
+        .check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
 private fun assertFindInPageButton() = findInPageButton()
-        .check(ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+        .check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
+private fun assertAddOnsButton() = addOnsButton()
+        .check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
+private fun assertSyncedTabsButton() = syncedTabsButton()
+        .check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
 private fun assertReportIssueButton() = reportIssueButton()
-        .check(ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+        .check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
 private fun assertSettingsButton() = settingsButton()
-        .check(ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+        .check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
