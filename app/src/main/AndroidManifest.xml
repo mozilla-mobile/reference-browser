@@ -57,7 +57,7 @@
         <activity
             android:theme="@style/Theme.AppCompat.Light"
             android:name=".addons.AddonsActivity"
-            android:label="@string/mozac_feature_addons_addons"
+            android:label="@string/mozac_feature_addons_addons2"
             android:exported="false"
             android:parentActivityName=".BrowserActivity" />
 
@@ -65,29 +65,29 @@
             android:theme="@style/Theme.AppCompat.Light"
             android:name=".addons.AddonDetailsActivity"
             android:exported="false"
-            android:label="@string/mozac_feature_addons_addons" />
+            android:label="@string/mozac_feature_addons_addons2" />
 
         <activity android:name=".addons.InstalledAddonDetailsActivity"
-            android:label="@string/mozac_feature_addons_addons"
+            android:label="@string/mozac_feature_addons_addons2"
             android:parentActivityName=".addons.AddonsActivity"
             android:exported="false"
             android:theme="@style/Theme.AppCompat.Light" />
 
         <activity
             android:name=".addons.PermissionsDetailsActivity"
-            android:label="@string/mozac_feature_addons_addons"
+            android:label="@string/mozac_feature_addons_addons2"
             android:exported="false"
             android:theme="@style/Theme.AppCompat.Light" />
 
         <activity
             android:name=".addons.AddonSettingsActivity"
-            android:label="@string/mozac_feature_addons_addons"
+            android:label="@string/mozac_feature_addons_addons2"
             android:exported="false"
             android:theme="@style/Theme.AppCompat.Light" />
 
         <activity
             android:name=".addons.WebExtensionActionPopupActivity"
-            android:label="@string/mozac_feature_addons_addons"
+            android:label="@string/mozac_feature_addons_addons2"
             android:theme="@style/Theme.AppCompat.Light"/>
 
         <activity
