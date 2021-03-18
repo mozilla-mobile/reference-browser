@@ -6,7 +6,9 @@
 
 package org.mozilla.reference.browser.ui.robots
 
+import android.content.Context
 import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.Espresso.openActionBarOverflowOrOptionsMenu
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
@@ -19,11 +21,11 @@ import androidx.test.uiautomator.Until
 import org.junit.Assert.assertNull
 import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.ext.waitAndInteract
-import org.mozilla.reference.browser.helpers.matchers.TabMatcher
 import org.mozilla.reference.browser.helpers.TestAssetHelper.waitingTime
 import org.mozilla.reference.browser.helpers.TestAssetHelper.waitingTimeShort
 import org.mozilla.reference.browser.helpers.assertIsSelected
 import org.mozilla.reference.browser.helpers.click
+import org.mozilla.reference.browser.helpers.matchers.TabMatcher
 
 /**
  * Implementation of Robot Pattern for the tab tray menu.
@@ -38,7 +40,6 @@ class TabTrayMenuRobot {
     fun verifyPrivateBrowsingTab() = assertPrivateBrowsingTabs()
     fun verifyGoBackButton() = assertGoBackButton()
     fun verifyNewTabButton() = assertNewTabButton()
-    fun verifyMenuButton() = assertMenuButton()
     fun verifyRegularBrowsingTab(isSelected: Boolean) =
             regularTabs().assertIsSelected(isSelected)
     fun verifyPrivateBrowsingTab(isSelected: Boolean) =
@@ -67,8 +68,10 @@ class TabTrayMenuRobot {
             return NavigationToolbarRobot.Transition()
         }
 
-        fun openMoreOptionsMenu(interact: TabTrayMoreOptionsMenuRobot.() -> Unit): TabTrayMoreOptionsMenuRobot.Transition {
-            menuButton().click()
+        fun openMoreOptionsMenu(context: Context, interact: TabTrayMoreOptionsMenuRobot.() -> Unit): TabTrayMoreOptionsMenuRobot.Transition {
+            // The 3dot "More options" button is actually an Android Options Menu (check tabstray_menu.xml) not a View that we treat as a menu
+            openActionBarOverflowOrOptionsMenu(context)
+
             TabTrayMoreOptionsMenuRobot().interact()
             return TabTrayMoreOptionsMenuRobot.Transition()
         }
@@ -91,7 +94,6 @@ private fun regularTabs() = onView(ViewMatchers.withContentDescription("Tabs"))
 private fun privateTabs() = onView(ViewMatchers.withContentDescription("Private tabs"))
 private fun goBackButton() = onView(ViewMatchers.withContentDescription("back"))
 private fun newTabButton() = onView(ViewMatchers.withContentDescription("Add New Tab"))
-private fun menuButton() = onView(ViewMatchers.withContentDescription("More options"))
 private fun closeTabButtonTabTray() = onView(withId(R.id.mozac_browser_tabstray_close))
 private fun tab() = onView(TabMatcher.withText("about:blank"))
 
@@ -102,8 +104,6 @@ private fun assertPrivateBrowsingTabs() = privateTabs()
 private fun assertGoBackButton() = goBackButton()
         .check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
 private fun assertNewTabButton() = newTabButton()
-        .check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
-private fun assertMenuButton() = menuButton()
         .check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
 private fun assertPrivateTabs() {
     mDevice.wait(Until.findObject(By.text("Private Browsing")), waitingTime)
