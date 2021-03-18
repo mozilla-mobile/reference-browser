@@ -6,6 +6,7 @@ package org.mozilla.reference.browser
 
 import android.content.Context
 import mozilla.components.feature.autofill.AutofillConfiguration
+import org.mozilla.reference.browser.autofill.AutofillConfirmActivity
 import org.mozilla.reference.browser.autofill.AutofillUnlockActivity
 import org.mozilla.reference.browser.components.Core
 import org.mozilla.reference.browser.components.Analytics
@@ -59,7 +60,9 @@ class Components(private val context: Context) {
             storage = core.loginsStorage,
             publicSuffixList = utils.publicSuffixList,
             unlockActivity = AutofillUnlockActivity::class.java,
-            applicationName = context.getString(R.string.app_name)
+            confirmActivity = AutofillConfirmActivity::class.java,
+            applicationName = context.getString(R.string.app_name),
+            httpClient = core.client
         )
     }
 }
