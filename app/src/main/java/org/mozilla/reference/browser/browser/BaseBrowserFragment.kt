@@ -16,7 +16,6 @@ import androidx.fragment.app.Fragment
 import androidx.preference.PreferenceManager
 import kotlinx.android.synthetic.main.fragment_browser.*
 import kotlinx.android.synthetic.main.fragment_browser.view.*
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import mozilla.components.browser.state.selector.selectedTab
 import mozilla.components.browser.toolbar.behavior.BrowserToolbarBehavior
 import mozilla.components.feature.app.links.AppLinksFeature
