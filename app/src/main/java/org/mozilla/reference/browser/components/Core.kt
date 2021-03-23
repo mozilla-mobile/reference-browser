@@ -6,7 +6,6 @@ package org.mozilla.reference.browser.components
 
 import android.content.Context
 import android.content.SharedPreferences
-import android.preference.PreferenceManager
 import mozilla.components.browser.icons.BrowserIcons
 import mozilla.components.browser.session.Session
 import mozilla.components.browser.session.SessionManager
@@ -65,7 +64,7 @@ class Core(private val context: Context) {
      * configuration (see build variants).
      */
     val engine: Engine by lazy {
-        val prefs = PreferenceManager.getDefaultSharedPreferences(context)
+        val prefs = androidx.preference.PreferenceManager.getDefaultSharedPreferences(context)
 
         val defaultSettings = DefaultSettings(
             requestInterceptor = AppRequestInterceptor(context),
@@ -228,9 +227,9 @@ class Core(private val context: Context) {
      * @return the constructed tracking protection policy based on preferences.
      */
     fun createTrackingProtectionPolicy(
-        prefs: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(context),
-        normalMode: Boolean = prefs.getBoolean(context.getPreferenceKey(pref_key_tracking_protection_normal), true),
-        privateMode: Boolean = prefs.getBoolean(context.getPreferenceKey(pref_key_tracking_protection_private), true)
+            prefs: SharedPreferences = androidx.preference.PreferenceManager.getDefaultSharedPreferences(context),
+            normalMode: Boolean = prefs.getBoolean(context.getPreferenceKey(pref_key_tracking_protection_normal), true),
+            privateMode: Boolean = prefs.getBoolean(context.getPreferenceKey(pref_key_tracking_protection_private), true)
     ): TrackingProtectionPolicy {
 
         val trackingPolicy = TrackingProtectionPolicy.recommended()

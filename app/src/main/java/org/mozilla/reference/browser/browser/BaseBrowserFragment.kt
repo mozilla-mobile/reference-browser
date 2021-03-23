@@ -16,6 +16,7 @@ import androidx.fragment.app.Fragment
 import androidx.preference.PreferenceManager
 import kotlinx.android.synthetic.main.fragment_browser.*
 import kotlinx.android.synthetic.main.fragment_browser.view.*
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import mozilla.components.browser.state.selector.selectedTab
 import mozilla.components.browser.toolbar.behavior.BrowserToolbarBehavior
 import mozilla.components.feature.app.links.AppLinksFeature
@@ -132,7 +133,7 @@ abstract class BaseBrowserFragment : Fragment(), UserInteractionHandler, Activit
         contextMenuIntegration.set(
             feature = ContextMenuIntegration(
                 requireContext(),
-                requireFragmentManager(),
+                parentFragmentManager,
                 requireComponents.core.store,
                 requireComponents.useCases.tabsUseCases,
                 requireComponents.useCases.contextMenuUseCases,
@@ -163,7 +164,7 @@ abstract class BaseBrowserFragment : Fragment(), UserInteractionHandler, Activit
                 requireContext(),
                 store = requireComponents.core.store,
                 sessionId = sessionId,
-                fragmentManager = requireFragmentManager(),
+                fragmentManager = parentFragmentManager,
                 launchInApp = {
                     prefs.getBoolean(requireContext().getPreferenceKey(R.string.pref_key_launch_external_app), false)
                 }
@@ -177,7 +178,7 @@ abstract class BaseBrowserFragment : Fragment(), UserInteractionHandler, Activit
                 fragment = this,
                 store = requireComponents.core.store,
                 customTabId = sessionId,
-                fragmentManager = requireFragmentManager(),
+                fragmentManager = parentFragmentManager,
                 onNeedToRequestPermissions = { permissions ->
                     requestPermissions(permissions, REQUEST_CODE_PROMPT_PERMISSIONS)
                 }),
@@ -213,7 +214,7 @@ abstract class BaseBrowserFragment : Fragment(), UserInteractionHandler, Activit
         sitePermissionFeature.set(
             feature = SitePermissionsFeature(
                 context = requireContext(),
-                fragmentManager = requireFragmentManager(),
+                fragmentManager = parentFragmentManager,
                 sessionId = sessionId,
                 storage = requireComponents.core.sitePermissionsStorage,
                 onNeedToRequestPermissions = { permissions ->

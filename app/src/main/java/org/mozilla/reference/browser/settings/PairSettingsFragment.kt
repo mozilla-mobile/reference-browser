@@ -58,7 +58,7 @@ class PairSettingsFragment : Fragment(), UserInteractionHandler {
 
     override fun onBackPressed(): Boolean {
         qrFeature.onBackPressed()
-        fragmentManager?.popBackStack()
+        parentFragmentManager.popBackStack()
         return true
     }
 }
