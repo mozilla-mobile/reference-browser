@@ -5,7 +5,7 @@
 package org.mozilla.reference.browser.settings
 
 import android.content.Context
-import android.preference.PreferenceManager
+import androidx.preference.PreferenceManager
 import org.mozilla.reference.browser.R
 
 object Settings {

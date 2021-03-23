@@ -8,6 +8,7 @@ package org.mozilla.reference.browser.pip
 
 import android.app.Activity
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.mapNotNull
@@ -28,6 +29,7 @@ class PictureInPictureIntegration(
     private val pictureFeature = PictureInPictureFeature(store, activity)
     private var whiteListed = false
 
+    @ExperimentalCoroutinesApi
     override fun start() {
         scope = store.flowScoped { flow ->
             flow.mapNotNull { state -> state.findTabOrCustomTabOrSelectedTab(customTabId) }

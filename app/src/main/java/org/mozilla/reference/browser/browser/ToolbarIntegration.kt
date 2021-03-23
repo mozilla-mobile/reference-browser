@@ -8,6 +8,7 @@ import android.content.Context
 import android.content.Intent
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.map
@@ -46,6 +47,7 @@ import org.mozilla.reference.browser.ext.share
 import org.mozilla.reference.browser.settings.SettingsActivity
 import org.mozilla.reference.browser.tabs.synced.SyncedTabsActivity
 
+@ExperimentalCoroutinesApi
 class ToolbarIntegration(
     private val context: Context,
     toolbar: BrowserToolbar,
@@ -105,7 +107,7 @@ class ToolbarIntegration(
         return RowMenuCandidate(listOf(forward, refresh, stop))
     }
 
-    private fun sessionMenuItems(session: Session, sessionState: SessionState): List<MenuCandidate> {
+    private fun sessionMenuItems(sessionState: SessionState): List<MenuCandidate> {
         return listOfNotNull(
             menuToolbar(sessionState),
 
@@ -145,7 +147,7 @@ class ToolbarIntegration(
 
     private fun menuItems(session: Session?, sessionState: SessionState?): List<MenuCandidate> {
         val sessionMenuItems = if (session != null && sessionState != null) {
-            sessionMenuItems(session, sessionState)
+            sessionMenuItems(sessionState)
         } else {
             emptyList()
         }

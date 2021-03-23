@@ -134,10 +134,10 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
     private fun getClickListenerForPairingSignIn(): OnPreferenceClickListener {
         return OnPreferenceClickListener {
-            fragmentManager?.beginTransaction()
-                    ?.replace(android.R.id.content, PairSettingsFragment())
-                    ?.addToBackStack(null)
-                    ?.commit()
+            parentFragmentManager.beginTransaction()
+                    .replace(android.R.id.content, PairSettingsFragment())
+                    .addToBackStack(null)
+                    .commit()
             getActionBarUpdater().apply {
                 updateTitle(R.string.pair_preferences)
             }
@@ -147,10 +147,10 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
     private fun getClickListenerForFirefoxAccount(): OnPreferenceClickListener {
         return OnPreferenceClickListener {
-            fragmentManager?.beginTransaction()
-                    ?.replace(android.R.id.content, AccountSettingsFragment())
-                    ?.addToBackStack(null)
-                    ?.commit()
+            parentFragmentManager.beginTransaction()
+                    .replace(android.R.id.content, AccountSettingsFragment())
+                    .addToBackStack(null)
+                    .commit()
             getActionBarUpdater().apply {
                 updateTitle(R.string.account_settings)
             }
@@ -160,10 +160,10 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
     private fun getClickListenerForPrivacy(): OnPreferenceClickListener {
         return OnPreferenceClickListener {
-            fragmentManager?.beginTransaction()
-                    ?.replace(android.R.id.content, PrivacySettingsFragment())
-                    ?.addToBackStack(null)
-                    ?.commit()
+            parentFragmentManager.beginTransaction()
+                    .replace(android.R.id.content, PrivacySettingsFragment())
+                    .addToBackStack(null)
+                    .commit()
             getActionBarUpdater().apply {
                 updateTitle(R.string.privacy_settings)
             }
@@ -180,10 +180,10 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
     private fun getAboutPageListener(): OnPreferenceClickListener {
         return OnPreferenceClickListener {
-            fragmentManager?.beginTransaction()
-                ?.replace(android.R.id.content, AboutFragment())
-                ?.addToBackStack(null)
-                ?.commit()
+            parentFragmentManager.beginTransaction()
+                .replace(android.R.id.content, AboutFragment())
+                .addToBackStack(null)
+                .commit()
             true
         }
     }
