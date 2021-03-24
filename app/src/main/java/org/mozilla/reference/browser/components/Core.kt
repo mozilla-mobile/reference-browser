@@ -228,9 +228,9 @@ class Core(private val context: Context) {
      * @return the constructed tracking protection policy based on preferences.
      */
     fun createTrackingProtectionPolicy(
-            prefs: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(context),
-            normalMode: Boolean = prefs.getBoolean(context.getPreferenceKey(pref_key_tracking_protection_normal), true),
-            privateMode: Boolean = prefs.getBoolean(context.getPreferenceKey(pref_key_tracking_protection_private), true)
+        prefs: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(context),
+        normalMode: Boolean = prefs.getBoolean(context.getPreferenceKey(pref_key_tracking_protection_normal), true),
+        privateMode: Boolean = prefs.getBoolean(context.getPreferenceKey(pref_key_tracking_protection_private), true)
     ): TrackingProtectionPolicy {
 
         val trackingPolicy = TrackingProtectionPolicy.recommended()
