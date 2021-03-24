@@ -8,7 +8,6 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import androidx.core.content.ContextCompat
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.map
 import mozilla.components.browser.menu2.BrowserMenuController
@@ -39,7 +38,6 @@ import org.mozilla.reference.browser.BrowserActivity
 import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.ext.share
 
-@ExperimentalCoroutinesApi
 class CustomTabsIntegration(
     private val context: Context,
     private val sessionManager: SessionManager,
