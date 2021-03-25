@@ -80,14 +80,11 @@ class ThreeDotMenuTest {
 
     @Test
     fun threeDotMenuItemsTest() {
-
         val defaultWebPage = TestAssetHelper.getGenericAsset(mockWebServer, 1)
-
         navigationToolbar {
-
         // pull up URL to ensure this is not a first-user 3 dot menu
-
         }.enterUrlAndEnterToBrowser(defaultWebPage.url) {
+            mDevice.waitForIdle()
         }.openNavigationToolbar {
         }.openThreeDotMenu {
             verifyThreeDotMenuExists()
@@ -96,7 +93,10 @@ class ThreeDotMenuTest {
             verifyStopButtonExists()
             verifyShareButtonExists()
             verifyRequestDesktopSiteToggleExists()
+            verifyAddToHomescreenButtonExists()
             verifyFindInPageButtonExists()
+            verifyAddOnsButtonExists()
+            verifySyncedTabsButtonExists()
             verifyReportIssueExists()
             verifyOpenSettingsExists()
         }
