@@ -4,19 +4,20 @@
 
 package org.mozilla.reference.browser.ui
 
-import org.junit.Rule
-import org.junit.Test
-import org.mozilla.reference.browser.helpers.BrowserActivityTestRule
-import org.mozilla.reference.browser.ui.robots.navigationToolbar
-import androidx.test.platform.app.InstrumentationRegistry
-import androidx.test.uiautomator.UiDevice
-import androidx.test.uiautomator.UiSelector
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.withId
-import org.mozilla.reference.browser.helpers.click
+import androidx.test.platform.app.InstrumentationRegistry
+import androidx.test.uiautomator.UiDevice
+import androidx.test.uiautomator.UiSelector
 import org.junit.Before
+import org.junit.Rule
+import org.junit.Test
 import org.mozilla.reference.browser.R
+import org.mozilla.reference.browser.helpers.BrowserActivityTestRule
+import org.mozilla.reference.browser.helpers.click
+import org.mozilla.reference.browser.ui.robots.mDevice
+import org.mozilla.reference.browser.ui.robots.navigationToolbar
 
 /**
  *  Tests for verifying tab tray menu:
@@ -62,8 +63,8 @@ class TabTrayMenuTest {
             verifyPrivateBrowsingTab()
             verifyGoBackButton()
             verifyNewTabButton()
-            verifyMenuButton()
-            goBackFromTabTrayTest()
+        }.openMoreOptionsMenu(activityTestRule.activity) {
+            verifyCloseAllTabsButton()
         }
     }
 
@@ -75,7 +76,8 @@ class TabTrayMenuTest {
         }.openNewTab {
         }.openTabTrayMenu {
             verifyThereIsOneTabOpen()
-        }.openMoreOptionsMenu {
+        }.openMoreOptionsMenu(activityTestRule.activity) {
+            mDevice.waitForIdle()
             verifyCloseAllTabsButton()
         }.closeAllTabs {
             verifyNoTabAddressView()
@@ -93,7 +95,8 @@ class TabTrayMenuTest {
         }.openTabTrayMenu {
             openPrivateBrowsing()
             verifyThereIsOnePrivateTabOpen()
-        }.openMoreOptionsMenu {
+        }.openMoreOptionsMenu(activityTestRule.activity) {
+            mDevice.waitForIdle()
             verifyCloseAllPrivateTabsButton()
         }.closeAllPrivateTabs {
         }.openTabTrayMenu {
