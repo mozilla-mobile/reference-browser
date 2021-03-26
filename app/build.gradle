@@ -16,6 +16,7 @@ android {
     defaultConfig {
         applicationId "org.mozilla.reference.browser"
         minSdkVersion Config.minSdkVersion
+        compileSdkVersion Config.targetSdkVersion
         targetSdkVersion Config.targetSdkVersion
         versionCode 1
         versionName Config.generateDebugVersionName()
@@ -28,6 +29,10 @@ android {
         minifyEnabled false
         proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         matchingFallbacks = ['release'] // Use on the "release" build type in dependencies (AARs)
+    }
+
+    buildFeatures {
+        compose true
     }
 
     buildTypes {
@@ -273,6 +278,13 @@ dependencies {
     implementation Deps.androidx_constraintlayout
     implementation Deps.androidx_preference_ktx
     implementation Deps.androidx_work_runtime_ktx
+
+    implementation Deps.androidx_activity_compose
+    implementation Deps.androidx_compose_ui
+    implementation Deps.androidx_compose_ui_tooling
+    implementation Deps.androidx_compose_foundation
+    implementation Deps.androidx_compose_material
+
     implementation Deps.google_material
 
     androidTestImplementation Deps.uiautomator

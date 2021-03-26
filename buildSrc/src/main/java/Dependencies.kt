@@ -7,17 +7,17 @@
 
 // Synchronized version numbers for dependencies used by (some) modules
 private object Versions {
-    const val kotlin = "1.4.10"
+    const val kotlin = "1.4.30"
     const val coroutines = "1.3.9"
 
-    const val androidx_appcompat = "1.0.2"
+    const val androidx_appcompat = "1.3.0-rc01"
     const val androidx_constraintlayout = "1.1.3"
     const val androidx_preference = "1.0.0"
 
     const val workmanager = "2.0.0"
     const val google_material = "1.0.0"
 
-    const val android_gradle_plugin = "4.0.1"
+    const val android_gradle_plugin = "7.0.0-alpha11"
 
     const val mozilla_android_components = AndroidComponents.VERSION
 
@@ -32,7 +32,9 @@ private object Versions {
     const val uiautomator = "2.2.0"
 
     object AndroidX {
+        const val activity_compose = "1.3.0-alpha05"
         const val core = "1.1.0"
+        const val compose = "1.0.0-beta03"
     }
 }
 
@@ -101,7 +103,6 @@ object Deps {
     const val mozilla_ui_tabcounter = "org.mozilla.components:ui-tabcounter:${Versions.mozilla_android_components}"
 
     const val mozilla_service_firefox_accounts = "org.mozilla.components:service-firefox-accounts:${Versions.mozilla_android_components}"
-    const val mozilla_service_glean = "org.mozilla.components:service-glean:${Versions.mozilla_android_components}"
     const val mozilla_service_location = "org.mozilla.components:service-location:${Versions.mozilla_android_components}"
     const val mozilla_service_sync_logins = "org.mozilla.components:service-sync-logins:${Versions.mozilla_android_components}"
 
@@ -124,6 +125,12 @@ object Deps {
     const val androidx_constraintlayout = "androidx.constraintlayout:constraintlayout:${Versions.androidx_constraintlayout}"
     const val androidx_preference_ktx = "androidx.preference:preference-ktx:${Versions.androidx_preference}"
     const val androidx_work_runtime_ktx = "androidx.work:work-runtime-ktx:${Versions.workmanager}"
+    const val androidx_compose_ui = "androidx.compose.ui:ui:${Versions.AndroidX.compose}"
+    const val androidx_compose_ui_tooling = "androidx.compose.ui:ui-tooling:${Versions.AndroidX.compose}"
+    const val androidx_compose_foundation = "androidx.compose.foundation:foundation:${Versions.AndroidX.compose}"
+    const val androidx_compose_material = "androidx.compose.material:material:${Versions.AndroidX.compose}"
+    const val androidx_activity_compose = "androidx.activity:activity-compose:${Versions.AndroidX.activity_compose}"
+
     const val google_material = "com.google.android.material:material:${Versions.google_material}"
 
     const val tools_androidgradle = "com.android.tools.build:gradle:${Versions.android_gradle_plugin}"
