@@ -73,7 +73,9 @@ class SettingsViewTest {
         }.openThreeDotMenu {
         }.openSettings {
         }.openFXAQrCode {
+            mDevice.waitForIdle()
             verifyFxAQrCode()
+            mDevice.pressBack()
         }
 
     }
