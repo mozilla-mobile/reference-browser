@@ -7,15 +7,15 @@
 package org.mozilla.reference.browser.ui.robots
 
 import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.matcher.ViewMatchers
-import androidx.test.espresso.matcher.ViewMatchers.withId
-import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
+import androidx.test.espresso.matcher.ViewMatchers.withId
+import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.uiautomator.UiDevice
-import org.mozilla.reference.browser.helpers.click
 import org.mozilla.reference.browser.R
+import org.mozilla.reference.browser.helpers.click
 
 /**
  * Implementation of Robot Pattern for three dot menu.
@@ -95,6 +95,13 @@ class ThreeDotMenuRobot {
             settingsButton().click()
             SettingsViewRobot().interact()
             return SettingsViewRobot.Transition()
+        }
+
+        fun openAddonsManager(interact: AddonsManagerRobot.() -> Unit): AddonsManagerRobot.Transition {
+            addOnsButton().click()
+
+            AddonsManagerRobot().interact()
+            return AddonsManagerRobot.Transition()
         }
     }
 }

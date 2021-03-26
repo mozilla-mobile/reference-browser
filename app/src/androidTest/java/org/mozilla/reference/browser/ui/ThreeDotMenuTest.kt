@@ -226,4 +226,20 @@ class ThreeDotMenuTest {
             verifySettingsViewExists()
         }
     }
+
+    @Test
+    fun openAddOnsManagerTest() {
+        val defaultWebPage = TestAssetHelper.getGenericAsset(mockWebServer, 1)
+
+        navigationToolbar {
+        }.enterUrlAndEnterToBrowser(defaultWebPage.url) {
+            mDevice.waitForIdle()
+        }.openNavigationToolbar {
+        }.openThreeDotMenu {
+            verifyAddOnsButtonExists()
+        }.openAddonsManager {
+            mDevice.waitForIdle()
+            verifyAddonsView()
+        }
+    }
 }
