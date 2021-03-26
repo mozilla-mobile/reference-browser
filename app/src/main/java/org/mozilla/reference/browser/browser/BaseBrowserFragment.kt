@@ -11,6 +11,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.CallSuper
+import androidx.compose.ui.platform.ComposeView
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.fragment.app.Fragment
 import androidx.preference.PreferenceManager
@@ -18,6 +19,7 @@ import kotlinx.android.synthetic.main.fragment_browser.*
 import kotlinx.android.synthetic.main.fragment_browser.view.*
 import mozilla.components.browser.state.selector.selectedTab
 import mozilla.components.browser.toolbar.behavior.BrowserToolbarBehavior
+import mozilla.components.compose.browser.toolbar.BrowserToolbar
 import mozilla.components.feature.app.links.AppLinksFeature
 import mozilla.components.feature.downloads.DownloadsFeature
 import mozilla.components.feature.downloads.manager.FetchDownloadManager
@@ -94,6 +96,8 @@ abstract class BaseBrowserFragment : Fragment(), UserInteractionHandler, Activit
     ): View {
         return inflater.inflate(R.layout.fragment_browser, container, false)
     }
+
+    abstract val shouldUseComposeUI: Boolean
 
     @CallSuper
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -263,6 +267,16 @@ abstract class BaseBrowserFragment : Fragment(), UserInteractionHandler, Activit
                 owner = this,
                 view = view
             )
+        }
+
+        val composeView = view.findViewById<ComposeView>(R.id.compose_view)
+        if (shouldUseComposeUI) {
+            composeView.visibility = View.VISIBLE
+            composeView.setContent { BrowserToolbar() }
+
+            val params = swipeRefresh.layoutParams as CoordinatorLayout.LayoutParams
+            params.topMargin = resources.getDimensionPixelSize(R.dimen.browser_toolbar_height)
+            swipeRefresh.layoutParams = params
         }
     }
 

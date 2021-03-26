@@ -6,6 +6,7 @@ package org.mozilla.reference.browser.browser
 
 import android.os.Bundle
 import android.view.View
+import androidx.preference.PreferenceManager
 import kotlinx.android.synthetic.main.fragment_browser.*
 import kotlinx.android.synthetic.main.fragment_browser.view.*
 import mozilla.components.browser.thumbnails.BrowserThumbnails
@@ -29,6 +30,11 @@ class BrowserFragment : BaseBrowserFragment(), UserInteractionHandler {
     private val thumbnailsFeature = ViewBoundFeatureWrapper<BrowserThumbnails>()
     private val readerViewFeature = ViewBoundFeatureWrapper<ReaderViewIntegration>()
     private val webExtToolbarFeature = ViewBoundFeatureWrapper<WebExtensionToolbarFeature>()
+
+    override val shouldUseComposeUI: Boolean
+        get() = PreferenceManager.getDefaultSharedPreferences(requireContext()).getBoolean(
+            getString(R.string.pref_key_compose_ui), false
+        )
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

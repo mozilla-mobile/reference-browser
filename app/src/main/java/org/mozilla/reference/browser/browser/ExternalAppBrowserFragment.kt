@@ -29,6 +29,8 @@ class ExternalAppBrowserFragment : BaseBrowserFragment(), UserInteractionHandler
     private val windowFeature = ViewBoundFeatureWrapper<CustomTabWindowFeature>()
     private val hideToolbarFeature = ViewBoundFeatureWrapper<WebAppHideToolbarFeature>()
 
+    override val shouldUseComposeUI: Boolean = false
+
     private val manifest: WebAppManifest?
         get() = arguments?.getWebAppManifest()
     private val trustedScopes: List<Uri>
