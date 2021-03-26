@@ -1,0 +1,37 @@
+<?xml version="1.0" ?>
+<SmellBaseline>
+  <ManuallySuppressedIssues></ManuallySuppressedIssues>
+  <CurrentIssues>
+    <ID>ForbiddenComment:AppRequestInterceptor.kt$AppRequestInterceptor$* NB, and FIXME: this class is consumed by a 'Core' component group, but itself relies on 'firefoxAccountsFeature' * component; this creates a circular dependency, since firefoxAccountsFeature relies on tabsUseCases * which in turn needs 'core' itself.</ID>
+    <ID>ForbiddenComment:ThreeDotMenuTest.kt$ThreeDotMenuTest$* Tests for verifying the main three dot menu options * * Including: * - Verify all menu items present * - Forward button navigates forward to a page * - Refresh button refreshes page content * - Share button opens app overlay menu * - Request desktop site toggle forwards to desktop view of web page (TBD) * - Find in page button can locate web page text * - Report issue button forwards to gitubh issues (TBD) * - Open settings button opens Settings sub-menu * * Not included: * - TODO: Request desktop site (user mockWebServer to parse request headers) * - Stop button stops page loading (covered by smoke tests)</ID>
+    <ID>ImplicitDefaultLocale:AboutFragment.kt$AboutFragment$String.format( "%s (Build #%s)\n", packageInfo.versionName, geckoVersion )</ID>
+    <ID>ImplicitDefaultLocale:AboutFragment.kt$AboutFragment$String.format( "%s \uD83D\uDCE6: %s, %s\n\uD83D\uDEA2: %s", aboutText, Build.version, Build.gitHash, Build.applicationServicesVersion )</ID>
+    <ID>LongMethod:BaseBrowserFragment.kt$BaseBrowserFragment$@CallSuper override fun onViewCreated(view: View, savedInstanceState: Bundle?)</ID>
+    <ID>LongMethod:BrowserFragment.kt$BrowserFragment$override fun onViewCreated(view: View, savedInstanceState: Bundle?)</ID>
+    <ID>LongMethod:ExternalAppBrowserFragment.kt$ExternalAppBrowserFragment$override fun onViewCreated(view: View, savedInstanceState: Bundle?)</ID>
+    <ID>LongParameterList:ContextMenuIntegration.kt$ContextMenuIntegration$( context: Context, fragmentManager: FragmentManager, browserStore: BrowserStore, tabsUseCases: TabsUseCases, contextMenuUseCases: ContextMenuUseCases, parentView: View, sessionId: String? = null )</ID>
+    <ID>LongParameterList:CustomTabsIntegration.kt$CustomTabsIntegration$( private val context: Context, private val sessionManager: SessionManager, store: BrowserStore, toolbar: BrowserToolbar, private val engineView: EngineView, private val sessionUseCases: SessionUseCases, private val customTabsUseCases: CustomTabsUseCases, sessionId: String, private val activity: Activity? )</ID>
+    <ID>LongParameterList:ToolbarIntegration.kt$ToolbarIntegration$( private val context: Context, toolbar: BrowserToolbar, historyStorage: HistoryStorage, sessionManager: SessionManager, store: BrowserStore, private val sessionUseCases: SessionUseCases, private val tabsUseCases: TabsUseCases, private val webAppUseCases: WebAppUseCases, sessionId: String? = null )</ID>
+    <ID>MaxLineLength:AddToHomeScreenRobot.kt$AddToHomeScreenRobot$private fun addAutomaticallyToHomeScreenButton()</ID>
+    <ID>MaxLineLength:AddonsManagerRobot.kt$AddonsManagerRobot$hasDescendant(withText("Finally, an efficient wide-spectrum content blocker. Easy on CPU and memory."))</ID>
+    <ID>MaxLineLength:AddonsManagerRobot.kt$AddonsManagerRobot.Transition$fun</ID>
+    <ID>MaxLineLength:AwesomeBarRobot.kt$AwesomeBarRobot.Transition$fun</ID>
+    <ID>MaxLineLength:SettingsViewRobot.kt$private fun openLinksInAppsToggle()</ID>
+    <ID>MaxLineLength:SettingsViewRobot.kt$private fun remoteDebuggingToggle()</ID>
+    <ID>MaxLineLength:SettingsViewTest.kt$SettingsViewTest$@Ignore("Test instrumentation process is crashing, see: https://github.com/mozilla-mobile/reference-browser/issues/1502")</ID>
+    <ID>MaxLineLength:TabTrayMenuRobot.kt$TabTrayMenuRobot.Transition$// The 3dot "More options" button is actually an Android Options Menu (check tabstray_menu.xml) not a View that we treat as a menu</ID>
+    <ID>MaxLineLength:TabTrayMenuRobot.kt$TabTrayMenuRobot.Transition$fun</ID>
+    <ID>MaxLineLength:ThreeDotMenuTest.kt$ThreeDotMenuTest$// Verifies the Synced tabs menu opens from a tab's 3 dot menu and displays the correct view if the user isn't signed in</ID>
+    <ID>SwallowedException:AboutFragment.kt$AboutFragment$catch (e: PackageManager.NameNotFoundException) { "" }</ID>
+    <ID>SwallowedException:AddonsFragment.kt$AddonsFragment$catch (e: AddonManagerException) { scope.launch(Dispatchers.Main) { Toast.makeText( activity, R.string.mozac_feature_addons_failed_to_query_add_ons, Toast.LENGTH_SHORT ).show() } }</ID>
+    <ID>SwallowedException:InstalledAddonDetailsActivity.kt$InstalledAddonDetailsActivity$catch (e: AddonManagerException) { scope.launch(Dispatchers.Main) { Toast.makeText( baseContext, R.string.mozac_feature_addons_failed_to_query_add_ons, Toast.LENGTH_SHORT ).show() } }</ID>
+    <ID>ThrowingExceptionsWithoutMessageOrCause:SyncedTabsAdapter.kt$SyncedTabsAdapter$IllegalStateException()</ID>
+    <ID>UnusedPrivateMember:ContentPanelRobot.kt$ContentPanelRobot.Transition$interact: ContentPanelRobot.() -&gt; Unit</ID>
+    <ID>UnusedPrivateMember:ExternalAppsRobot.kt$ExternalAppsRobot.Transition$interact: ExternalAppsRobot.() -&gt; Unit</ID>
+    <ID>UnusedPrivateMember:FindInPagePanelRobot.kt$FindInPagePanelRobot.Transition$interact: FindInPagePanelRobot.() -&gt; Unit</ID>
+    <ID>UnusedPrivateMember:InstalledAddonDetailsActivity.kt$InstalledAddonDetailsActivity$private fun bindVersion(addon: Addon)</ID>
+    <ID>UnusedPrivateMember:SettingsViewPrivacyRobot.kt$SettingsViewPrivacyRobot.Transition$interact: SettingsViewPrivacyRobot.() -&gt; Unit</ID>
+    <ID>UnusedPrivateMember:SettingsViewPrivacyRobot.kt$private fun privacyUpButton()</ID>
+    <ID>UnusedPrivateMember:SyncedTabsViewHolder.kt$SyncedTabsViewHolder.TabViewHolder$private val image = itemView.findViewById&lt;ImageView&gt;(R.id.synced_tabs_item_image)</ID>
+  </CurrentIssues>
+</SmellBaseline>

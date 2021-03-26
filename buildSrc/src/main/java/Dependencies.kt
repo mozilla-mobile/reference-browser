@@ -2,6 +2,9 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
+// If you ever need to force a toolchain rebuild (taskcluster) then edit the following comment.
+// FORCE REBUILD 2021-04-12
+
 // Synchronized version numbers for dependencies used by (some) modules
 private object Versions {
     const val kotlin = "1.4.10"
