@@ -38,6 +38,11 @@
         android:title="@string/preferences_autofill"
         android:summary="@string/preferences_autofill_summary" />
 
+    <androidx.preference.SwitchPreferenceCompat
+        android:key="@string/pref_key_compose_ui"
+        android:defaultValue="false"
+        android:title="@string/preferences_compose_ui"/>
+
     <PreferenceCategory
         android:title="@string/developer_tools_category">
 

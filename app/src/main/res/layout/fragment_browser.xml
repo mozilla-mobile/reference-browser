@@ -11,6 +11,15 @@
     android:layout_height="match_parent"
     tools:context=".BrowserActivity">
 
+    <androidx.compose.ui.platform.ComposeView
+        android:id="@+id/compose_view"
+        android:layout_width="match_parent"
+        android:layout_gravity="top"
+        android:background="#ffffcc00"
+        android:layout_marginBottom="@dimen/browser_toolbar_height"
+        android:layout_height="@dimen/browser_toolbar_height"
+        android:visibility="gone" />
+
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipeRefresh"
         android:layout_width="match_parent"
