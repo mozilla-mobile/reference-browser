@@ -2,10 +2,6 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-plugins {
-    id "com.jetbrains.python.envs" version "0.0.26"
-}
-
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
@@ -252,7 +248,6 @@ dependencies {
     implementation Deps.mozilla_ui_tabcounter
 
     implementation Deps.mozilla_service_firefox_accounts
-    implementation Deps.mozilla_service_glean
     implementation Deps.mozilla_service_location
     implementation Deps.mozilla_service_sync_logins
 
@@ -335,10 +330,6 @@ task printGeckoviewVersion {
         println('geckoviewVersion: ' + groovy.json.JsonOutput.toJson(geckoviewDependency.selected.moduleVersion.version))
     }
 }
-
-// Normally this should use the same version as the dependency. But since we are using snapshots we can't reference a
-// git tag. So we are just using "master" and hoping for the best.
-apply from: 'https://github.com/mozilla-mobile/android-components/raw/master/components/service/glean/scripts/sdk_generator.gradle'
 
 if (gradle.hasProperty('localProperties.dependencySubstitutions.geckoviewTopsrcdir')) {
     if (gradle.hasProperty('localProperties.dependencySubstitutions.geckoviewTopobjdir')) {
