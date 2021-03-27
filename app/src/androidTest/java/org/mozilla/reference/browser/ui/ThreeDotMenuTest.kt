@@ -58,15 +58,33 @@ class ThreeDotMenuTest {
 
     /* ktlint-disable no-blank-line-before-rbrace */ // This imposes unreadable grouping.
     @Test
-    fun threeDotMenuItemsTest() {
-
-        val defaultWebPage = TestAssetHelper.getGenericAsset(mockWebServer, 1)
-
+    fun homeScreenMenuTest() {
         navigationToolbar {
+        }.openThreeDotMenu {
+            verifyThreeDotMenuExists()
+            // These items should not exist in the home screen menu
+            verifyForwardButtonDoesntExist()
+            verifyReloadButtonDoesntExist()
+            verifyStopButtonDoesntExist()
+            verifyShareButtonDoesntExist()
+            verifyRequestDesktopSiteToggleDoesntExist()
+            verifyAddToHomescreenButtonDoesntExist()
+            verifyFindInPageButtonDoesntExist()
+            // Only these items should exist in the home screen menu
+            verifyAddOnsButtonExists()
+            verifySyncedTabsButtonExists()
+            verifyReportIssueExists()
+            verifyOpenSettingsExists()
+        }
+    }
 
+    @Test
+    fun threeDotMenuItemsTest() {
+        val defaultWebPage = TestAssetHelper.getGenericAsset(mockWebServer, 1)
+        navigationToolbar {
         // pull up URL to ensure this is not a first-user 3 dot menu
-
         }.enterUrlAndEnterToBrowser(defaultWebPage.url) {
+            mDevice.waitForIdle()
         }.openNavigationToolbar {
         }.openThreeDotMenu {
             verifyThreeDotMenuExists()
@@ -75,7 +93,10 @@ class ThreeDotMenuTest {
             verifyStopButtonExists()
             verifyShareButtonExists()
             verifyRequestDesktopSiteToggleExists()
+            verifyAddToHomescreenButtonExists()
             verifyFindInPageButtonExists()
+            verifyAddOnsButtonExists()
+            verifySyncedTabsButtonExists()
             verifyReportIssueExists()
             verifyOpenSettingsExists()
         }
@@ -148,6 +169,7 @@ class ThreeDotMenuTest {
         }
     }
 
+    @Ignore("Temp disable broken test - see:  https://github.com/mozilla-mobile/fenix/issues/5534")
     @Test
     // finds specific text snippets in a lorem ipsum sample page
     fun findInPageTest() {
@@ -187,9 +209,11 @@ class ThreeDotMenuTest {
 
         navigationToolbar {
         }.enterUrlAndEnterToBrowser(loremIpsumWebPage.url) {
+            mDevice.waitForIdle()
         }.openNavigationToolbar {
         }.openThreeDotMenu {
         }.reportIssue {
+            mDevice.waitForIdle()
             verifyGithubUrl()
         }
     }
@@ -200,6 +224,22 @@ class ThreeDotMenuTest {
         }.openThreeDotMenu {
         }.openSettings {
             verifySettingsViewExists()
+        }
+    }
+
+    @Test
+    fun openAddOnsManagerTest() {
+        val defaultWebPage = TestAssetHelper.getGenericAsset(mockWebServer, 1)
+
+        navigationToolbar {
+        }.enterUrlAndEnterToBrowser(defaultWebPage.url) {
+            mDevice.waitForIdle()
+        }.openNavigationToolbar {
+        }.openThreeDotMenu {
+            verifyAddOnsButtonExists()
+        }.openAddonsManager {
+            mDevice.waitForIdle()
+            verifyAddonsView()
         }
     }
 }

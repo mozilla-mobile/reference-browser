@@ -5,10 +5,13 @@
 package org.mozilla.reference.browser.ui.robots
 
 import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.assertion.ViewAssertions
+import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers
+import androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibility
+import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.uiautomator.By
 import androidx.test.uiautomator.Until
+import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.helpers.TestAssetHelper.waitingTimeShort
 
 /**
@@ -25,10 +28,12 @@ class ExternalAppsRobot {
     }
 }
 
-private fun fXAQrCode() = onView(ViewMatchers.withText("Pairing"))
-
 private fun assertDefaultAppsLayout() {
     mDevice.wait(Until.findObject(By.text("Default apps")), waitingTimeShort)
 }
-private fun assertFXAQrCode() = fXAQrCode()
-        .check(ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+private fun assertFXAQrCode() {
+    onView(withText(R.string.pair_preferences))
+        .check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+    onView(withText(R.string.pair_instructions))
+        .check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+}

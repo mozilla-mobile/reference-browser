@@ -19,7 +19,11 @@ gcloud:
   # by default, set to app name
   # declare results-history-name to create a separate dropdown menu in Firebase 
   # see: https://github.com/TestArmada/flank/issues/341
-  #results-history-name: tmp_parallel 
+  #results-history-name: tmp_parallel
+
+  # The number of times a test execution should be re-attempted if one or more failures occur.
+  # The maximum number of reruns allowed is 10. Default is 0, which implies no reruns.
+  num-flaky-test-attempts: 1
 
   # test and app are the only required args
   app: /app/path 
@@ -33,20 +37,23 @@ gcloud:
     - /sdcard/screenshots
   performance-metrics: true
 
+  test-targets:
+    - package org.mozilla.reference.browser.ui
+
   device:
    - model: Pixel2
-     version: 28
+     version: 29
 
 flank:
   project: GOOGLE_PROJECT
   # test shards - the amount of groups to split the test suite into
   # set to -1 to use one shard per test.
-  max-test-shards: -1 
-  # repeat tests - the amount of times to run the tests.
+  max-test-shards: -1
+  # num-test-runs: the amount of times to run the tests.
   # 1 runs the tests once. 10 runs all the tests 10x
-  repeat-tests: 1
+  num-test-runs: 1
   # always run - these tests are inserted at the beginning of every shard
   # useful if you need to grant permissions or login before other tests run
   #test-targets-always-run:
-    #- class com.example.app.ExampleUiTest#testPasses
+    # - class com.example.app.ExampleUiTest#testPasses
     # - class org.mozilla.focus.activty.SwitchContextTest#testPasses
