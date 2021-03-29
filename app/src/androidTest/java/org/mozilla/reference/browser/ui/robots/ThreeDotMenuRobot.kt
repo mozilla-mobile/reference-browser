@@ -14,7 +14,9 @@ import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.uiautomator.UiDevice
+import androidx.test.uiautomator.UiSelector
 import org.mozilla.reference.browser.R
+import org.mozilla.reference.browser.helpers.TestAssetHelper.waitingTime
 import org.mozilla.reference.browser.helpers.click
 
 /**
@@ -102,6 +104,14 @@ class ThreeDotMenuRobot {
 
             AddonsManagerRobot().interact()
             return AddonsManagerRobot.Transition()
+        }
+
+        fun openSyncedTabs(interact: SyncedTabsRobot.() -> Unit): SyncedTabsRobot.Transition {
+            mDevice.findObject(UiSelector().text("Synced Tabs")).waitForExists(waitingTime)
+            syncedTabsButton().click()
+
+            SyncedTabsRobot().interact()
+            return SyncedTabsRobot.Transition()
         }
     }
 }

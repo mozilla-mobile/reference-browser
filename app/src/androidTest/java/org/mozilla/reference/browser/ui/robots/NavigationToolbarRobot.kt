@@ -39,6 +39,7 @@ class NavigationToolbarRobot {
             urlBar().perform(click())
             awesomeBar().perform(replaceText(url.toString()),
                     pressImeActionButton())
+            mDevice.waitForIdle()
 
             BrowserRobot().interact()
             return BrowserRobot.Transition()
