@@ -256,4 +256,23 @@ class ThreeDotMenuTest {
             verifyNotSignedInSyncTabsView()
         }
     }
+
+    @Test
+    fun requestDesktopSiteTest() {
+        val defaultWebPage = TestAssetHelper.getGenericAsset(mockWebServer, 1)
+
+        navigationToolbar {
+        }.enterUrlAndEnterToBrowser(defaultWebPage.url) {
+        }.openNavigationToolbar {
+        }.openThreeDotMenu {
+        }.requestDesktopSite {
+        }.openThreeDotMenu {
+            verifyRequestDesktopSiteIsTurnedOn()
+        }.goBack {
+        }.openThreeDotMenu {
+        }.requestDesktopSite {
+        }.openThreeDotMenu {
+            verifyRequestDesktopSiteIsTurnedOff()
+        }
+    }
 }

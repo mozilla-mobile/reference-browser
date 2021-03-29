@@ -15,6 +15,8 @@ import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.uiautomator.UiDevice
 import androidx.test.uiautomator.UiSelector
+import junit.framework.Assert.assertFalse
+import junit.framework.Assert.assertTrue
 import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.helpers.TestAssetHelper.waitingTime
 import org.mozilla.reference.browser.helpers.click
@@ -46,6 +48,9 @@ class ThreeDotMenuRobot {
     fun verifyStopButtonDoesntExist() = assertStopButtonDoesntExist()
     fun verifyAddToHomescreenButtonDoesntExist() = assertAddToHomescreenButtonDoesntExist()
 
+    fun verifyRequestDesktopSiteIsTurnedOff() = assertRequestDesktopSiteIsTurnedOff()
+    fun verifyRequestDesktopSiteIsTurnedOn() = assertRequestDesktopSiteIsTurnedOn()
+
     class Transition {
 
         fun goForward(interact: BrowserRobot.() -> Unit): BrowserRobot.Transition {
@@ -76,7 +81,10 @@ class ThreeDotMenuRobot {
         }
 
         fun requestDesktopSite(interact: NavigationToolbarRobot.() -> Unit): NavigationToolbarRobot.Transition {
+            mDevice.findObject(UiSelector().textContains("Request desktop site"))
+                .waitForExists(waitingTime)
             requestDesktopSiteToggle().click()
+            mDevice.waitForIdle()
             NavigationToolbarRobot().interact()
             return NavigationToolbarRobot.Transition()
         }
@@ -112,6 +120,13 @@ class ThreeDotMenuRobot {
 
             SyncedTabsRobot().interact()
             return SyncedTabsRobot.Transition()
+        }
+
+        fun goBack(interact: NavigationToolbarRobot.() -> Unit): NavigationToolbarRobot.Transition {
+            mDevice.pressBack()
+
+            NavigationToolbarRobot().interact()
+            return NavigationToolbarRobot.Transition()
         }
     }
 }
@@ -164,3 +179,13 @@ private fun assertReportIssueButton() = reportIssueButton()
         .check(ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
 private fun assertSettingsButton() = settingsButton()
         .check(ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+private fun assertRequestDesktopSiteIsTurnedOff() {
+    assertFalse(
+        mDevice.findObject(UiSelector().textContains("Request desktop site")).isChecked
+    )
+}
+private fun assertRequestDesktopSiteIsTurnedOn() {
+    assertTrue(
+        mDevice.findObject(UiSelector().textContains("Request desktop site")).isChecked
+    )
+}
