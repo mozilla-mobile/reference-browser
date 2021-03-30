@@ -103,31 +103,25 @@ class ThreeDotMenuTest {
     }
 
     @Test
-    @Ignore("Cannot figure out why this test is failing when trying to open the three-dot menu.")
     fun goForwardTest() {
 
         val defaultWebPage = TestAssetHelper.getGenericAsset(mockWebServer, 1)
         val nextWebPage = TestAssetHelper.getGenericAsset(mockWebServer, 2)
 
-        // navigate to webpage and back to cache a browsing history
-        // (for page forward test)
-
         navigationToolbar {
         }.enterUrlAndEnterToBrowser(defaultWebPage.url) {
-            verifyPageContent(defaultWebPage.content)
+            verifyUrl(defaultWebPage.toString())
         }.openNavigationToolbar {
         }.enterUrlAndEnterToBrowser(nextWebPage.url) {
-            verifyPageContent(nextWebPage.content)
-        }.openNavigationToolbar {
+            verifyUrl(nextWebPage.toString())
             mDevice.pressBack()
-            mDevice.pressBack()
+            verifyUrl(defaultWebPage.toString())
         }
 
         navigationToolbar {
         }.openThreeDotMenu {
-            verifyThreeDotMenuExists()
         }.goForward {
-            verifyPageContent(nextWebPage.content)
+            verifyUrl(nextWebPage.toString())
         }
     }
 

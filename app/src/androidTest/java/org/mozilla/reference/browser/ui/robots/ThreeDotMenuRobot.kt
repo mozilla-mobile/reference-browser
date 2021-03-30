@@ -55,6 +55,8 @@ class ThreeDotMenuRobot {
 
         fun goForward(interact: BrowserRobot.() -> Unit): BrowserRobot.Transition {
             forwardButton().click()
+            mDevice.waitForIdle()
+
             BrowserRobot().interact()
             return BrowserRobot.Transition()
         }
