@@ -21,6 +21,7 @@ import org.hamcrest.CoreMatchers.allOf
 import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.helpers.TestAssetHelper
 import org.mozilla.reference.browser.helpers.TestAssetHelper.waitingTime
+import org.mozilla.reference.browser.helpers.TestHelper.packageName
 import org.mozilla.reference.browser.helpers.click
 import org.mozilla.reference.browser.helpers.hasCousin
 
@@ -98,7 +99,7 @@ class SettingsViewRobot {
 }
 
 private fun waitForSettingsRecyclerViewToExist() {
-    mDevice.findObject(UiSelector().resourceId("org.mozilla.reference.browser.debug:id/recycler_view"))
+    mDevice.findObject(UiSelector().resourceId("$packageName:id/recycler_view"))
         .waitForExists(
         waitingTime)
 }
