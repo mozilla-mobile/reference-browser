@@ -128,6 +128,14 @@ class ThreeDotMenuRobot {
             NavigationToolbarRobot().interact()
             return NavigationToolbarRobot.Transition()
         }
+
+        fun openAddToHomeScreen(interact: AddToHomeScreenRobot.() -> Unit): AddToHomeScreenRobot.Transition {
+            mDevice.findObject(UiSelector().text("Add to Home screen")).waitForExists(waitingTime)
+            addToHomescreenButton().click()
+
+            AddToHomeScreenRobot().interact()
+            return AddToHomeScreenRobot.Transition()
+        }
     }
 }
 
