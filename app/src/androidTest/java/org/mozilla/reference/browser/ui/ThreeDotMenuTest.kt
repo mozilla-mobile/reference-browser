@@ -275,4 +275,27 @@ class ThreeDotMenuTest {
             verifyRequestDesktopSiteIsTurnedOff()
         }
     }
+
+    @Test
+    fun addToHomeScreenTest() {
+        val defaultWebPage = TestAssetHelper.getGenericAsset(mockWebServer, 1)
+
+        navigationToolbar {
+        }.enterUrlAndEnterToBrowser(defaultWebPage.url) {
+        }.openNavigationToolbar {
+        }.openThreeDotMenu {
+        }.openAddToHomeScreen {
+            verifyAddToHomeScreenPopup()
+            clickCancelAddToHomeScreenButton()
+        }
+
+        navigationToolbar {
+        }.openThreeDotMenu {
+        }.openAddToHomeScreen {
+            verifyAddToHomeScreenPopup()
+            clickAddAutomaticallyToHomeScreenButton()
+        }.openHomeScreenShortcut("Website") {
+            verifyUrl(defaultWebPage.toString())
+        }
+    }
 }
