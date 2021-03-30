@@ -20,6 +20,7 @@ import androidx.test.uiautomator.Until
 import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.ext.waitAndInteract
 import org.mozilla.reference.browser.helpers.TestAssetHelper.waitingTime
+import org.mozilla.reference.browser.helpers.TestHelper.packageName
 import org.mozilla.reference.browser.helpers.click
 
 /**
@@ -49,7 +50,7 @@ class NavigationToolbarRobot {
 
         fun openThreeDotMenu(interact: ThreeDotMenuRobot.() -> Unit): ThreeDotMenuRobot.Transition {
             mDevice.findObject(UiSelector()
-                .resourceId("org.mozilla.reference.browser.debug:id/mozac_browser_toolbar_menu"))
+                .resourceId("$packageName:id/mozac_browser_toolbar_menu"))
                 .waitForExists(waitingTime)
             threeDotMenuButton().click()
 

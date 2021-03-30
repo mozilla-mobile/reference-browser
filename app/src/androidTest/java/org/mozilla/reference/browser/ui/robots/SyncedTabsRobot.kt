@@ -11,6 +11,7 @@ import junit.framework.Assert.assertTrue
 import org.hamcrest.CoreMatchers.allOf
 import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.helpers.TestAssetHelper
+import org.mozilla.reference.browser.helpers.TestHelper.packageName
 
 /**
  * Implementation of Robot Pattern for Synced Tabs sub menu.
@@ -29,7 +30,7 @@ class SyncedTabsRobot {
     private fun assertNotSignedInSyncTabsView() {
         assertTrue(
             mDevice.findObject(UiSelector()
-                .resourceId("org.mozilla.reference.browser.debug:id/synced_tabs_status"))
+                .resourceId("$packageName:id/synced_tabs_status"))
             .waitForExists(TestAssetHelper.waitingTime))
 
         onView(

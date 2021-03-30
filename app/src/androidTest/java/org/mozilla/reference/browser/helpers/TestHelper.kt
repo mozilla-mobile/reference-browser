@@ -4,10 +4,13 @@
 
 package org.mozilla.reference.browser.helpers
 
+import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.uiautomator.UiScrollable
 import androidx.test.uiautomator.UiSelector
 
 object TestHelper {
+
+    val packageName = InstrumentationRegistry.getInstrumentation().targetContext.packageName
 
     fun scrollToElementByText(text: String): UiScrollable {
         val appView = UiScrollable(UiSelector().scrollable(true))

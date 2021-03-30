@@ -11,6 +11,7 @@ import androidx.test.uiautomator.UiSelector
 import androidx.test.uiautomator.Until
 import org.mozilla.reference.browser.ext.waitAndInteract
 import org.mozilla.reference.browser.helpers.TestAssetHelper.waitingTime
+import org.mozilla.reference.browser.helpers.TestHelper.packageName
 
 /**
  * Implementation of Robot Pattern for browser action.
@@ -34,10 +35,10 @@ class BrowserRobot {
 
     private fun verifyUrl(expectedUrl: String) {
         mDevice.findObject(UiSelector()
-            .resourceId("org.mozilla.reference.browser.debug:id/toolbar"))
+            .resourceId("$packageName:id/toolbar"))
             .waitForExists(waitingTime)
         mDevice.findObject(UiSelector()
-            .resourceId("org.mozilla.reference.browser.debug:id/mozac_browser_toolbar_url_view"))
+            .resourceId("$packageName:id/mozac_browser_toolbar_url_view"))
             .waitForExists(waitingTime)
         mDevice.findObject(UiSelector().textContains(expectedUrl))
             .waitForExists(waitingTime)
