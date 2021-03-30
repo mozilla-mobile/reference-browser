@@ -33,7 +33,7 @@ class BrowserRobot {
         verifyUrl("https://github.com/login")
     }
 
-    private fun verifyUrl(expectedUrl: String) {
+    fun verifyUrl(expectedUrl: String) {
         mDevice.findObject(UiSelector()
             .resourceId("$packageName:id/toolbar"))
             .waitForExists(waitingTime)
