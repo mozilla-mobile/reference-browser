@@ -119,11 +119,13 @@ class SettingsViewTest {
             toggleRemoteDebuggingOn()
         }
     }
-    @Ignore("https://github.com/mozilla-mobile/reference-browser/issues/680")
+
+    @Test
     fun aboutReferenceBrowserTest() {
         navigationToolbar {
         }.openThreeDotMenu {
         }.openSettings {
+            scrollToElementByText("About Reference Browser")
         }.openAboutReferenceBrowser {
             verifyAboutBrowser()
         }
