@@ -9,6 +9,7 @@ import androidx.test.uiautomator.By
 import androidx.test.uiautomator.UiDevice
 import androidx.test.uiautomator.UiSelector
 import androidx.test.uiautomator.Until
+import junit.framework.Assert.assertTrue
 import org.mozilla.reference.browser.ext.waitAndInteract
 import org.mozilla.reference.browser.helpers.TestAssetHelper.waitingTime
 import org.mozilla.reference.browser.helpers.TestHelper.packageName
@@ -45,8 +46,10 @@ class BrowserRobot {
     }
 
     fun verifyAboutBrowser() {
-        // Testing About Reference Browser crashes in Java String
-        // https://github.com/mozilla-mobile/reference-browser/issues/680
+        assertTrue(mDevice.findObject(UiSelector().resourceId("$packageName:id/about_content"))
+            .waitForExists(waitingTime))
+        assertTrue(mDevice.findObject(UiSelector().resourceId("$packageName:id/version_info"))
+            .waitForExists(waitingTime))
     }
 
     class Transition {
