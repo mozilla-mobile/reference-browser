@@ -5,12 +5,9 @@
 package org.mozilla.reference.browser.ui.robots
 
 import androidx.test.platform.app.InstrumentationRegistry
-import androidx.test.uiautomator.By
 import androidx.test.uiautomator.UiDevice
 import androidx.test.uiautomator.UiSelector
-import androidx.test.uiautomator.Until
 import junit.framework.Assert.assertTrue
-import org.mozilla.reference.browser.ext.waitAndInteract
 import org.mozilla.reference.browser.helpers.TestAssetHelper.waitingTime
 import org.mozilla.reference.browser.helpers.TestHelper.packageName
 
@@ -22,8 +19,11 @@ class BrowserRobot {
     * document.querySelector('#testContent').innerText == expectedText
     */
     fun verifyPageContent(expectedText: String) {
-        val mDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
-        mDevice.waitAndInteract(Until.findObject(By.textContains(expectedText))) {}
+        mDevice.findObject(UiSelector().resourceId("$packageName:id/engineView"))
+            .waitForExists(waitingTime)
+        mDevice.waitForIdle()
+        assertTrue(mDevice.findObject(UiSelector().textContains(expectedText))
+            .waitForExists(waitingTime))
     }
 
     fun verifyFXAUrl() {
