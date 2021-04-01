@@ -6,10 +6,14 @@ package org.mozilla.reference.browser.ui.robots
 
 import android.net.Uri
 import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.IdlingRegistry
+import androidx.test.espresso.IdlingResource
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.action.ViewActions.pressImeActionButton
 import androidx.test.espresso.action.ViewActions.replaceText
+import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.platform.app.InstrumentationRegistry
@@ -19,6 +23,7 @@ import androidx.test.uiautomator.UiSelector
 import androidx.test.uiautomator.Until
 import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.ext.waitAndInteract
+import org.mozilla.reference.browser.helpers.SessionLoadedIdlingResource
 import org.mozilla.reference.browser.helpers.TestAssetHelper.waitingTime
 import org.mozilla.reference.browser.helpers.TestHelper.packageName
 import org.mozilla.reference.browser.helpers.click
@@ -27,11 +32,27 @@ import org.mozilla.reference.browser.helpers.click
  * Implementation of Robot Pattern for the navigation toolbar menu.
  */
 class NavigationToolbarRobot {
+    private lateinit var sessionLoadedIdlingResource: SessionLoadedIdlingResource
 
     fun verifyNoTabAddressView() = assertNoTabAddressText()
     fun verifyNewTabAddressView() = assertNewTabAddressText()
 
     fun checkNumberOfTabsTabCounter(numTabs: String) = numberOfOpenTabsTabCounter.check(matches(withText(numTabs)))
+
+    fun verifyReaderViewDetected(visible: Boolean = false) {
+        sessionLoadedIdlingResource = SessionLoadedIdlingResource()
+
+        mDevice.findObject(UiSelector().resourceId("$packageName:id/mozac_browser_toolbar_page_actions"))
+            .waitForExists(waitingTime)
+
+        runWithIdleRes(sessionLoadedIdlingResource) {
+            onView(withId(R.id.mozac_browser_toolbar_page_actions)
+            ).check(
+                if (visible) matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE))
+                else ViewAssertions.doesNotExist()
+            )
+        }
+    }
 
     class Transition {
 
@@ -83,4 +104,13 @@ private fun assertNoTabAddressText() {
 
 private fun assertNewTabAddressText() {
     mDevice.waitAndInteract(Until.findObject(By.text("about:blank"))) {}
+}
+
+inline fun runWithIdleRes(ir: IdlingResource?, pendingCheck: () -> Unit) {
+    try {
+        IdlingRegistry.getInstance().register(ir)
+        pendingCheck()
+    } finally {
+        IdlingRegistry.getInstance().unregister(ir)
+    }
 }
