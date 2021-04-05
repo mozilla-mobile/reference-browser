@@ -222,22 +222,6 @@ class ThreeDotMenuTest {
     }
 
     @Test
-    fun openAddOnsManagerTest() {
-        val defaultWebPage = TestAssetHelper.getGenericAsset(mockWebServer, 1)
-
-        navigationToolbar {
-        }.enterUrlAndEnterToBrowser(defaultWebPage.url) {
-            mDevice.waitForIdle()
-        }.openNavigationToolbar {
-        }.openThreeDotMenu {
-            verifyAddOnsButtonExists()
-        }.openAddonsManager {
-            mDevice.waitForIdle()
-            verifyAddonsView()
-        }
-    }
-
-    @Test
     // Verifies the Synced tabs menu opens from a tab's 3 dot menu and displays the correct view if the user isn't signed in
     fun openSyncedTabsTest() {
         val defaultWebPage = TestAssetHelper.getGenericAsset(mockWebServer, 1)
