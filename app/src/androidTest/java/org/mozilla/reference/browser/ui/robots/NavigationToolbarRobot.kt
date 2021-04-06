@@ -63,6 +63,12 @@ class NavigationToolbarRobot {
             TabTrayMenuRobot().interact()
             return TabTrayMenuRobot.Transition()
         }
+
+        fun clickToolbar(interact: AwesomeBarRobot.() -> Unit): AwesomeBarRobot.Transition {
+            urlBar().click()
+            AwesomeBarRobot().interact()
+            return AwesomeBarRobot.Transition()
+        }
     }
 }
 
