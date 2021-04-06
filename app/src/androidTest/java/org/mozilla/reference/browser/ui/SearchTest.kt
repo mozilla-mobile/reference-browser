@@ -1,0 +1,54 @@
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+
+package org.mozilla.reference.browser.ui
+
+import okhttp3.mockwebserver.MockWebServer
+import org.junit.After
+import org.junit.Before
+import org.junit.Rule
+import org.junit.Test
+import org.mozilla.reference.browser.helpers.AndroidAssetDispatcher
+import org.mozilla.reference.browser.helpers.BrowserActivityTestRule
+import org.mozilla.reference.browser.helpers.TestAssetHelper
+import org.mozilla.reference.browser.ui.robots.navigationToolbar
+
+class SearchTest {
+
+    private lateinit var mockWebServer: MockWebServer
+
+    @get:Rule
+    val activityTestRule = BrowserActivityTestRule()
+
+    @Before
+    fun setUp() {
+        mockWebServer = MockWebServer().apply {
+            setDispatcher(AndroidAssetDispatcher())
+            start()
+        }
+    }
+
+    @After
+    fun tearDown() {
+        mockWebServer.shutdown()
+    }
+
+    @Test
+    fun siteSearchSuggestionTest() {
+        val defaultWebPage = TestAssetHelper.getGenericAsset(mockWebServer, 1)
+
+        navigationToolbar {
+        }.enterUrlAndEnterToBrowser(defaultWebPage.url) {
+        }.openNavigationToolbar {
+        }.openTabTrayMenu {
+        }.openNewTab {
+        }.clickToolbar {
+            clickClearToolbarButton()
+            typeText("localhost")
+            verifySearchSuggestion(defaultWebPage.url.toString())
+        }.clickSearchSuggestion(defaultWebPage.url.toString()) {
+            verifyUrl(defaultWebPage.url.toString())
+        }
+    }
+}

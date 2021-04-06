@@ -5,13 +5,34 @@
 package org.mozilla.reference.browser.ui.robots
 
 import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.action.ViewActions
+import androidx.test.espresso.matcher.ViewMatchers.isDescendantOfA
 import androidx.test.espresso.matcher.ViewMatchers.withId
+import androidx.test.uiautomator.UiSelector
+import junit.framework.Assert.assertTrue
+import org.hamcrest.CoreMatchers.allOf
 import org.mozilla.reference.browser.R
+import org.mozilla.reference.browser.helpers.TestAssetHelper.waitingTime
+import org.mozilla.reference.browser.helpers.TestHelper.packageName
+import org.mozilla.reference.browser.helpers.click
 
 /**
  * Implementation of Robot Pattern for awesomebar.
  */
 class AwesomeBarRobot {
+
+    fun verifySearchSuggestion(searchSuggestionTitle: String) = assertSearchSuggestion(searchSuggestionTitle)
+
+    fun typeText(searchTerm: String) {
+        mDevice.waitForIdle()
+        awesomeBar().perform(ViewActions.typeText(searchTerm))
+    }
+
+    fun clickClearToolbarButton() {
+        mDevice.findObject(UiSelector().resourceId("$packageName:id/toolbar"))
+            .waitForExists(waitingTime)
+        clearToolbarButton().click()
+    }
 
     class Transition {
 
@@ -19,6 +40,14 @@ class AwesomeBarRobot {
 
             NavigationToolbarRobot().interact()
             return NavigationToolbarRobot.Transition()
+        }
+
+        fun clickSearchSuggestion(searchSuggestionTitle: String, interact: BrowserRobot.() -> Unit): BrowserRobot.Transition {
+            val searchSuggestion = mDevice.findObject(UiSelector().textContains(searchSuggestionTitle))
+            searchSuggestion.clickAndWaitForNewWindow()
+
+            BrowserRobot().interact()
+            return BrowserRobot.Transition()
         }
     }
 }
@@ -28,4 +57,24 @@ fun browser(interact: AwesomeBarRobot.() -> Unit): AwesomeBarRobot.Transition {
     return AwesomeBarRobot.Transition()
 }
 
-private fun urlBarSearch() = onView(withId(R.id.mozac_browser_toolbar_edit_url_view))
+private fun awesomeBar() =
+    onView(
+        allOf(
+            withId(R.id.mozac_browser_toolbar_edit_url_view),
+            isDescendantOfA(withId(R.id.mozac_browser_toolbar_container))
+        )
+    )
+
+private fun clearToolbarButton() =
+    onView(
+        allOf(
+            withId(R.id.mozac_browser_toolbar_clear_view),
+            isDescendantOfA(withId(R.id.mozac_browser_toolbar_container))
+        )
+    )
+
+private fun assertSearchSuggestion(searchSuggestionTitle: String) {
+    mDevice.waitForIdle()
+    assertTrue(mDevice.findObject(UiSelector().textContains(searchSuggestionTitle))
+        .waitForExists(waitingTime))
+}
