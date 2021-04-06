@@ -10,6 +10,9 @@ import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.action.ViewActions.pressImeActionButton
 import androidx.test.espresso.action.ViewActions.replaceText
 import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.matcher.ViewMatchers
+import androidx.test.espresso.matcher.ViewMatchers.hasSibling
+import androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibility
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.platform.app.InstrumentationRegistry
@@ -17,6 +20,7 @@ import androidx.test.uiautomator.By
 import androidx.test.uiautomator.UiDevice
 import androidx.test.uiautomator.UiSelector
 import androidx.test.uiautomator.Until
+import org.hamcrest.CoreMatchers.allOf
 import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.ext.waitAndInteract
 import org.mozilla.reference.browser.helpers.TestAssetHelper.waitingTime
@@ -32,6 +36,15 @@ class NavigationToolbarRobot {
     fun verifyNewTabAddressView() = assertNewTabAddressText()
 
     fun checkNumberOfTabsTabCounter(numTabs: String) = numberOfOpenTabsTabCounter.check(matches(withText(numTabs)))
+
+    fun waitForReaderViewIcon() {
+        mDevice.waitForWindowUpdate(packageName, waitingTime)
+        mDevice.findObject(UiSelector()
+            .resourceId("$packageName:id/mozac_browser_toolbar_page_actions"))
+            .waitForExists(waitingTime)
+    }
+
+    fun verifyReaderViewIcon() = assertReaderViewIcon()
 
     class Transition {
 
@@ -84,3 +97,11 @@ private fun assertNoTabAddressText() {
 private fun assertNewTabAddressText() {
     mDevice.waitAndInteract(Until.findObject(By.text("about:blank"))) {}
 }
+
+private fun assertReaderViewIcon() =
+    onView(
+        allOf(
+            withId(R.id.mozac_browser_toolbar_page_actions),
+            hasSibling(withId(R.id.mozac_browser_toolbar_origin_view))
+        )
+    ).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))

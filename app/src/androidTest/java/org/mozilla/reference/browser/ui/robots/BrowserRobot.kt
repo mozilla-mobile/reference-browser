@@ -56,6 +56,8 @@ class BrowserRobot {
         private val device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
 
         fun openNavigationToolbar(interact: NavigationToolbarRobot.() -> Unit): NavigationToolbarRobot.Transition {
+            mDevice.findObject(UiSelector().resourceId("$packageName:id/toolbar"))
+                .waitForExists(waitingTime)
             device.pressMenu()
 
             NavigationToolbarRobot().interact()
