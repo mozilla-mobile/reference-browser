@@ -63,6 +63,7 @@ class ThreeDotMenuRobot {
 
         fun refreshPage(interact: BrowserRobot.() -> Unit): BrowserRobot.Transition {
             refreshButton().click()
+            mDevice.waitForIdle()
             BrowserRobot().interact()
             return BrowserRobot.Transition()
         }
