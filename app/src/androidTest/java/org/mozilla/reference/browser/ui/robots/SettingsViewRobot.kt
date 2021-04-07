@@ -10,6 +10,8 @@ import androidx.test.espresso.Espresso
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers
+import androidx.test.espresso.matcher.ViewMatchers.isCompletelyDisplayed
+import androidx.test.espresso.matcher.ViewMatchers.isDescendantOfA
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibility
 import androidx.test.espresso.matcher.ViewMatchers.withId
@@ -48,6 +50,9 @@ class SettingsViewRobot {
     fun verifyMozillaHeading() = assertMozillaHeading()
     fun verifyAboutReferenceBrowserButton() = assertAboutReferenceBrowserButton()
     fun verifySettingsRecyclerViewToExist() = waitForSettingsRecyclerViewToExist()
+
+    fun clickCustomAddonCollectionButton() = customAddonCollectionButton().click()
+    fun verifyCustomAddonCollectionPanelExist() = assertCustomAddonCollectionPanel()
 
     // toggleRemoteDebugging does not yet verify that the debug service is started
     // server runs on port 6000
@@ -159,3 +164,14 @@ private fun assertMozillaHeading() = mozillaHeading()
         .check(matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
 private fun assertAboutReferenceBrowserButton() = aboutReferenceBrowserButton()
         .check(matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+private fun assertCustomAddonCollectionPanel() {
+    mDevice.waitForIdle()
+    mDevice.findObject(UiSelector().resourceId("$packageName:id/parentPanel"))
+        .waitForExists(waitingTime)
+    onView(
+        allOf(
+            withText(R.string.preferences_customize_amo_collection),
+            isDescendantOfA(withId(R.id.title_template))
+        )
+    ).check(matches(isCompletelyDisplayed()))
+}
