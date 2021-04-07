@@ -27,6 +27,7 @@ class SettingsViewTest {
     val grantPermissionRule: GrantPermissionRule = GrantPermissionRule.grant(android.Manifest.permission.CAMERA)
 
     @get:Rule val browserActivityTestRule = BrowserActivityTestRule()
+
     // This test verifies settings view items are all in place
     @Test
     fun settingsItemsTest() {
@@ -94,7 +95,6 @@ class SettingsViewTest {
             verifyTPEnableinPrivateBrowsing()
             verifyDataChoicesHeading()
             verifyUseTelemetryToggle()
-            verifyUseTelemetryToggle()
             verifyTelemetrySummary()
         }
     }
@@ -128,6 +128,22 @@ class SettingsViewTest {
             scrollToElementByText("About Reference Browser")
         }.openAboutReferenceBrowser {
             verifyAboutBrowser()
+        }
+    }
+
+    @Test
+    /* Can't check further because after creating the custom add-on collection
+    the currently running process is terminated see:
+    /blob/master/app/src/main/java/org/mozilla/reference/browser/settings/SettingsFragment.kt#L217
+    Confirming the custom add-on collection creation or trying to continue testing afterwards
+    will cause the test instrumentation process to crash */
+    fun customAddonsCollectionTest() {
+        navigationToolbar {
+        }.openThreeDotMenu {
+        }.openSettings {
+            verifyCustomAddonCollectionButton()
+            clickCustomAddonCollectionButton()
+            verifyCustomAddonCollectionPanelExist()
         }
     }
 }
