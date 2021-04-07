@@ -4,6 +4,7 @@
 
 package org.mozilla.reference.browser.ui
 
+import androidx.core.net.toUri
 import androidx.test.rule.GrantPermissionRule
 import org.junit.Ignore
 import org.junit.Rule
@@ -144,6 +145,21 @@ class SettingsViewTest {
             verifyCustomAddonCollectionButton()
             clickCustomAddonCollectionButton()
             verifyCustomAddonCollectionPanelExist()
+        }
+    }
+
+    @Test
+    fun openLinksInAppsTest() {
+        val url = "m.youtube.com"
+        navigationToolbar {
+        }.openThreeDotMenu {
+        }.openSettings {
+            verifyOpenLinksInApps()
+            clickOpenLinksInApps()
+        }.goBack {
+        }.enterUrlAndEnterToBrowser(url.toUri()) {
+        }.checkExternalApps {
+            verifyYouTubeApp()
         }
     }
 }
