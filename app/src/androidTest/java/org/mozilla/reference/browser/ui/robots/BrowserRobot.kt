@@ -61,6 +61,12 @@ class BrowserRobot {
             NavigationToolbarRobot().interact()
             return NavigationToolbarRobot.Transition()
         }
+
+        fun checkExternalApps(interact: ExternalAppsRobot.() -> Unit): ExternalAppsRobot.Transition {
+            mDevice.waitForWindowUpdate(packageName, waitingTime)
+            ExternalAppsRobot().interact()
+            return ExternalAppsRobot.Transition()
+        }
     }
 }
 

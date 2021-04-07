@@ -54,6 +54,8 @@ class SettingsViewRobot {
     fun clickCustomAddonCollectionButton() = customAddonCollectionButton().click()
     fun verifyCustomAddonCollectionPanelExist() = assertCustomAddonCollectionPanel()
 
+    fun clickOpenLinksInApps() = openLinksInAppsToggle().click()
+
     // toggleRemoteDebugging does not yet verify that the debug service is started
     // server runs on port 6000
     fun toggleRemoteDebuggingOn() = {
@@ -99,6 +101,14 @@ class SettingsViewRobot {
             aboutReferenceBrowserButton().click()
             BrowserRobot().interact()
             return BrowserRobot.Transition()
+        }
+
+        fun goBack(interact: NavigationToolbarRobot.() -> Unit): NavigationToolbarRobot.Transition {
+            val navigateUpButton = mDevice.findObject(UiSelector().descriptionContains("Navigate up"))
+            navigateUpButton.clickAndWaitForNewWindow()
+
+            NavigationToolbarRobot().interact()
+            return NavigationToolbarRobot.Transition()
         }
     }
 }
