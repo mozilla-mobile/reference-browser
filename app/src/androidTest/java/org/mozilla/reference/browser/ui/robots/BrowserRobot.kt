@@ -11,6 +11,7 @@ import androidx.test.uiautomator.UiSelector
 import androidx.test.uiautomator.Until
 import junit.framework.Assert.assertTrue
 import org.mozilla.reference.browser.ext.waitAndInteract
+import org.mozilla.reference.browser.helpers.Constants.LONG_CLICK_DURATION
 import org.mozilla.reference.browser.helpers.TestAssetHelper.waitingTime
 import org.mozilla.reference.browser.helpers.TestHelper.packageName
 
@@ -52,6 +53,61 @@ class BrowserRobot {
             .waitForExists(waitingTime))
     }
 
+    fun longClickMatchingText(expectedText: String) {
+        mDevice.waitForWindowUpdate(packageName, waitingTime)
+        mDevice.findObject(UiSelector().resourceId("$packageName:id/engineView"))
+            .waitForExists(waitingTime)
+        mDevice.findObject(UiSelector().textContains(expectedText)).waitForExists(waitingTime)
+        val link = mDevice.findObject(By.textContains(expectedText))
+            link.click(LONG_CLICK_DURATION)
+    }
+
+    fun verifyLinkContextMenuItems() {
+        mDevice.waitForWindowUpdate(packageName, waitingTime)
+        mDevice.findObject(UiSelector().resourceId("$packageName:id/parentPanel"))
+            .waitForExists(waitingTime)
+        assertTrue(mDevice.findObject(UiSelector().resourceId("$packageName:id/titleView"))
+            .waitForExists(waitingTime))
+        assertTrue(mDevice.findObject(UiSelector().textContains("Open link in new tab"))
+            .waitForExists(waitingTime))
+        assertTrue(mDevice.findObject(UiSelector().textContains("Open link in private tab"))
+            .waitForExists(waitingTime))
+        assertTrue(mDevice.findObject(UiSelector().textContains("Copy link"))
+            .waitForExists(waitingTime))
+        assertTrue(mDevice.findObject(UiSelector().textContains("Share link"))
+            .waitForExists(waitingTime))
+    }
+
+    fun clickContextOpenLinkInNewTab() {
+        mDevice.findObject(UiSelector().resourceId("$packageName:id/parentPanel"))
+            .waitForExists(waitingTime)
+        mDevice.findObject(UiSelector().textContains("Open link in new tab"))
+            .waitForExists(waitingTime)
+
+        val contextMenuOpenInNewTab = mDevice.findObject(UiSelector().textContains("Open link in new tab"))
+        contextMenuOpenInNewTab.click()
+    }
+
+    fun clickContextOpenLinkInPrivateTab() {
+        mDevice.findObject(UiSelector().resourceId("$packageName:id/parentPanel"))
+            .waitForExists(waitingTime)
+        mDevice.findObject(UiSelector().textContains("Open link in private tab"))
+            .waitForExists(waitingTime)
+
+        val contextMenuOpenInNewPrivateTab = mDevice.findObject(UiSelector().textContains("Open link in private tab"))
+        contextMenuOpenInNewPrivateTab.click()
+    }
+
+    fun clickContextCopyLink() {
+        mDevice.findObject(UiSelector().resourceId("$packageName:id/parentPanel"))
+            .waitForExists(waitingTime)
+        mDevice.findObject(UiSelector().textContains("Copy link"))
+            .waitForExists(waitingTime)
+
+        val contextCopyLink = mDevice.findObject(UiSelector().textContains("Copy link"))
+        contextCopyLink.click()
+    }
+
     class Transition {
         private val device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
 
@@ -66,6 +122,19 @@ class BrowserRobot {
             mDevice.waitForWindowUpdate(packageName, waitingTime)
             ExternalAppsRobot().interact()
             return ExternalAppsRobot.Transition()
+        }
+
+        fun clickContextShareLink(interact: ContentPanelRobot.() -> Unit): ContentPanelRobot.Transition {
+            mDevice.findObject(UiSelector().resourceId("$packageName:id/parentPanel"))
+                .waitForExists(waitingTime)
+            mDevice.findObject(UiSelector().textContains("Share link"))
+                .waitForExists(waitingTime)
+
+            val contextCopyLink = mDevice.findObject(UiSelector().textContains("Share link"))
+            contextCopyLink.click()
+
+            ContentPanelRobot().interact()
+            return ContentPanelRobot.Transition()
         }
     }
 }

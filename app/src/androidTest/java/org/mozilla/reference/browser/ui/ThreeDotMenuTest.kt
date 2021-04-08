@@ -272,7 +272,7 @@ class ThreeDotMenuTest {
         }.openAddToHomeScreen {
             verifyAddToHomeScreenPopup()
             clickAddAutomaticallyToHomeScreenButton()
-        }.openHomeScreenShortcut("Website") {
+        }.openHomeScreenShortcut(defaultWebPage.title) {
             verifyUrl(defaultWebPage.toString())
         }
     }

@@ -22,6 +22,7 @@ import org.mozilla.reference.browser.helpers.click
 class AwesomeBarRobot {
 
     fun verifySearchSuggestion(searchSuggestionTitle: String) = assertSearchSuggestion(searchSuggestionTitle)
+    fun verifyLinkFromClipboard(clipboardLink: String) = assertLinkFromClipboard(clipboardLink)
 
     fun typeText(searchTerm: String) {
         mDevice.waitForIdle()
@@ -45,6 +46,14 @@ class AwesomeBarRobot {
         fun clickSearchSuggestion(searchSuggestionTitle: String, interact: BrowserRobot.() -> Unit): BrowserRobot.Transition {
             val searchSuggestion = mDevice.findObject(UiSelector().textContains(searchSuggestionTitle))
             searchSuggestion.clickAndWaitForNewWindow()
+
+            BrowserRobot().interact()
+            return BrowserRobot.Transition()
+        }
+
+        fun clickLinkFromClipboard(clipboardLink: String, interact: BrowserRobot.() -> Unit): BrowserRobot.Transition {
+            val clipboardLink = mDevice.findObject(UiSelector().textContains(clipboardLink))
+            clipboardLink.clickAndWaitForNewWindow()
 
             BrowserRobot().interact()
             return BrowserRobot.Transition()
@@ -76,5 +85,15 @@ private fun clearToolbarButton() =
 private fun assertSearchSuggestion(searchSuggestionTitle: String) {
     mDevice.waitForIdle()
     assertTrue(mDevice.findObject(UiSelector().textContains(searchSuggestionTitle))
+        .waitForExists(waitingTime))
+}
+
+private fun assertLinkFromClipboard(clipboardLink: String) {
+    mDevice.waitForIdle()
+    mDevice.findObject(UiSelector().resourceId("$packageName:id/awesomeBar"))
+        .waitForExists(waitingTime)
+    mDevice.findObject(UiSelector().resourceId("$packageName:id/mozac_browser_awesomebar_title"))
+        .waitForExists(waitingTime)
+    assertTrue(mDevice.findObject(UiSelector().textContains(clipboardLink))
         .waitForExists(waitingTime))
 }
