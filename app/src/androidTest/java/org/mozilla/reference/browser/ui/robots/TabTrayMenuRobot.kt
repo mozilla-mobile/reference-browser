@@ -17,12 +17,15 @@ import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.uiautomator.By
 import androidx.test.uiautomator.UiDevice
+import androidx.test.uiautomator.UiSelector
 import androidx.test.uiautomator.Until
+import junit.framework.Assert
 import org.junit.Assert.assertNull
 import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.ext.waitAndInteract
 import org.mozilla.reference.browser.helpers.TestAssetHelper.waitingTime
 import org.mozilla.reference.browser.helpers.TestAssetHelper.waitingTimeShort
+import org.mozilla.reference.browser.helpers.TestHelper
 import org.mozilla.reference.browser.helpers.assertIsSelected
 import org.mozilla.reference.browser.helpers.click
 import org.mozilla.reference.browser.helpers.matchers.TabMatcher
@@ -47,6 +50,7 @@ class TabTrayMenuRobot {
     fun verifyThereAreNotPrivateTabsOpen() = assertThereAreNoPrivateTabsOpen()
     fun verifyThereIsOnePrivateTabOpen() = assertPrivateTabs()
     fun verifyThereIsOneTabOpen() = tab().check(matches(isDisplayed()))
+    fun verifyExistingOpenTabs(title: String) = assertExistingOpenTabs(title)
 
     fun goBackFromTabTrayTest() = goBackButton().click()
 
@@ -115,4 +119,13 @@ private fun assertThereAreNoPrivateTabsOpen() {
     } finally {
         obj?.recycle()
     }
+}
+
+private fun assertExistingOpenTabs(title: String) {
+    mDevice.waitForIdle()
+    mDevice.findObject(UiSelector().resourceId("${TestHelper.packageName}:id/tabsTray"))
+        .waitForExists(waitingTime)
+    Assert.assertTrue(
+        mDevice.findObject(UiSelector().textContains(title)).waitForExists(waitingTime)
+    )
 }
