@@ -83,4 +83,23 @@ class AddonsTest {
             verifyAddonElementsView(addonName)
         }
     }
+
+    @Test
+    fun removeAddonTest() {
+        val addonName = "uBlock Origin"
+
+        navigationToolbar {
+        }.openThreeDotMenu {
+        }.openAddonsManager {
+            verifyAddonsRecommendedView()
+            clickInstallAddonButton(addonName)
+            clickAllowInstallAddonButton()
+            waitForAddonDownloadComplete()
+        }.dismissAddonDownloadCompletedPrompt {
+            openAddon(addonName)
+            verifyAddonElementsView(addonName)
+        }.clickRemoveAddonButton {
+            verifyAddonUninstallToast(addonName)
+        }
+    }
 }

@@ -5,6 +5,7 @@
 package org.mozilla.reference.browser.ui.robots
 
 import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.NoMatchingViewException
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers
@@ -34,24 +35,49 @@ class AddonsManagerRobot {
     fun verifyInstallAddonPrompt(addonName: String) = assertAddonPrompt(addonName)
     fun verifyAddonDownloadCompletedPrompt(addonName: String) = assertAddonDownloadCompletedPrompt(addonName)
     fun verifyAddonElementsView(addonName: String) = assertAddonElementsView(addonName)
+    fun verifyAddonUninstallToast(addonName: String) = assertAddonUninstallToast(addonName)
     fun clickInstallAddonButton(addonName: String) = selectInstallAddonButton(addonName)
     fun clickCancelInstallButton() = cancelInstallButton()
     fun clickAllowInstallAddonButton() = allowInstallAddonButton()
     fun waitForAddonDownloadComplete() = waitForDownloadProgressUntilGone()
     fun openAddon(addonName: String) {
-        mDevice.waitForIdle()
-        verifyAddonsEnabledView()
-        onView(
-            allOf(
-                withId(R.id.add_on_name),
-                withText(addonName)))
-            .check(matches(isCompletelyDisplayed()))
-            .perform(click())
+        try {
+            mDevice.waitForIdle()
+            verifyAddonsEnabledView()
+            onView(
+                allOf(
+                    withId(R.id.add_on_name),
+                    withText(addonName)))
+                .check(matches(isCompletelyDisplayed()))
+                .perform(click())
+        } catch (e: NoMatchingViewException) {
+            mDevice.waitForIdle()
+            navigationToolbar {
+            }.openThreeDotMenu {
+            }.openAddonsManager {
+                verifyAddonsRecommendedView()
+                clickInstallAddonButton(addonName)
+                allowInstallAddonButton()
+                waitForAddonDownloadComplete()
+                verifyAddonDownloadCompletedPrompt(addonName)
+            }.dismissAddonDownloadCompletedPrompt {
+                openAddon(addonName)
+            }
+        }
     }
 
     class Transition {
         fun dismissAddonDownloadCompletedPrompt(interact: AddonsManagerRobot.() -> Unit): AddonsManagerRobot.Transition {
             mDevice.pressBack()
+            AddonsManagerRobot().interact()
+            return AddonsManagerRobot.Transition()
+        }
+
+        fun clickRemoveAddonButton(interact: AddonsManagerRobot.() -> Unit): AddonsManagerRobot.Transition {
+            mDevice.waitForIdle()
+            val removeAddonButton = mDevice.findObject(UiSelector().resourceId("$packageName:id/remove_add_on"))
+            removeAddonButton.clickAndWaitForNewWindow()
+
             AddonsManagerRobot().interact()
             return AddonsManagerRobot.Transition()
         }
@@ -180,5 +206,11 @@ class AddonsManagerRobot {
                 hasSibling(withId(R.id.allow_in_private_browsing_switch))
             )
         ).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+    }
+
+    private fun assertAddonUninstallToast(addonName: String) {
+        mDevice.waitForIdle()
+        assertTrue(mDevice.findObject(UiSelector().textContains("Successfully uninstalled $addonName"))
+            .waitUntilGone(waitingTime))
     }
 }
