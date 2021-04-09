@@ -30,23 +30,20 @@ import org.mozilla.reference.browser.helpers.TestHelper.packageName
 class AddonsManagerRobot {
 
     fun verifyAddonsRecommendedView() = assertAddonsRecommendedView()
-    fun verifyAddonsEnabledView() = assertAddonsEnabledView()
     fun verifyInstallAddonPrompt(addonName: String) = assertAddonPrompt(addonName)
     fun verifyAddonDownloadCompletedPrompt(addonName: String) = assertAddonDownloadCompletedPrompt(addonName)
     fun verifyAddonElementsView(addonName: String) = assertAddonElementsView(addonName)
+    fun verifyAddonUninstallToast(addonName: String) = assertAddonUninstallToast(addonName)
     fun clickInstallAddonButton(addonName: String) = selectInstallAddonButton(addonName)
     fun clickCancelInstallButton() = cancelInstallButton()
     fun clickAllowInstallAddonButton() = allowInstallAddonButton()
     fun waitForAddonDownloadComplete() = waitForDownloadProgressUntilGone()
     fun openAddon(addonName: String) {
+        val addon = mDevice.findObject(UiSelector().textContains(addonName))
         mDevice.waitForIdle()
-        verifyAddonsEnabledView()
-        onView(
-            allOf(
-                withId(R.id.add_on_name),
-                withText(addonName)))
-            .check(matches(isCompletelyDisplayed()))
-            .perform(click())
+        mDevice.findObject(UiSelector().textContains("Enabled")).waitForExists(waitingTime)
+        mDevice.findObject(UiSelector().textContains(addonName)).waitForExists(waitingTime)
+        addon.clickAndWaitForNewWindow()
     }
 
     class Transition {
@@ -55,9 +52,18 @@ class AddonsManagerRobot {
             AddonsManagerRobot().interact()
             return AddonsManagerRobot.Transition()
         }
+        fun clickRemoveAddonButton(interact: AddonsManagerRobot.() -> Unit): AddonsManagerRobot.Transition {
+            val removeAddonButton = mDevice.findObject(UiSelector().resourceId("$packageName:id/remove_add_on"))
+            mDevice.findObject(UiSelector().resourceId("$packageName:id/remove_add_on"))
+                .waitForExists(waitingTime)
+            removeAddonButton.clickAndWaitForNewWindow()
+            AddonsManagerRobot().interact()
+            return AddonsManagerRobot.Transition()
+        }
     }
 
     private fun assertAddonsRecommendedView() {
+        mDevice.waitForIdle()
         assertTrue(mDevice.findObject(UiSelector().text("Recommended")).waitForExists(waitingTime))
         // Check uBlock is displayed in the "Recommended" section
         onView(
@@ -68,21 +74,6 @@ class AddonsManagerRobot {
                     hasDescendant(withId(R.id.rating)),
                     hasDescendant(withId(R.id.users_count)),
                     hasDescendant(withId(R.id.add_button))
-            )
-        ).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
-    }
-
-    private fun assertAddonsEnabledView() {
-        assertTrue(mDevice.findObject(UiSelector().text("Enabled")).waitForExists(waitingTime))
-        // Check uBlock is displayed in the "Enabled" section
-        onView(
-            allOf(
-                withId(R.id.add_on_item),
-                hasDescendant(withText("uBlock Origin")),
-                hasDescendant(withText("Finally, an efficient wide-spectrum content blocker. Easy on CPU and memory.")),
-                hasDescendant(withId(R.id.rating)),
-                hasDescendant(withId(R.id.users_count)),
-                hasDescendant(withId(R.id.add_button))
             )
         ).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
     }
@@ -180,5 +171,10 @@ class AddonsManagerRobot {
                 hasSibling(withId(R.id.allow_in_private_browsing_switch))
             )
         ).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+    }
+
+    private fun assertAddonUninstallToast(addonName: String) {
+        mDevice.findObject(UiSelector().textContains("Successfully uninstalled $addonName"))
+            .waitUntilGone(waitingTime)
     }
 }
