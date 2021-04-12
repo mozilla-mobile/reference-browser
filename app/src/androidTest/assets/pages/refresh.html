@@ -2,7 +2,7 @@
 <html>
     <script src="jquery-1.10.2.js"></script>
     <script>
-      
+
     function setCookie(newVal){
 	window.document.cookie = "pageStatus = " + newVal + ";";
     }
@@ -27,19 +27,19 @@
 
         if (currentCookie.localeCompare("REFRESHED") == 0) {
                 setCookie("DEFAULT");
-            return "My little test page - DEFAULT";
+            return "DEFAULT";
         } else {
                 setCookie("REFRESHED");
-            return "My little test page - REFRESHED!";
+            return "REFRESHED";
         }
     }
 
     var textToShow = valSwap();
-    $(document).ready(function() {
-        $("h1").html(textToShow);
+    window.addEventListener('DOMContentLoaded', (event) => {
+        document.querySelector('h1').innerHTML = textToShow;
     });
 </script>
 <body>
-<h1>My little test page - DEFAULT</h1>
+<h1>DEFAULT</h1>
 </body>
 </html>
