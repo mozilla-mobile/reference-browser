@@ -6,6 +6,8 @@ package org.mozilla.reference.browser.ui.robots
 
 import android.net.Uri
 import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.IdlingRegistry
+import androidx.test.espresso.IdlingResource
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.action.ViewActions.pressImeActionButton
 import androidx.test.espresso.action.ViewActions.replaceText
@@ -89,4 +91,13 @@ private fun assertNoTabAddressText() {
 
 private fun assertNewTabAddressText() {
     mDevice.waitAndInteract(Until.findObject(By.text("about:blank"))) {}
+}
+
+inline fun runWithIdleRes(ir: IdlingResource?, pendingCheck: () -> Unit) {
+    try {
+        IdlingRegistry.getInstance().register(ir)
+        pendingCheck()
+    } finally {
+        IdlingRegistry.getInstance().unregister(ir)
+    }
 }

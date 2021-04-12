@@ -8,10 +8,9 @@ import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.uiautomator.By
 import androidx.test.uiautomator.UiDevice
 import androidx.test.uiautomator.UiSelector
-import androidx.test.uiautomator.Until
 import junit.framework.Assert.assertTrue
-import org.mozilla.reference.browser.ext.waitAndInteract
 import org.mozilla.reference.browser.helpers.Constants.LONG_CLICK_DURATION
+import org.mozilla.reference.browser.helpers.SessionLoadedIdlingResource
 import org.mozilla.reference.browser.helpers.TestAssetHelper.waitingTime
 import org.mozilla.reference.browser.helpers.TestHelper.packageName
 
@@ -19,12 +18,20 @@ import org.mozilla.reference.browser.helpers.TestHelper.packageName
  * Implementation of Robot Pattern for browser action.
  */
 class BrowserRobot {
+    private lateinit var sessionLoadedIdlingResource: SessionLoadedIdlingResource
     /* Asserts that the text within DOM element with ID="testContent" has the given text, i.e.
     * document.querySelector('#testContent').innerText == expectedText
     */
     fun verifyPageContent(expectedText: String) {
-        val mDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
-        mDevice.waitAndInteract(Until.findObject(By.textContains(expectedText))) {}
+        sessionLoadedIdlingResource = SessionLoadedIdlingResource()
+
+        mDevice.waitForIdle()
+        mDevice.findObject(UiSelector().resourceId("$packageName:id/engineView"))
+            .waitForExists(waitingTime)
+        runWithIdleRes(sessionLoadedIdlingResource) {
+            assertTrue(mDevice.findObject(UiSelector().textContains(expectedText))
+                .waitForExists(waitingTime))
+        }
     }
 
     fun verifyFXAUrl() {
