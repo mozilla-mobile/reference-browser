@@ -13,7 +13,6 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.fragment_add_ons.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -34,6 +33,9 @@ class AddonsFragment : Fragment(), AddonsManagerAdapterDelegate {
     private lateinit var recyclerView: RecyclerView
     private val scope = CoroutineScope(Dispatchers.IO)
 
+    private val addonProgressOverlay: View
+        get() = requireView().findViewById(R.id.addonProgressOverlay)
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -53,6 +55,7 @@ class AddonsFragment : Fragment(), AddonsManagerAdapterDelegate {
         this@AddonsFragment.view?.let { view ->
             bindRecyclerView(view)
         }
+
         addonProgressOverlay.visibility = View.GONE
 
         findPreviousDialogFragment()?.let { dialog ->

@@ -12,9 +12,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
-import kotlinx.android.synthetic.main.fragment_tabstray.tabsPanel
-import kotlinx.android.synthetic.main.fragment_tabstray.tabsTray
-import kotlinx.android.synthetic.main.fragment_tabstray.tabsToolbar
+import androidx.recyclerview.widget.RecyclerView
 import mozilla.components.browser.tabstray.DefaultTabViewHolder
 import mozilla.components.browser.tabstray.TabsAdapter
 import mozilla.components.browser.tabstray.TabsTrayStyling
@@ -50,6 +48,9 @@ class TabsTrayFragment : Fragment(), UserInteractionHandler {
             { !it.content.private },
             ::closeTabsTray)
 
+        val tabsPanel: TabsPanel = view.findViewById(R.id.tabsPanel)
+        val tabsToolbar: TabsToolbar = view.findViewById(R.id.tabsToolbar)
+
         tabsPanel.initialize(tabsFeature, updateTabsToolbar = ::updateTabsToolbar)
         tabsToolbar.initialize(tabsFeature) { closeTabsTray() }
     }
@@ -79,6 +80,7 @@ class TabsTrayFragment : Fragment(), UserInteractionHandler {
     }
 
     private fun updateTabsToolbar(isPrivate: Boolean) {
+        val tabsToolbar = requireView().findViewById<TabsToolbar>(R.id.tabsToolbar)
         tabsToolbar.updateToolbar(isPrivate)
     }
 
@@ -96,6 +98,7 @@ class TabsTrayFragment : Fragment(), UserInteractionHandler {
             styling = trayStyling
         }
 
+        val tabsTray = requireView().findViewById<RecyclerView>(R.id.tabsTray)
         tabsTray.layoutManager = layoutManager
         tabsTray.adapter = tabsAdapter
 

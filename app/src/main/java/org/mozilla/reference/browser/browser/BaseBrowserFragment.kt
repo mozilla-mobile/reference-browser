@@ -15,14 +15,16 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.fragment.app.Fragment
 import androidx.preference.PreferenceManager
-import kotlinx.android.synthetic.main.fragment_browser.*
-import kotlinx.android.synthetic.main.fragment_browser.view.*
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import mozilla.components.browser.state.selector.selectedTab
+import mozilla.components.browser.toolbar.BrowserToolbar
 import mozilla.components.browser.toolbar.behavior.BrowserToolbarBehavior
 import mozilla.components.compose.browser.toolbar.BrowserToolbar
+import mozilla.components.concept.engine.EngineView
 import mozilla.components.feature.app.links.AppLinksFeature
 import mozilla.components.feature.downloads.DownloadsFeature
 import mozilla.components.feature.downloads.manager.FetchDownloadManager
+import mozilla.components.feature.findinpage.view.FindInPageBar
 import mozilla.components.feature.findinpage.view.FindInPageView
 import mozilla.components.feature.prompts.PromptFeature
 import mozilla.components.feature.session.FullScreenFeature
@@ -71,6 +73,15 @@ abstract class BaseBrowserFragment : Fragment(), UserInteractionHandler, Activit
     private val swipeRefreshFeature = ViewBoundFeatureWrapper<SwipeRefreshFeature>()
     private val windowFeature = ViewBoundFeatureWrapper<WindowFeature>()
     private val webAuthnFeature = ViewBoundFeatureWrapper<WebAuthnFeature>()
+
+    private val engineView: EngineView
+        get() = requireView().findViewById<View>(R.id.engineView) as EngineView
+    private val toolbar: BrowserToolbar
+        get() = requireView().findViewById(R.id.toolbar)
+    private val findInPageBar: FindInPageBar
+        get() = requireView().findViewById(R.id.findInPageBar)
+    private val swipeRefresh: SwipeRefreshLayout
+        get() = requireView().findViewById(R.id.swipeRefresh)
 
     private val backButtonHandler: List<ViewBoundFeatureWrapper<*>> = listOf(
         fullScreenFeature,
@@ -140,6 +151,7 @@ abstract class BaseBrowserFragment : Fragment(), UserInteractionHandler, Activit
                 requireComponents.core.store,
                 requireComponents.useCases.tabsUseCases,
                 requireComponents.useCases.contextMenuUseCases,
+                engineView,
                 view,
                 sessionId),
             owner = this,
@@ -258,7 +270,7 @@ abstract class BaseBrowserFragment : Fragment(), UserInteractionHandler, Activit
             feature = SwipeRefreshFeature(
                 requireComponents.core.store,
                 requireComponents.useCases.sessionUseCases.reload,
-                view.swipeRefresh
+                swipeRefresh
             ),
             owner = this,
             view = view

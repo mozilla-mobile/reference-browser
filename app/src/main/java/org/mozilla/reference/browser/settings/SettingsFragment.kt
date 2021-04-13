@@ -10,14 +10,13 @@ import android.os.Bundle
 import android.os.Handler
 import android.provider.Settings
 import android.view.View
+import android.widget.EditText
 import androidx.preference.Preference.OnPreferenceChangeListener
 import androidx.preference.Preference.OnPreferenceClickListener
 import androidx.preference.PreferenceFragmentCompat
 import android.widget.Toast
 import android.widget.Toast.LENGTH_SHORT
 import androidx.appcompat.app.AlertDialog
-import kotlinx.android.synthetic.main.amo_collection_override_dialog.view.custom_amo_collection
-import kotlinx.android.synthetic.main.amo_collection_override_dialog.view.custom_amo_user
 import mozilla.components.support.ktx.android.view.showKeyboard
 import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.R.string.pref_key_firefox_account
@@ -195,6 +194,8 @@ class SettingsFragment : PreferenceFragmentCompat() {
         return OnPreferenceClickListener {
             val context = requireContext()
             val dialogView = View.inflate(context, R.layout.amo_collection_override_dialog, null)
+            val userView = dialogView.findViewById<EditText>(R.id.custom_amo_user)
+            val collectionView = dialogView.findViewById<EditText>(R.id.custom_amo_collection)
 
             AlertDialog.Builder(context).apply {
                 setTitle(context.getString(R.string.preferences_customize_amo_collection))
@@ -204,8 +205,8 @@ class SettingsFragment : PreferenceFragmentCompat() {
                 }
 
                 setPositiveButton(R.string.customize_addon_collection_ok) { _, _ ->
-                    RBSettings.setOverrideAmoUser(context, dialogView.custom_amo_user.text.toString())
-                    RBSettings.setOverrideAmoCollection(context, dialogView.custom_amo_collection.text.toString())
+                    RBSettings.setOverrideAmoUser(context, userView.text.toString())
+                    RBSettings.setOverrideAmoCollection(context, collectionView.text.toString())
 
                     Toast.makeText(
                             context,
@@ -218,10 +219,10 @@ class SettingsFragment : PreferenceFragmentCompat() {
                     }, AMO_COLLECTION_OVERRIDE_EXIT_DELAY)
                 }
 
-                dialogView.custom_amo_collection.setText(RBSettings.getOverrideAmoCollection(context))
-                dialogView.custom_amo_user.setText(RBSettings.getOverrideAmoUser(context))
-                dialogView.custom_amo_user.requestFocus()
-                dialogView.custom_amo_user.showKeyboard()
+                collectionView.setText(RBSettings.getOverrideAmoCollection(context))
+                userView.setText(RBSettings.getOverrideAmoUser(context))
+                userView.requestFocus()
+                userView.showKeyboard()
                 create()
             }.show()
             true

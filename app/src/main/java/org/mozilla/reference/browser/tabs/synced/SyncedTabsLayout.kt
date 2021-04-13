@@ -8,8 +8,10 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.View
 import android.widget.FrameLayout
+import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
-import kotlinx.android.synthetic.main.layout_synced_tabs.view.*
+import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import mozilla.components.browser.storage.sync.SyncedDeviceTabs
 import mozilla.components.feature.syncedtabs.view.SyncedTabsView
 import mozilla.components.feature.syncedtabs.view.SyncedTabsView.ErrorType.MULTIPLE_DEVICES_UNAVAILABLE
@@ -29,13 +31,20 @@ class SyncedTabsLayout @JvmOverloads constructor(
 
     private val adapter = SyncedTabsAdapter() { listener?.onTabClicked(it) }
 
+    private val syncedTabsList: RecyclerView
+        get() = findViewById(R.id.synced_tabs_list)
+    private val syncedTabsPullToRefresh: SwipeRefreshLayout
+        get() = findViewById(R.id.synced_tabs_pull_to_refresh)
+    private val syncedTabsStatus: TextView
+        get() = findViewById(R.id.synced_tabs_status)
+
     init {
         inflate(getContext(), R.layout.layout_synced_tabs, this)
 
-        synced_tabs_list.layoutManager = LinearLayoutManager(context)
-        synced_tabs_list.adapter = adapter
+        syncedTabsList.layoutManager = LinearLayoutManager(context)
+        syncedTabsList.adapter = adapter
 
-        synced_tabs_pull_to_refresh.setOnRefreshListener { listener?.onRefresh() }
+        syncedTabsPullToRefresh.setOnRefreshListener { listener?.onRefresh() }
     }
 
     override fun onError(error: SyncedTabsView.ErrorType) {
@@ -46,15 +55,15 @@ class SyncedTabsLayout @JvmOverloads constructor(
             SYNC_NEEDS_REAUTHENTICATION -> R.string.synced_tabs_reauth
         }
 
-        synced_tabs_status.text = context.getText(stringResId)
+        syncedTabsStatus.text = context.getText(stringResId)
 
-        synced_tabs_list.visibility = View.GONE
-        synced_tabs_status.visibility = View.VISIBLE
+        syncedTabsList.visibility = View.GONE
+        syncedTabsStatus.visibility = View.VISIBLE
     }
 
     override fun displaySyncedTabs(syncedTabs: List<SyncedDeviceTabs>) {
-        synced_tabs_list.visibility = View.VISIBLE
-        synced_tabs_status.visibility = View.GONE
+        syncedTabsList.visibility = View.VISIBLE
+        syncedTabsStatus.visibility = View.GONE
 
         val allDeviceTabs = syncedTabs.filter {
             it.tabs.isEmpty()
@@ -68,13 +77,13 @@ class SyncedTabsLayout @JvmOverloads constructor(
     }
 
     override fun startLoading() {
-        synced_tabs_list.visibility = View.VISIBLE
-        synced_tabs_status.visibility = View.GONE
+        syncedTabsList.visibility = View.VISIBLE
+        syncedTabsStatus.visibility = View.GONE
 
-        synced_tabs_pull_to_refresh.isRefreshing = true
+        syncedTabsPullToRefresh.isRefreshing = true
     }
 
     override fun stopLoading() {
-        synced_tabs_pull_to_refresh.isRefreshing = false
+        syncedTabsPullToRefresh.isRefreshing = false
     }
 }

@@ -12,7 +12,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import kotlinx.android.synthetic.main.fragment_add_on_settings.*
 import mozilla.components.concept.engine.EngineSession
 import mozilla.components.concept.engine.EngineView
 import mozilla.components.feature.addons.Addon
@@ -61,6 +60,7 @@ class AddonSettingsActivity : AppCompatActivity() {
         override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
             super.onViewCreated(view, savedInstanceState)
 
+            val addonSettingsEngineView = view.findViewById<View>(R.id.addonSettingsEngineView) as EngineView
             addonSettingsEngineView.render(engineSession)
             engineSession.loadUrl(optionsPageUrl)
         }

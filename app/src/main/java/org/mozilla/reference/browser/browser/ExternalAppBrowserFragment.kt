@@ -8,7 +8,8 @@ import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import androidx.core.view.isVisible
-import kotlinx.android.synthetic.main.fragment_browser.*
+import mozilla.components.browser.toolbar.BrowserToolbar
+import mozilla.components.concept.engine.EngineView
 import mozilla.components.concept.engine.manifest.WebAppManifest
 import mozilla.components.feature.customtabs.CustomTabWindowFeature
 import mozilla.components.feature.pwa.ext.getWebAppManifest
@@ -19,6 +20,7 @@ import mozilla.components.feature.pwa.feature.WebAppSiteControlsFeature
 import mozilla.components.support.base.feature.UserInteractionHandler
 import mozilla.components.support.base.feature.ViewBoundFeatureWrapper
 import mozilla.components.support.ktx.android.arch.lifecycle.addObservers
+import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.ext.requireComponents
 
 /**
@@ -30,6 +32,11 @@ class ExternalAppBrowserFragment : BaseBrowserFragment(), UserInteractionHandler
     private val hideToolbarFeature = ViewBoundFeatureWrapper<WebAppHideToolbarFeature>()
 
     override val shouldUseComposeUI: Boolean = false
+
+    private val toolbar: BrowserToolbar
+        get() = requireView().findViewById(R.id.toolbar)
+    private val engineView: EngineView
+        get() = requireView().findViewById<View>(R.id.engineView) as EngineView
 
     private val manifest: WebAppManifest?
         get() = arguments?.getWebAppManifest()

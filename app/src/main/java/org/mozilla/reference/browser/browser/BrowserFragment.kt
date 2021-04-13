@@ -7,11 +7,14 @@ package org.mozilla.reference.browser.browser
 import android.os.Bundle
 import android.view.View
 import androidx.preference.PreferenceManager
-import kotlinx.android.synthetic.main.fragment_browser.*
-import kotlinx.android.synthetic.main.fragment_browser.view.*
+import com.google.android.material.floatingactionbutton.FloatingActionButton
+import mozilla.components.browser.awesomebar.BrowserAwesomeBar
 import mozilla.components.browser.thumbnails.BrowserThumbnails
+import mozilla.components.browser.toolbar.BrowserToolbar
+import mozilla.components.concept.engine.EngineView
 import mozilla.components.feature.awesomebar.AwesomeBarFeature
 import mozilla.components.feature.awesomebar.provider.SearchSuggestionProvider
+import mozilla.components.feature.readerview.view.ReaderViewControlsBar
 import mozilla.components.feature.search.ext.toDefaultSearchEngineProvider
 import mozilla.components.feature.syncedtabs.SyncedTabsStorageSuggestionProvider
 import mozilla.components.feature.tabs.toolbar.TabsToolbarFeature
@@ -30,6 +33,17 @@ class BrowserFragment : BaseBrowserFragment(), UserInteractionHandler {
     private val thumbnailsFeature = ViewBoundFeatureWrapper<BrowserThumbnails>()
     private val readerViewFeature = ViewBoundFeatureWrapper<ReaderViewIntegration>()
     private val webExtToolbarFeature = ViewBoundFeatureWrapper<WebExtensionToolbarFeature>()
+
+    private val awesomeBar: BrowserAwesomeBar
+        get() = requireView().findViewById(R.id.awesomeBar)
+    private val toolbar: BrowserToolbar
+        get() = requireView().findViewById(R.id.toolbar)
+    private val engineView: EngineView
+        get() = requireView().findViewById<View>(R.id.engineView) as EngineView
+    private val readerViewBar: ReaderViewControlsBar
+        get() = requireView().findViewById(R.id.readerViewBar)
+    private val readerViewAppearanceButton: FloatingActionButton
+        get() = requireView().findViewById(R.id.readerViewAppearanceButton)
 
     override val shouldUseComposeUI: Boolean
         get() = PreferenceManager.getDefaultSharedPreferences(requireContext()).getBoolean(
@@ -89,9 +103,9 @@ class BrowserFragment : BaseBrowserFragment(), UserInteractionHandler {
                 requireContext(),
                 requireComponents.core.engine,
                 requireComponents.core.store,
-                view.toolbar,
-                view.readerViewBar,
-                view.readerViewAppearanceButton
+                toolbar,
+                readerViewBar,
+                readerViewAppearanceButton
             ),
             owner = this,
             view = view
@@ -99,7 +113,7 @@ class BrowserFragment : BaseBrowserFragment(), UserInteractionHandler {
 
         webExtToolbarFeature.set(
             feature = WebExtensionToolbarFeature(
-                view.toolbar,
+                toolbar,
                 requireContext().components.core.store
             ),
             owner = this,
