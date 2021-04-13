@@ -20,7 +20,8 @@ set -v
 mkdir -p ${NEXUS_WORK}/conf
 cp /builds/worker/checkouts/src/taskcluster/scripts/toolchain/android-gradle-dependencies/nexus.xml ${NEXUS_WORK}/conf/nexus.xml
 
-RUN_AS_USER=worker /opt/sonatype/nexus/bin/nexus restart
+# For the Android build system we want Java 11. However this Nexus installation requires Java 8.
+PATH="/usr/lib/jvm/java-8-openjdk-amd64/jre/bin/:$PATH" RUN_AS_USER=worker /opt/sonatype/nexus/bin/nexus restart
 
 # Wait "a while" for Nexus to actually start.  Don't fail if this fails.
 wget --quiet --retry-connrefused --waitretry=2 --tries=100 \
