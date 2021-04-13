@@ -11,7 +11,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import kotlinx.android.synthetic.main.fragment_synced_tabs.*
 import mozilla.components.browser.storage.sync.Tab
 import mozilla.components.feature.syncedtabs.SyncedTabsFeature
 import mozilla.components.support.base.feature.ViewBoundFeatureWrapper
@@ -39,7 +38,7 @@ class SyncedTabsFragment : Fragment() {
                 context = requireContext(),
                 storage = backgroundServices.syncedTabsStorage,
                 accountManager = backgroundServices.accountManager,
-                view = synced_tabs_layout,
+                view = view.findViewById<SyncedTabsLayout>(R.id.synced_tabs_layout),
                 lifecycleOwner = this,
                 onTabClicked = ::handleTabClicked
             ),

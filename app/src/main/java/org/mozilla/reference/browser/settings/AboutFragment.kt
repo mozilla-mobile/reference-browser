@@ -14,13 +14,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.pm.PackageInfoCompat
 import androidx.core.text.HtmlCompat
 import androidx.core.text.HtmlCompat.FROM_HTML_SEPARATOR_LINE_BREAK_LIST_ITEM
 import androidx.fragment.app.Fragment
-import kotlinx.android.synthetic.main.fragment_about.*
 import mozilla.components.Build
 import org.mozilla.geckoview.BuildConfig.MOZ_APP_BUILDID
 import org.mozilla.geckoview.BuildConfig.MOZ_APP_VERSION
@@ -63,10 +63,13 @@ class AboutFragment : Fragment() {
             FROM_HTML_SEPARATOR_LINE_BREAK_LIST_ITEM
         )
 
-        about_content.text = content
-        version_info.text = versionInfo
+        val aboutView = view.findViewById<TextView>(R.id.about_content)
+        aboutView.text = content
 
-        version_info.setOnTouchListener { v, _ ->
+        val versionInfoView = view.findViewById<TextView>(R.id.version_info)
+        versionInfoView.text = versionInfo
+
+        versionInfoView.setOnTouchListener { v, _ ->
             val clipBoard = requireContext().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
             clipBoard.setPrimaryClip(ClipData.newPlainText(versionInfo, versionInfo))
 

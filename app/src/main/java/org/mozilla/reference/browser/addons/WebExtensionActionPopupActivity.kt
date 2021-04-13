@@ -12,7 +12,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import kotlinx.android.synthetic.main.fragment_add_on_settings.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import mozilla.components.browser.state.action.WebExtensionAction
 import mozilla.components.concept.engine.EngineSession
@@ -55,6 +54,9 @@ class WebExtensionActionPopupActivity : AppCompatActivity() {
     class WebExtensionActionPopupFragment : Fragment(), EngineSession.Observer {
         private var engineSession: EngineSession? = null
         private lateinit var webExtensionId: String
+
+        private val addonSettingsEngineView: EngineView
+            get() = requireView().findViewById<View>(R.id.addonSettingsEngineView) as EngineView
 
         override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
             webExtensionId = requireNotNull(arguments?.getString("web_extension_id"))
