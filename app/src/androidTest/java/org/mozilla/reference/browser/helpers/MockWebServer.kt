@@ -7,13 +7,15 @@ package org.mozilla.reference.browser.helpers
 import android.net.Uri
 import android.os.Handler
 import android.os.Looper
-import androidx.test.InstrumentationRegistry
 import okhttp3.mockwebserver.Dispatcher
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import okhttp3.mockwebserver.RecordedRequest
+import okio.Buffer
+import okio.source
 import org.mozilla.reference.browser.helpers.ext.toUri
 import java.io.IOException
+import java.io.InputStream
 
 object MockWebServerHelper {
 
@@ -46,17 +48,44 @@ class AndroidAssetDispatcher : Dispatcher() {
     private val mainThreadHandler = Handler(Looper.getMainLooper())
 
     override fun dispatch(request: RecordedRequest): MockResponse {
-        val assetManager = InstrumentationRegistry.getContext().assets
-        val assetContents = try {
-            val pathNoLeadingSlash = request.path.drop(1)
-            assetManager.open(pathNoLeadingSlash).use { inputStream ->
-                inputStream.bufferedReader().use { it.readText() }
+        val assetManager = androidx.test.platform.app.InstrumentationRegistry.getInstrumentation().context.assets
+        try {
+            val pathWithoutQueryParams = Uri.parse(request.path!!.drop(1)).path
+            assetManager.open(pathWithoutQueryParams!!).use { inputStream ->
+                return fileToResponse(pathWithoutQueryParams, inputStream)
             }
         } catch (e: IOException) { // e.g. file not found.
             // We're on a background thread so we need to forward the exception to the main thread.
             mainThreadHandler.postAtFrontOfQueue { throw e }
             return MockResponse().setResponseCode(HTTP_NOT_FOUND)
         }
-        return MockResponse().setResponseCode(HTTP_OK).setBody(assetContents)
+    }
+}
+
+@Throws(IOException::class)
+private fun fileToResponse(path: String, file: InputStream): MockResponse {
+    return MockResponse()
+        .setResponseCode(HTTP_OK)
+        .setBody(fileToBytes(file)!!)
+        .addHeader("content-type: " + contentType(path))
+}
+
+@Throws(IOException::class)
+private fun fileToBytes(file: InputStream): Buffer? {
+    val result = Buffer()
+    result.writeAll(file.source())
+    return result
+}
+
+private fun contentType(path: String): String? {
+    return when {
+        path.endsWith(".png") -> "image/png"
+        path.endsWith(".jpg") -> "image/jpeg"
+        path.endsWith(".jpeg") -> "image/jpeg"
+        path.endsWith(".gif") -> "image/gif"
+        path.endsWith(".svg") -> "image/svg+xml"
+        path.endsWith(".html") -> "text/html; charset=utf-8"
+        path.endsWith(".txt") -> "text/plain; charset=utf-8"
+        else -> "application/octet-stream"
     }
 }
