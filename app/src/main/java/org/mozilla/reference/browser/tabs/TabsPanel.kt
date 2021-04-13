@@ -77,6 +77,7 @@ class TabsPanel @JvmOverloads constructor(
 
     private fun Drawable.colorTint(@ColorRes color: Int) = apply {
         mutate()
+        @Suppress("DEPRECATION") // Deprecated warning appeared when switching to Java 11.
         setColorFilter(ContextCompat.getColor(context, color), PorterDuff.Mode.SRC_IN)
     }
 }

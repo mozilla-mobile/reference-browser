@@ -32,7 +32,10 @@ RUN apt-get update -qq \
     # We need to install tzdata before all of the other packages. Otherwise it will show an interactive dialog that
     # we cannot navigate while building the Docker image.
     && apt-get install -y tzdata \
+    # For the Android build system we want Java 11. However the local Nexus installation for the
+    # toolchain cache requires Java 8.
     && apt-get install -y openjdk-8-jdk \
+                          openjdk-11-jdk \
                           wget \
                           expect \
                           git \
