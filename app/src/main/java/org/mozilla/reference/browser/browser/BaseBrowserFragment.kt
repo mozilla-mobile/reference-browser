@@ -157,6 +157,8 @@ abstract class BaseBrowserFragment : Fragment(), UserInteractionHandler, Activit
                     DownloadService::class
                 ),
                 onNeedToRequestPermissions = { permissions ->
+                    // The Fragment class wants us to use registerForActivityResult
+                    @Suppress("DEPRECATION")
                     requestPermissions(permissions, REQUEST_CODE_DOWNLOAD_PERMISSIONS)
                 }),
             owner = this,
@@ -183,6 +185,8 @@ abstract class BaseBrowserFragment : Fragment(), UserInteractionHandler, Activit
                 customTabId = sessionId,
                 fragmentManager = parentFragmentManager,
                 onNeedToRequestPermissions = { permissions ->
+                    // The Fragment class wants us to use registerForActivityResult
+                    @Suppress("DEPRECATION")
                     requestPermissions(permissions, REQUEST_CODE_PROMPT_PERMISSIONS)
                 }),
             owner = this,
@@ -221,6 +225,8 @@ abstract class BaseBrowserFragment : Fragment(), UserInteractionHandler, Activit
                 sessionId = sessionId,
                 storage = requireComponents.core.sitePermissionsStorage,
                 onNeedToRequestPermissions = { permissions ->
+                    // The Fragment class wants us to use registerForActivityResult
+                    @Suppress("DEPRECATION")
                     requestPermissions(permissions, REQUEST_CODE_APP_PERMISSIONS)
                 },
                 onShouldShowRequestPermissionRationale = { shouldShowRequestPermissionRationale(it) },

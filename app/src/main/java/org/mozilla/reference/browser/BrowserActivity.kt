@@ -83,6 +83,7 @@ open class BrowserActivity : AppCompatActivity() {
         removeSessionIfNeeded()
     }
 
+    @Suppress("DEPRECATION") // ComponentActivity wants us to use registerForActivityResult
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         Logger.info("Activity onActivityResult received with " +
             "requestCode: $requestCode, resultCode: $resultCode, data: $data")

@@ -30,6 +30,8 @@ class PairSettingsFragment : Fragment(), UserInteractionHandler {
                 requireContext(),
                 fragmentManager = parentFragmentManager,
                 onNeedToRequestPermissions = { permissions ->
+                    // The Fragment class wants us to use registerForActivityResult
+                    @Suppress("DEPRECATION")
                     requestPermissions(permissions, REQUEST_CODE_CAMERA_PERMISSIONS)
                 },
                 onScanResult = { pairingUrl ->
