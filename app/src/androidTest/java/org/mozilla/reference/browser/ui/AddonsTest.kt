@@ -78,7 +78,7 @@ class AddonsTest {
             clickInstallAddonButton(addonName)
             clickAllowInstallAddonButton()
             waitForAddonDownloadComplete()
-        }.dismissAddonDownloadCompletedPrompt {
+            dismissAddonDownloadCompletedPrompt(addonName)
             openAddon(addonName)
             verifyAddonElementsView(addonName)
         }
