@@ -38,7 +38,12 @@ gcloud:
   performance-metrics: true
 
   test-targets:
-    - package org.mozilla.reference.browser.ui
+    - class org.mozilla.reference.browser.ui.ContextMenusTest#verifyLinkedImageContextMenuItemsTest
+    - class org.mozilla.reference.browser.ui.ContextMenusTest#verifyLinkedImageContextMenuItemsTest
+    - class org.mozilla.reference.browser.ui.ContextMenusTest#contextShareImageTest
+    - class org.mozilla.reference.browser.ui.ContextMenusTest#contextCopyImageLocationTest
+    - class org.mozilla.reference.browser.ui.ContextMenusTest#verifyContextSaveImageTest
+    - class org.mozilla.reference.browser.ui.ContextMenusTest#verifyContextDownloadLinkTest
 
   device:
    - model: Pixel2
