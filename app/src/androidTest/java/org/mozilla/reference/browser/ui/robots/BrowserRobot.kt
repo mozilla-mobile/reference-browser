@@ -62,6 +62,15 @@ class BrowserRobot {
             link.click(LONG_CLICK_DURATION)
     }
 
+    fun longClickMatchingImage(expectedText: String) {
+        mDevice.waitForIdle()
+        mDevice.findObject(UiSelector().resourceId("$packageName:id/engineView"))
+            .waitForExists(waitingTime)
+        mDevice.wait(Until.findObject(By.text(expectedText)), waitingTime).isClickable
+        val image = mDevice.findObject(By.textContains(expectedText))
+            image.click(LONG_CLICK_DURATION)
+    }
+
     fun verifyLinkContextMenuItems() {
         mDevice.waitForWindowUpdate(packageName, waitingTime)
         mDevice.findObject(UiSelector().resourceId("$packageName:id/parentPanel"))
@@ -75,6 +84,52 @@ class BrowserRobot {
         assertTrue(mDevice.findObject(UiSelector().textContains("Copy link"))
             .waitForExists(waitingTime))
         assertTrue(mDevice.findObject(UiSelector().textContains("Share link"))
+            .waitForExists(waitingTime))
+    }
+
+    fun verifyLinkedImageContextMenuItems() {
+        mDevice.waitForWindowUpdate(packageName, waitingTime)
+        mDevice.findObject(UiSelector().resourceId("$packageName:id/parentPanel"))
+            .waitForExists(waitingTime)
+        assertTrue(mDevice.findObject(UiSelector().resourceId("$packageName:id/titleView"))
+            .waitForExists(waitingTime))
+        assertTrue(mDevice.findObject(UiSelector().textContains("Open link in new tab"))
+            .waitForExists(waitingTime))
+        assertTrue(mDevice.findObject(UiSelector().textContains("Open link in private tab"))
+            .waitForExists(waitingTime))
+        assertTrue(mDevice.findObject(UiSelector().textContains("Copy link"))
+            .waitForExists(waitingTime))
+        assertTrue(mDevice.findObject(UiSelector().textContains("Download link"))
+            .waitForExists(waitingTime))
+        assertTrue(mDevice.findObject(UiSelector().textContains("Share link"))
+            .waitForExists(waitingTime))
+        assertTrue(mDevice.findObject(UiSelector().textContains("Share image"))
+            .waitForExists(waitingTime))
+        assertTrue(mDevice.findObject(UiSelector().textContains("Open image in new tab"))
+            .waitForExists(waitingTime))
+        assertTrue(mDevice.findObject(UiSelector().textContains("Save image"))
+            .waitForExists(waitingTime))
+        assertTrue(mDevice.findObject(UiSelector().textContains("Copy image location"))
+            .waitForExists(waitingTime))
+    }
+
+    fun verifyNonLinkedImageContextMenuItems() {
+        mDevice.waitForWindowUpdate(packageName, waitingTime)
+        mDevice.findObject(UiSelector().resourceId("$packageName:id/parentPanel"))
+            .waitForExists(waitingTime)
+        assertTrue(mDevice.findObject(UiSelector().resourceId("$packageName:id/titleView"))
+            .waitForExists(waitingTime))
+        assertTrue(mDevice.findObject(UiSelector().textContains("Copy link"))
+            .waitForExists(waitingTime))
+        assertTrue(mDevice.findObject(UiSelector().textContains("Share link"))
+            .waitForExists(waitingTime))
+        assertTrue(mDevice.findObject(UiSelector().textContains("Share image"))
+            .waitForExists(waitingTime))
+        assertTrue(mDevice.findObject(UiSelector().textContains("Open image in new tab"))
+            .waitForExists(waitingTime))
+        assertTrue(mDevice.findObject(UiSelector().textContains("Save image"))
+            .waitForExists(waitingTime))
+        assertTrue(mDevice.findObject(UiSelector().textContains("Copy image location"))
             .waitForExists(waitingTime))
     }
 
@@ -108,6 +163,32 @@ class BrowserRobot {
         contextCopyLink.click()
     }
 
+    fun clickContextSaveImage() {
+        mDevice.findObject(UiSelector().resourceId("$packageName:id/parentPanel"))
+            .waitForExists(waitingTime)
+        mDevice.findObject(UiSelector().textContains("Save image")).waitForExists(waitingTime)
+        val contextCopyImageLink = mDevice.findObject(UiSelector().textContains("Save image"))
+        contextCopyImageLink.click()
+    }
+
+    fun clickContextDownloadLink() {
+        mDevice.findObject(UiSelector().resourceId("$packageName:id/parentPanel"))
+            .waitForExists(waitingTime)
+        mDevice.findObject(UiSelector().textContains("Download link")).waitForExists(waitingTime)
+        val contextDownloadLink = mDevice.findObject(UiSelector().textContains("Download link"))
+        contextDownloadLink.click()
+    }
+
+    fun clickContextCopyImageLocation() {
+        mDevice.findObject(UiSelector().resourceId("$packageName:id/parentPanel"))
+            .waitForExists(waitingTime)
+        mDevice.findObject(UiSelector().textContains("Copy image location"))
+            .waitForExists(waitingTime)
+
+        val contextCopyImageLocation = mDevice.findObject(UiSelector().textContains("Copy image location"))
+        contextCopyImageLocation.click()
+    }
+
     class Transition {
         private val device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
 
@@ -130,8 +211,19 @@ class BrowserRobot {
             mDevice.findObject(UiSelector().textContains("Share link"))
                 .waitForExists(waitingTime)
 
-            val contextCopyLink = mDevice.findObject(UiSelector().textContains("Share link"))
-            contextCopyLink.click()
+            val contextShareLink = mDevice.findObject(UiSelector().textContains("Share link"))
+            contextShareLink.click()
+
+            ContentPanelRobot().interact()
+            return ContentPanelRobot.Transition()
+        }
+
+        fun clickContextShareImage(interact: ContentPanelRobot.() -> Unit): ContentPanelRobot.Transition {
+            mDevice.findObject(UiSelector().resourceId("$packageName:id/parentPanel"))
+                .waitForExists(waitingTime)
+            mDevice.findObject(UiSelector().textContains("Share image")).waitForExists(waitingTime)
+            val contextShareImageLink = mDevice.findObject(UiSelector().textContains("Share image"))
+            contextShareImageLink.click()
 
             ContentPanelRobot().interact()
             return ContentPanelRobot.Transition()

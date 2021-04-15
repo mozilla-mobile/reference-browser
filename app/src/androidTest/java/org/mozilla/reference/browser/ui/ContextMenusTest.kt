@@ -12,7 +12,9 @@ import org.junit.Test
 import org.mozilla.reference.browser.helpers.AndroidAssetDispatcher
 import org.mozilla.reference.browser.helpers.BrowserActivityTestRule
 import org.mozilla.reference.browser.helpers.TestAssetHelper
+import org.mozilla.reference.browser.ui.robots.downloadRobot
 import org.mozilla.reference.browser.ui.robots.navigationToolbar
+import org.mozilla.reference.browser.ui.robots.notificationShade
 
 class ContextMenusTest {
 
@@ -35,13 +37,35 @@ class ContextMenusTest {
     }
 
     @Test
-    fun verifyLinkContextMenuItems() {
+    fun verifyLinkContextMenuItemsTest() {
         val pageLinks = TestAssetHelper.getGenericAsset(mockWebServer, 4)
 
         navigationToolbar {
         }.enterUrlAndEnterToBrowser(pageLinks.url) {
             longClickMatchingText("Link 1")
             verifyLinkContextMenuItems()
+        }
+    }
+
+    @Test
+    fun verifyLinkedImageContextMenuItemsTest() {
+        val pageLinks = TestAssetHelper.getGenericAsset(mockWebServer, 4)
+
+        navigationToolbar {
+        }.enterUrlAndEnterToBrowser(pageLinks.url) {
+            longClickMatchingImage("test_link_image")
+            verifyLinkedImageContextMenuItems()
+        }
+    }
+
+    @Test
+    fun verifyNonLinkedImageContextMenuItemsTest() {
+        val pageLinks = TestAssetHelper.getGenericAsset(mockWebServer, 4)
+
+        navigationToolbar {
+        }.enterUrlAndEnterToBrowser(pageLinks.url) {
+            longClickMatchingImage("test_no_link_image")
+            verifyNonLinkedImageContextMenuItems()
         }
     }
 
@@ -105,6 +129,77 @@ class ContextMenusTest {
             longClickMatchingText("Link 1")
         }.clickContextShareLink {
             verifyContentPanel()
+        }
+    }
+
+    @Test
+    fun contextShareImageTest() {
+        val pageLinks = TestAssetHelper.getGenericAsset(mockWebServer, 4)
+
+        navigationToolbar {
+        }.enterUrlAndEnterToBrowser(pageLinks.url) {
+            longClickMatchingImage("test_link_image")
+        }.clickContextShareImage {
+            verifyContentPanel()
+        }
+    }
+
+    @Test
+    fun contextCopyImageLocationTest() {
+        val pageLinks = TestAssetHelper.getGenericAsset(mockWebServer, 4)
+        val imageUrl = TestAssetHelper.getImageAsset(mockWebServer)
+
+        navigationToolbar {
+        }.enterUrlAndEnterToBrowser(pageLinks.url) {
+            longClickMatchingImage("test_link_image")
+            clickContextCopyImageLocation()
+        }.openNavigationToolbar {
+        }.clickToolbar {
+            verifyLinkFromClipboard(imageUrl.url.toString())
+        }.clickLinkFromClipboard(imageUrl.url.toString()) {
+            verifyUrl(imageUrl.toString())
+        }
+    }
+
+    @Test
+    fun verifyContextSaveImageTest() {
+        val pageLinks = TestAssetHelper.getGenericAsset(mockWebServer, 4)
+
+        navigationToolbar {
+        }.enterUrlAndEnterToBrowser(pageLinks.url) {
+            longClickMatchingImage("test_no_link_image")
+            clickContextSaveImage()
+        }
+
+        downloadRobot {
+            verifyAllowFileAccessPopup()
+            clickAllowButton()
+        }
+
+        notificationShade {
+            verifySystemNotificationExists("Download completed")
+        }.closeNotification {
+        }
+    }
+
+    @Test
+    fun verifyContextDownloadLinkTest() {
+        val pageLinks = TestAssetHelper.getGenericAsset(mockWebServer, 4)
+
+        navigationToolbar {
+        }.enterUrlAndEnterToBrowser(pageLinks.url) {
+            longClickMatchingImage("test_link_image")
+            clickContextDownloadLink()
+        }
+
+        downloadRobot {
+            verifyAllowFileAccessPopup()
+            clickAllowButton()
+        }
+
+        notificationShade {
+            verifySystemNotificationExists("Download completed")
+        }.closeNotification {
         }
     }
 }
