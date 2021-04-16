@@ -26,6 +26,7 @@ import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.ext.waitAndInteract
 import org.mozilla.reference.browser.helpers.TestAssetHelper.waitingTime
 import org.mozilla.reference.browser.helpers.TestHelper.packageName
+import org.mozilla.reference.browser.helpers.click
 
 /**
  * Implementation of Robot Pattern for the addons manager.
@@ -59,6 +60,11 @@ class AddonsManagerRobot {
         mDevice.waitAndInteract(Until.findObject(By.text("Okay, Got it"))) {}
         val gotItButton = mDevice.findObject(UiSelector().text("Okay, Got it"))
         gotItButton.click()
+    }
+
+    fun clickRemoveAddonButton() {
+        removeAddonButton().click()
+        mDevice.waitForIdle()
     }
 
     class Transition {
@@ -106,6 +112,8 @@ class AddonsManagerRobot {
                 hasSibling(hasDescendant(withText(addonName)))
             )
         )
+
+    private fun removeAddonButton() = onView(withId(R.id.remove_add_on))
 
     private fun selectInstallAddonButton(addonName: String) {
         mDevice.waitForIdle()
