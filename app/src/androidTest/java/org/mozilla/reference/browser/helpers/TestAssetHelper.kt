@@ -70,4 +70,11 @@ object TestAssetHelper {
 
         return TestAsset(url, "", "")
     }
+
+    fun getDownloadAsset(server: MockWebServer): TestAsset {
+        val url = server.url("pages/download.html").toString().toUri()!!
+        val content = "Page content: web_icon.png"
+
+        return TestAsset(url, content, "")
+    }
 }

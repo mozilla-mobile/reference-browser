@@ -4,6 +4,7 @@
 
 package org.mozilla.reference.browser.helpers
 
+import android.os.Build
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.uiautomator.UiScrollable
 import androidx.test.uiautomator.UiSelector
@@ -16,5 +17,12 @@ object TestHelper {
         val appView = UiScrollable(UiSelector().scrollable(true))
         appView.scrollTextIntoView(text)
         return appView
+    }
+
+    fun getPermissionAllowID(): String {
+        return when (Build.VERSION.SDK_INT > Build.VERSION_CODES.P) {
+            true -> "com.android.permissioncontroller"
+            false -> "com.android.packageinstaller"
+        }
     }
 }
