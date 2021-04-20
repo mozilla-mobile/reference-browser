@@ -9,4 +9,11 @@
         the functions are not available on Android. -->
         <ignore path="**/sentry*.jar" />
     </issue>
+
+    <issue id="ObsoleteLintCustomCheck">
+        <!-- Some dependency JARs (at this time Jetpack Compose Beta dependencies) contain lint rules
+         compiled against an incompatible version of lint. There's not much we can do except waiting
+         for an update. So let's just ignore those errors here. -->
+        <ignore path="**/*.jar" />
+    </issue>
 </lint>
