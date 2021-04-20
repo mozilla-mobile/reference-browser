@@ -52,6 +52,15 @@ class NotificationRobot {
         } while (!notificationFound)
     }
 
+    fun clickSystemMediaNotificationControlButton(state: String) {
+        systemMediaNotificationControlButton(state).waitForExists(waitingTime)
+        systemMediaNotificationControlButton(state).click()
+    }
+
+    fun verifySystemMediaNotificationControlButtonState(action: String) {
+        assertTrue(systemMediaNotificationControlButton(action).waitForExists(waitingTime))
+    }
+
     class Transition {
 
         fun closeNotification(interact: BrowserRobot.() -> Unit): BrowserRobot.Transition {
@@ -70,3 +79,10 @@ fun notificationShade(interact: NotificationRobot.() -> Unit): NotificationRobot
     NotificationRobot().interact()
     return NotificationRobot.Transition()
 }
+
+private fun systemMediaNotificationControlButton(state: String) =
+    mDevice.findObject(
+        UiSelector()
+            .resourceId("android:id/action0")
+            .descriptionContains(state)
+    )
