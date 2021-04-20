@@ -77,4 +77,28 @@ object TestAssetHelper {
 
         return TestAsset(url, content, "")
     }
+
+    fun getAudioPageAsset(server: MockWebServer): TestAsset {
+        val url = server.url("pages/audioMediaPage.html").toString().toUri()!!
+        val title = "Audio_Test_Page"
+        val content = "Page content: audio player"
+
+        return TestAsset(url, content, title)
+    }
+
+    fun getVideoPageAsset(server: MockWebServer): TestAsset {
+        val url = server.url("pages/videoMediaPage.html").toString().toUri()!!
+        val title = "Video_Test_Page"
+        val content = "Page content: video player"
+
+        return TestAsset(url, content, title)
+    }
+
+    fun getNoControlsVideoPageAsset(server: MockWebServer): TestAsset {
+        val url = server.url("pages/noControlsVideoMediaPage.html").toString().toUri()!!
+        val title = "No_Controls_Video_Test_Page"
+        val content = "Page content: video player"
+
+        return TestAsset(url, content, title)
+    }
 }

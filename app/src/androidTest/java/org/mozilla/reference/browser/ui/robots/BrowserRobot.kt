@@ -78,6 +78,20 @@ class BrowserRobot {
             .waitForExists(waitingTime))
     }
 
+    fun verifyNoControlsVideoContextMenuItems() {
+        mDevice.waitForWindowUpdate(packageName, waitingTime)
+        mDevice.findObject(UiSelector().resourceId("$packageName:id/parentPanel"))
+            .waitForExists(waitingTime)
+        assertTrue(mDevice.findObject(UiSelector().resourceId("$packageName:id/titleView"))
+            .waitForExists(waitingTime))
+        assertTrue(mDevice.findObject(UiSelector().textContains("Copy link"))
+            .waitForExists(waitingTime))
+        assertTrue(mDevice.findObject(UiSelector().textContains("Share link"))
+            .waitForExists(waitingTime))
+        assertTrue(mDevice.findObject(UiSelector().textContains("Save file to device"))
+            .waitForExists(waitingTime))
+    }
+
     fun clickContextOpenLinkInNewTab() {
         mDevice.findObject(UiSelector().resourceId("$packageName:id/parentPanel"))
             .waitForExists(waitingTime)
@@ -106,6 +120,16 @@ class BrowserRobot {
 
         val contextCopyLink = mDevice.findObject(UiSelector().textContains("Copy link"))
         contextCopyLink.click()
+    }
+
+    fun verifyMediaPlayerControlButtonState(state: String) {
+        assertTrue(mediaPlayerPlayButton(state).waitForExists(waitingTime))
+    }
+
+    fun clickMediaPlayerControlButton(state: String) {
+        mediaPlayerPlayButton(state).waitForExists(waitingTime)
+        mediaPlayerPlayButton(state).click()
+        mDevice.waitForIdle()
     }
 
     class Transition {
@@ -143,3 +167,10 @@ fun browser(interact: BrowserRobot.() -> Unit): BrowserRobot.Transition {
     BrowserRobot().interact()
     return BrowserRobot.Transition()
 }
+
+private fun mediaPlayerPlayButton(state: String) =
+    mDevice.findObject(
+        UiSelector()
+            .className("android.widget.Button")
+            .text(state)
+    )
