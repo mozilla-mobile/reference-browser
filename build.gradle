@@ -6,6 +6,7 @@ buildscript {
             maven {
                 name "Google"
                 url project.property("googleRepo")
+                allowInsecureProtocol true // Local Nexus in CI uses HTTP
             }
         } else {
             google()
@@ -15,6 +16,7 @@ buildscript {
             maven {
                 name "BintrayJCenter"
                 url project.property("jcenterRepo")
+                allowInsecureProtocol true // Local Nexus in CI uses HTTP
             }
         } else {
             jcenter()
@@ -37,6 +39,7 @@ allprojects {
             maven {
                 name "Google"
                 url project.property("googleRepo")
+                allowInsecureProtocol true // Local Nexus in CI uses HTTP
             }
         } else {
             google()
@@ -66,6 +69,7 @@ allprojects {
             maven {
                 name "BintrayJCenter"
                 url project.property("jcenterRepo")
+                allowInsecureProtocol true // Local Nexus in CI uses HTTP
             }
         } else {
             jcenter()
