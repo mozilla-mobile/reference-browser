@@ -25,7 +25,7 @@ private object Versions {
 
     const val espresso_core = "3.1.0"
     const val espresso_version = "3.1.0"
-    const val mockwebserver = "3.10.0"
+    const val mockwebserver = "4.9.0"
     const val orchestrator = "1.1.1"
     const val tools_test_rules = "1.1.0"
     const val tools_test_runner = "1.1.0"

@@ -19,7 +19,7 @@ class AddonsTest {
     @Before
     fun setUp() {
         mockWebServer = MockWebServer().apply {
-            setDispatcher(AndroidAssetDispatcher())
+            dispatcher = AndroidAssetDispatcher()
             start()
         }
     }
@@ -78,9 +78,27 @@ class AddonsTest {
             clickInstallAddonButton(addonName)
             clickAllowInstallAddonButton()
             waitForAddonDownloadComplete()
-        }.dismissAddonDownloadCompletedPrompt {
+            dismissAddonDownloadCompletedPrompt(addonName)
             openAddon(addonName)
             verifyAddonElementsView(addonName)
+        }
+    }
+
+    @Test
+    fun removeAddonTest() {
+        val addonName = "uBlock Origin"
+
+        navigationToolbar {
+        }.openThreeDotMenu {
+        }.openAddonsManager {
+            verifyAddonsRecommendedView()
+            clickInstallAddonButton(addonName)
+            clickAllowInstallAddonButton()
+            waitForAddonDownloadComplete()
+            dismissAddonDownloadCompletedPrompt(addonName)
+            openAddon(addonName)
+            clickRemoveAddonButton()
+            verifyAddonsRecommendedView()
         }
     }
 }

@@ -16,13 +16,17 @@ import androidx.test.espresso.matcher.ViewMatchers.withContentDescription
 import androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibility
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
+import androidx.test.uiautomator.By
 import androidx.test.uiautomator.UiSelector
+import androidx.test.uiautomator.Until
 import junit.framework.Assert.assertTrue
 import org.hamcrest.CoreMatchers.allOf
 import org.hamcrest.CoreMatchers.containsString
 import org.mozilla.reference.browser.R
+import org.mozilla.reference.browser.ext.waitAndInteract
 import org.mozilla.reference.browser.helpers.TestAssetHelper.waitingTime
 import org.mozilla.reference.browser.helpers.TestHelper.packageName
+import org.mozilla.reference.browser.helpers.click
 
 /**
  * Implementation of Robot Pattern for the addons manager.
@@ -49,9 +53,22 @@ class AddonsManagerRobot {
             .perform(click())
     }
 
+    fun dismissAddonDownloadCompletedPrompt(addonName: String) {
+        mDevice.waitForWindowUpdate(packageName, waitingTime)
+        mDevice.findObject(UiSelector().text("$addonName has been added to Reference Browser"))
+            .waitForExists(waitingTime)
+        mDevice.waitAndInteract(Until.findObject(By.text("Okay, Got it"))) {}
+        val gotItButton = mDevice.findObject(UiSelector().text("Okay, Got it"))
+        gotItButton.click()
+    }
+
+    fun clickRemoveAddonButton() {
+        removeAddonButton().click()
+        mDevice.waitForIdle()
+    }
+
     class Transition {
-        fun dismissAddonDownloadCompletedPrompt(interact: AddonsManagerRobot.() -> Unit): AddonsManagerRobot.Transition {
-            mDevice.pressBack()
+        fun addonsManagerRobot(interact: AddonsManagerRobot.() -> Unit): AddonsManagerRobot.Transition {
             AddonsManagerRobot().interact()
             return AddonsManagerRobot.Transition()
         }
@@ -95,6 +112,8 @@ class AddonsManagerRobot {
                 hasSibling(hasDescendant(withText(addonName)))
             )
         )
+
+    private fun removeAddonButton() = onView(withId(R.id.remove_add_on))
 
     private fun selectInstallAddonButton(addonName: String) {
         mDevice.waitForIdle()
