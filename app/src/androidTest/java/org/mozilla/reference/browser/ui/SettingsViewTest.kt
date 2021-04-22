@@ -48,10 +48,11 @@ class SettingsViewTest {
             verifyMakeDefaultBrowserButton()
             verifyAutofillAppsButton()
             varifyAutofillAppsSummary()
+            verifyJetpackComposeButton()
             verifyDeveloperToolsHeading()
             verifyRemoteDebugging()
+            scrollToElementByText("Custom Add-on collection")
             verifyCustomAddonCollectionButton()
-            scrollToElementByText("About Reference Browser")
             verifyMozillaHeading()
             verifyAboutReferenceBrowserButton()
         }
@@ -142,6 +143,7 @@ class SettingsViewTest {
         navigationToolbar {
         }.openThreeDotMenu {
         }.openSettings {
+            scrollToElementByText("About Reference Browser")
             verifyCustomAddonCollectionButton()
             clickCustomAddonCollectionButton()
             verifyCustomAddonCollectionPanelExist()
