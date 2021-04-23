@@ -98,6 +98,13 @@ class SettingsViewRobot {
             return ExternalAppsRobot.Transition()
         }
 
+        fun clickAutofillAppsButton(interact: ExternalAppsRobot.() -> Unit):
+            ExternalAppsRobot.Transition {
+            autofillAppsButton().click()
+            ExternalAppsRobot().interact()
+            return ExternalAppsRobot.Transition()
+        }
+
         fun openAboutReferenceBrowser(interact: BrowserRobot.() -> Unit): BrowserRobot.Transition {
             aboutReferenceBrowserButton().click()
             BrowserRobot().interact()

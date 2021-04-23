@@ -112,6 +112,16 @@ class SettingsViewTest {
     }
 
     @Test
+    fun autofillAppsTest() {
+        navigationToolbar {
+        }.openThreeDotMenu {
+        }.openSettings {
+        }.clickAutofillAppsButton {
+            verifyAndroidAutofillServices()
+        }
+    }
+
+    @Test
     fun remoteDebuggingViaUSB() {
         navigationToolbar {
         }.openThreeDotMenu {
