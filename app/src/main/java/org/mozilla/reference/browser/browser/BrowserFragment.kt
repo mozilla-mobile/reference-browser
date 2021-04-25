@@ -15,7 +15,6 @@ import mozilla.components.concept.engine.EngineView
 import mozilla.components.feature.awesomebar.AwesomeBarFeature
 import mozilla.components.feature.awesomebar.provider.SearchSuggestionProvider
 import mozilla.components.feature.readerview.view.ReaderViewControlsBar
-import mozilla.components.feature.search.ext.toDefaultSearchEngineProvider
 import mozilla.components.feature.syncedtabs.SyncedTabsStorageSuggestionProvider
 import mozilla.components.feature.tabs.toolbar.TabsToolbarFeature
 import mozilla.components.feature.toolbar.WebExtensionToolbarFeature
@@ -56,7 +55,7 @@ class BrowserFragment : BaseBrowserFragment(), UserInteractionHandler {
         AwesomeBarFeature(awesomeBar, toolbar, engineView)
             .addSearchProvider(
                 requireContext(),
-                requireComponents.core.store.toDefaultSearchEngineProvider(),
+                requireComponents.core.store,
                 requireComponents.useCases.searchUseCases.defaultSearch,
                 fetchClient = requireComponents.core.client,
                 mode = SearchSuggestionProvider.Mode.MULTIPLE_SUGGESTIONS,
