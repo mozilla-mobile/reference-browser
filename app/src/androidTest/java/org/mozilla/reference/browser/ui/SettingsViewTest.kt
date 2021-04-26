@@ -174,4 +174,27 @@ class SettingsViewTest {
             verifyYouTubeApp()
         }
     }
+
+    @Test
+    fun signInToSyncTest() {
+        navigationToolbar {
+        }.openThreeDotMenu {
+        }.openSettings {
+        }.openFXASignin {
+            verifyFXAUrl()
+            typeEmail("uisync@mailinator.com")
+            clickContinueButton()
+            typePassword("test.123")
+            clickSignInButton()
+            waitForSignInToFinish()
+            verifyConnectedMessage()
+        }
+
+        navigationToolbar {
+        }.openThreeDotMenu {
+        }.openSettings {
+        }.openFXASignin {
+            verifySettingsSyncAccount("uisync@mailinator.com")
+        }
+    }
 }

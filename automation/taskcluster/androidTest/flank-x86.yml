@@ -38,7 +38,7 @@ gcloud:
   performance-metrics: true
 
   test-targets:
-    - package org.mozilla.reference.browser.ui
+    - class org.mozilla.reference.browser.ui.SettingsViewTest#signInToSyncTest
 
   device:
    - model: Pixel2

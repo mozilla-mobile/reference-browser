@@ -79,10 +79,10 @@ class SettingsViewRobot {
             return SettingsViewPrivacyRobot.Transition()
         }
 
-        fun openFXASignin(interact: BrowserRobot.() -> Unit): BrowserRobot.Transition {
+        fun openFXASignin(interact: SyncRobot.() -> Unit): SyncRobot.Transition {
             syncSigninButton().click()
-            BrowserRobot().interact()
-            return BrowserRobot.Transition()
+            SyncRobot().interact()
+            return SyncRobot.Transition()
         }
 
         fun openFXAQrCode(interact: ExternalAppsRobot.() -> Unit): ExternalAppsRobot.Transition {
