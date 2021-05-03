@@ -50,6 +50,8 @@ JAVA_BIN="/usr/bin/java"
 PATH_TEST="./automation/taskcluster/androidTest"
 PATH_APK="./app/build/outputs/apk/debug"
 FLANK_BIN="/builds/worker/test-tools/flank.jar"
+ARTIFACT_DIR="/builds/worker/artifacts"
+RESULTS_DIR="${ARTIFACT_DIR}/results"
 
 echo
 echo "ACTIVATE SERVICE ACCT"
@@ -83,59 +85,61 @@ then
     flank_template="${PATH_TEST}/flank-x86.yml"
     APK_APP="${PATH_APK}/app-x86-debug.apk"
 else
-     echo "NOT FOUND"
-#    exitcode=1
+    echo "FAILURE: Flank configuration template not found"
+    exitcode=1
 fi
 
 APK_TEST="./app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk"
-ls -la ./app/build/outputs/apk/androidTest/debug
+echo "device_type: ${device_type}"
+echo "APK_APP: ${APK_APP}"
+echo "APK_TEST: ${APK_TEST}"
 
-# keep running script on failure, so we can capture the failure and do some
-# final output
-set +e
 # function to exit script with exit code from test run.
 # (Only 0 if all test executions passed)
 function failure_check() {
+    echo
+    echo
     if [[ $exitcode -ne 0 ]]; then
-        echo
-        echo
-	echo "ERROR: UI test run failed, please check above URL"
+        echo "FAILURE: UI test run failed, please check above URL"
+    else
+	      echo "All UI test(s) have passed!"
     fi
-    exit $exitcode
+
+    echo
+    echo "RESULTS"
+    echo
+
+    mkdir -p /builds/worker/artifacts/github
+    chmod +x $PATH_TEST/parse-ui-test.py
+    $PATH_TEST/parse-ui-test.py \
+        --exit-code "${exitcode}" \
+        --log flank.log \
+        --results "${RESULTS_DIR}" \
+        --output-md "${ARTIFACT_DIR}/github/customCheckRunText.md" \
+	--device-type "${device_type}"
 }
+
+echo
+echo "FLANK VERSION"
+echo
+$JAVA_BIN -jar $FLANK_BIN --version
+echo
+echo
 
 echo
 echo "EXECUTE TEST(S)"
 echo
-$JAVA_BIN -jar $FLANK_BIN android run --config=$flank_template --max-test-shards=$num_shards --app=$APK_APP --test=$APK_TEST --project=$GOOGLE_PROJECT
-exitcode=$?
-echo
-echo
-failure_check
-echo
-echo
+# Note that if --local-results-dir is "results", timestamped sub-directory will
+# contain the results. For any other value, the directory itself will have the results.
+set -o pipefail && $JAVA_BIN -jar $FLANK_BIN android run \
+	--config=$flank_template \
+	--max-test-shards=$num_shards \
+	--app=$APK_APP --test=$APK_TEST \
+	--local-result-dir="${RESULTS_DIR}" \
+	--project=$GOOGLE_PROJECT \
+	| tee flank.log
 
-echo
-echo "COPY ARTIFACTS"
-echo
-cp -r "./results" "./test_artifacts"
 exitcode=$?
 failure_check
-echo
-echo
 
-echo
-echo "RESULTS"
-echo
-ls -la ./results
-echo 
-echo
-
-echo
-echo "RESULTS"
-echo
-ls -la ./test_results
-
-echo "All UI test(s) have passed!"
-echo
-echo
+exit $exitcode
