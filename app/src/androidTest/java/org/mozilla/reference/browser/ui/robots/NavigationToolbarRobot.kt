@@ -29,7 +29,7 @@ import org.mozilla.reference.browser.helpers.click
 class NavigationToolbarRobot {
 
     fun verifyNoTabAddressView() = assertNoTabAddressText()
-    fun verifyNewTabAddressView() = assertNewTabAddressText()
+    fun verifyNewTabAddressView(url: String) = assertNewTabAddressText(url)
 
     fun checkNumberOfTabsTabCounter(numTabs: String) = numberOfOpenTabsTabCounter.check(matches(withText(numTabs)))
 
@@ -87,6 +87,6 @@ private fun assertNoTabAddressText() {
     mDevice.waitAndInteract(Until.findObject(By.text("Search or enter address"))) {}
 }
 
-private fun assertNewTabAddressText() {
-    mDevice.waitAndInteract(Until.findObject(By.text("about:blank"))) {}
+private fun assertNewTabAddressText(url: String) {
+    mDevice.waitAndInteract(Until.findObject(By.textContains(url))) {}
 }
