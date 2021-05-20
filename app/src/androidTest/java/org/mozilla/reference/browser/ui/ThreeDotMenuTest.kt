@@ -103,25 +103,47 @@ class ThreeDotMenuTest {
     }
 
     @Test
-    fun goForwardTest() {
+    fun normalBrowsingTabNavigationTest() {
 
-        val defaultWebPage = TestAssetHelper.getGenericAsset(mockWebServer, 1)
-        val nextWebPage = TestAssetHelper.getGenericAsset(mockWebServer, 2)
+        val firstWebPage = TestAssetHelper.getGenericAsset(mockWebServer, 1)
+        val secondWebPage = TestAssetHelper.getGenericAsset(mockWebServer, 2)
 
         navigationToolbar {
-        }.enterUrlAndEnterToBrowser(defaultWebPage.url) {
-            verifyUrl(defaultWebPage.toString())
+        }.enterUrlAndEnterToBrowser(firstWebPage.url) {
+            verifyPageContent("Page content: 1")
         }.openNavigationToolbar {
-        }.enterUrlAndEnterToBrowser(nextWebPage.url) {
-            verifyUrl(nextWebPage.toString())
-            mDevice.pressBack()
-            verifyUrl(defaultWebPage.toString())
-        }
-
-        navigationToolbar {
+        }.enterUrlAndEnterToBrowser(secondWebPage.url) {
+            verifyPageContent("Page content: 2")
+        }.goBack {
+            verifyUrl(firstWebPage.url.toString())
+        }.openNavigationToolbar {
         }.openThreeDotMenu {
         }.goForward {
-            verifyUrl(nextWebPage.toString())
+            verifyUrl(secondWebPage.url.toString())
+        }
+    }
+
+    @Test
+    fun privateBrowsingTabNavigationTest() {
+
+        val firstWebPage = TestAssetHelper.getGenericAsset(mockWebServer, 1)
+        val secondWebPage = TestAssetHelper.getGenericAsset(mockWebServer, 2)
+
+        navigationToolbar {
+        }.openTabTrayMenu {
+            openPrivateBrowsing()
+        }.openNewTab {
+        }.enterUrlAndEnterToBrowser(firstWebPage.url) {
+            verifyPageContent("Page content: 1")
+        }.openNavigationToolbar {
+        }.enterUrlAndEnterToBrowser(secondWebPage.url) {
+            verifyPageContent("Page content: 2")
+        }.goBack {
+            verifyUrl(secondWebPage.url.toString())
+        }.openNavigationToolbar {
+        }.openThreeDotMenu {
+        }.goForward {
+            verifyUrl(secondWebPage.url.toString())
         }
     }
 
