@@ -10,11 +10,15 @@ import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.uiautomator.UiDevice
 import androidx.test.uiautomator.UiSelector
+import okhttp3.mockwebserver.MockWebServer
+import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.mozilla.reference.browser.R
+import org.mozilla.reference.browser.helpers.AndroidAssetDispatcher
 import org.mozilla.reference.browser.helpers.BrowserActivityTestRule
+import org.mozilla.reference.browser.helpers.TestAssetHelper
 import org.mozilla.reference.browser.helpers.click
 import org.mozilla.reference.browser.ui.robots.mDevice
 import org.mozilla.reference.browser.ui.robots.navigationToolbar
@@ -28,12 +32,19 @@ import org.mozilla.reference.browser.ui.robots.navigationToolbar
 
 class TabTrayMenuTest {
 
+    private lateinit var mockWebServer: MockWebServer
+
     @get:Rule val activityTestRule = BrowserActivityTestRule()
 
     @Before
     // SetUp to close all tabs before starting each test
     fun setUp() {
         val mDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
+
+        mockWebServer = MockWebServer().apply {
+            dispatcher = AndroidAssetDispatcher()
+            start()
+        }
 
         fun optionsButton() = onView(ViewMatchers.withContentDescription("More options"))
         fun closeAllTabsButton() = onView(ViewMatchers.withText("Close All Tabs"))
@@ -51,6 +62,11 @@ class TabTrayMenuTest {
         } else {
             goBackButton().click()
         }
+    }
+
+    @After
+    fun tearDown() {
+        mockWebServer.shutdown()
     }
 
     /* ktlint-disable no-blank-line-before-rbrace */ // This imposes unreadable grouping.
@@ -136,11 +152,55 @@ class TabTrayMenuTest {
     @Test
     // This test verifies the new tab is open and that its items are all in place
     fun openNewTabTest() {
+        val genericURL = TestAssetHelper.getGenericAsset(mockWebServer, 1)
+
         navigationToolbar {
         }.openTabTrayMenu {
         }.openNewTab {
-            verifyNewTabAddressView()
+            verifyNewTabAddressView("about:blank")
             checkNumberOfTabsTabCounter("1")
+        }.openTabTrayMenu {
+        }.openNewTab {
+        }.enterUrlAndEnterToBrowser(genericURL.url) {
+            verifyUrl(genericURL.url.toString())
+        }.openNavigationToolbar {
+            checkNumberOfTabsTabCounter("2")
+        }.openTabTrayMenu {
+            verifyExistingOpenTabs("about:blank")
+            verifyExistingOpenTabs(genericURL.title)
+        }.clickOpenTab("about:blank") {
+            verifyUrl("about:blank")
+        }
+    }
+
+    @Test
+    // This test verifies the new tab is open and that its items are all in place
+    fun openNewPrivateTabTest() {
+        val firstGenericURL = TestAssetHelper.getGenericAsset(mockWebServer, 1)
+        val secondGenericURL = TestAssetHelper.getGenericAsset(mockWebServer, 2)
+
+        navigationToolbar {
+        }.openTabTrayMenu {
+            openPrivateBrowsing()
+        }.openNewTab {
+            verifyNewTabAddressView("data:text/html")
+            checkNumberOfTabsTabCounter("1")
+        }.openTabTrayMenu {
+            openPrivateBrowsing()
+        }.openNewTab {
+        }.enterUrlAndEnterToBrowser(firstGenericURL.url) {
+            verifyUrl(firstGenericURL.url.toString())
+        }.openNavigationToolbar {
+            checkNumberOfTabsTabCounter("2")
+        }.openTabTrayMenu {
+            openPrivateBrowsing()
+            verifyExistingOpenTabs("Private Browsing")
+            verifyExistingOpenTabs(firstGenericURL.title)
+        }.openNewTab {
+        }.enterUrlAndEnterToBrowser(secondGenericURL.url) {
+            verifyUrl(secondGenericURL.url.toString())
+        }.openNavigationToolbar {
+            checkNumberOfTabsTabCounter("3")
         }
     }
 

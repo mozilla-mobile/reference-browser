@@ -91,6 +91,13 @@ class TabTrayMenuRobot {
             NavigationToolbarRobot().interact()
             return NavigationToolbarRobot.Transition()
         }
+
+        fun clickOpenTab(title: String, interact: BrowserRobot.() -> Unit): BrowserRobot.Transition {
+            openTab(title).clickAndWaitForNewWindow()
+
+            BrowserRobot().interact()
+            return BrowserRobot.Transition()
+        }
     }
 }
 
@@ -129,3 +136,5 @@ private fun assertExistingOpenTabs(title: String) {
         mDevice.findObject(UiSelector().textContains(title)).waitForExists(waitingTime)
     )
 }
+
+private fun openTab(title: String) = mDevice.findObject(UiSelector().textContains(title))
