@@ -23,8 +23,9 @@ class BrowserRobot {
     * document.querySelector('#testContent').innerText == expectedText
     */
     fun verifyPageContent(expectedText: String) {
-        val mDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
-        mDevice.waitAndInteract(Until.findObject(By.textContains(expectedText))) {}
+        mDevice.waitAndInteract(Until.findObject(By.res("$packageName:id/engineView"))) {}
+        assertTrue(mDevice.findObject(UiSelector().textContains(expectedText))
+            .waitForExists(waitingTime))
     }
 
     fun verifyFXAUrl() {
