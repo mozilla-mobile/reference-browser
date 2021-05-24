@@ -17,6 +17,8 @@ import androidx.test.uiautomator.By
 import androidx.test.uiautomator.UiDevice
 import androidx.test.uiautomator.UiSelector
 import androidx.test.uiautomator.Until
+import org.junit.Assert.assertTrue
+import org.mozilla.fenix.ui.robots.ReaderViewRobot
 import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.ext.waitAndInteract
 import org.mozilla.reference.browser.helpers.TestAssetHelper.waitingTime
@@ -30,6 +32,7 @@ class NavigationToolbarRobot {
 
     fun verifyNoTabAddressView() = assertNoTabAddressText()
     fun verifyNewTabAddressView(url: String) = assertNewTabAddressText(url)
+    fun verifyReaderViewButton() = assertReaderViewButton()
 
     fun checkNumberOfTabsTabCounter(numTabs: String) = numberOfOpenTabsTabCounter.check(matches(withText(numTabs)))
 
@@ -69,6 +72,12 @@ class NavigationToolbarRobot {
             AwesomeBarRobot().interact()
             return AwesomeBarRobot.Transition()
         }
+
+        fun clickReaderViewButton(interact: ReaderViewRobot.() -> Unit): ReaderViewRobot.Transition {
+            readerViewButton().clickAndWaitForNewWindow()
+            ReaderViewRobot().interact()
+            return ReaderViewRobot.Transition()
+        }
     }
 }
 
@@ -82,6 +91,8 @@ private var numberOfOpenTabsTabCounter = onView(withId(R.id.counter_text))
 private fun urlBar() = onView(withId(R.id.mozac_browser_toolbar_url_view))
 private fun awesomeBar() = onView(withId(R.id.mozac_browser_toolbar_edit_url_view))
 private fun threeDotMenuButton() = onView(withId(R.id.mozac_browser_toolbar_menu))
+private fun readerViewButton() =
+    mDevice.findObject(UiSelector().resourceId("$packageName:id/mozac_browser_toolbar_page_actions"))
 
 private fun assertNoTabAddressText() {
     mDevice.waitAndInteract(Until.findObject(By.text("Search or enter address"))) {}
@@ -89,4 +100,20 @@ private fun assertNoTabAddressText() {
 
 private fun assertNewTabAddressText(url: String) {
     mDevice.waitAndInteract(Until.findObject(By.textContains(url))) {}
+}
+
+private fun assertReaderViewButton() {
+    mDevice.findObject(UiSelector().resourceId("$packageName:id/mozac_browser_toolbar_progress"))
+        .waitUntilGone(waitingTime)
+
+    mDevice.findObject(
+        UiSelector().resourceId("$packageName:id/mozac_browser_toolbar_page_actions")
+            .fromParent(UiSelector().resourceId("$packageName:id/toolbar")))
+        .waitForExists(waitingTime)
+
+    assertTrue(
+        mDevice.findObject(
+            UiSelector().resourceId("$packageName:id/mozac_browser_toolbar_page_actions"))
+            .waitForExists(waitingTime)
+    )
 }
