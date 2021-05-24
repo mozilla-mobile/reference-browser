@@ -17,6 +17,7 @@ import androidx.test.uiautomator.By
 import androidx.test.uiautomator.UiDevice
 import androidx.test.uiautomator.UiSelector
 import androidx.test.uiautomator.Until
+import org.junit.Assert.assertTrue
 import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.ext.waitAndInteract
 import org.mozilla.reference.browser.helpers.TestAssetHelper.waitingTime
@@ -30,6 +31,7 @@ class NavigationToolbarRobot {
 
     fun verifyNoTabAddressView() = assertNoTabAddressText()
     fun verifyNewTabAddressView(url: String) = assertNewTabAddressText(url)
+    fun verifyReaderViewButton() = assertReaderViewButton()
 
     fun checkNumberOfTabsTabCounter(numTabs: String) = numberOfOpenTabsTabCounter.check(matches(withText(numTabs)))
 
@@ -89,4 +91,13 @@ private fun assertNoTabAddressText() {
 
 private fun assertNewTabAddressText(url: String) {
     mDevice.waitAndInteract(Until.findObject(By.textContains(url))) {}
+}
+
+private fun assertReaderViewButton() {
+    mDevice.findObject(UiSelector().resourceId("$packageName:id/mozac_browser_toolbar_progress"))
+        .waitUntilGone(waitingTime)
+    assertTrue(
+        mDevice.findObject(
+            UiSelector().resourceId("$packageName:id/mozac_browser_toolbar_page_actions")
+        ).waitForExists(waitingTime))
 }
