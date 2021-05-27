@@ -10,6 +10,8 @@ import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.action.ViewActions.pressImeActionButton
 import androidx.test.espresso.action.ViewActions.replaceText
 import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.matcher.ViewMatchers
+import androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibility
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.platform.app.InstrumentationRegistry
@@ -17,6 +19,7 @@ import androidx.test.uiautomator.By
 import androidx.test.uiautomator.UiDevice
 import androidx.test.uiautomator.UiSelector
 import androidx.test.uiautomator.Until
+import org.mozilla.fenix.ui.robots.ReaderViewRobot
 import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.ext.waitAndInteract
 import org.mozilla.reference.browser.helpers.TestAssetHelper.waitingTime
@@ -30,7 +33,7 @@ class NavigationToolbarRobot {
 
     fun verifyNoTabAddressView() = assertNoTabAddressText()
     fun verifyNewTabAddressView(url: String) = assertNewTabAddressText(url)
-
+    fun verifyReaderViewButton() = assertReaderViewButton()
     fun checkNumberOfTabsTabCounter(numTabs: String) = numberOfOpenTabsTabCounter.check(matches(withText(numTabs)))
 
     class Transition {
@@ -69,6 +72,13 @@ class NavigationToolbarRobot {
             AwesomeBarRobot().interact()
             return AwesomeBarRobot.Transition()
         }
+
+        fun clickReaderViewButton(interact: ReaderViewRobot.() -> Unit): ReaderViewRobot.Transition {
+            readerViewButton().click()
+            mDevice.waitForWindowUpdate(packageName, waitingTime)
+            ReaderViewRobot().interact()
+            return ReaderViewRobot.Transition()
+        }
     }
 }
 
@@ -82,6 +92,7 @@ private var numberOfOpenTabsTabCounter = onView(withId(R.id.counter_text))
 private fun urlBar() = onView(withId(R.id.mozac_browser_toolbar_url_view))
 private fun awesomeBar() = onView(withId(R.id.mozac_browser_toolbar_edit_url_view))
 private fun threeDotMenuButton() = onView(withId(R.id.mozac_browser_toolbar_menu))
+private fun readerViewButton() = onView(withId(R.id.mozac_browser_toolbar_page_actions))
 
 private fun assertNoTabAddressText() {
     mDevice.waitAndInteract(Until.findObject(By.text("Search or enter address"))) {}
@@ -89,4 +100,13 @@ private fun assertNoTabAddressText() {
 
 private fun assertNewTabAddressText(url: String) {
     mDevice.waitAndInteract(Until.findObject(By.textContains(url))) {}
+}
+
+private fun assertReaderViewButton() {
+    mDevice.waitForWindowUpdate(packageName, waitingTime)
+    mDevice.findObject(
+        UiSelector().resourceId("$packageName:id/mozac_browser_toolbar_page_actions")
+    ).waitForExists(waitingTime)
+
+    readerViewButton().check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
 }
