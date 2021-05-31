@@ -160,6 +160,12 @@ class BrowserRobot {
             ContentPanelRobot().interact()
             return ContentPanelRobot.Transition()
         }
+
+        fun goBack(interact: BrowserRobot.() -> Unit): BrowserRobot.Transition {
+            mDevice.pressBack()
+            BrowserRobot().interact()
+            return BrowserRobot.Transition()
+        }
     }
 }
 
