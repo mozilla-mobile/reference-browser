@@ -103,7 +103,7 @@ class ThreeDotMenuTest {
     }
 
     @Test
-    fun goForwardTest() {
+    fun normalBrowsingTabNavigationTest() {
 
         val defaultWebPage = TestAssetHelper.getGenericAsset(mockWebServer, 1)
         val nextWebPage = TestAssetHelper.getGenericAsset(mockWebServer, 2)
@@ -114,11 +114,33 @@ class ThreeDotMenuTest {
         }.openNavigationToolbar {
         }.enterUrlAndEnterToBrowser(nextWebPage.url) {
             verifyUrl(nextWebPage.toString())
-            mDevice.pressBack()
+        }.goBack {
             verifyUrl(defaultWebPage.toString())
+        }.openNavigationToolbar {
+        }.openThreeDotMenu {
+        }.goForward {
+            verifyUrl(nextWebPage.toString())
         }
+    }
+
+    @Test
+    fun privateBrowsingTabNavigationTest() {
+
+        val defaultWebPage = TestAssetHelper.getGenericAsset(mockWebServer, 1)
+        val nextWebPage = TestAssetHelper.getGenericAsset(mockWebServer, 2)
 
         navigationToolbar {
+        }.openTabTrayMenu {
+            openPrivateBrowsing()
+        }.openNewTab {
+        }.enterUrlAndEnterToBrowser(defaultWebPage.url) {
+            verifyUrl(defaultWebPage.toString())
+        }.openNavigationToolbar {
+        }.enterUrlAndEnterToBrowser(nextWebPage.url) {
+            verifyUrl(nextWebPage.toString())
+        }.goBack {
+            verifyUrl(defaultWebPage.toString())
+        }.openNavigationToolbar {
         }.openThreeDotMenu {
         }.goForward {
             verifyUrl(nextWebPage.toString())
