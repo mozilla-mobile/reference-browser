@@ -9,7 +9,7 @@
 # 2. Activates gcloud service account
 # 3. Connects to google Firebase (using TestArmada's Flank tool)
 # 4. Executes UI tests
-# 5. Puts test artifacts into the test_artifacts folder
+# 5. Puts test artifacts into a public build worker artifacts directory
 
 # NOTE:
 # Flank supports sharding across multiple devices at a time, but gcloud API
@@ -50,6 +50,8 @@ JAVA_BIN="/usr/bin/java"
 PATH_TEST="./automation/taskcluster/androidTest"
 PATH_APK="./app/build/outputs/apk/debug"
 FLANK_BIN="/builds/worker/test-tools/flank.jar"
+ARTIFACT_DIR="/builds/worker/artifacts"
+RESULTS_DIR="${ARTIFACT_DIR}/results"
 
 echo
 echo "ACTIVATE SERVICE ACCT"
@@ -107,19 +109,10 @@ function failure_check() {
 echo
 echo "EXECUTE TEST(S)"
 echo
-$JAVA_BIN -jar $FLANK_BIN android run --config=$flank_template --max-test-shards=$num_shards --app=$APK_APP --test=$APK_TEST --project=$GOOGLE_PROJECT
+$JAVA_BIN -jar $FLANK_BIN android run --config=$flank_template --max-test-shards=$num_shards --app=$APK_APP --test=$APK_TEST --project=$GOOGLE_PROJECT --local-result-dir="${RESULTS_DIR}"
 exitcode=$?
 echo
 echo
-failure_check
-echo
-echo
-
-echo
-echo "COPY ARTIFACTS"
-echo
-cp -r "./results" "./test_artifacts"
-exitcode=$?
 failure_check
 echo
 echo
@@ -127,14 +120,9 @@ echo
 echo
 echo "RESULTS"
 echo
-ls -la ./results
+ls -la "${RESULTS_DIR}"
 echo 
 echo
-
-echo
-echo "RESULTS"
-echo
-ls -la ./test_results
 
 echo "All UI test(s) have passed!"
 echo
