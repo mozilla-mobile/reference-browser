@@ -69,6 +69,10 @@ jobs:
                   path: .firebase_token.json
                   json: true
         worker:
+            artifacts:
+               - name: public
+                 path: /builds/worker/artifacts
+                 type: directory
             docker-image: {in-tree: ui-tests}
             env:
                 GOOGLE_APPLICATION_CREDENTIALS: '.firebase_token.json'
