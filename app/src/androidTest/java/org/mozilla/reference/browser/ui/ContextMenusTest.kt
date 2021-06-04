@@ -107,4 +107,21 @@ class ContextMenusTest {
             verifyContentPanel()
         }
     }
+
+    @Test
+    fun contextCopyImageLocationTest() {
+        val pageLinks = TestAssetHelper.getGenericAsset(mockWebServer, 4)
+        val linkedImage = TestAssetHelper.getImageAsset(mockWebServer)
+
+        navigationToolbar {
+        }.enterUrlAndEnterToBrowser(pageLinks.url) {
+            longClickMatchingText("test_link_image")
+            clickContextCopyImageLocation()
+        }.openNavigationToolbar {
+        }.clickToolbar {
+            verifyLinkFromClipboard(linkedImage.url.toString())
+        }.clickLinkFromClipboard(linkedImage.url.toString()) {
+            verifyUrl(linkedImage.url.toString())
+        }
+    }
 }

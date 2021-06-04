@@ -122,6 +122,16 @@ class BrowserRobot {
         contextCopyLink.click()
     }
 
+    fun clickContextCopyImageLocation() {
+        mDevice.findObject(UiSelector().resourceId("$packageName:id/parentPanel"))
+            .waitForExists(waitingTime)
+        mDevice.findObject(UiSelector().textContains("Copy image location"))
+            .waitForExists(waitingTime)
+
+        val contextCopyLink = mDevice.findObject(UiSelector().textContains("Copy image location"))
+        contextCopyLink.click()
+    }
+
     fun verifyMediaPlayerControlButtonState(state: String) {
         assertTrue(mediaPlayerPlayButton(state).waitForExists(waitingTime))
     }
