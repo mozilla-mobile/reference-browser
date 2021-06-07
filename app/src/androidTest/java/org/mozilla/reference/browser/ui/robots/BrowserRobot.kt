@@ -62,6 +62,39 @@ class BrowserRobot {
             link.click(LONG_CLICK_DURATION)
     }
 
+    fun longClickAndCopyPlainText(expectedText: String) {
+        try {
+            mDevice.waitForWindowUpdate(packageName, waitingTime)
+            mDevice.findObject(UiSelector().resourceId("$packageName:id/engineView"))
+                .waitForExists(waitingTime)
+            mDevice.findObject(UiSelector().textContains(expectedText)).waitForExists(waitingTime)
+            val link = mDevice.findObject(By.textContains(expectedText))
+            link.click(LONG_CLICK_DURATION)
+
+            mDevice.findObject(UiSelector().textContains("Copy")).waitForExists(waitingTime)
+            val copyText = mDevice.findObject(By.textContains("Copy"))
+            copyText.click()
+        } catch (e: NullPointerException) {
+            println("Failed to long click desired text: ${e.localizedMessage}")
+            navigationToolbar {
+            }.openThreeDotMenu {
+            }.refreshPage {
+                mDevice.waitForIdle()
+            }
+
+            mDevice.waitForWindowUpdate(packageName, waitingTime)
+            mDevice.findObject(UiSelector().resourceId("$packageName:id/engineView"))
+                .waitForExists(waitingTime)
+            mDevice.findObject(UiSelector().textContains(expectedText)).waitForExists(waitingTime)
+            val link = mDevice.findObject(By.textContains(expectedText))
+            link.click(LONG_CLICK_DURATION)
+
+            mDevice.findObject(UiSelector().textContains("Copy")).waitForExists(waitingTime)
+            val copyText = mDevice.findObject(By.textContains("Copy"))
+            copyText.click()
+        }
+    }
+
     fun verifyLinkContextMenuItems() {
         mDevice.waitForWindowUpdate(packageName, waitingTime)
         mDevice.findObject(UiSelector().resourceId("$packageName:id/parentPanel"))
