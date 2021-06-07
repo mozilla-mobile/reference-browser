@@ -101,4 +101,10 @@ object TestAssetHelper {
 
         return TestAsset(url, content, title)
     }
+
+    fun getSampleTextAsset(server: MockWebServer): TestAsset {
+        val url = server.url("pages/sampleText.html").toString().toUri()!!
+        val content = "Sample_text"
+        return TestAsset(url, content, "")
+    }
 }

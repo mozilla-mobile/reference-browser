@@ -122,6 +122,12 @@ class BrowserRobot {
         contextCopyLink.click()
     }
 
+    fun clickCopyText() {
+        mDevice.findObject(UiSelector().textContains("Copy")).waitForExists(waitingTime)
+        val copyText = mDevice.findObject(By.textContains("Copy"))
+        copyText.click()
+    }
+
     fun verifyMediaPlayerControlButtonState(state: String) {
         assertTrue(mediaPlayerPlayButton(state).waitForExists(waitingTime))
     }

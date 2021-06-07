@@ -107,4 +107,21 @@ class ContextMenusTest {
             verifyContentPanel()
         }
     }
+
+    @Test
+    fun textSelectionTest() {
+        val sampleTextWebPage = TestAssetHelper.getSampleTextAsset(mockWebServer)
+
+        navigationToolbar {
+        }.enterUrlAndEnterToBrowser(sampleTextWebPage.url) {
+            longClickMatchingText("Sample_text")
+            clickCopyText()
+        }.openNavigationToolbar {
+        }.clickToolbar {
+            clickClearToolbarButton()
+            longClickToolbar()
+            clickPasteText()
+            verifyPastedToolbarText("Sample_text")
+        }
+    }
 }
