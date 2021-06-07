@@ -107,4 +107,20 @@ class ContextMenusTest {
             verifyContentPanel()
         }
     }
+
+    @Test
+    fun textSelectionTest() {
+        val genericURL = TestAssetHelper.getGenericAsset(mockWebServer, 1)
+
+        navigationToolbar {
+        }.enterUrlAndEnterToBrowser(genericURL.url) {
+            longClickAndCopyPlainText("content")
+        }.openNavigationToolbar {
+        }.clickToolbar {
+            clickClearToolbarButton()
+            longClickToolbar()
+            clickPasteText()
+            verifyPastedToolbarText("content")
+        }
+    }
 }
