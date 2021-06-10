@@ -109,18 +109,34 @@ class ContextMenusTest {
     }
 
     @Test
-    fun textSelectionTest() {
+    fun copyTextTest() {
         val genericURL = TestAssetHelper.getGenericAsset(mockWebServer, 1)
 
         navigationToolbar {
         }.enterUrlAndEnterToBrowser(genericURL.url) {
-            longClickAndCopyPlainText("content")
+            longClickAndCopyText("content")
         }.openNavigationToolbar {
         }.clickToolbar {
             clickClearToolbarButton()
             longClickToolbar()
             clickPasteText()
             verifyPastedToolbarText("content")
+        }
+    }
+
+    @Test
+    fun selectAllAndCopyTextTest() {
+        val genericURL = TestAssetHelper.getGenericAsset(mockWebServer, 1)
+
+        navigationToolbar {
+        }.enterUrlAndEnterToBrowser(genericURL.url) {
+            longClickAndCopyText("content", true)
+        }.openNavigationToolbar {
+        }.clickToolbar {
+            clickClearToolbarButton()
+            longClickToolbar()
+            clickPasteText()
+            verifyPastedToolbarText("Page content: 1")
         }
     }
 }
