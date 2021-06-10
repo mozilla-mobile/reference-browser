@@ -62,8 +62,9 @@ class BrowserRobot {
             link.click(LONG_CLICK_DURATION)
     }
 
-    fun longClickAndCopyPlainText(expectedText: String) {
+    fun longClickAndCopyText(expectedText: String, selectAll: Boolean = false) {
         try {
+            // Long click desired text
             mDevice.waitForWindowUpdate(packageName, waitingTime)
             mDevice.findObject(UiSelector().resourceId("$packageName:id/engineView"))
                 .waitForExists(waitingTime)
@@ -71,17 +72,28 @@ class BrowserRobot {
             val link = mDevice.findObject(By.textContains(expectedText))
             link.click(LONG_CLICK_DURATION)
 
+            // Click Select all from the text selection toolbar
+            if (selectAll) {
+                mDevice.findObject(UiSelector().textContains("Select all")).waitForExists(waitingTime)
+                val selectAllText = mDevice.findObject(By.textContains("Select all"))
+                selectAllText.click()
+            }
+
+            // Click Copy from the text selection toolbar
             mDevice.findObject(UiSelector().textContains("Copy")).waitForExists(waitingTime)
             val copyText = mDevice.findObject(By.textContains("Copy"))
             copyText.click()
         } catch (e: NullPointerException) {
             println("Failed to long click desired text: ${e.localizedMessage}")
+
+            // Refresh the page in case the first long click didn't succeed
             navigationToolbar {
             }.openThreeDotMenu {
             }.refreshPage {
                 mDevice.waitForIdle()
             }
 
+            // Long click again the desired text
             mDevice.waitForWindowUpdate(packageName, waitingTime)
             mDevice.findObject(UiSelector().resourceId("$packageName:id/engineView"))
                 .waitForExists(waitingTime)
@@ -89,6 +101,14 @@ class BrowserRobot {
             val link = mDevice.findObject(By.textContains(expectedText))
             link.click(LONG_CLICK_DURATION)
 
+            // Click again Select all from the text selection toolbar
+            if (selectAll) {
+                mDevice.findObject(UiSelector().textContains("Select all")).waitForExists(waitingTime)
+                val selectAllText = mDevice.findObject(By.textContains("Select all"))
+                selectAllText.click()
+            }
+
+            // Click again Copy from the text selection toolbar
             mDevice.findObject(UiSelector().textContains("Copy")).waitForExists(waitingTime)
             val copyText = mDevice.findObject(By.textContains("Copy"))
             copyText.click()

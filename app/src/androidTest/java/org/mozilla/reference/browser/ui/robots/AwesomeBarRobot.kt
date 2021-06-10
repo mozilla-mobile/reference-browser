@@ -11,7 +11,7 @@ import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.isDescendantOfA
 import androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibility
 import androidx.test.espresso.matcher.ViewMatchers.withId
-import androidx.test.espresso.matcher.ViewMatchers.withText
+import androidx.test.espresso.matcher.ViewMatchers.withSubstring
 import androidx.test.uiautomator.By
 import androidx.test.uiautomator.UiSelector
 import junit.framework.Assert.assertTrue
@@ -128,7 +128,7 @@ private fun assertPastedToolbarText(expectedText: String) {
         .waitForExists(waitingTime)
     onView(
         allOf(
-            withText(expectedText),
+            withSubstring(expectedText),
             withId(R.id.mozac_browser_toolbar_edit_url_view)
         )
     ).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
