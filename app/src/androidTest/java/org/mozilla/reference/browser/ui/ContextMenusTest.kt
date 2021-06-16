@@ -104,7 +104,7 @@ class ContextMenusTest {
         }.enterUrlAndEnterToBrowser(pageLinks.url) {
             longClickMatchingText("Link 1")
         }.clickContextShareLink {
-            verifyContentPanel()
+            verifyShareContentPanel()
         }
     }
 
