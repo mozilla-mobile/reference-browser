@@ -13,6 +13,7 @@ import androidx.test.espresso.matcher.ViewMatchers.withSubstring
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.uiautomator.By
 import androidx.test.uiautomator.UiSelector
+import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.helpers.TestAssetHelper.waitingTime
@@ -38,6 +39,8 @@ class CustomTabRobot {
     fun verifyRequestDesktopButton() = assertRequestDesktopButton()
     fun verifyFindInPageButton() = assertFindInPageButton()
     fun verifyOpenInBrowserButton() = assertOpenInBrowserButton()
+    fun verifyRequestDesktopSiteIsTurnedOff() = assertRequestDesktopSiteIsTurnedOff()
+    fun verifyRequestDesktopSiteIsTurnedOn() = assertRequestDesktopSiteIsTurnedOn()
     fun clickForwardButton() = forwardButton().click()
 
     fun clickGenericLink(expectedText: String) {
@@ -48,11 +51,32 @@ class CustomTabRobot {
         link.click()
     }
 
+    fun requestDesktopSite() {
+        mDevice.findObject(UiSelector().textContains("Request desktop site"))
+            .waitForExists(waitingTime)
+        requestDesktopButton().click()
+        mDevice.waitForIdle()
+    }
+
     class Transition {
         fun openMainMenu(interact: CustomTabRobot.() -> Unit): Transition {
             menuButton().click()
 
             CustomTabRobot().interact()
+            return Transition()
+        }
+
+        fun clickShareButton(interact: ContentPanelRobot.() -> Unit): ContentPanelRobot.Transition {
+            shareButton().click()
+
+            ContentPanelRobot().interact()
+            return ContentPanelRobot.Transition()
+        }
+
+        fun clickOpenInBrowserButton(interact: BrowserRobot.() -> Unit): Transition {
+            openInBrowserButton().click()
+
+            BrowserRobot().interact()
             return Transition()
         }
 
@@ -81,8 +105,8 @@ private fun refreshButton() = onView(withContentDescription("Refresh"))
 private fun stopButton() = onView(withContentDescription("Stop"))
 private fun shareButton() = onView(withText("Share"))
 private fun requestDesktopButton() = onView(withSubstring("Request desktop site"))
-private fun findInPage() = onView(withText("Find in Page"))
-private fun openInBrowser() = onView(withText("Open in Browser"))
+private fun findInPageButton() = onView(withText("Find in Page"))
+private fun openInBrowserButton() = onView(withText("Open in Browser"))
 
 private fun assertCloseButton() =
     closeButton().check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
@@ -115,6 +139,16 @@ private fun assertShareButton() =
 private fun assertRequestDesktopButton() =
     requestDesktopButton().check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
 private fun assertFindInPageButton() =
-    findInPage().check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+    findInPageButton().check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
 private fun assertOpenInBrowserButton() =
-    openInBrowser().check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+    openInBrowserButton().check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+private fun assertRequestDesktopSiteIsTurnedOff() {
+    assertFalse(
+        mDevice.findObject(UiSelector().textContains("Request desktop site")).isChecked
+    )
+}
+private fun assertRequestDesktopSiteIsTurnedOn() {
+    assertTrue(
+        mDevice.findObject(UiSelector().textContains("Request desktop site")).isChecked
+    )
+}
