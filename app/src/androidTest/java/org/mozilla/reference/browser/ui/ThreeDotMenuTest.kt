@@ -181,7 +181,7 @@ class ThreeDotMenuTest {
         }.openNavigationToolbar {
         }.openThreeDotMenu {
         }.openShare {
-            verifyContentPanel()
+            verifyShareContentPanel()
         }
     }
 

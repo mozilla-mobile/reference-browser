@@ -4,16 +4,17 @@
 
 package org.mozilla.reference.browser.ui.robots
 
-import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.uiautomator.UiDevice
+import androidx.test.uiautomator.UiSelector
+import org.junit.Assert.assertTrue
+import org.mozilla.reference.browser.helpers.TestAssetHelper.waitingTime
 
 /**
  * Implementation of Robot Pattern for the content panel.
  */
 class ContentPanelRobot {
-    fun verifyContentPanel() = shareContentPanel()
+    fun verifyShareContentPanel() = assertShareContentPanel()
 
     class Transition {
         val mDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
@@ -25,4 +26,8 @@ class ContentPanelRobot {
     }
 }
 
-private fun shareContentPanel() = onView((ViewMatchers.withText("Share")))
+private fun assertShareContentPanel() {
+    mDevice.waitForIdle()
+    assertTrue(mDevice.findObject(UiSelector().textContains("Share")).waitForExists(waitingTime))
+    mDevice.pressBack()
+}

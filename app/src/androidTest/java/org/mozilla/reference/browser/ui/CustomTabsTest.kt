@@ -105,4 +105,59 @@ class CustomTabsTest {
             verifyPageUrl(genericURL.url.toString())
         }
     }
+
+    @Test
+    fun customTabShareTest() {
+        val customTabPage = TestAssetHelper.getGenericAsset(mockWebServer, 1)
+
+        intentReceiverActivityTestRule.launchActivity(
+            createCustomTabIntent(
+                customTabPage.url.toString()
+            )
+        )
+
+        customTabScreen {
+        }.openMainMenu {
+        }.clickShareButton {
+            verifyShareContentPanel()
+        }
+    }
+
+    @Test
+    fun customTabRequestDesktopSiteTest() {
+        val customTabPage = TestAssetHelper.getGenericAsset(mockWebServer, 1)
+
+        intentReceiverActivityTestRule.launchActivity(
+            createCustomTabIntent(
+                customTabPage.url.toString()
+            )
+        )
+
+        customTabScreen {
+        }.openMainMenu {
+            requestDesktopSite()
+        }.openMainMenu {
+            verifyRequestDesktopSiteIsTurnedOn()
+            requestDesktopSite()
+        }.openMainMenu {
+            verifyRequestDesktopSiteIsTurnedOff()
+        }
+    }
+
+    @Test
+    fun customTabOpenInBrowserTest() {
+        val customTabPage = TestAssetHelper.getGenericAsset(mockWebServer, 1)
+
+        intentReceiverActivityTestRule.launchActivity(
+            createCustomTabIntent(
+                customTabPage.url.toString()
+            )
+        )
+
+        customTabScreen {
+        }.openMainMenu {
+        }.clickOpenInBrowserButton {
+            verifyUrl(customTabPage.url.toString())
+        }
+    }
 }
