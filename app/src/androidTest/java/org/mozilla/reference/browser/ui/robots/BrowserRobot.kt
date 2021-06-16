@@ -42,8 +42,8 @@ class BrowserRobot {
         mDevice.findObject(UiSelector()
             .resourceId("$packageName:id/mozac_browser_toolbar_url_view"))
             .waitForExists(waitingTime)
-        mDevice.findObject(UiSelector().textContains(expectedUrl))
-            .waitForExists(waitingTime)
+        assertTrue(mDevice.findObject(UiSelector().textContains(expectedUrl))
+            .waitForExists(waitingTime))
     }
 
     fun verifyAboutBrowser() {

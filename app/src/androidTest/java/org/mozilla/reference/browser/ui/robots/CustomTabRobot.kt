@@ -81,8 +81,8 @@ private fun refreshButton() = onView(withContentDescription("Refresh"))
 private fun stopButton() = onView(withContentDescription("Stop"))
 private fun shareButton() = onView(withText("Share"))
 private fun requestDesktopButton() = onView(withSubstring("Request desktop site"))
-private fun findInPage() = onView(withText("Find in Page"))
-private fun openInBrowser() = onView(withText("Open in Browser"))
+private fun findInPageButton() = onView(withText("Find in Page"))
+private fun openInBrowserButton() = onView(withText("Open in Browser"))
 
 private fun assertCloseButton() =
     closeButton().check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
@@ -115,6 +115,6 @@ private fun assertShareButton() =
 private fun assertRequestDesktopButton() =
     requestDesktopButton().check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
 private fun assertFindInPageButton() =
-    findInPage().check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+    findInPageButton().check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
 private fun assertOpenInBrowserButton() =
-    openInBrowser().check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+    openInBrowserButton().check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))

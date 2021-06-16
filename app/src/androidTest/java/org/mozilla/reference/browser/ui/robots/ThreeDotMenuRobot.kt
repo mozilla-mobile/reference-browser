@@ -12,8 +12,6 @@ import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withId
-import androidx.test.platform.app.InstrumentationRegistry
-import androidx.test.uiautomator.UiDevice
 import androidx.test.uiautomator.UiSelector
 import junit.framework.Assert.assertFalse
 import junit.framework.Assert.assertTrue
@@ -74,10 +72,7 @@ class ThreeDotMenuRobot {
         }
 
         fun openShare(interact: ContentPanelRobot.() -> Unit): ContentPanelRobot.Transition {
-            val device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
-
             shareButton().click()
-            device.pressBack()
             ContentPanelRobot().interact()
             return ContentPanelRobot.Transition()
         }
