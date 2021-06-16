@@ -92,7 +92,7 @@ class ContextMenusTest {
         }.clickToolbar {
             verifyLinkFromClipboard(genericURL.url.toString())
         }.clickLinkFromClipboard(genericURL.url.toString()) {
-            verifyUrl(genericURL.toString())
+            verifyUrl(genericURL.url.toString())
         }
     }
 
