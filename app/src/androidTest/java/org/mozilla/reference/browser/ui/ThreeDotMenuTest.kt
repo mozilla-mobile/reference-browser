@@ -174,14 +174,14 @@ class ThreeDotMenuTest {
 
     @Test
     fun doShareTest() {
-        val loremIpsumWebPage = TestAssetHelper.getLoremIpsumAsset(mockWebServer)
+        val genericURL = TestAssetHelper.getGenericAsset(mockWebServer, 1)
 
         navigationToolbar {
-        }.enterUrlAndEnterToBrowser(loremIpsumWebPage.url) {
+        }.enterUrlAndEnterToBrowser(genericURL.url) {
         }.openNavigationToolbar {
         }.openThreeDotMenu {
         }.openShare {
-            verifyContentPanel()
+            verifyShareContentPanel()
         }
     }
 
