@@ -13,6 +13,7 @@ import androidx.test.espresso.matcher.ViewMatchers.withSubstring
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.uiautomator.By
 import androidx.test.uiautomator.UiSelector
+import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.helpers.TestAssetHelper.waitingTime
@@ -38,6 +39,8 @@ class CustomTabRobot {
     fun verifyRequestDesktopButton() = assertRequestDesktopButton()
     fun verifyFindInPageButton() = assertFindInPageButton()
     fun verifyOpenInBrowserButton() = assertOpenInBrowserButton()
+    fun verifyRequestDesktopSiteIsTurnedOff() = assertRequestDesktopSiteIsTurnedOff()
+    fun verifyRequestDesktopSiteIsTurnedOn() = assertRequestDesktopSiteIsTurnedOn()
     fun clickForwardButton() = forwardButton().click()
 
     fun clickGenericLink(expectedText: String) {
@@ -46,6 +49,13 @@ class CustomTabRobot {
         mDevice.findObject(UiSelector().textContains(expectedText)).waitForExists(waitingTime)
         val link = mDevice.findObject(By.textContains(expectedText))
         link.click()
+    }
+
+    fun requestDesktopSite() {
+        mDevice.findObject(UiSelector().textContains("Request desktop site"))
+            .waitForExists(waitingTime)
+        requestDesktopButton().click()
+        mDevice.waitForIdle()
     }
 
     class Transition {
@@ -125,3 +135,13 @@ private fun assertFindInPageButton() =
     findInPage().check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
 private fun assertOpenInBrowserButton() =
     openInBrowser().check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+private fun assertRequestDesktopSiteIsTurnedOff() {
+    assertFalse(
+        mDevice.findObject(UiSelector().textContains("Request desktop site")).isChecked
+    )
+}
+private fun assertRequestDesktopSiteIsTurnedOn() {
+    assertTrue(
+        mDevice.findObject(UiSelector().textContains("Request desktop site")).isChecked
+    )
+}

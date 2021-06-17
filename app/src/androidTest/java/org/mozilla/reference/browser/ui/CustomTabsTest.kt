@@ -122,4 +122,25 @@ class CustomTabsTest {
             verifyShareContentPanel()
         }
     }
+
+    @Test
+    fun customTabRequestDesktopSiteTest() {
+        val customTabPage = TestAssetHelper.getGenericAsset(mockWebServer, 1)
+
+        intentReceiverActivityTestRule.launchActivity(
+            createCustomTabIntent(
+                customTabPage.url.toString()
+            )
+        )
+
+        customTabScreen {
+        }.openMainMenu {
+            requestDesktopSite()
+        }.openMainMenu {
+            verifyRequestDesktopSiteIsTurnedOn()
+            requestDesktopSite()
+        }.openMainMenu {
+            verifyRequestDesktopSiteIsTurnedOff()
+        }
+    }
 }
