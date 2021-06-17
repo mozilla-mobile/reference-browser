@@ -51,7 +51,7 @@ class CustomTabRobot {
         link.click()
     }
 
-    fun requestDesktopSite() {
+    fun switchRequestDesktopSiteToggle() {
         mDevice.findObject(UiSelector().textContains("Request desktop site"))
             .waitForExists(waitingTime)
         requestDesktopButton().click()

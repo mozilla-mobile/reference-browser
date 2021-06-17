@@ -78,7 +78,9 @@ class ThreeDotMenuRobot {
             return ContentPanelRobot.Transition()
         }
 
-        fun requestDesktopSite(interact: NavigationToolbarRobot.() -> Unit): NavigationToolbarRobot.Transition {
+        fun switchRequestDesktopSiteToggle(
+            interact: NavigationToolbarRobot.() -> Unit
+        ): NavigationToolbarRobot.Transition {
             mDevice.findObject(UiSelector().textContains("Request desktop site"))
                 .waitForExists(waitingTime)
             requestDesktopSiteToggle().click()
