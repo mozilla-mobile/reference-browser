@@ -62,6 +62,13 @@ class CustomTabRobot {
             CustomTabRobot().interact()
             return Transition()
         }
+
+        fun clickShareButton(interact: ContentPanelRobot.() -> Unit): ContentPanelRobot.Transition {
+            shareButton().click()
+
+            ContentPanelRobot().interact()
+            return ContentPanelRobot.Transition()
+        }
     }
 }
 
