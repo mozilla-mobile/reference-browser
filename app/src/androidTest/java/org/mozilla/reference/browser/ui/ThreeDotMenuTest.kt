@@ -265,12 +265,12 @@ class ThreeDotMenuTest {
         }.enterUrlAndEnterToBrowser(defaultWebPage.url) {
         }.openNavigationToolbar {
         }.openThreeDotMenu {
-        }.requestDesktopSite {
+        }.switchRequestDesktopSiteToggle {
         }.openThreeDotMenu {
             verifyRequestDesktopSiteIsTurnedOn()
         }.goBack {
         }.openThreeDotMenu {
-        }.requestDesktopSite {
+        }.switchRequestDesktopSiteToggle {
         }.openThreeDotMenu {
             verifyRequestDesktopSiteIsTurnedOff()
         }

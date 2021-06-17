@@ -135,10 +135,10 @@ class CustomTabsTest {
 
         customTabScreen {
         }.openMainMenu {
-            requestDesktopSite()
+            switchRequestDesktopSiteToggle()
         }.openMainMenu {
             verifyRequestDesktopSiteIsTurnedOn()
-            requestDesktopSite()
+            switchRequestDesktopSiteToggle()
         }.openMainMenu {
             verifyRequestDesktopSiteIsTurnedOff()
         }
