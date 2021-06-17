@@ -216,6 +216,7 @@ class BrowserRobot {
 
         fun goBack(interact: BrowserRobot.() -> Unit): BrowserRobot.Transition {
             mDevice.pressBack()
+            mDevice.waitForIdle()
             BrowserRobot().interact()
             return BrowserRobot.Transition()
         }

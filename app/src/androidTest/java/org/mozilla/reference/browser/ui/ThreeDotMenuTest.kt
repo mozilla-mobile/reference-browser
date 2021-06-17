@@ -110,11 +110,14 @@ class ThreeDotMenuTest {
 
         navigationToolbar {
         }.enterUrlAndEnterToBrowser(defaultWebPage.url) {
+            verifyPageContent("Page content: 1")
             verifyUrl(defaultWebPage.url.toString())
         }.openNavigationToolbar {
         }.enterUrlAndEnterToBrowser(nextWebPage.url) {
+            verifyPageContent("Page content: 2")
             verifyUrl(nextWebPage.url.toString())
         }.goBack {
+            verifyPageContent("Page content: 1")
             verifyUrl(defaultWebPage.url.toString())
         }.openNavigationToolbar {
         }.openThreeDotMenu {
