@@ -105,4 +105,21 @@ class CustomTabsTest {
             verifyPageUrl(genericURL.url.toString())
         }
     }
+
+    @Test
+    fun customTabShareTest() {
+        val customTabPage = TestAssetHelper.getGenericAsset(mockWebServer, 1)
+
+        intentReceiverActivityTestRule.launchActivity(
+            createCustomTabIntent(
+                customTabPage.url.toString()
+            )
+        )
+
+        customTabScreen {
+        }.openMainMenu {
+        }.clickShareButton {
+            verifyShareContentPanel()
+        }
+    }
 }
