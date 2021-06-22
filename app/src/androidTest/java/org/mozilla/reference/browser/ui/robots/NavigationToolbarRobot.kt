@@ -45,6 +45,8 @@ class NavigationToolbarRobot {
             urlBar().perform(click())
             awesomeBar().perform(replaceText(url.toString()),
                     pressImeActionButton())
+            mDevice.findObject(UiSelector()
+                .resourceId("$packageName:id/mozac_browser_toolbar_progress")).waitForExists(waitingTime)
             mDevice.waitForIdle()
 
             BrowserRobot().interact()
