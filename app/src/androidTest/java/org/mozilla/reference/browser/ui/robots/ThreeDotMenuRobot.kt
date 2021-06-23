@@ -89,7 +89,7 @@ class ThreeDotMenuRobot {
             return NavigationToolbarRobot.Transition()
         }
 
-        fun findInPage(interact: FindInPagePanelRobot.() -> Unit): FindInPagePanelRobot.Transition {
+        fun openFindInPage(interact: FindInPagePanelRobot.() -> Unit): FindInPagePanelRobot.Transition {
             findInPageButton().click()
             FindInPagePanelRobot().interact()
             return FindInPagePanelRobot.Transition()
