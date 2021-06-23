@@ -185,35 +185,24 @@ class ThreeDotMenuTest {
         }
     }
 
-    @Ignore("Temp disable broken test - see:  https://github.com/mozilla-mobile/fenix/issues/5534")
     @Test
-    // finds specific text snippets in a lorem ipsum sample page
     fun findInPageTest() {
-        val loremIpsumWebPage = TestAssetHelper.getLoremIpsumAsset(mockWebServer)
+        val defaultWebPage = TestAssetHelper.getGenericAsset(mockWebServer, 1)
 
         navigationToolbar {
-        }.enterUrlAndEnterToBrowser(loremIpsumWebPage.url) {
+        }.enterUrlAndEnterToBrowser(defaultWebPage.url) {
         }.openNavigationToolbar {
         }.openThreeDotMenu {
-        }.findInPage {
-            verifyFindInPageNextButton()
-            verifyFindInPagePrevButton()
-            verifyFindInPageCloseButton()
-            mDevice.waitForIdle()
-            enterFindInPageQuery("lab")
-            mDevice.waitForIdle()
-            verifyFindNextInPageResult("1/3")
-            verifyFindNextInPageResult("2/3")
-            verifyFindNextInPageResult("3/3")
-            verifyFindPrevInPageResult("1/3")
-            verifyFindPrevInPageResult("3/3")
-            verifyFindPrevInPageResult("2/3")
-            enterFindInPageQuery("in")
-            verifyFindNextInPageResult("3/7")
-            verifyFindNextInPageResult("4/7")
-            verifyFindNextInPageResult("5/7")
-            verifyFindNextInPageResult("6/7")
-            verifyFindNextInPageResult("7/7")
+        }.openFindInPage {
+            verifyFindInPageBar()
+            enterFindInPageQuery("e")
+            verifyFindInPageResult("1/2")
+            clickFindInPageNextButton()
+            verifyFindInPageResult("2/2")
+            clickFindInPagePreviousButton()
+            verifyFindInPageResult("1/2")
+            clickFindInPageCloseButton()
+            verifyFindInPageBarIsDismissed()
         }
     }
 
