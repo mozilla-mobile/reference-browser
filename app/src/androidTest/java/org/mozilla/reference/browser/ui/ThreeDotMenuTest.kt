@@ -110,16 +110,16 @@ class ThreeDotMenuTest {
 
         navigationToolbar {
         }.enterUrlAndEnterToBrowser(defaultWebPage.url) {
-            verifyUrl(defaultWebPage.toString())
+            verifyUrl(defaultWebPage.url.toString())
         }.openNavigationToolbar {
         }.enterUrlAndEnterToBrowser(nextWebPage.url) {
-            verifyUrl(nextWebPage.toString())
+            verifyUrl(nextWebPage.url.toString())
         }.goBack {
-            verifyUrl(defaultWebPage.toString())
+            verifyUrl(defaultWebPage.url.toString())
         }.openNavigationToolbar {
         }.openThreeDotMenu {
         }.goForward {
-            verifyUrl(nextWebPage.toString())
+            verifyUrl(nextWebPage.url.toString())
         }
     }
 
@@ -134,16 +134,16 @@ class ThreeDotMenuTest {
             openPrivateBrowsing()
         }.openNewTab {
         }.enterUrlAndEnterToBrowser(defaultWebPage.url) {
-            verifyUrl(defaultWebPage.toString())
+            verifyUrl(defaultWebPage.url.toString())
         }.openNavigationToolbar {
         }.enterUrlAndEnterToBrowser(nextWebPage.url) {
-            verifyUrl(nextWebPage.toString())
+            verifyUrl(nextWebPage.url.toString())
         }.goBack {
-            verifyUrl(defaultWebPage.toString())
+            verifyUrl(defaultWebPage.url.toString())
         }.openNavigationToolbar {
         }.openThreeDotMenu {
         }.goForward {
-            verifyUrl(nextWebPage.toString())
+            verifyUrl(nextWebPage.url.toString())
         }
     }
 
@@ -284,7 +284,7 @@ class ThreeDotMenuTest {
             verifyAddToHomeScreenPopup()
             clickAddAutomaticallyToHomeScreenButton()
         }.openHomeScreenShortcut(defaultWebPage.title) {
-            verifyUrl(defaultWebPage.toString())
+            verifyUrl(defaultWebPage.url.toString())
         }
     }
 }
