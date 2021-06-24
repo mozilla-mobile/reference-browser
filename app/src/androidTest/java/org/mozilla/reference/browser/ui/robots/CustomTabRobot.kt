@@ -79,6 +79,13 @@ class CustomTabRobot {
             ContentPanelRobot().interact()
             return ContentPanelRobot.Transition()
         }
+
+        fun clickOpenInBrowserButton(interact: BrowserRobot.() -> Unit): Transition {
+            openInBrowserButton().click()
+
+            BrowserRobot().interact()
+            return Transition()
+        }
     }
 }
 
@@ -99,7 +106,7 @@ private fun stopButton() = onView(withContentDescription("Stop"))
 private fun shareButton() = onView(withText("Share"))
 private fun requestDesktopButton() = onView(withSubstring("Request desktop site"))
 private fun findInPage() = onView(withText("Find in Page"))
-private fun openInBrowser() = onView(withText("Open in Browser"))
+private fun openInBrowserButton() = onView(withText("Open in Browser"))
 
 private fun assertCloseButton() =
     closeButton().check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
@@ -134,7 +141,7 @@ private fun assertRequestDesktopButton() =
 private fun assertFindInPageButton() =
     findInPage().check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
 private fun assertOpenInBrowserButton() =
-    openInBrowser().check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+    openInBrowserButton().check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
 private fun assertRequestDesktopSiteIsTurnedOff() {
     assertFalse(
         mDevice.findObject(UiSelector().textContains("Request desktop site")).isChecked

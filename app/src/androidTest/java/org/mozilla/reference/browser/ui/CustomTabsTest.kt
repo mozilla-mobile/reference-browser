@@ -143,4 +143,21 @@ class CustomTabsTest {
             verifyRequestDesktopSiteIsTurnedOff()
         }
     }
+
+    @Test
+    fun customTabOpenInBrowserTest() {
+        val customTabPage = TestAssetHelper.getGenericAsset(mockWebServer, 1)
+
+        intentReceiverActivityTestRule.launchActivity(
+            createCustomTabIntent(
+                customTabPage.url.toString()
+            )
+        )
+
+        customTabScreen {
+        }.openMainMenu {
+        }.clickOpenInBrowserButton {
+            verifyUrl(customTabPage.url.toString())
+        }
+    }
 }
