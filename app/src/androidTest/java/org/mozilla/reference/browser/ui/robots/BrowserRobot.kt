@@ -4,12 +4,21 @@
 
 package org.mozilla.reference.browser.ui.robots
 
+import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.matcher.ViewMatchers
+import androidx.test.espresso.matcher.ViewMatchers.isDescendantOfA
+import androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibility
+import androidx.test.espresso.matcher.ViewMatchers.withId
+import androidx.test.espresso.matcher.ViewMatchers.withSubstring
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.uiautomator.By
 import androidx.test.uiautomator.UiDevice
 import androidx.test.uiautomator.UiSelector
 import androidx.test.uiautomator.Until
 import junit.framework.Assert.assertTrue
+import org.hamcrest.CoreMatchers.allOf
+import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.ext.waitAndInteract
 import org.mozilla.reference.browser.helpers.Constants.LONG_CLICK_DURATION
 import org.mozilla.reference.browser.helpers.TestAssetHelper.waitingTime
@@ -44,6 +53,13 @@ class BrowserRobot {
             .waitForExists(waitingTime)
         mDevice.findObject(UiSelector().textContains(expectedUrl))
             .waitForExists(waitingTime)
+        onView(
+            allOf(
+                withSubstring(expectedUrl),
+                withId(R.id.mozac_browser_toolbar_url_view),
+                isDescendantOfA(withId(R.id.mozac_browser_toolbar_origin_view))
+            )
+        ).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
     }
 
     fun verifyAboutBrowser() {
