@@ -11,6 +11,9 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.compose.material.MaterialTheme
+import androidx.compose.ui.platform.ComposeView
+import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import mozilla.components.browser.tabstray.DefaultTabViewHolder
@@ -18,6 +21,8 @@ import mozilla.components.browser.tabstray.TabsAdapter
 import mozilla.components.browser.tabstray.TabsTrayStyling
 import mozilla.components.browser.tabstray.ViewHolderProvider
 import mozilla.components.browser.thumbnails.loader.ThumbnailLoader
+import mozilla.components.compose.tabs.BrowserTabsTrayList
+import mozilla.components.compose.tabs.ComposableTrayAdapter
 import mozilla.components.concept.tabstray.TabsTray
 import mozilla.components.feature.tabs.tabstray.TabsFeature
 import mozilla.components.support.base.feature.UserInteractionHandler
@@ -32,13 +37,22 @@ import org.mozilla.reference.browser.ext.requireComponents
 class TabsTrayFragment : Fragment(), UserInteractionHandler {
     private var tabsFeature: TabsFeature? = null
 
+    private val shouldUseComposeUI: Boolean
+        get() = PreferenceManager.getDefaultSharedPreferences(requireContext()).getBoolean(
+            getString(R.string.pref_key_compose_ui), false
+        )
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
         inflater.inflate(R.layout.fragment_tabstray, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val trayAdapter = createAndSetupTabsTray(requireContext())
+        val trayAdapter = if (shouldUseComposeUI) {
+            createAndSetupComposeTabsTray(view)
+        } else {
+            createAndSetupTabsTray(requireContext())
+        }
 
         tabsFeature = TabsFeature(
             trayAdapter,
@@ -105,5 +119,28 @@ class TabsTrayFragment : Fragment(), UserInteractionHandler {
         TabsTouchHelper(tabsAdapter).attachToRecyclerView(tabsTray)
 
         return tabsAdapter
+    }
+
+    private fun createAndSetupComposeTabsTray(rootView: View): TabsTray {
+        val tabsTray = rootView.findViewById<RecyclerView>(R.id.tabsTray)
+        tabsTray.visibility = View.GONE
+
+        val adapter = ComposableTrayAdapter()
+        val composeView = rootView.findViewById<ComposeView>(R.id.compose_tabstray)
+
+        composeView.apply {
+            visibility = View.VISIBLE
+            setContent {
+                MaterialTheme {
+                    BrowserTabsTrayList(
+                        adapter = adapter,
+                        useCases = requireComponents.useCases.tabsUseCases,
+                        closeTabsTray = ::closeTabsTray
+                    )
+                }
+            }
+        }
+
+        return adapter
     }
 }
