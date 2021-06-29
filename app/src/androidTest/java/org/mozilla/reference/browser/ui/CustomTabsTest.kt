@@ -160,4 +160,23 @@ class CustomTabsTest {
             verifyUrl(customTabPage.url.toString())
         }
     }
+
+    @Test
+    fun customTabScrollTest() {
+        val customTabPage = TestAssetHelper.getLoremIpsumAsset(mockWebServer)
+
+        intentReceiverActivityTestRule.launchActivity(
+            createCustomTabIntent(
+                customTabPage.url.toString()
+            )
+        )
+
+        customTabScreen {
+            verifyPageTitle(customTabPage.title)
+            scrollDown()
+            verifyToolbarIsHidden()
+            scrollUp()
+            verifyToolbarIsDisplayed()
+        }
+    }
 }

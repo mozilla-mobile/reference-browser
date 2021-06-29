@@ -12,6 +12,7 @@ import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withSubstring
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.uiautomator.By
+import androidx.test.uiautomator.UiScrollable
 import androidx.test.uiautomator.UiSelector
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
@@ -41,7 +42,11 @@ class CustomTabRobot {
     fun verifyOpenInBrowserButton() = assertOpenInBrowserButton()
     fun verifyRequestDesktopSiteIsTurnedOff() = assertRequestDesktopSiteIsTurnedOff()
     fun verifyRequestDesktopSiteIsTurnedOn() = assertRequestDesktopSiteIsTurnedOn()
+    fun verifyToolbarIsHidden() = asssertToolbarIsHidden()
+    fun verifyToolbarIsDisplayed() = asssertToolbarIsDisplayed()
     fun clickForwardButton() = forwardButton().click()
+    fun scrollDown() = scrollDownCustomTabs()
+    fun scrollUp() = scrollUpCustomTabs()
 
     fun clickGenericLink(expectedText: String) {
         mDevice.findObject(UiSelector().resourceId("$packageName:id/engineView"))
@@ -151,4 +156,26 @@ private fun assertRequestDesktopSiteIsTurnedOn() {
     assertTrue(
         mDevice.findObject(UiSelector().textContains("Request desktop site")).isChecked
     )
+}
+private fun customTabScrollableView() =
+    UiScrollable(
+        UiSelector().descriptionContains("Lorem ipsum dolor sit amet, consetetur sadipscing elitr")
+    ).setAsVerticalList()
+
+private fun scrollDownCustomTabs() {
+    customTabScrollableView().scrollToEnd(1)
+}
+private fun scrollUpCustomTabs() {
+    customTabScrollableView().scrollToBeginning(1)
+}
+
+private fun asssertToolbarIsHidden() {
+    mDevice.findObject(UiSelector().resourceId("$packageName:id/toolbar")).waitUntilGone(waitingTime)
+    assertFalse(mDevice.findObject(UiSelector().resourceId("$packageName:id/toolbar"))
+        .waitForExists(waitingTime))
+}
+private fun asssertToolbarIsDisplayed() {
+    mDevice.findObject(UiSelector().resourceId("$packageName:id/toolbar")).waitForExists(waitingTime)
+    assertTrue(mDevice.findObject(UiSelector().resourceId("$packageName:id/toolbar"))
+        .waitForExists(waitingTime))
 }
