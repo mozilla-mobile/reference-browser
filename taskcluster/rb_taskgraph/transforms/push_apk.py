@@ -30,7 +30,7 @@ def build_pushapk_task(config, tasks):
             {
                 "taskId": {"task-reference": "<signing>"},
                 "taskType": "signing",
-                "paths": dep.attributes["apks"].values(),
+                "paths": list(dep.attributes["apks"].values()),
             }
         ]
         task["worker"]["dep"] = config.params["level"] != "3"

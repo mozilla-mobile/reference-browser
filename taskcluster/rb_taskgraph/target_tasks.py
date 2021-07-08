@@ -14,7 +14,7 @@ def target_tasks_nightly(full_task_graph, parameters, graph_config):
     def filter(task, parameters):
         return task.attributes.get("nightly", False)
 
-    return [l for l, t in full_task_graph.tasks.iteritems() if filter(t, parameters)]
+    return [l for l, t in full_task_graph.tasks.items() if filter(t, parameters)]
 
 
 @target_task("bump_android_components")
@@ -24,4 +24,4 @@ def target_tasks_bump_android_components(full_task_graph, parameters, graph_conf
     def filter(task, parameters):
         return task.attributes.get("bump-type", "") == "android-components"
 
-    return [l for l, t in full_task_graph.tasks.iteritems() if filter(t, parameters)]
+    return [l for l, t in full_task_graph.tasks.items() if filter(t, parameters)]
