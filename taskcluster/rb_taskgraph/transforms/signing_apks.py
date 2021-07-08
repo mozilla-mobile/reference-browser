@@ -22,7 +22,7 @@ def build_signing_task(config, tasks):
             {
                 "taskId": {"task-reference": "<build>"},
                 "taskType": "build",
-                "paths": dep.attributes["apks"].values(),
+                "paths": list(dep.attributes["apks"].values()),
                 "formats": ["autograph_apk"],
             }
         ]
