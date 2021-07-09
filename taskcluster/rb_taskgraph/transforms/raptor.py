@@ -6,7 +6,6 @@ Apply some defaults and minor modifications to the jobs defined in the build
 kind.
 """
 
-from __future__ import absolute_import, print_function, unicode_literals
 
 import copy
 import json
@@ -60,11 +59,11 @@ def build_raptor_task(config, tasks):
         resolve_keyed_by(task, "worker-type", item_name=task["name"], **{"abi": abi})
 
         task["treeherder"] = inherit_treeherder_from_dep(task, signing)
-        task["treeherder"]["platform"] += "-{}".format(abi)
+        task["treeherder"]["platform"] += f"-{abi}"
         task["dependencies"]["signing"] = signing.label
 
         extra_config = {
-            "installer_url": "<signing/{}>".format(apk),
+            "installer_url": f"<signing/{apk}>",
             "test_packages_url": "<geckoview-nightly/public/build/en-US/target.test_packages.json>",
         }
         env = task["worker"]["env"]
@@ -72,7 +71,7 @@ def build_raptor_task(config, tasks):
             "artifact-reference": json.dumps(extra_config, sort_keys=True)
         }
         env["GECKO_HEAD_REV"] = "default"
-        env["MOZILLA_BUILD_URL"] = {"artifact-reference": "<signing/{}>".format(apk)}
+        env["MOZILLA_BUILD_URL"] = {"artifact-reference": f"<signing/{apk}>"}
         env["MOZHARNESS_URL"] = {
             "artifact-reference": "<geckoview-nightly/public/build/en-US/mozharness.zip>"
         }
@@ -86,7 +85,7 @@ def build_raptor_task(config, tasks):
                 "file": "./test-linux.sh",
             }
         )
-        task["run"]["command"].append("--test={}".format(test_name))
+        task["run"]["command"].append(f"--test={test_name}")
         task["run"]["command"].extend(task.pop("args", []))
 
         yield task

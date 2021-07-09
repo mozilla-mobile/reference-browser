@@ -5,7 +5,6 @@
 Handle notifications like emails.
 """
 
-from __future__ import absolute_import, print_function, unicode_literals
 
 import copy
 import json
@@ -33,7 +32,7 @@ def add_notify_email(config, tasks):
 
             routes = task.setdefault('routes', [])
             routes.extend([
-                'notify.email.{}.on-{}'.format(address, reason)
+                f'notify.email.{address}.on-{reason}'
                 for address in email_config['to-addresses']
                 for reason in email_config['on-reasons']
             ])

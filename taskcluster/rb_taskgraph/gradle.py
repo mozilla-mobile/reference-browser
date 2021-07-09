@@ -2,7 +2,6 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-from __future__ import absolute_import, print_function, unicode_literals
 
 import json
 import subprocess
@@ -18,7 +17,7 @@ def get_build_variant(build_type):
     ]
     number_of_matching_variants = len(matching_variants)
     if number_of_matching_variants == 0:
-        raise ValueError('No variant found for build type "{}"'.format(build_type))
+        raise ValueError(f'No variant found for build type "{build_type}"')
     elif number_of_matching_variants > 1:
         raise ValueError('Too many variants found for build type "{}": {}'.format(
             build_type, matching_variants
@@ -36,16 +35,16 @@ def _fetch_all_variants():
 
 def _run_gradle_process(gradle_command, **kwargs):
     gradle_properties = [
-        '-P{property_name}={value}'.format(property_name=property_name, value=value)
-        for property_name, value in kwargs.iteritems()
+        f'-P{property_name}={value}'
+        for property_name, value in kwargs.items()
     ]
 
-    process = subprocess.Popen(["./gradlew", "--no-daemon", "--quiet", gradle_command] + gradle_properties, stdout=subprocess.PIPE)
+    process = subprocess.Popen(["./gradlew", "--no-daemon", "--quiet", gradle_command] + gradle_properties, stdout=subprocess.PIPE, universal_newlines=True)
     output, err = process.communicate()
     exit_code = process.wait()
 
-    if exit_code is not 0:
-        raise RuntimeError("Gradle command returned error: {}".format(exit_code))
+    if exit_code != 0:
+        raise RuntimeError(f"Gradle command returned error: {exit_code}")
 
     return output
 

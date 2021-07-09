@@ -2,7 +2,6 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-from __future__ import absolute_import, print_function, unicode_literals
 
 from six import text_type
 
@@ -17,18 +16,18 @@ from taskgraph.transforms.task import payload_builder
     schema={
         # the maximum time to run, in seconds
         Required("max-run-time"): int,
-        Required("signing-type"): text_type,
+        Required("signing-type"): str,
         # list of artifact URLs for the artifacts that should be signed
         Required("upstream-artifacts"): [
             {
                 # taskId of the task with the artifact
                 Required("taskId"): taskref_or_string,
                 # type of signing task (for CoT)
-                Required("taskType"): text_type,
+                Required("taskType"): str,
                 # Paths to the artifacts to sign
-                Required("paths"): [text_type],
+                Required("paths"): [str],
                 # Signing formats to use on each of the paths
-                Required("formats"): [text_type],
+                Required("formats"): [str],
             }
         ],
     },
@@ -53,7 +52,7 @@ def build_scriptworker_signing_payload(config, task, task_def):
     )
     task_def["scopes"].extend(
         [
-            "{}:signing:format:{}".format(scope_prefix, format)
+            f"{scope_prefix}:signing:format:{format}"
             for format in sorted(formats)
         ]
     )
@@ -65,13 +64,13 @@ def build_scriptworker_signing_payload(config, task, task_def):
         Required("upstream-artifacts"): [
             {
                 Required("taskId"): taskref_or_string,
-                Required("taskType"): text_type,
-                Required("paths"): [text_type],
+                Required("taskType"): str,
+                Required("paths"): [str],
             }
         ],
-        Required("channel"): text_type,
+        Required("channel"): str,
         Required("commit"): bool,
-        Required("product"): text_type,
+        Required("product"): str,
         Required("dep"): bool,
     },
 )
