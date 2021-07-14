@@ -4,6 +4,7 @@
 package org.mozilla.reference.browser.ui.robots
 
 import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.NoMatchingViewException
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.withContentDescription
@@ -52,14 +53,32 @@ class CustomTabRobot {
     }
 
     fun switchRequestDesktopSiteToggle() {
-        mDevice.findObject(UiSelector().textContains("Request desktop site"))
-            .waitForExists(waitingTime)
-        requestDesktopButton().click()
-        mDevice.waitForIdle()
+        try {
+            // Click the Request desktop site toggle
+            mDevice.findObject(UiSelector().textContains("Request desktop site"))
+                .waitForExists(waitingTime)
+            requestDesktopButton().click()
+            mDevice.waitForIdle()
+        } catch (e: NoMatchingViewException) {
+            println("Failed to click request desktop toggle: ${e.localizedMessage}")
+            // If the click didn't succeed the main menu remains displayed and should be dismissed
+            mDevice.pressBack()
+            customTabScreen {
+            }.openMainMenu {
+            }
+            // Click again the Request desktop site toggle
+            mDevice.findObject(UiSelector().textContains("Request desktop site"))
+                .waitForExists(waitingTime)
+            requestDesktopButton().click()
+            mDevice.waitForIdle()
+        }
     }
 
     class Transition {
         fun openMainMenu(interact: CustomTabRobot.() -> Unit): Transition {
+            mDevice.findObject(UiSelector().resourceId("$packageName:id/mozac_browser_toolbar_menu"))
+                .waitForExists(waitingTime)
+
             menuButton().click()
 
             CustomTabRobot().interact()
