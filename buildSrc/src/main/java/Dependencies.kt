@@ -7,8 +7,8 @@
 
 // Synchronized version numbers for dependencies used by (some) modules
 private object Versions {
-    const val kotlin = "1.4.30"
-    const val coroutines = "1.3.9"
+    const val kotlin = "1.5.10"
+    const val coroutines = "1.5.0"
 
     const val androidx_appcompat = "1.3.0-rc01"
     const val androidx_constraintlayout = "1.1.3"
@@ -17,7 +17,7 @@ private object Versions {
     const val workmanager = "2.0.0"
     const val google_material = "1.0.0"
 
-    const val android_gradle_plugin = "7.0.0-alpha14"
+    const val android_gradle_plugin = "7.0.0-rc01"
 
     const val mozilla_android_components = AndroidComponents.VERSION
 
@@ -31,10 +31,12 @@ private object Versions {
     const val tools_test_runner = "1.1.0"
     const val uiautomator = "2.2.0"
 
+    const val compose_version = "1.0.0-rc02"
+
     object AndroidX {
-        const val activity_compose = "1.3.0-alpha05"
+        const val activity_compose = "1.3.0-rc02"
         const val core = "1.1.0"
-        const val compose = "1.0.0-beta03"
+        const val compose = compose_version
     }
 }
 
