@@ -34,6 +34,10 @@ android {
         compose true
     }
 
+    composeOptions {
+        kotlinCompilerExtensionVersion = Versions.compose_version
+    }
+
     buildTypes {
         debug {
             applicationIdSuffix ".debug"
