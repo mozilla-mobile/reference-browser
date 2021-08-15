@@ -22,7 +22,7 @@ object EngineProvider {
     private var runtime: GeckoRuntime? = null
 
     @Synchronized
-    private fun getOrCreateRuntime(context: Context): GeckoRuntime {
+    fun getOrCreateRuntime(context: Context): GeckoRuntime {
         if (runtime == null) {
             val builder = GeckoRuntimeSettings.Builder()
 

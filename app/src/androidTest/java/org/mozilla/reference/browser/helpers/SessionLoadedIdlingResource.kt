@@ -4,8 +4,9 @@
 
 package org.mozilla.reference.browser.helpers
 
-import androidx.test.InstrumentationRegistry
 import androidx.test.espresso.IdlingResource
+import androidx.test.platform.app.InstrumentationRegistry
+import mozilla.components.browser.state.selector.selectedTab
 import org.mozilla.reference.browser.BrowserApplication
 
 /**
@@ -24,11 +25,9 @@ class SessionLoadedIdlingResource : IdlingResource {
         val context = InstrumentationRegistry.getInstrumentation().targetContext.applicationContext
                 as BrowserApplication
 
-        val sessionManager = context.components.core.sessionManager
+        val store = context.components.core.store
 
-        val session = sessionManager.selectedSession
-
-        return if (session?.loading == true) {
+        return if (store.state.selectedTab?.content?.loading == true) {
             false
         } else {
             invokeCallback()

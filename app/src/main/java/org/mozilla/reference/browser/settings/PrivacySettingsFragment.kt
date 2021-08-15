@@ -7,6 +7,7 @@ package org.mozilla.reference.browser.settings
 import android.os.Bundle
 import androidx.preference.Preference.OnPreferenceChangeListener
 import androidx.preference.PreferenceFragmentCompat
+import androidx.preference.SwitchPreferenceCompat
 import mozilla.components.concept.engine.EngineSession.TrackingProtectionPolicy
 import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.ext.getPreferenceKey
@@ -17,19 +18,20 @@ class PrivacySettingsFragment : PreferenceFragmentCompat() {
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.privacy_preferences, rootKey)
 
-        val telemetryKey = context?.getPreferenceKey(R.string.pref_key_telemetry)
-        val trackingProtectionNormalKey = context?.getPreferenceKey(R.string.pref_key_tracking_protection_normal)
-        val trackingProtectionPrivateKey = context?.getPreferenceKey(R.string.pref_key_tracking_protection_private)
+        val context = requireContext()
+        val telemetryKey = context.getPreferenceKey(R.string.pref_key_telemetry)
+        val trackingProtectionNormalKey = context.getPreferenceKey(R.string.pref_key_tracking_protection_normal)
+        val trackingProtectionPrivateKey = context.getPreferenceKey(R.string.pref_key_tracking_protection_private)
 
-        val prefTelemetry = findPreference(telemetryKey)
-        val prefTrackingProtectionNormal = findPreference(trackingProtectionNormalKey)
-        val prefTrackingProtectionPrivate = findPreference(trackingProtectionPrivateKey)
+        val prefTelemetry = findPreference<SwitchPreferenceCompat>(telemetryKey)
+        val prefTrackingProtectionNormal = findPreference<SwitchPreferenceCompat>(trackingProtectionNormalKey)
+        val prefTrackingProtectionPrivate = findPreference<SwitchPreferenceCompat>(trackingProtectionPrivateKey)
 
-        prefTelemetry.onPreferenceChangeListener = getChangeListenerForTelemetry()
-        prefTrackingProtectionNormal.onPreferenceChangeListener = getChangeListenerForTrackingProtection { enabled ->
+        prefTelemetry?.onPreferenceChangeListener = getChangeListenerForTelemetry()
+        prefTrackingProtectionNormal?.onPreferenceChangeListener = getChangeListenerForTrackingProtection { enabled ->
             requireComponents.core.createTrackingProtectionPolicy(normalMode = enabled)
         }
-        prefTrackingProtectionPrivate.onPreferenceChangeListener = getChangeListenerForTrackingProtection { enabled ->
+        prefTrackingProtectionPrivate?.onPreferenceChangeListener = getChangeListenerForTrackingProtection { enabled ->
             requireComponents.core.createTrackingProtectionPolicy(privateMode = enabled)
         }
     }

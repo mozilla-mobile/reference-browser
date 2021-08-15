@@ -33,19 +33,19 @@ class AccountSettingsFragment : PreferenceFragmentCompat() {
     private val syncStatusObserver = object : SyncStatusObserver {
         override fun onStarted() {
             CoroutineScope(Dispatchers.Main).launch {
-                val pref = findPreference(context?.getPreferenceKey(pref_key_sync_now))
+                val pref = findPreference<Preference>(requireContext().getPreferenceKey(pref_key_sync_now))
 
-                pref.title = getString(R.string.syncing)
-                pref.isEnabled = false
+                pref?.title = getString(R.string.syncing)
+                pref?.isEnabled = false
             }
         }
 
         // Sync stopped successfully.
         override fun onIdle() {
             CoroutineScope(Dispatchers.Main).launch {
-                val pref = findPreference(context?.getPreferenceKey(pref_key_sync_now))
-                pref.title = getString(R.string.sync_now)
-                pref.isEnabled = true
+                val pref = findPreference<Preference>(requireContext().getPreferenceKey(pref_key_sync_now))
+                pref?.title = getString(R.string.sync_now)
+                pref?.isEnabled = true
                 updateLastSyncedTimePref(context!!, pref, failed = false)
                 updateSyncEngineStates()
             }
@@ -54,9 +54,9 @@ class AccountSettingsFragment : PreferenceFragmentCompat() {
         // Sync stopped after encountering a problem.
         override fun onError(error: Exception?) {
             CoroutineScope(Dispatchers.Main).launch {
-                val pref = findPreference(context?.getPreferenceKey(pref_key_sync_now))
-                pref.title = getString(R.string.sync_now)
-                pref.isEnabled = true
+                val pref = findPreference<Preference>(requireContext().getPreferenceKey(pref_key_sync_now))
+                pref?.title = getString(R.string.sync_now)
+                pref?.isEnabled = true
                 updateLastSyncedTimePref(context!!, pref, failed = true)
             }
         }
@@ -65,21 +65,22 @@ class AccountSettingsFragment : PreferenceFragmentCompat() {
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.account_preferences, rootKey)
 
-        val signOutKey = context?.getPreferenceKey(pref_key_sign_out)
-        val syncNowKey = context?.getPreferenceKey(pref_key_sync_now)
+        val signOutKey = requireContext().getPreferenceKey(pref_key_sign_out)
+        val syncNowKey = requireContext().getPreferenceKey(pref_key_sync_now)
 
         // Sign Out
-        val preferenceSignOut = findPreference(signOutKey)
-        preferenceSignOut.onPreferenceClickListener = getClickListenerForSignOut()
+        val preferenceSignOut = findPreference<CustomColorPreference>(signOutKey)
+        preferenceSignOut?.onPreferenceClickListener = getClickListenerForSignOut()
 
         // Sync Now
-        val preferenceSyncNow = findPreference(syncNowKey)
+        val preferenceSyncNow = findPreference<Preference>(syncNowKey)
         updateLastSyncedTimePref(requireContext(), preferenceSyncNow)
 
-        preferenceSyncNow.onPreferenceClickListener = getClickListenerForSyncNow()
+        preferenceSyncNow?.onPreferenceClickListener = getClickListenerForSyncNow()
 
         SUPPORTED_SYNC_ENGINES.forEach {
-            (findPreference(context?.getPreferenceKey(it.prefId())) as CheckBoxPreference).apply {
+            val preferenceKey = requireContext().getPreferenceKey(it.prefId())
+            (findPreference<CheckBoxPreference>(preferenceKey) as CheckBoxPreference).apply {
                 setOnPreferenceChangeListener { _, newValue ->
                     updateSyncEngineState(context, it, newValue as Boolean)
                     true
@@ -98,10 +99,10 @@ class AccountSettingsFragment : PreferenceFragmentCompat() {
         )
     }
 
-    fun updateLastSyncedTimePref(context: Context, pref: Preference, failed: Boolean = false) {
+    fun updateLastSyncedTimePref(context: Context, pref: Preference?, failed: Boolean = false) {
         val lastSyncTime = getLastSynced(context)
 
-        pref.summary = if (!failed && lastSyncTime == 0L) {
+        pref?.summary = if (!failed && lastSyncTime == 0L) {
             // Never tried to sync.
             getString(R.string.preferences_sync_never_synced_summary)
         } else if (failed && lastSyncTime == 0L) {
@@ -158,7 +159,8 @@ class AccountSettingsFragment : PreferenceFragmentCompat() {
     private fun updateSyncEngineStates() {
         val syncEnginesStatus = SyncEnginesStorage(requireContext()).getStatus()
         SUPPORTED_SYNC_ENGINES.forEach { engine ->
-            (findPreference(context?.getPreferenceKey(engine.prefId())) as CheckBoxPreference).apply {
+            val preferenceKey = requireContext().getPreferenceKey(engine.prefId())
+            (findPreference<CheckBoxPreference>(preferenceKey) as CheckBoxPreference).apply {
                 isEnabled = syncEnginesStatus.containsKey(engine)
                 isChecked = syncEnginesStatus.getOrElse(engine) { true }
             }

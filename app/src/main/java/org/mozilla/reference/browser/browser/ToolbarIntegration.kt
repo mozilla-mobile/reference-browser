@@ -14,8 +14,6 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import mozilla.components.browser.domains.autocomplete.ShippedDomainsProvider
 import mozilla.components.browser.menu2.BrowserMenuController
-import mozilla.components.browser.session.Session
-import mozilla.components.browser.session.SessionManager
 import mozilla.components.browser.state.selector.selectedTab
 import mozilla.components.browser.state.state.SessionState
 import mozilla.components.browser.state.store.BrowserStore
@@ -46,11 +44,11 @@ import org.mozilla.reference.browser.ext.share
 import org.mozilla.reference.browser.settings.SettingsActivity
 import org.mozilla.reference.browser.tabs.synced.SyncedTabsActivity
 
+@Suppress("LongParameterList")
 class ToolbarIntegration(
     private val context: Context,
     toolbar: BrowserToolbar,
     historyStorage: HistoryStorage,
-    sessionManager: SessionManager,
     store: BrowserStore,
     private val sessionUseCases: SessionUseCases,
     private val tabsUseCases: TabsUseCases,
@@ -143,8 +141,8 @@ class ToolbarIntegration(
         )
     }
 
-    private fun menuItems(session: Session?, sessionState: SessionState?): List<MenuCandidate> {
-        val sessionMenuItems = if (session != null && sessionState != null) {
+    private fun menuItems(sessionState: SessionState?): List<MenuCandidate> {
+        val sessionMenuItems = if (sessionState != null) {
             sessionMenuItems(sessionState)
         } else {
             emptyList()
@@ -204,7 +202,7 @@ class ToolbarIntegration(
                 .map { state -> state.selectedTab }
                 .ifChanged()
                 .collect { tab ->
-                    menuController.submitList(menuItems(sessionManager.selectedSession, tab))
+                    menuController.submitList(menuItems(tab))
                 }
         }
     }
