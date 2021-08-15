@@ -8,8 +8,8 @@ import android.app.Application
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import mozilla.components.browser.session.Session
 import mozilla.components.browser.state.action.SystemAction
+import mozilla.components.concept.engine.webextension.isUnsupported
 import mozilla.components.concept.push.PushProcessor
 import mozilla.components.feature.addons.update.GlobalAddonDependencyProvider
 import mozilla.components.support.base.log.Log
@@ -56,16 +56,31 @@ open class BrowserApplication : Application() {
             runtime = components.core.engine,
             store = components.core.store,
             onNewTabOverride = { _, engineSession, url ->
-                val session = Session(url)
-                components.core.sessionManager.add(session, true, engineSession)
-                session.id
+                val tabId = components.useCases.tabsUseCases.addTab(
+                    url = url,
+                    selectTab = true,
+                    engineSession = engineSession
+                )
+                tabId
             },
             onCloseTabOverride = { _, sessionId ->
                 components.useCases.tabsUseCases.removeTab(sessionId)
             },
             onSelectTabOverride = { _, sessionId ->
-                val selected = components.core.sessionManager.findSessionById(sessionId)
-                selected?.let { components.useCases.tabsUseCases.selectTab(it.id) }
+                components.useCases.tabsUseCases.selectTab(sessionId)
+            },
+            onExtensionsLoaded = { extensions ->
+                components.core.addonUpdater.registerForFutureUpdates(extensions)
+
+                val checker = components.core.supportedAddonsChecker
+                val hasUnsupportedAddons = extensions.any { it.isUnsupported() }
+                if (hasUnsupportedAddons) {
+                    checker.registerForChecks()
+                } else {
+                    // As checks are a persistent subscriptions, we have to make sure
+                    // we remove any previous subscriptions.
+                    checker.unregisterForChecks()
+                }
             },
             onUpdatePermissionRequest = components.core.addonUpdater::onUpdatePermissionRequest
         )

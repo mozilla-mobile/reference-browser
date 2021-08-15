@@ -135,7 +135,6 @@ abstract class BaseBrowserFragment : Fragment(), UserInteractionHandler, Activit
                 requireContext(),
                 toolbar,
                 requireComponents.core.historyStorage,
-                requireComponents.core.sessionManager,
                 requireComponents.core.store,
                 requireComponents.useCases.sessionUseCases,
                 requireComponents.useCases.tabsUseCases,
@@ -235,7 +234,7 @@ abstract class BaseBrowserFragment : Fragment(), UserInteractionHandler, Activit
                 context = requireContext(),
                 fragmentManager = parentFragmentManager,
                 sessionId = sessionId,
-                storage = requireComponents.core.sitePermissionsStorage,
+                storage = requireComponents.core.geckoSitePermissionsStorage,
                 onNeedToRequestPermissions = { permissions ->
                     // The Fragment class wants us to use registerForActivityResult
                     @Suppress("DEPRECATION")

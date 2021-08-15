@@ -7,7 +7,6 @@ package org.mozilla.reference.browser
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import mozilla.components.browser.session.Session
 import org.mozilla.reference.browser.ext.components
 
 /**
@@ -23,7 +22,7 @@ class BrowserTestActivity : Activity() {
         // with a gecko session that we don't manage. We want to receive
         // callbacks to update the UI (toolbar) which might have an impact
         // on performance as well (e.g. progress bar animations).
-        components.core.sessionManager.add(Session("about:blank"))
+        components.useCases.tabsUseCases.addTab("about:blank")
 
         startActivity(Intent(this, BrowserActivity::class.java))
     }
