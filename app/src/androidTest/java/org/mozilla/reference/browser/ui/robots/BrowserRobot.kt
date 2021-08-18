@@ -192,6 +192,8 @@ class BrowserRobot {
     }
 
     fun verifyMediaPlayerControlButtonState(state: String) {
+        mDevice.findObject(UiSelector().textContains("Audio_Test_Page")).waitForExists(waitingTime)
+        mDevice.findObject(UiSelector().textContains("audio player")).waitForExists(waitingTime)
         assertTrue(mediaPlayerPlayButton(state).waitForExists(waitingTime))
     }
 

@@ -37,17 +37,16 @@ class MediaPlaybackTest {
 
         navigationToolbar {
         }.enterUrlAndEnterToBrowser(audioTestPage.url) {
+            verifyMediaPlayerControlButtonState("Play")
             clickMediaPlayerControlButton("Play")
         }
 
         notificationShade {
             verifySystemNotificationExists(audioTestPage.title)
+            verifySystemMediaNotificationControlButtonState("Pause")
             clickSystemMediaNotificationControlButton("Pause")
             verifySystemMediaNotificationControlButtonState("Play")
-            clickSystemMediaNotificationControlButton("Play")
-        }.closeNotification {
-            verifyMediaPlayerControlButtonState("Pause")
-        }
+        }.closeNotification {}
     }
 
     @Test
