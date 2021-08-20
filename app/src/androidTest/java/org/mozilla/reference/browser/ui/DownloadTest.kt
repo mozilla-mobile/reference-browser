@@ -40,8 +40,6 @@ class DownloadTest {
         }.enterUrlAndEnterToBrowser(downloadPage.url) {}
 
         downloadRobot {
-            clickAllowButton()
-            verifyDownloadPopup()
             clickCancelDownloadButton()
         }
 
@@ -58,8 +56,6 @@ class DownloadTest {
         }.enterUrlAndEnterToBrowser(downloadPage.url) {}
 
         downloadRobot {
-            clickAllowButton()
-            verifyDownloadPopup()
             clickDownloadButton()
         }
 
