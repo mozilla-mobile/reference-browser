@@ -66,9 +66,11 @@ class AwesomeBarRobot {
             return NavigationToolbarRobot.Transition()
         }
 
-        fun clickSearchSuggestion(searchSuggestionTitle: String, interact: BrowserRobot.() -> Unit): BrowserRobot.Transition {
-            val searchSuggestion = mDevice.findObject(UiSelector().textContains(searchSuggestionTitle))
-            searchSuggestion.clickAndWaitForNewWindow()
+        fun clickSearchSuggestion(interact: BrowserRobot.() -> Unit): BrowserRobot.Transition {
+            mDevice.waitForIdle()
+            val searchSuggestion = mDevice.findObject(UiSelector().resourceId("$packageName:id/mozac_browser_awesomebar_edit_suggestion"))
+            searchSuggestion.click()
+            mDevice.pressEnter()
 
             BrowserRobot().interact()
             return BrowserRobot.Transition()
@@ -107,8 +109,11 @@ private fun clearToolbarButton() =
 
 private fun assertSearchSuggestion(searchSuggestionTitle: String) {
     mDevice.waitForIdle()
-    assertTrue(mDevice.findObject(UiSelector().textContains(searchSuggestionTitle))
-        .waitForExists(waitingTime))
+    assertTrue(
+        mDevice.findObject(UiSelector()
+            .textContains(searchSuggestionTitle)
+            .resourceId("$packageName:id/mozac_browser_awesomebar_description")
+        ).waitForExists(waitingTime))
 }
 
 private fun assertLinkFromClipboard(clipboardLink: String) {

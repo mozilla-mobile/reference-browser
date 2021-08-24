@@ -44,10 +44,9 @@ class SearchTest {
         }.openTabTrayMenu {
         }.openNewTab {
         }.clickToolbar {
-            clickClearToolbarButton()
-            typeText("localhost")
+            typeText(defaultWebPage.url.toString())
             verifySearchSuggestion(defaultWebPage.url.toString())
-        }.clickSearchSuggestion(defaultWebPage.url.toString()) {
+        }.clickSearchSuggestion() {
             verifyUrl(defaultWebPage.url.toString())
         }
     }
