@@ -15,8 +15,10 @@ import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.uiautomator.UiSelector
 import junit.framework.Assert.assertFalse
 import junit.framework.Assert.assertTrue
+import junit.framework.AssertionFailedError
 import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.helpers.TestAssetHelper.waitingTime
+import org.mozilla.reference.browser.helpers.TestHelper.packageName
 import org.mozilla.reference.browser.helpers.click
 
 /**
@@ -78,13 +80,34 @@ class ThreeDotMenuRobot {
             return ContentPanelRobot.Transition()
         }
 
+        @Suppress("SwallowedException")
         fun switchRequestDesktopSiteToggle(
             interact: NavigationToolbarRobot.() -> Unit
         ): NavigationToolbarRobot.Transition {
-            mDevice.findObject(UiSelector().textContains("Request desktop site"))
-                .waitForExists(waitingTime)
-            requestDesktopSiteToggle().click()
-            mDevice.waitForIdle()
+            try {
+                mDevice.findObject(UiSelector().textContains("Request desktop site"))
+                    .waitForExists(waitingTime)
+                requestDesktopSiteToggle().click()
+                mDevice.waitForIdle()
+                assertTrue(
+                    mDevice.findObject(UiSelector()
+                        .resourceId("$packageName:id/mozac_browser_menu_recyclerView")
+                    ).waitUntilGone(waitingTime))
+            } catch (e: AssertionFailedError) {
+                println("Failed to click request desktop toggle")
+                // If the click didn't succeed the main menu remains displayed and should be dismissed
+                mDevice.pressBack()
+                threeDotMenuButton().click()
+                mDevice.findObject(UiSelector().textContains("Request desktop site"))
+                    .waitForExists(waitingTime)
+                // Click again the Request desktop site toggle
+                requestDesktopSiteToggle().click()
+                mDevice.waitForIdle()
+                assertTrue(
+                    mDevice.findObject(UiSelector()
+                        .resourceId("$packageName:id/mozac_browser_menu_recyclerView")
+                    ).waitUntilGone(waitingTime))
+            }
             NavigationToolbarRobot().interact()
             return NavigationToolbarRobot.Transition()
         }
@@ -143,6 +166,7 @@ private fun threeDotMenuRecyclerViewExists() {
     onView(withId(R.id.mozac_browser_menu_recyclerView)).check(matches(isDisplayed()))
 }
 
+private fun threeDotMenuButton() = onView(withId(R.id.mozac_browser_toolbar_menu))
 private fun forwardButton() = onView(ViewMatchers.withContentDescription("Forward"))
 private fun refreshButton() = onView(ViewMatchers.withContentDescription("Refresh"))
 private fun stopButton() = onView(ViewMatchers.withContentDescription("Stop"))
