@@ -71,6 +71,9 @@ class NavigationToolbarRobot {
 
         fun clickToolbar(interact: AwesomeBarRobot.() -> Unit): AwesomeBarRobot.Transition {
             urlBar().click()
+            mDevice.waitForIdle()
+            mDevice.findObject(UiSelector().textContains("Search or enter address"))
+                .waitForExists(waitingTime)
             AwesomeBarRobot().interact()
             return AwesomeBarRobot.Transition()
         }
