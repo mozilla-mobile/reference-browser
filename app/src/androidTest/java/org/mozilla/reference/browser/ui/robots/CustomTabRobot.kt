@@ -4,7 +4,6 @@
 package org.mozilla.reference.browser.ui.robots
 
 import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.NoMatchingViewException
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.withContentDescription
@@ -52,6 +51,7 @@ class CustomTabRobot {
         link.click()
     }
 
+    @Suppress("SwallowedException")
     fun switchRequestDesktopSiteToggle() {
         try {
             // Click the Request desktop site toggle
@@ -59,8 +59,12 @@ class CustomTabRobot {
                 .waitForExists(waitingTime)
             requestDesktopButton().click()
             mDevice.waitForIdle()
-        } catch (e: NoMatchingViewException) {
-            println("Failed to click request desktop toggle: ${e.localizedMessage}")
+            assertTrue(
+                mDevice.findObject(UiSelector()
+                    .resourceId("$packageName:id/mozac_browser_menu_recyclerView")
+                ).waitUntilGone(waitingTime))
+        } catch (e: AssertionError) {
+            println("Failed to click request desktop toggle")
             // If the click didn't succeed the main menu remains displayed and should be dismissed
             mDevice.pressBack()
             customTabScreen {
