@@ -37,6 +37,8 @@ private object Versions {
         const val activity_compose = "1.3.0-rc02"
         const val core = "1.1.0"
         const val compose = compose_version
+        const val lifecycle = "2.2.0"
+        const val swiperefreshlayout = "1.1.0"
     }
 }
 
@@ -121,6 +123,7 @@ object Deps {
     const val androidx_appcompat = "androidx.appcompat:appcompat:${Versions.androidx_appcompat}"
     const val androidx_core_ktx = "androidx.core:core-ktx:${Versions.AndroidX.core}"
     const val androidx_constraintlayout = "androidx.constraintlayout:constraintlayout:${Versions.androidx_constraintlayout}"
+    const val androidx_lifecycle_process = "androidx.lifecycle:lifecycle-process:${Versions.AndroidX.lifecycle}"
     const val androidx_preference_ktx = "androidx.preference:preference-ktx:${Versions.androidx_preference}"
     const val androidx_work_runtime_ktx = "androidx.work:work-runtime-ktx:${Versions.workmanager}"
     const val androidx_compose_ui = "androidx.compose.ui:ui:${Versions.AndroidX.compose}"
@@ -128,6 +131,7 @@ object Deps {
     const val androidx_compose_foundation = "androidx.compose.foundation:foundation:${Versions.AndroidX.compose}"
     const val androidx_compose_material = "androidx.compose.material:material:${Versions.AndroidX.compose}"
     const val androidx_activity_compose = "androidx.activity:activity-compose:${Versions.AndroidX.activity_compose}"
+    const val androidx_swiperefreshlayout = "androidx.swiperefreshlayout:swiperefreshlayout:${Versions.AndroidX.swiperefreshlayout}"
 
     const val google_material = "com.google.android.material:material:${Versions.google_material}"
 
