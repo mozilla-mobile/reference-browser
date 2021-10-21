@@ -199,6 +199,19 @@ if (project.hasProperty("telemetry") && project.property("telemetry") == "true")
     }
 }
 
+// Select the Glean from GeckoView.
+// `service-sync-logins` requires Glean, which pulls in glean-native,
+// but that's also provided by geckoview-omni, so now we need to select which one to use.
+project.configurations.all {
+    resolutionStrategy.capabilitiesResolution.withCapability("org.mozilla.telemetry:glean-native") {
+        def toBeSelected = candidates.find { it.id instanceof ModuleComponentIdentifier && it.id.module.contains('geckoview') }
+        if (toBeSelected != null) {
+            select(toBeSelected)
+        }
+        because 'use GeckoView Glean instead of standalone Glean'
+    }
+}
+
 dependencies {
     implementation Deps.mozilla_concept_engine
     implementation Deps.mozilla_concept_menu
