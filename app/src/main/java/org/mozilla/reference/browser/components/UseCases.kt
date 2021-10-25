@@ -41,7 +41,7 @@ class UseCases(
      * Use cases that provide search engine integration.
      */
     val searchUseCases by lazy {
-        SearchUseCases(store, tabsUseCases)
+        SearchUseCases(store, tabsUseCases, sessionUseCases)
     }
 
     /**
