@@ -30,16 +30,12 @@
             android:layout_height="match_parent" />
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
-    <mozilla.components.browser.awesomebar.BrowserAwesomeBar
+    <org.mozilla.reference.browser.search.AwesomeBarWrapper
         android:id="@+id/awesomeBar"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:padding="4dp"
-        android:visibility="gone"
-        mozac:awesomeBarTitleTextColor="#ffffff"
-        mozac:awesomeBarDescriptionTextColor="#dddddd"
-        mozac:awesomeBarChipTextColor="#ffffff"
-        mozac:awesomeBarChipBackgroundColor="#444444" />
+        android:visibility="gone" />
 
     <mozilla.components.feature.findinpage.view.FindInPageBar
         android:id="@+id/findInPageBar"
