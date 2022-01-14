@@ -14,7 +14,7 @@ private object Versions {
     const val androidx_constraintlayout = "1.1.3"
     const val androidx_preference = "1.0.0"
 
-    const val workmanager = "2.0.0"
+    const val workmanager = "2.7.1"
     const val google_material = "1.0.0"
 
     const val android_gradle_plugin = "7.0.0"

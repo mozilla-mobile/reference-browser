@@ -58,11 +58,17 @@ object NotificationManager {
             val intent = Intent(Intent.ACTION_VIEW, Uri.parse(tab.url)).apply {
                 flags = Intent.FLAG_ACTIVITY_NEW_TASK
             }
+            val flags = if (SDK_INT >= Build.VERSION_CODES.S) {
+                PendingIntent.FLAG_MUTABLE or PendingIntent.FLAG_ONE_SHOT
+            } else {
+                PendingIntent.FLAG_ONE_SHOT
+            }
+
             val pendingIntent: PendingIntent = PendingIntent.getActivity(
                 context,
                 REQUEST_CODE_SEND_TAB,
                 intent,
-                PendingIntent.FLAG_ONE_SHOT
+                flags
             )
             val importance = if (SDK_INT >= Build.VERSION_CODES.N) {
                 // We pick 'IMPORTANCE_HIGH' priority because this is a user-triggered action that is
@@ -123,8 +129,14 @@ object NotificationManager {
             setPackage(context.packageName)
         }
 
+        val flags = if (SDK_INT >= Build.VERSION_CODES.S) {
+            PendingIntent.FLAG_MUTABLE
+        } else {
+            0
+        }
+
         val pendingIntent =
-            PendingIntent.getActivity(context, REQUEST_CODE_DATA_REPORTING, intent, 0)
+            PendingIntent.getActivity(context, REQUEST_CODE_DATA_REPORTING, intent, flags)
 
         val notificationBuilder = NotificationCompat.Builder(
             context,
