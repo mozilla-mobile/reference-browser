@@ -5,6 +5,7 @@
 package org.mozilla.reference.browser
 
 import android.app.Application
+import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -109,6 +110,7 @@ open class BrowserApplication : Application() {
         }
     }
 
+    @OptIn(DelicateCoroutinesApi::class)
     private fun restoreBrowserState() = GlobalScope.launch(Dispatchers.Main) {
         val store = components.core.store
         val sessionStorage = components.core.sessionStorage

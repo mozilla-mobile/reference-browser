@@ -11,6 +11,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import mozilla.components.lib.crash.Crash
@@ -49,6 +50,7 @@ class CrashIntegration(
         }
     }
 
+    @OptIn(DelicateCoroutinesApi::class)
     fun sendCrashReport(crash: Crash) {
         GlobalScope.launch {
             crashReporter.submitReport(crash)
