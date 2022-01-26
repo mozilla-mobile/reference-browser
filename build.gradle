@@ -12,14 +12,14 @@ buildscript {
             google()
         }
 
-        if (project.hasProperty("jcenterRepo")) {
+        if (project.hasProperty("centralRepo")) {
             maven {
-                name "BintrayJCenter"
-                url project.property("jcenterRepo")
+                name "MavenCentral"
+                url project.property("centralRepo")
                 allowInsecureProtocol true // Local Nexus in CI uses HTTP
             }
         } else {
-            jcenter()
+            mavenCentral()
         }
     }
 
@@ -65,14 +65,14 @@ allprojects {
             }
         }
 
-        if (project.hasProperty("jcenterRepo")) {
+        if (project.hasProperty("centralRepo")) {
             maven {
-                name "BintrayJCenter"
-                url project.property("jcenterRepo")
+                name "MavenCentral"
+                url project.property("centralRepo")
                 allowInsecureProtocol true // Local Nexus in CI uses HTTP
             }
         } else {
-            jcenter()
+            mavenCentral()
         }
     }
 
