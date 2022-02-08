@@ -19,6 +19,7 @@ import junit.framework.AssertionFailedError
 import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.helpers.TestAssetHelper.waitingTime
 import org.mozilla.reference.browser.helpers.TestHelper.packageName
+import org.mozilla.reference.browser.helpers.TestHelper.waitForObjects
 import org.mozilla.reference.browser.helpers.click
 
 /**
@@ -141,9 +142,27 @@ class ThreeDotMenuRobot {
             return AddonsManagerRobot.Transition()
         }
 
+        @Suppress("SwallowedException")
         fun openSyncedTabs(interact: SyncedTabsRobot.() -> Unit): SyncedTabsRobot.Transition {
-            mDevice.findObject(UiSelector().text("Synced Tabs")).waitForExists(waitingTime)
-            syncedTabsButton().click()
+            var currentTries = 0
+            while (currentTries++ < 3) {
+                try {
+                    mDevice.waitForObjects(syncedTabsButton())
+                    syncedTabsButton().clickAndWaitForNewWindow(waitingTime)
+                    assertTrue(
+                        mDevice.findObject(
+                            UiSelector()
+                                .resourceId("$packageName:id/synced_tabs_layout")
+                        ).waitForExists(waitingTime)
+                    )
+                    break
+                } catch (e: AssertionFailedError) {
+                    mDevice.pressBack()
+                    navigationToolbar {
+                    }.openThreeDotMenu {
+                    }
+                }
+            }
 
             SyncedTabsRobot().interact()
             return SyncedTabsRobot.Transition()
@@ -181,7 +200,12 @@ private fun reportIssueButton() = onView(ViewMatchers.withText("Report issue"))
 private fun settingsButton() = onView(ViewMatchers.withText("Settings"))
 private fun addToHomescreenButton() = onView(ViewMatchers.withText("Add to homescreen"))
 private fun addOnsButton() = onView(ViewMatchers.withText("Add-ons"))
-private fun syncedTabsButton() = onView(ViewMatchers.withText("Synced Tabs"))
+private fun syncedTabsButton() =
+    mDevice.findObject(
+        UiSelector()
+            .resourceId("$packageName:id/label")
+            .textContains("Synced Tabs")
+    )
 
 private fun assertShareButtonDoesntExist() = shareButton().check(ViewAssertions.doesNotExist())
 private fun assertRequestDesktopSiteToggleDoesntExist() =
@@ -209,8 +233,7 @@ private fun assertFindInPageButton() = findInPageButton()
     .check(ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
 private fun assertAddOnsButton() = addOnsButton()
     .check(matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
-private fun assertSyncedTabsButton() = syncedTabsButton()
-    .check(matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+private fun assertSyncedTabsButton() = assertTrue(syncedTabsButton().waitForExists(waitingTime))
 private fun assertReportIssueButton() = reportIssueButton()
     .check(ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
 private fun assertSettingsButton() = settingsButton()

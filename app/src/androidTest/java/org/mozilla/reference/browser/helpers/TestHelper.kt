@@ -14,9 +14,12 @@ import android.net.Uri
 import android.os.Build
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.test.platform.app.InstrumentationRegistry
+import androidx.test.uiautomator.UiDevice
+import androidx.test.uiautomator.UiObject
 import androidx.test.uiautomator.UiScrollable
 import androidx.test.uiautomator.UiSelector
 import mozilla.components.support.ktx.android.content.appName
+import org.junit.Assert
 
 object TestHelper {
 
@@ -61,5 +64,10 @@ object TestHelper {
         val canvas = Canvas(bitmap)
         canvas.drawColor(Color.GREEN)
         return bitmap
+    }
+
+    fun UiDevice.waitForObjects(obj: UiObject, waitingTime: Long = TestAssetHelper.waitingTime) {
+        this.waitForIdle()
+        Assert.assertNotNull(obj.waitForExists(waitingTime))
     }
 }
