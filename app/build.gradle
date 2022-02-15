@@ -308,6 +308,7 @@ dependencies {
     implementation Deps.google_material
 
     androidTestImplementation Deps.uiautomator
+    androidTestImplementation Deps.junit_ktx
 
     androidTestImplementation Deps.espresso_core, {
         exclude group: 'com.android.support', module: 'support-annotations'
