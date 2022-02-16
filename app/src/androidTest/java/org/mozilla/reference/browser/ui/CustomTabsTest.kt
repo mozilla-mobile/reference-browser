@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package org.mozilla.reference.browser.ui
 
 import androidx.test.rule.ActivityTestRule
