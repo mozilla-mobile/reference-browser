@@ -130,6 +130,7 @@ class ThreeDotMenuRobot {
 
         fun openSettings(interact: SettingsViewRobot.() -> Unit): SettingsViewRobot.Transition {
             settingsButton().click()
+            mDevice.waitForIdle()
             SettingsViewRobot().interact()
             return SettingsViewRobot.Transition()
         }

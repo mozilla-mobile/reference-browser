@@ -274,14 +274,12 @@ class ThreeDotMenuTest {
         }.openNavigationToolbar {
         }.openThreeDotMenu {
         }.openAddToHomeScreen {
-            verifyAddToHomeScreenPopup()
             clickCancelAddToHomeScreenButton()
         }
 
         navigationToolbar {
         }.openThreeDotMenu {
         }.openAddToHomeScreen {
-            verifyAddToHomeScreenPopup()
             clickAddAutomaticallyToHomeScreenButton()
         }.openHomeScreenShortcut(defaultWebPage.title) {
             verifyUrl(defaultWebPage.url.toString())

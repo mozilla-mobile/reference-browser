@@ -37,7 +37,6 @@ class SettingsViewTest {
         navigationToolbar {
         }.openThreeDotMenu {
         }.openSettings {
-            mDevice.waitForIdle()
             verifySettingsRecyclerViewToExist()
             verifyNavigateUp()
             verifySyncSigninButton()
@@ -53,7 +52,6 @@ class SettingsViewTest {
             verifyJetpackComposeButton()
             verifyDeveloperToolsHeading()
             verifyRemoteDebugging()
-            scrollToElementByText("Custom Add-on collection")
             verifyCustomAddonCollectionButton()
             verifyMozillaHeading()
             verifyAboutReferenceBrowserButton()

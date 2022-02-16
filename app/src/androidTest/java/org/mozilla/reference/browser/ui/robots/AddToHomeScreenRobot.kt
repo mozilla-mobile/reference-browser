@@ -5,7 +5,6 @@
 package org.mozilla.reference.browser.ui.robots
 
 import androidx.test.uiautomator.UiSelector
-import junit.framework.Assert.assertTrue
 import org.mozilla.reference.browser.helpers.TestAssetHelper.waitingTime
 
 /**
@@ -13,14 +12,19 @@ import org.mozilla.reference.browser.helpers.TestAssetHelper.waitingTime
  */
 class AddToHomeScreenRobot {
 
-    fun clickCancelAddToHomeScreenButton() = cancelAddToHomeScreenButton().click()
-    fun clickAddAutomaticallyToHomeScreenButton() = addAutomaticallyToHomeScreenButton().click()
-    fun verifyAddToHomeScreenPopup() = assertAddToHomeScreenPopup()
+    fun clickCancelAddToHomeScreenButton() {
+        cancelAddToHomeScreenButton().waitForExists(waitingTime)
+        cancelAddToHomeScreenButton().click()
+    }
+    fun clickAddAutomaticallyToHomeScreenButton() {
+        addAutomaticallyToHomeScreenButton().waitForExists(waitingTime)
+        addAutomaticallyToHomeScreenButton().click()
+    }
 
     class Transition {
         fun openHomeScreenShortcut(title: String, interact: BrowserRobot.() -> Unit): BrowserRobot.Transition {
-            mDevice.findObject(UiSelector().text(title))
-            mDevice.findObject((UiSelector().text(title))).clickAndWaitForNewWindow(waitingTime)
+            mDevice.findObject(UiSelector().textContains(title)).waitForExists(waitingTime)
+            mDevice.findObject((UiSelector().textContains(title))).clickAndWaitForNewWindow(waitingTime)
 
             BrowserRobot().interact()
             return BrowserRobot.Transition()
@@ -29,10 +33,4 @@ class AddToHomeScreenRobot {
 
     private fun cancelAddToHomeScreenButton() = mDevice.findObject(UiSelector().textContains("CANCEL"))
     private fun addAutomaticallyToHomeScreenButton() = mDevice.findObject(UiSelector().textContains("ADD AUTOMATICALLY"))
-    private fun assertAddToHomeScreenPopup() {
-        assertTrue(
-            mDevice.findObject(UiSelector().text("Touch & hold to place manually"))
-                .waitForExists(waitingTime)
-        )
-    }
 }
