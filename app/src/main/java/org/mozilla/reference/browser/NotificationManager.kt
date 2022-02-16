@@ -7,7 +7,6 @@ package org.mozilla.reference.browser
 import android.annotation.TargetApi
 import android.app.Notification
 import android.app.NotificationChannel
-import android.app.NotificationManager as AndroidNotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
@@ -23,6 +22,7 @@ import mozilla.components.concept.sync.TabData
 import mozilla.components.support.base.log.logger.Logger
 import org.mozilla.reference.browser.IntentRequestCodes.REQUEST_CODE_DATA_REPORTING
 import org.mozilla.reference.browser.IntentRequestCodes.REQUEST_CODE_SEND_TAB
+import android.app.NotificationManager as AndroidNotificationManager
 
 /**
  * Manages notification channels and allows displaying different supported types of notifications.

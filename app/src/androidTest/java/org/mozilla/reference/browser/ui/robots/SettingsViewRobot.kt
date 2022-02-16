@@ -73,7 +73,7 @@ class SettingsViewRobot {
 
     class Transition {
         fun openSettingsViewPrivacy(interact: SettingsViewPrivacyRobot.() -> Unit):
-                SettingsViewPrivacyRobot.Transition {
+            SettingsViewPrivacyRobot.Transition {
             privacyButton().click()
             SettingsViewPrivacyRobot().interact()
             return SettingsViewPrivacyRobot.Transition()
@@ -92,7 +92,7 @@ class SettingsViewRobot {
         }
 
         fun makeDefaultBrowser(interact: ExternalAppsRobot.() -> Unit):
-                ExternalAppsRobot.Transition {
+            ExternalAppsRobot.Transition {
             makeDefaultBrowserButton().click()
             ExternalAppsRobot().interact()
             return ExternalAppsRobot.Transition()
@@ -124,7 +124,8 @@ class SettingsViewRobot {
 private fun waitForSettingsRecyclerViewToExist() {
     mDevice.findObject(UiSelector().resourceId("$packageName:id/recycler_view"))
         .waitForExists(
-        waitingTime)
+            waitingTime
+        )
 }
 
 private fun assertSettingsView() {
@@ -154,37 +155,37 @@ private fun assertNavigateUpButton() {
     mDevice.wait(Until.findObject(By.text("Navigate up")), TestAssetHelper.waitingTimeShort)
 }
 private fun assertSyncSigninButton() = syncSigninButton()
-        .check(matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+    .check(matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
 private fun assertSyncHistorySummary() = syncHistorySummary()
-        .check(matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+    .check(matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
 private fun assertSyncQrCodeButton() = syncQrCodeButton()
-        .check(matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+    .check(matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
 private fun assertSyncQrSummary() = syncQrSummary()
-        .check(matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+    .check(matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
 private fun assertPrivacyButton() = privacyButton()
-        .check(matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+    .check(matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
 private fun assertPrivacySummary() = privacySummary()
-        .check(matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+    .check(matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
 private fun assertOpenLinksInApps() = openLinksInAppsToggle()
-        .check(matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+    .check(matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
 private fun assertMakeDefaultBrowserButton() = makeDefaultBrowserButton()
-        .check(matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+    .check(matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
 private fun assertAutofillAppsButton() = autofillAppsButton()
-        .check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+    .check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
 private fun assertAutofillAppsSummary() = autofillAppsSummary()
-        .check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+    .check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
 private fun assertJetpackComposeButton() = jetpackComposeButton()
-        .check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+    .check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
 private fun assertDeveloperToolsHeading() = developerToolsHeading()
-        .check(matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+    .check(matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
 private fun assertRemoteDebugging() = remoteDebuggingToggle()
-        .check(matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+    .check(matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
 private fun assertCustomAddonCollectionButton() = customAddonCollectionButton()
-        .check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+    .check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
 private fun assertMozillaHeading() = mozillaHeading()
-        .check(matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+    .check(matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
 private fun assertAboutReferenceBrowserButton() = aboutReferenceBrowserButton()
-        .check(matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+    .check(matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
 private fun assertCustomAddonCollectionPanel() {
     mDevice.waitForIdle()
     mDevice.findObject(UiSelector().resourceId("$packageName:id/parentPanel"))

@@ -31,8 +31,8 @@ import mozilla.components.feature.session.FullScreenFeature
 import mozilla.components.feature.session.SessionFeature
 import mozilla.components.feature.session.SwipeRefreshFeature
 import mozilla.components.feature.session.behavior.EngineViewBrowserToolbarBehavior
-import mozilla.components.feature.tabs.WindowFeature
 import mozilla.components.feature.sitepermissions.SitePermissionsFeature
+import mozilla.components.feature.tabs.WindowFeature
 import mozilla.components.feature.webauthn.WebAuthnFeature
 import mozilla.components.support.base.feature.ActivityResultHandler
 import mozilla.components.support.base.feature.PermissionsFeature
@@ -50,8 +50,8 @@ import org.mozilla.reference.browser.downloads.DownloadService
 import org.mozilla.reference.browser.ext.getPreferenceKey
 import org.mozilla.reference.browser.ext.requireComponents
 import org.mozilla.reference.browser.pip.PictureInPictureIntegration
-import mozilla.components.feature.session.behavior.ToolbarPosition as MozacEngineBehaviorToolbarPosition
 import mozilla.components.browser.toolbar.behavior.ToolbarPosition as MozacToolbarBehaviorToolbarPosition
+import mozilla.components.feature.session.behavior.ToolbarPosition as MozacEngineBehaviorToolbarPosition
 
 /**
  * Base fragment extended by [BrowserFragment] and [ExternalAppBrowserFragment].
@@ -119,9 +119,11 @@ abstract class BaseBrowserFragment : Fragment(), UserInteractionHandler, Activit
                 requireComponents.core.store,
                 requireComponents.useCases.sessionUseCases.goBack,
                 engineView,
-                sessionId),
+                sessionId
+            ),
             owner = this,
-            view = view)
+            view = view
+        )
 
         (toolbar.layoutParams as? CoordinatorLayout.LayoutParams)?.apply {
             behavior = BrowserToolbarBehavior(
@@ -139,9 +141,11 @@ abstract class BaseBrowserFragment : Fragment(), UserInteractionHandler, Activit
                 requireComponents.useCases.sessionUseCases,
                 requireComponents.useCases.tabsUseCases,
                 requireComponents.useCases.webAppUseCases,
-                sessionId),
+                sessionId
+            ),
             owner = this,
-            view = view)
+            view = view
+        )
 
         contextMenuIntegration.set(
             feature = ContextMenuIntegration(
@@ -152,9 +156,11 @@ abstract class BaseBrowserFragment : Fragment(), UserInteractionHandler, Activit
                 requireComponents.useCases.contextMenuUseCases,
                 engineView,
                 view,
-                sessionId),
+                sessionId
+            ),
             owner = this,
-            view = view)
+            view = view
+        )
 
         downloadsFeature.set(
             feature = DownloadsFeature(
@@ -171,9 +177,11 @@ abstract class BaseBrowserFragment : Fragment(), UserInteractionHandler, Activit
                     // The Fragment class wants us to use registerForActivityResult
                     @Suppress("DEPRECATION")
                     requestPermissions(permissions, REQUEST_CODE_DOWNLOAD_PERMISSIONS)
-                }),
+                }
+            ),
             owner = this,
-            view = view)
+            view = view
+        )
 
         appLinksFeature.set(
             feature = AppLinksFeature(
@@ -199,9 +207,11 @@ abstract class BaseBrowserFragment : Fragment(), UserInteractionHandler, Activit
                     // The Fragment class wants us to use registerForActivityResult
                     @Suppress("DEPRECATION")
                     requestPermissions(permissions, REQUEST_CODE_PROMPT_PERMISSIONS)
-                }),
+                }
+            ),
             owner = this,
-            view = view)
+            view = view
+        )
 
         windowFeature.set(
             feature = WindowFeature(requireComponents.core.store, requireComponents.useCases.tabsUseCases),
@@ -218,16 +228,19 @@ abstract class BaseBrowserFragment : Fragment(), UserInteractionHandler, Activit
                 fullScreenChanged = ::fullScreenChanged
             ),
             owner = this,
-            view = view)
+            view = view
+        )
 
         findInPageIntegration.set(
             feature = FindInPageIntegration(
                 requireComponents.core.store,
                 sessionId,
                 findInPageBar as FindInPageView,
-                engineView),
+                engineView
+            ),
             owner = this,
-            view = view)
+            view = view
+        )
 
         sitePermissionFeature.set(
             feature = SitePermissionsFeature(
@@ -241,7 +254,8 @@ abstract class BaseBrowserFragment : Fragment(), UserInteractionHandler, Activit
                     requestPermissions(permissions, REQUEST_CODE_APP_PERMISSIONS)
                 },
                 onShouldShowRequestPermissionRationale = { shouldShowRequestPermissionRationale(it) },
-                store = requireComponents.core.store),
+                store = requireComponents.core.store
+            ),
             owner = this,
             view = view
         )
@@ -358,8 +372,10 @@ abstract class BaseBrowserFragment : Fragment(), UserInteractionHandler, Activit
     }
 
     override fun onActivityResult(requestCode: Int, data: Intent?, resultCode: Int): Boolean {
-        Logger.info("Fragment onActivityResult received with " +
-            "requestCode: $requestCode, resultCode: $resultCode, data: $data")
+        Logger.info(
+            "Fragment onActivityResult received with " +
+                "requestCode: $requestCode, resultCode: $resultCode, data: $data"
+        )
 
         return activityResultHandler.any { it.onActivityResult(requestCode, data, resultCode) }
     }

@@ -90,8 +90,10 @@ open class BrowserActivity : AppCompatActivity() {
 
     @Suppress("DEPRECATION") // ComponentActivity wants us to use registerForActivityResult
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        Logger.info("Activity onActivityResult received with " +
-            "requestCode: $requestCode, resultCode: $resultCode, data: $data")
+        Logger.info(
+            "Activity onActivityResult received with " +
+                "requestCode: $requestCode, resultCode: $resultCode, data: $data"
+        )
 
         supportFragmentManager.fragments.forEach {
             if (it is ActivityResultHandler && it.onActivityResult(requestCode, data, resultCode)) {

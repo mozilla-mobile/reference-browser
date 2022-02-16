@@ -31,9 +31,11 @@ class Analytics(private val context: Context) {
      * A generic crash reporter component configured to use both Sentry and Socorro.
      */
     val crashReporter: CrashReporter by lazy {
-        val socorroService = MozillaSocorroService(context, appName = "ReferenceBrowser",
+        val socorroService = MozillaSocorroService(
+            context, appName = "ReferenceBrowser",
             version = MOZ_APP_VERSION, buildId = MOZ_APP_BUILDID, vendor = MOZ_APP_VENDOR,
-            releaseChannel = MOZ_UPDATE_CHANNEL)
+            releaseChannel = MOZ_UPDATE_CHANNEL
+        )
 
         val services: MutableList<CrashReporterService> = mutableListOf(socorroService)
 
