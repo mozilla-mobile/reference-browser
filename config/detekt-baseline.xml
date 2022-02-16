@@ -4,17 +4,13 @@
   <CurrentIssues>
     <ID>ForbiddenComment:AppRequestInterceptor.kt$AppRequestInterceptor$* NB, and FIXME: this class is consumed by a 'Core' component group, but itself relies on 'firefoxAccountsFeature' * component; this creates a circular dependency, since firefoxAccountsFeature relies on tabsUseCases * which in turn needs 'core' itself.</ID>
     <ID>ForbiddenComment:ThreeDotMenuTest.kt$ThreeDotMenuTest$* Tests for verifying the main three dot menu options * * Including: * - Verify all menu items present * - Forward button navigates forward to a page * - Refresh button refreshes page content * - Share button opens app overlay menu * - Request desktop site toggle forwards to desktop view of web page (TBD) * - Find in page button can locate web page text * - Report issue button forwards to gitubh issues (TBD) * - Open settings button opens Settings sub-menu * * Not included: * - TODO: Request desktop site (user mockWebServer to parse request headers) * - Stop button stops page loading (covered by smoke tests)</ID>
-    <ID>ImplicitDefaultLocale:AboutFragment.kt$AboutFragment$String.format( "%s (Build #%s)\n", packageInfo.versionName, geckoVersion )</ID>
-    <ID>ImplicitDefaultLocale:AboutFragment.kt$AboutFragment$String.format( "%s \uD83D\uDCE6: %s, %s\n\uD83D\uDEA2: %s", aboutText, Build.version, Build.gitHash, Build.applicationServicesVersion )</ID>
+    <ID>LargeClass:BaseBrowserFragment.kt$BaseBrowserFragment : FragmentUserInteractionHandlerActivityResultHandler</ID>
+    <ID>LargeClass:ThreeDotMenuTest.kt$ThreeDotMenuTest</ID>
     <ID>LongMethod:BaseBrowserFragment.kt$BaseBrowserFragment$@CallSuper override fun onViewCreated(view: View, savedInstanceState: Bundle?)</ID>
-    <ID>LongMethod:BrowserFragment.kt$BrowserFragment$override fun onViewCreated(view: View, savedInstanceState: Bundle?)</ID>
-    <ID>LongMethod:ExternalAppBrowserFragment.kt$ExternalAppBrowserFragment$override fun onViewCreated(view: View, savedInstanceState: Bundle?)</ID>
-    <ID>LongParameterList:ContextMenuIntegration.kt$ContextMenuIntegration$( context: Context, fragmentManager: FragmentManager, browserStore: BrowserStore, tabsUseCases: TabsUseCases, contextMenuUseCases: ContextMenuUseCases, parentView: View, sessionId: String? = null )</ID>
-    <ID>LongParameterList:CustomTabsIntegration.kt$CustomTabsIntegration$( private val context: Context, private val sessionManager: SessionManager, store: BrowserStore, toolbar: BrowserToolbar, private val engineView: EngineView, private val sessionUseCases: SessionUseCases, private val customTabsUseCases: CustomTabsUseCases, sessionId: String, private val activity: Activity? )</ID>
-    <ID>LongParameterList:ToolbarIntegration.kt$ToolbarIntegration$( private val context: Context, toolbar: BrowserToolbar, historyStorage: HistoryStorage, sessionManager: SessionManager, store: BrowserStore, private val sessionUseCases: SessionUseCases, private val tabsUseCases: TabsUseCases, private val webAppUseCases: WebAppUseCases, sessionId: String? = null )</ID>
+    <ID>LongParameterList:ReaderViewIntegration.kt$ReaderViewIntegration$( context: Context, engine: Engine, store: BrowserStore, toolbar: BrowserToolbar, view: ReaderViewControlsView, readerViewAppearanceButton: FloatingActionButton )</ID>
+    <ID>LongParameterList:Utilities.kt$Utilities$( private val context: Context, private val store: BrowserStore, private val sessionUseCases: SessionUseCases, private val searchUseCases: SearchUseCases, private val tabsUseCases: TabsUseCases, private val customTabsUseCases: CustomTabsUseCases )</ID>
     <ID>MaxLineLength:AddToHomeScreenRobot.kt$AddToHomeScreenRobot$private fun addAutomaticallyToHomeScreenButton()</ID>
     <ID>MaxLineLength:AddonsManagerRobot.kt$AddonsManagerRobot$hasDescendant(withText("Finally, an efficient wide-spectrum content blocker. Easy on CPU and memory."))</ID>
-    <ID>MaxLineLength:AddonsManagerRobot.kt$AddonsManagerRobot.Transition$fun</ID>
     <ID>MaxLineLength:AwesomeBarRobot.kt$AwesomeBarRobot.Transition$fun</ID>
     <ID>MaxLineLength:SettingsViewRobot.kt$private fun openLinksInAppsToggle()</ID>
     <ID>MaxLineLength:SettingsViewRobot.kt$private fun remoteDebuggingToggle()</ID>
@@ -22,16 +18,50 @@
     <ID>MaxLineLength:TabTrayMenuRobot.kt$TabTrayMenuRobot.Transition$// The 3dot "More options" button is actually an Android Options Menu (check tabstray_menu.xml) not a View that we treat as a menu</ID>
     <ID>MaxLineLength:TabTrayMenuRobot.kt$TabTrayMenuRobot.Transition$fun</ID>
     <ID>MaxLineLength:ThreeDotMenuTest.kt$ThreeDotMenuTest$// Verifies the Synced tabs menu opens from a tab's 3 dot menu and displays the correct view if the user isn't signed in</ID>
-    <ID>SwallowedException:AboutFragment.kt$AboutFragment$catch (e: PackageManager.NameNotFoundException) { "" }</ID>
-    <ID>SwallowedException:AddonsFragment.kt$AddonsFragment$catch (e: AddonManagerException) { scope.launch(Dispatchers.Main) { Toast.makeText( activity, R.string.mozac_feature_addons_failed_to_query_add_ons, Toast.LENGTH_SHORT ).show() } }</ID>
-    <ID>SwallowedException:InstalledAddonDetailsActivity.kt$InstalledAddonDetailsActivity$catch (e: AddonManagerException) { scope.launch(Dispatchers.Main) { Toast.makeText( baseContext, R.string.mozac_feature_addons_failed_to_query_add_ons, Toast.LENGTH_SHORT ).show() } }</ID>
-    <ID>ThrowingExceptionsWithoutMessageOrCause:SyncedTabsAdapter.kt$SyncedTabsAdapter$IllegalStateException()</ID>
-    <ID>UnusedPrivateMember:ContentPanelRobot.kt$ContentPanelRobot.Transition$interact: ContentPanelRobot.() -&gt; Unit</ID>
-    <ID>UnusedPrivateMember:ExternalAppsRobot.kt$ExternalAppsRobot.Transition$interact: ExternalAppsRobot.() -&gt; Unit</ID>
-    <ID>UnusedPrivateMember:FindInPagePanelRobot.kt$FindInPagePanelRobot.Transition$interact: FindInPagePanelRobot.() -&gt; Unit</ID>
-    <ID>UnusedPrivateMember:InstalledAddonDetailsActivity.kt$InstalledAddonDetailsActivity$private fun bindVersion(addon: Addon)</ID>
-    <ID>UnusedPrivateMember:SettingsViewPrivacyRobot.kt$SettingsViewPrivacyRobot.Transition$interact: SettingsViewPrivacyRobot.() -&gt; Unit</ID>
-    <ID>UnusedPrivateMember:SettingsViewPrivacyRobot.kt$private fun privacyUpButton()</ID>
-    <ID>UnusedPrivateMember:SyncedTabsViewHolder.kt$SyncedTabsViewHolder.TabViewHolder$private val image = itemView.findViewById&lt;ImageView&gt;(R.id.synced_tabs_item_image)</ID>
+    <ID>UndocumentedPublicClass:AboutFragment.kt$AboutFragment : Fragment</ID>
+    <ID>UndocumentedPublicClass:AccountSettingsFragment.kt$AccountSettingsFragment : PreferenceFragmentCompat</ID>
+    <ID>UndocumentedPublicClass:AppPermissionCodes.kt$AppPermissionCodes</ID>
+    <ID>UndocumentedPublicClass:AutofillConfirmActivity.kt$AutofillConfirmActivity : AbstractAutofillConfirmActivity</ID>
+    <ID>UndocumentedPublicClass:AutofillPreference.kt$AutofillPreference : Preference</ID>
+    <ID>UndocumentedPublicClass:AutofillSearchActivity.kt$AutofillSearchActivity : AbstractAutofillSearchActivity</ID>
+    <ID>UndocumentedPublicClass:AutofillService.kt$AutofillService : AbstractAutofillService</ID>
+    <ID>UndocumentedPublicClass:AutofillUnlockActivity.kt$AutofillUnlockActivity : AbstractAutofillUnlockActivity</ID>
+    <ID>UndocumentedPublicClass:BrowserApplication.kt$BrowserApplication : Application</ID>
+    <ID>UndocumentedPublicClass:ContextMenuIntegration.kt$ContextMenuIntegration : LifecycleAwareFeature</ID>
+    <ID>UndocumentedPublicClass:CrashIntegration.kt$CrashIntegration : LifecycleObserver</ID>
+    <ID>UndocumentedPublicClass:CrashListActivity.kt$CrashListActivity : AbstractCrashListActivity</ID>
+    <ID>UndocumentedPublicClass:CustomTabsIntegration.kt$CustomTabsIntegration : LifecycleAwareFeatureUserInteractionHandler</ID>
+    <ID>UndocumentedPublicClass:CustomTabsService.kt$CustomTabsService : AbstractCustomTabsService</ID>
+    <ID>UndocumentedPublicClass:DownloadService.kt$DownloadService : AbstractFetchDownloadService</ID>
+    <ID>UndocumentedPublicClass:EngineProvider.kt$EngineProvider</ID>
+    <ID>UndocumentedPublicClass:FindInPageIntegration.kt$FindInPageIntegration : LifecycleAwareFeatureUserInteractionHandler</ID>
+    <ID>UndocumentedPublicClass:FirebasePush.kt$FirebasePush : AbstractFirebasePushService</ID>
+    <ID>UndocumentedPublicClass:IntentReceiverActivity.kt$IntentReceiverActivity : Activity</ID>
+    <ID>UndocumentedPublicClass:IntentRequestCodes.kt$IntentRequestCodes</ID>
+    <ID>UndocumentedPublicClass:PairSettingsFragment.kt$PairSettingsFragment : FragmentUserInteractionHandler</ID>
+    <ID>UndocumentedPublicClass:PictureInPictureIntegration.kt$PictureInPictureIntegration : LifecycleAwareFeature</ID>
+    <ID>UndocumentedPublicClass:PrivacySettingsFragment.kt$PrivacySettingsFragment : PreferenceFragmentCompat</ID>
+    <ID>UndocumentedPublicClass:PrivatePage.kt$PrivatePage</ID>
+    <ID>UndocumentedPublicClass:ReaderViewIntegration.kt$ReaderViewIntegration : LifecycleAwareFeatureUserInteractionHandler</ID>
+    <ID>UndocumentedPublicClass:Settings.kt$Settings</ID>
+    <ID>UndocumentedPublicClass:SettingsActivity.kt$SettingsActivity : AppCompatActivityActionBarUpdater</ID>
+    <ID>UndocumentedPublicClass:SettingsFragment.kt$SettingsFragment : PreferenceFragmentCompat</ID>
+    <ID>UndocumentedPublicClass:SettingsFragment.kt$SettingsFragment$ActionBarUpdater</ID>
+    <ID>UndocumentedPublicClass:SyncedTabsActivity.kt$SyncedTabsActivity : AppCompatActivity</ID>
+    <ID>UndocumentedPublicClass:SyncedTabsAdapter.kt$SyncedTabsAdapter : ListAdapter</ID>
+    <ID>UndocumentedPublicClass:SyncedTabsAdapter.kt$SyncedTabsAdapter$AdapterItem</ID>
+    <ID>UndocumentedPublicClass:SyncedTabsAdapter.kt$SyncedTabsAdapter.AdapterItem$Device : AdapterItem</ID>
+    <ID>UndocumentedPublicClass:SyncedTabsAdapter.kt$SyncedTabsAdapter.AdapterItem$Tab : AdapterItem</ID>
+    <ID>UndocumentedPublicClass:SyncedTabsFragment.kt$SyncedTabsFragment : Fragment</ID>
+    <ID>UndocumentedPublicClass:SyncedTabsIntegration.kt$SyncedTabsIntegration</ID>
+    <ID>UndocumentedPublicClass:SyncedTabsLayout.kt$SyncedTabsLayout : FrameLayoutSyncedTabsView</ID>
+    <ID>UndocumentedPublicClass:SyncedTabsViewHolder.kt$SyncedTabsViewHolder : ViewHolder</ID>
+    <ID>UndocumentedPublicClass:SyncedTabsViewHolder.kt$SyncedTabsViewHolder$DeviceViewHolder : SyncedTabsViewHolder</ID>
+    <ID>UndocumentedPublicClass:SyncedTabsViewHolder.kt$SyncedTabsViewHolder$TabViewHolder : SyncedTabsViewHolder</ID>
+    <ID>UndocumentedPublicClass:TabsPanel.kt$TabsPanel : TabLayoutOnTabSelectedListener</ID>
+    <ID>UndocumentedPublicClass:TabsToolbar.kt$TabsToolbar : Toolbar</ID>
+    <ID>UndocumentedPublicClass:TabsTouchHelper.kt$TabsTouchHelper : ItemTouchHelper</ID>
+    <ID>UndocumentedPublicClass:ToolbarIntegration.kt$ToolbarIntegration : LifecycleAwareFeatureUserInteractionHandler</ID>
+    <ID>UndocumentedPublicClass:WebPushEngineIntegration.kt$WebPushEngineIntegration : Observer</ID>
   </CurrentIssues>
 </SmellBaseline>
