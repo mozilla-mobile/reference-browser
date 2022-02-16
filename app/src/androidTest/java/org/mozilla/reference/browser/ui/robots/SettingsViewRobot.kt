@@ -23,6 +23,7 @@ import org.hamcrest.CoreMatchers.allOf
 import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.helpers.TestAssetHelper
 import org.mozilla.reference.browser.helpers.TestAssetHelper.waitingTime
+import org.mozilla.reference.browser.helpers.TestHelper
 import org.mozilla.reference.browser.helpers.TestHelper.packageName
 import org.mozilla.reference.browser.helpers.click
 import org.mozilla.reference.browser.helpers.hasCousin
@@ -182,8 +183,10 @@ private fun assertRemoteDebugging() = remoteDebuggingToggle()
     .check(matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
 private fun assertCustomAddonCollectionButton() = customAddonCollectionButton()
     .check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
-private fun assertMozillaHeading() = mozillaHeading()
-    .check(matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+private fun assertMozillaHeading() {
+    TestHelper.scrollToElementByText("About Reference Browser")
+    mozillaHeading().check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+}
 private fun assertAboutReferenceBrowserButton() = aboutReferenceBrowserButton()
     .check(matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
 private fun assertCustomAddonCollectionPanel() {

@@ -58,6 +58,13 @@ class AwesomeBarRobot {
         pasteText.click()
     }
 
+    fun pasteAndLoadCopiedLink() {
+        longClickToolbar()
+        clickPasteText()
+        mDevice.pressEnter()
+        mDevice.waitForWindowUpdate("$packageName", waitingTime)
+    }
+
     class Transition {
 
         fun openWebPage(interact: NavigationToolbarRobot.() -> Unit): NavigationToolbarRobot.Transition {
@@ -73,18 +80,10 @@ class AwesomeBarRobot {
             BrowserRobot().interact()
             return BrowserRobot.Transition()
         }
-
-        fun clickLinkFromClipboard(clipboardLink: String, interact: BrowserRobot.() -> Unit): BrowserRobot.Transition {
-            val clipboardLink = mDevice.findObject(UiSelector().textContains(clipboardLink))
-            clipboardLink.clickAndWaitForNewWindow()
-
-            BrowserRobot().interact()
-            return BrowserRobot.Transition()
-        }
     }
 }
 
-fun browser(interact: AwesomeBarRobot.() -> Unit): AwesomeBarRobot.Transition {
+fun browserScreen(interact: AwesomeBarRobot.() -> Unit): AwesomeBarRobot.Transition {
     AwesomeBarRobot().interact()
     return AwesomeBarRobot.Transition()
 }

@@ -12,6 +12,7 @@ import org.junit.Test
 import org.mozilla.reference.browser.helpers.AndroidAssetDispatcher
 import org.mozilla.reference.browser.helpers.BrowserActivityTestRule
 import org.mozilla.reference.browser.helpers.TestAssetHelper
+import org.mozilla.reference.browser.ui.robots.browser
 import org.mozilla.reference.browser.ui.robots.navigationToolbar
 
 class ContextMenusTest {
@@ -90,8 +91,10 @@ class ContextMenusTest {
             clickContextCopyLink()
         }.openNavigationToolbar {
         }.clickToolbar {
-            verifyLinkFromClipboard(genericURL.url.toString())
-        }.clickLinkFromClipboard(genericURL.url.toString()) {
+            pasteAndLoadCopiedLink()
+        }
+
+        browser {
             verifyUrl(genericURL.url.toString())
         }
     }
