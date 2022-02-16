@@ -106,8 +106,10 @@ class Core(private val context: Context) {
         ).apply {
             icons.install(engine, this)
 
-            WebNotificationFeature(context, engine, icons, R.drawable.ic_notification,
-                geckoSitePermissionsStorage, BrowserActivity::class.java)
+            WebNotificationFeature(
+                context, engine, icons, R.drawable.ic_notification,
+                geckoSitePermissionsStorage, BrowserActivity::class.java
+            )
 
             MediaSessionFeature(context, MediaSessionService::class.java, this).start()
         }

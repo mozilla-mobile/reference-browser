@@ -107,8 +107,10 @@ private fun clearToolbarButton() =
 
 private fun assertSearchSuggestion(searchSuggestionTitle: String) {
     mDevice.waitForIdle()
-    assertTrue(mDevice.findObject(UiSelector().textContains(searchSuggestionTitle))
-        .waitForExists(waitingTime))
+    assertTrue(
+        mDevice.findObject(UiSelector().textContains(searchSuggestionTitle))
+            .waitForExists(waitingTime)
+    )
 }
 
 private fun assertLinkFromClipboard(clipboardLink: String) {
@@ -117,8 +119,10 @@ private fun assertLinkFromClipboard(clipboardLink: String) {
         .waitForExists(waitingTime)
     mDevice.findObject(UiSelector().resourceId("$packageName:id/mozac_browser_awesomebar_title"))
         .waitForExists(waitingTime)
-    assertTrue(mDevice.findObject(UiSelector().textContains(clipboardLink))
-        .waitForExists(waitingTime))
+    assertTrue(
+        mDevice.findObject(UiSelector().textContains(clipboardLink))
+            .waitForExists(waitingTime)
+    )
 }
 
 private fun assertPastedToolbarText(expectedText: String) {

@@ -161,11 +161,11 @@ class InstalledAddonDetailsActivity : AppCompatActivity() {
         switch.isChecked = addon.isAllowedInPrivateBrowsing()
         switch.setOnCheckedChangeListener { _, isChecked ->
             this.components.core.addonManager.setAddonAllowedInPrivateBrowsing(
-                    addon,
-                    isChecked,
-                    onSuccess = {
-                        switch.isChecked = isChecked
-                    }
+                addon,
+                isChecked,
+                onSuccess = {
+                    switch.isChecked = isChecked
+                }
             )
         }
     }

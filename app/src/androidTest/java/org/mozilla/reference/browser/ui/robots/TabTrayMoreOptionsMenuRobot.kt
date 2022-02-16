@@ -50,4 +50,4 @@ private fun assertCloseAllTabsButton() {
     mDevice.waitAndInteract(Until.findObject(By.text("Close All Tabs"))) {}
 }
 private fun assertCloseAllPrivateTabsButton() = closeAllPrivateTabsButton()
-        .check(ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+    .check(ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))

@@ -60,9 +60,11 @@ class CustomTabRobot {
             requestDesktopButton().click()
             mDevice.waitForIdle()
             assertTrue(
-                mDevice.findObject(UiSelector()
-                    .resourceId("$packageName:id/mozac_browser_menu_recyclerView")
-                ).waitUntilGone(waitingTime))
+                mDevice.findObject(
+                    UiSelector()
+                        .resourceId("$packageName:id/mozac_browser_menu_recyclerView")
+                ).waitUntilGone(waitingTime)
+            )
         } catch (e: AssertionError) {
             println("Failed to click request desktop toggle")
             // If the click didn't succeed the main menu remains displayed and should be dismissed

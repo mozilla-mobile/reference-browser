@@ -168,16 +168,26 @@ configurations {
 }
 
 dependencies {
-    ktlint "com.github.shyiko:ktlint:0.24.0"
+    ktlint("com.pinterest:ktlint:0.41.0") {
+        attributes {
+            attribute(Bundling.BUNDLING_ATTRIBUTE, getObjects().named(Bundling, Bundling.EXTERNAL))
+        }
+    }
 }
 
 task ktlint(type: JavaExec, group: "verification") {
     description = "Check Kotlin code style."
     classpath = configurations.ktlint
-    main = "com.github.shyiko.ktlint.Main"
-    args "app/**/*.kt"
+    main = "com.pinterest.ktlint.Main"
+    args "app/src/**/*.kt", "!**/build/**/*.kt"
 }
 
+task ktlintFormat(type: JavaExec, group: "formatting") {
+    description = "Fix Kotlin code style deviations."
+    classpath = configurations.ktlint
+    main = "com.pinterest.ktlint.Main"
+    args "-F", "app/src/**/*.kt", "!**/build/**/*.kt"
+}
 
 task listRepositories {
     doLast {

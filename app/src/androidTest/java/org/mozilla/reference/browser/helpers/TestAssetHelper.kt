@@ -30,9 +30,9 @@ object TestAssetHelper {
         @Suppress("MagicNumber")
         return (1..4).map {
             TestAsset(
-                    server.url("pages/generic$it.html").toString().toUri()!!,
-                    "Page content: $it",
-                        ""
+                server.url("pages/generic$it.html").toString().toUri()!!,
+                "Page content: $it",
+                ""
             )
         }
     }

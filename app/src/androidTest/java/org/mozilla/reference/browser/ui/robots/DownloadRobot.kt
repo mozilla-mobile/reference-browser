@@ -62,12 +62,21 @@ private fun assertDownloadPopup() {
 
 private fun clickAllowButton() {
     mDevice.waitForIdle()
-    mDevice.wait(Until.findObject(
-        By.res(getPermissionAllowID() + ":id/permission_message")), waitingTime)
-    mDevice.wait(Until.findObject(
-        By.res(getPermissionAllowID() + ":id/permission_allow_button")), waitingTime)
+    mDevice.wait(
+        Until.findObject(
+            By.res(getPermissionAllowID() + ":id/permission_message")
+        ),
+        waitingTime
+    )
+    mDevice.wait(
+        Until.findObject(
+            By.res(getPermissionAllowID() + ":id/permission_allow_button")
+        ),
+        waitingTime
+    )
 
     val allowButton = mDevice.findObject(
-        By.res(getPermissionAllowID() + ":id/permission_allow_button"))
+        By.res(getPermissionAllowID() + ":id/permission_allow_button")
+    )
     allowButton.click()
 }

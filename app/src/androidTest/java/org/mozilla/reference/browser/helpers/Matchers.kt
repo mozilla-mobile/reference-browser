@@ -48,17 +48,17 @@ fun hasCousin(matcher: Matcher<View>): Matcher<View> = object : BaseMatcher<View
         val parent = (item as? View)?.parent
         val grandParent = parent?.parent as? ViewGroup
         return grandParent
-                ?.children
-                ?.filter { v -> v != parent && v is ViewGroup }
-                ?.filter(matchChildren(matcher))
-                ?.count() == 1
+            ?.children
+            ?.filter { v -> v != parent && v is ViewGroup }
+            ?.filter(matchChildren(matcher))
+            ?.count() == 1
     }
 
     private fun matchChildren(matcher: Matcher<View>): (View?) -> Boolean = {
         (it as? ViewGroup)
-                ?.children
-                ?.filter { v -> matcher.matches(v) }
-                ?.count() == 1
+            ?.children
+            ?.filter { v -> matcher.matches(v) }
+            ?.count() == 1
     }
 }
 
