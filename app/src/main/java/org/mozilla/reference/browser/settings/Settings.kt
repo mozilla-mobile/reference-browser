@@ -11,30 +11,33 @@ import org.mozilla.reference.browser.R
 object Settings {
     fun isTelemetryEnabled(context: Context): Boolean =
         PreferenceManager.getDefaultSharedPreferences(context).getBoolean(
-                context.getString(R.string.pref_key_telemetry), true)
+            context.getString(R.string.pref_key_telemetry), true
+        )
 
     fun getOverrideAmoUser(context: Context): String =
-            PreferenceManager.getDefaultSharedPreferences(context).getString(
-                    context.getString(R.string.pref_key_override_amo_user), "") ?: ""
+        PreferenceManager.getDefaultSharedPreferences(context).getString(
+            context.getString(R.string.pref_key_override_amo_user), ""
+        ) ?: ""
 
     fun getOverrideAmoCollection(context: Context): String =
-            PreferenceManager.getDefaultSharedPreferences(context).getString(
-                    context.getString(R.string.pref_key_override_amo_collection), "") ?: ""
+        PreferenceManager.getDefaultSharedPreferences(context).getString(
+            context.getString(R.string.pref_key_override_amo_collection), ""
+        ) ?: ""
 
     fun setOverrideAmoUser(context: Context, value: String) {
         val key = context.getString(R.string.pref_key_override_amo_user)
         PreferenceManager.getDefaultSharedPreferences(context)
-                .edit()
-                .putString(key, value)
-                .apply()
+            .edit()
+            .putString(key, value)
+            .apply()
     }
 
     fun setOverrideAmoCollection(context: Context, value: String) {
         val key = context.getString(R.string.pref_key_override_amo_collection)
         PreferenceManager.getDefaultSharedPreferences(context)
-                .edit()
-                .putString(key, value)
-                .apply()
+            .edit()
+            .putString(key, value)
+            .apply()
     }
 
     fun isAmoCollectionOverrideConfigured(context: Context): Boolean {

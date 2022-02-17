@@ -40,8 +40,10 @@ private fun assertDefaultAppsLayout() {
 
 private fun assertAutofillServices() {
     mDevice.waitForWindowUpdate(packageName, waitingTime)
-    assertTrue(mDevice.findObject(UiSelector().textContains("Autofill service"))
-        .waitForExists(waitingTime))
+    assertTrue(
+        mDevice.findObject(UiSelector().textContains("Autofill service"))
+            .waitForExists(waitingTime)
+    )
 }
 
 @Suppress("SwallowedException")
@@ -49,15 +51,21 @@ private fun assertYouTubeApp() {
     try {
         // Check youtube's home buttons
         mDevice.waitForIdle()
-        assertTrue(mDevice.findObject(UiSelector().text("Home"))
-            .waitForExists(waitingTime))
-        assertTrue(mDevice.findObject(UiSelector().text("Subscriptions"))
-            .waitForExists(waitingTime))
+        assertTrue(
+            mDevice.findObject(UiSelector().text("Home"))
+                .waitForExists(waitingTime)
+        )
+        assertTrue(
+            mDevice.findObject(UiSelector().text("Subscriptions"))
+                .waitForExists(waitingTime)
+        )
     } catch (e: AssertionError) {
         println("The native youtube app opens but needs to be updated")
         // In case the app isn't up to date on the emulator an update message will be displayed
-        assertTrue(mDevice.findObject(UiSelector().text("Update for a faster, better YouTube"))
-            .waitForExists(waitingTime))
+        assertTrue(
+            mDevice.findObject(UiSelector().text("Update for a faster, better YouTube"))
+                .waitForExists(waitingTime)
+        )
     }
 }
 

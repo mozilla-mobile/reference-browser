@@ -11,26 +11,26 @@ import android.os.Handler
 import android.provider.Settings
 import android.view.View
 import android.widget.EditText
-import androidx.preference.Preference.OnPreferenceChangeListener
-import androidx.preference.Preference.OnPreferenceClickListener
-import androidx.preference.PreferenceFragmentCompat
 import android.widget.Toast
 import android.widget.Toast.LENGTH_SHORT
 import androidx.appcompat.app.AlertDialog
 import androidx.preference.Preference
+import androidx.preference.Preference.OnPreferenceChangeListener
+import androidx.preference.Preference.OnPreferenceClickListener
+import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreferenceCompat
 import mozilla.components.support.ktx.android.view.showKeyboard
 import org.mozilla.reference.browser.R
-import org.mozilla.reference.browser.R.string.pref_key_firefox_account
-import org.mozilla.reference.browser.ext.getPreferenceKey
-import org.mozilla.reference.browser.R.string.pref_key_sign_in
-import org.mozilla.reference.browser.R.string.pref_key_pair_sign_in
-import org.mozilla.reference.browser.R.string.pref_key_make_default_browser
-import org.mozilla.reference.browser.R.string.pref_key_remote_debugging
 import org.mozilla.reference.browser.R.string.pref_key_about_page
-import org.mozilla.reference.browser.R.string.pref_key_privacy
+import org.mozilla.reference.browser.R.string.pref_key_firefox_account
+import org.mozilla.reference.browser.R.string.pref_key_make_default_browser
 import org.mozilla.reference.browser.R.string.pref_key_override_amo_collection
+import org.mozilla.reference.browser.R.string.pref_key_pair_sign_in
+import org.mozilla.reference.browser.R.string.pref_key_privacy
+import org.mozilla.reference.browser.R.string.pref_key_remote_debugging
+import org.mozilla.reference.browser.R.string.pref_key_sign_in
 import org.mozilla.reference.browser.autofill.AutofillPreference
+import org.mozilla.reference.browser.ext.getPreferenceKey
 import org.mozilla.reference.browser.ext.requireComponents
 import kotlin.system.exitProcess
 
@@ -136,9 +136,9 @@ class SettingsFragment : PreferenceFragmentCompat() {
     private fun getClickListenerForPairingSignIn(): OnPreferenceClickListener {
         return OnPreferenceClickListener {
             parentFragmentManager.beginTransaction()
-                    .replace(android.R.id.content, PairSettingsFragment())
-                    .addToBackStack(null)
-                    .commit()
+                .replace(android.R.id.content, PairSettingsFragment())
+                .addToBackStack(null)
+                .commit()
             getActionBarUpdater().apply {
                 updateTitle(R.string.pair_preferences)
             }
@@ -149,9 +149,9 @@ class SettingsFragment : PreferenceFragmentCompat() {
     private fun getClickListenerForFirefoxAccount(): OnPreferenceClickListener {
         return OnPreferenceClickListener {
             parentFragmentManager.beginTransaction()
-                    .replace(android.R.id.content, AccountSettingsFragment())
-                    .addToBackStack(null)
-                    .commit()
+                .replace(android.R.id.content, AccountSettingsFragment())
+                .addToBackStack(null)
+                .commit()
             getActionBarUpdater().apply {
                 updateTitle(R.string.account_settings)
             }
@@ -162,9 +162,9 @@ class SettingsFragment : PreferenceFragmentCompat() {
     private fun getClickListenerForPrivacy(): OnPreferenceClickListener {
         return OnPreferenceClickListener {
             parentFragmentManager.beginTransaction()
-                    .replace(android.R.id.content, PrivacySettingsFragment())
-                    .addToBackStack(null)
-                    .commit()
+                .replace(android.R.id.content, PrivacySettingsFragment())
+                .addToBackStack(null)
+                .commit()
             getActionBarUpdater().apply {
                 updateTitle(R.string.privacy_settings)
             }
@@ -211,14 +211,17 @@ class SettingsFragment : PreferenceFragmentCompat() {
                     RBSettings.setOverrideAmoCollection(context, collectionView.text.toString())
 
                     Toast.makeText(
-                            context,
-                            getString(R.string.toast_customize_addon_collection_done),
-                            Toast.LENGTH_LONG
+                        context,
+                        getString(R.string.toast_customize_addon_collection_done),
+                        Toast.LENGTH_LONG
                     ).show()
 
-                    Handler().postDelayed({
-                        exitProcess(0)
-                    }, AMO_COLLECTION_OVERRIDE_EXIT_DELAY)
+                    Handler().postDelayed(
+                        {
+                            exitProcess(0)
+                        },
+                        AMO_COLLECTION_OVERRIDE_EXIT_DELAY
+                    )
                 }
 
                 collectionView.setText(RBSettings.getOverrideAmoCollection(context))

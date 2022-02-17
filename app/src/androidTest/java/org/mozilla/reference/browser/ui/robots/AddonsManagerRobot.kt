@@ -48,7 +48,9 @@ class AddonsManagerRobot {
         onView(
             allOf(
                 withId(R.id.add_on_name),
-                withText(addonName)))
+                withText(addonName)
+            )
+        )
             .check(matches(isCompletelyDisplayed()))
             .perform(click())
     }
@@ -80,11 +82,11 @@ class AddonsManagerRobot {
         onView(
             allOf(
                 withId(R.id.add_on_item),
-                    hasDescendant(withText("uBlock Origin")),
-                    hasDescendant(withText("Finally, an efficient wide-spectrum content blocker. Easy on CPU and memory.")),
-                    hasDescendant(withId(R.id.rating)),
-                    hasDescendant(withId(R.id.users_count)),
-                    hasDescendant(withId(R.id.add_button))
+                hasDescendant(withText("uBlock Origin")),
+                hasDescendant(withText("Finally, an efficient wide-spectrum content blocker. Easy on CPU and memory.")),
+                hasDescendant(withId(R.id.rating)),
+                hasDescendant(withId(R.id.users_count)),
+                hasDescendant(withId(R.id.add_button))
             )
         ).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
     }
@@ -127,12 +129,16 @@ class AddonsManagerRobot {
 
     private fun assertAddonPrompt(addonName: String) {
         mDevice.waitForIdle()
-        mDevice.findObject(UiSelector()
-            .resourceId("$packageName:id/title"))
+        mDevice.findObject(
+            UiSelector()
+                .resourceId("$packageName:id/title")
+        )
             .waitForExists(waitingTime)
 
-        assertTrue(mDevice.findObject(UiSelector().textContains("Add $addonName?"))
-            .waitForExists(waitingTime))
+        assertTrue(
+            mDevice.findObject(UiSelector().textContains("Add $addonName?"))
+                .waitForExists(waitingTime)
+        )
 
         onView(
             allOf(
@@ -144,13 +150,17 @@ class AddonsManagerRobot {
         onView(
             allOf(
                 withId(R.id.allow_button),
-                withText(R.string.mozac_feature_addons_permissions_dialog_add)))
+                withText(R.string.mozac_feature_addons_permissions_dialog_add)
+            )
+        )
             .check(matches(isCompletelyDisplayed()))
 
         onView(
             allOf(
                 withId(R.id.deny_button),
-                withText(R.string.mozac_feature_addons_permissions_dialog_cancel)))
+                withText(R.string.mozac_feature_addons_permissions_dialog_cancel)
+            )
+        )
             .check(matches(isCompletelyDisplayed()))
     }
 
@@ -158,7 +168,9 @@ class AddonsManagerRobot {
         onView(
             allOf(
                 withId(R.id.deny_button),
-                withText(R.string.mozac_feature_addons_permissions_dialog_cancel)))
+                withText(R.string.mozac_feature_addons_permissions_dialog_cancel)
+            )
+        )
             .check(matches(isCompletelyDisplayed()))
             .perform(click())
     }
@@ -167,16 +179,22 @@ class AddonsManagerRobot {
         onView(
             allOf(
                 withId(R.id.allow_button),
-                withText(R.string.mozac_feature_addons_permissions_dialog_add)))
+                withText(R.string.mozac_feature_addons_permissions_dialog_add)
+            )
+        )
             .check(matches(isCompletelyDisplayed()))
             .perform(click())
     }
 
     private fun assertAddonDownloadCompletedPrompt(addonName: String) {
         mDevice.waitForIdle()
-        assertTrue(mDevice.findObject(UiSelector()
-            .textContains("$addonName has been added to Reference Browser"))
-            .waitForExists(waitingTime))
+        assertTrue(
+            mDevice.findObject(
+                UiSelector()
+                    .textContains("$addonName has been added to Reference Browser")
+            )
+                .waitForExists(waitingTime)
+        )
     }
 
     private fun waitForDownloadProgressUntilGone() {

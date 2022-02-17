@@ -50,8 +50,8 @@ open class BrowserApplication : Application() {
         restoreBrowserState()
 
         GlobalAddonDependencyProvider.initialize(
-                components.core.addonManager,
-                components.core.addonUpdater
+            components.core.addonManager,
+            components.core.addonUpdater
         )
         WebExtensionSupport.initialize(
             runtime = components.core.engine,

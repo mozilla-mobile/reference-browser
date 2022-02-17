@@ -7,5 +7,5 @@ plugins {
 }
 
 repositories {
-    jcenter()
+    mavenCentral()
 }

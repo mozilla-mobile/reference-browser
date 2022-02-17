@@ -23,7 +23,7 @@ class SessionLoadedIdlingResource : IdlingResource {
 
     override fun isIdleNow(): Boolean {
         val context = InstrumentationRegistry.getInstrumentation().targetContext.applicationContext
-                as BrowserApplication
+            as BrowserApplication
 
         val store = context.components.core.store
 

@@ -9,13 +9,13 @@ import mozilla.components.feature.autofill.AutofillConfiguration
 import org.mozilla.reference.browser.autofill.AutofillConfirmActivity
 import org.mozilla.reference.browser.autofill.AutofillSearchActivity
 import org.mozilla.reference.browser.autofill.AutofillUnlockActivity
-import org.mozilla.reference.browser.components.Core
 import org.mozilla.reference.browser.components.Analytics
 import org.mozilla.reference.browser.components.BackgroundServices
+import org.mozilla.reference.browser.components.Core
 import org.mozilla.reference.browser.components.Push
 import org.mozilla.reference.browser.components.Services
-import org.mozilla.reference.browser.components.Utilities
 import org.mozilla.reference.browser.components.UseCases
+import org.mozilla.reference.browser.components.Utilities
 
 /**
  * Provides access to all components.

@@ -31,18 +31,21 @@ class ToggleImageButton @JvmOverloads constructor(
     private var onCheckedChangeListener: ((ToggleImageButton, Boolean) -> Unit)? = null
 
     init {
-        ViewCompat.setAccessibilityDelegate(this, object : AccessibilityDelegateCompat() {
-            override fun onInitializeAccessibilityEvent(host: View, event: AccessibilityEvent) {
-                super.onInitializeAccessibilityEvent(host, event)
-                event.isChecked = this@ToggleImageButton.isChecked
-            }
+        ViewCompat.setAccessibilityDelegate(
+            this,
+            object : AccessibilityDelegateCompat() {
+                override fun onInitializeAccessibilityEvent(host: View, event: AccessibilityEvent) {
+                    super.onInitializeAccessibilityEvent(host, event)
+                    event.isChecked = this@ToggleImageButton.isChecked
+                }
 
-            override fun onInitializeAccessibilityNodeInfo(host: View, info: AccessibilityNodeInfoCompat) {
-                super.onInitializeAccessibilityNodeInfo(host, info)
-                info.isCheckable = true
-                info.isChecked = this@ToggleImageButton.isChecked
+                override fun onInitializeAccessibilityNodeInfo(host: View, info: AccessibilityNodeInfoCompat) {
+                    super.onInitializeAccessibilityNodeInfo(host, info)
+                    info.isCheckable = true
+                    info.isChecked = this@ToggleImageButton.isChecked
+                }
             }
-        })
+        )
 
         TypedValue().apply {
             context.theme.resolveAttribute(R.attr.selectableItemBackgroundBorderless, this, true)

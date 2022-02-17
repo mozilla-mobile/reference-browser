@@ -30,7 +30,9 @@ class AddToHomeScreenRobot {
     private fun cancelAddToHomeScreenButton() = mDevice.findObject(UiSelector().textContains("CANCEL"))
     private fun addAutomaticallyToHomeScreenButton() = mDevice.findObject(UiSelector().textContains("ADD AUTOMATICALLY"))
     private fun assertAddToHomeScreenPopup() {
-        assertTrue(mDevice.findObject(UiSelector().text("Touch & hold to place manually"))
-            .waitForExists(waitingTime))
+        assertTrue(
+            mDevice.findObject(UiSelector().text("Touch & hold to place manually"))
+                .waitForExists(waitingTime)
+        )
     }
 }

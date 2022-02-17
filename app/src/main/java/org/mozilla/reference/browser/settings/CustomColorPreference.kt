@@ -5,11 +5,11 @@
 package org.mozilla.reference.browser.settings
 
 import android.content.Context
+import android.util.AttributeSet
+import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.preference.Preference
 import androidx.preference.PreferenceViewHolder
-import android.util.AttributeSet
-import android.widget.TextView
 import org.mozilla.reference.browser.R
 
 /**
@@ -30,10 +30,14 @@ class CustomColorPreference @JvmOverloads constructor(
 
     private fun init(context: Context, attrs: AttributeSet?) {
         context.obtainStyledAttributes(attrs, R.styleable.CustomColorPreference).apply {
-            titleColor = getColor(R.styleable.CustomColorPreference_titleColor,
-                ContextCompat.getColor(context, R.color.placeholder_grey))
-            summaryColor = getColor(R.styleable.CustomColorPreference_summaryColor,
-                ContextCompat.getColor(context, R.color.placeholder_grey))
+            titleColor = getColor(
+                R.styleable.CustomColorPreference_titleColor,
+                ContextCompat.getColor(context, R.color.placeholder_grey)
+            )
+            summaryColor = getColor(
+                R.styleable.CustomColorPreference_summaryColor,
+                ContextCompat.getColor(context, R.color.placeholder_grey)
+            )
             recycle()
         }
     }

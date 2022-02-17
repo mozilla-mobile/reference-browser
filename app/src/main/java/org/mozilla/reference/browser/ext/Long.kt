@@ -7,8 +7,8 @@ package org.mozilla.reference.browser.ext
 import android.content.Context
 import android.text.format.DateUtils
 import org.mozilla.reference.browser.R
-import java.util.Date
 import java.util.Calendar
+import java.util.Date
 import java.util.GregorianCalendar
 
 @Suppress("MagicNumber")

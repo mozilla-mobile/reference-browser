@@ -29,9 +29,12 @@ class SyncedTabsRobot {
 
     private fun assertNotSignedInSyncTabsView() {
         assertTrue(
-            mDevice.findObject(UiSelector()
-                .resourceId("$packageName:id/synced_tabs_status"))
-            .waitForExists(TestAssetHelper.waitingTime))
+            mDevice.findObject(
+                UiSelector()
+                    .resourceId("$packageName:id/synced_tabs_status")
+            )
+                .waitForExists(TestAssetHelper.waitingTime)
+        )
 
         onView(
             allOf(

@@ -10,8 +10,8 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import org.mozilla.reference.browser.tabs.synced.SyncedTabsViewHolder.DeviceViewHolder
 import org.mozilla.reference.browser.tabs.synced.SyncedTabsViewHolder.TabViewHolder
-import mozilla.components.concept.sync.Device as SyncDevice
 import mozilla.components.browser.storage.sync.Tab as SyncTab
+import mozilla.components.concept.sync.Device as SyncDevice
 
 class SyncedTabsAdapter(
     private val listener: (SyncTab) -> Unit
