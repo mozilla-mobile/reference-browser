@@ -11,6 +11,7 @@ import org.junit.Rule
 import org.junit.Test
 import org.mozilla.reference.browser.helpers.AndroidAssetDispatcher
 import org.mozilla.reference.browser.helpers.BrowserActivityTestRule
+import org.mozilla.reference.browser.helpers.RetryTestRule
 import org.mozilla.reference.browser.helpers.TestAssetHelper
 import org.mozilla.reference.browser.ui.robots.browser
 import org.mozilla.reference.browser.ui.robots.navigationToolbar
@@ -21,6 +22,10 @@ class ContextMenusTest {
 
     @get:Rule
     val activityTestRule = BrowserActivityTestRule()
+
+    @Rule
+    @JvmField
+    val retryTestRule = RetryTestRule(3)
 
     @Before
     fun setUp() {

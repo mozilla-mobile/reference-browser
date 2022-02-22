@@ -12,6 +12,7 @@ import org.junit.Ignore
 import org.junit.Rule
 import org.junit.Test
 import org.mozilla.reference.browser.helpers.BrowserActivityTestRule
+import org.mozilla.reference.browser.helpers.RetryTestRule
 import org.mozilla.reference.browser.helpers.TestHelper.scrollToElementByText
 import org.mozilla.reference.browser.ui.robots.mDevice
 import org.mozilla.reference.browser.ui.robots.navigationToolbar
@@ -30,6 +31,10 @@ class SettingsViewTest {
     val grantPermissionRule: GrantPermissionRule = GrantPermissionRule.grant(android.Manifest.permission.CAMERA)
 
     @get:Rule val browserActivityTestRule = BrowserActivityTestRule()
+
+    @Rule
+    @JvmField
+    val retryTestRule = RetryTestRule(3)
 
     // This test verifies settings view items are all in place
     @Test
