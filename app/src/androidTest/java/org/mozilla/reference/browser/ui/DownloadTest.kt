@@ -35,6 +35,7 @@ class DownloadTest {
     @Test
     fun cancelFileDownloadTest() {
         val downloadPage = TestAssetHelper.getDownloadAsset(mockWebServer)
+        val downloadFileName = "web_icon.png"
 
         navigationToolbar {
         }.enterUrlAndEnterToBrowser(downloadPage.url) {}
@@ -44,13 +45,14 @@ class DownloadTest {
         }
 
         notificationShade {
-            verifySystemNotificationDoesNotExists("Download completed")
+            verifyDownloadNotificationDoesNotExist("Download completed", downloadFileName)
         }.closeNotification {}
     }
 
     @Test
     fun fileDownloadTest() {
         val downloadPage = TestAssetHelper.getDownloadAsset(mockWebServer)
+        val downloadFileName = "web_icon.png"
 
         navigationToolbar {
         }.enterUrlAndEnterToBrowser(downloadPage.url) {}
@@ -60,7 +62,7 @@ class DownloadTest {
         }
 
         notificationShade {
-            verifySystemNotificationExists("Download completed")
+            verifyDownloadNotificationExist("Download completed", downloadFileName)
         }.closeNotification {}
     }
 }

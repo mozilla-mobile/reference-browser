@@ -67,6 +67,30 @@ class NotificationRobot {
         assertTrue(systemMediaNotificationControlButton(action).waitForExists(waitingTime))
     }
 
+    fun verifyDownloadNotificationExist(notificationMessage: String, fileName: String) {
+        val notification = UiSelector().text(notificationMessage)
+        var notificationFound = mDevice.findObject(notification).waitForExists(waitingTime)
+        val downloadFilename = mDevice.findObject(UiSelector().text(fileName))
+
+        while (!notificationFound) {
+            notificationTray.swipeUp(2)
+            notificationFound = mDevice.findObject(notification).waitForExists(waitingTime)
+        }
+        assertTrue(notificationFound)
+        assertTrue(downloadFilename.exists())
+    }
+
+    fun verifyDownloadNotificationDoesNotExist(notificationMessage: String, fileName: String) {
+        val notification = UiSelector().text(notificationMessage)
+        val notificationFound = mDevice.findObject(notification).waitForExists(waitingTime)
+        val downloadFilename = mDevice.findObject(UiSelector().text(fileName))
+
+        notificationTray.swipeUp(2)
+
+        assertFalse(notificationFound)
+        assertFalse(downloadFilename.exists())
+    }
+
     class Transition {
 
         fun closeNotification(interact: BrowserRobot.() -> Unit): BrowserRobot.Transition {
@@ -92,3 +116,7 @@ private fun systemMediaNotificationControlButton(state: String) =
             .resourceId("android:id/action0")
             .descriptionContains(state)
     )
+
+private val notificationTray = UiScrollable(
+    UiSelector().resourceId("com.android.systemui:id/notification_stack_scroller")
+).setAsVerticalList()
