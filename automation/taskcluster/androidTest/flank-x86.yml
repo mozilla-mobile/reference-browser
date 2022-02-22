@@ -41,8 +41,8 @@ gcloud:
     - package org.mozilla.reference.browser.ui
 
   device:
-   - model: Pixel2
-     version: 29
+   - model: Pixel3
+     version: 30
 
 flank:
   project: GOOGLE_PROJECT
