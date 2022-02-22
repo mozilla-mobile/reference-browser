@@ -18,6 +18,7 @@ import org.junit.Test
 import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.helpers.AndroidAssetDispatcher
 import org.mozilla.reference.browser.helpers.BrowserActivityTestRule
+import org.mozilla.reference.browser.helpers.RetryTestRule
 import org.mozilla.reference.browser.helpers.TestAssetHelper
 import org.mozilla.reference.browser.helpers.click
 import org.mozilla.reference.browser.ui.robots.mDevice
@@ -35,6 +36,10 @@ class TabTrayMenuTest {
     private lateinit var mockWebServer: MockWebServer
 
     @get:Rule val activityTestRule = BrowserActivityTestRule()
+
+    @Rule
+    @JvmField
+    val retryTestRule = RetryTestRule(3)
 
     @Before
     // SetUp to close all tabs before starting each test
