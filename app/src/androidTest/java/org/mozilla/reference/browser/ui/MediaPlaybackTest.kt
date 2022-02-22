@@ -42,7 +42,7 @@ class MediaPlaybackTest {
         }
 
         notificationShade {
-            verifySystemNotificationExists(audioTestPage.title)
+            verifySystemMediaNotificationExists(audioTestPage.title)
             verifySystemMediaNotificationControlButtonState("Pause")
             clickSystemMediaNotificationControlButton("Pause")
             verifySystemMediaNotificationControlButtonState("Play")
@@ -59,7 +59,7 @@ class MediaPlaybackTest {
         }
 
         notificationShade {
-            verifySystemNotificationExists(videoTestPage.title)
+            verifySystemMediaNotificationExists(videoTestPage.title)
             verifySystemMediaNotificationControlButtonState("Pause")
             clickSystemMediaNotificationControlButton("Pause")
             verifySystemMediaNotificationControlButtonState("Play")

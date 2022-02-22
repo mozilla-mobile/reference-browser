@@ -1,6 +1,5 @@
 package org.mozilla.reference.browser.ui.robots
 
-import androidx.test.uiautomator.UiObjectNotFoundException
 import androidx.test.uiautomator.UiScrollable
 import androidx.test.uiautomator.UiSelector
 import junit.framework.Assert.assertFalse
@@ -8,54 +7,11 @@ import junit.framework.Assert.assertTrue
 import org.mozilla.reference.browser.helpers.TestAssetHelper.waitingTime
 
 class NotificationRobot {
-    @Suppress("SwallowedException")
-    fun verifySystemNotificationDoesNotExists(notificationMessage: String) {
-        fun notificationTray() =
-            UiScrollable(UiSelector().resourceId("com.android.systemui:id/notification_stack_scroller"))
-
-        var notificationFound = true
-
-        do {
-            try {
-                notificationFound =
-                    notificationTray()
-                        .getChildByText(
-                            UiSelector()
-                                .text(notificationMessage),
-                            notificationMessage, true
-                        )
-                        .waitForExists(waitingTime)
-                assertFalse(notificationFound)
-            } catch (e: UiObjectNotFoundException) {
-                notificationTray().scrollForward()
-                mDevice.waitForIdle()
-            }
-        } while (!notificationFound)
-    }
 
     @Suppress("SwallowedException")
-    fun verifySystemNotificationExists(notificationMessage: String) {
-        fun notificationTray() =
-            UiScrollable(UiSelector().resourceId("com.android.systemui:id/notification_stack_scroller"))
-
-        var notificationFound = false
-
-        do {
-            try {
-                notificationFound =
-                    notificationTray()
-                        .getChildByText(
-                            UiSelector()
-                                .text(notificationMessage),
-                            notificationMessage, true
-                        )
-                        .waitForExists(waitingTime)
-                assertTrue(notificationFound)
-            } catch (e: UiObjectNotFoundException) {
-                notificationTray().scrollForward()
-                mDevice.waitForIdle()
-            }
-        } while (!notificationFound)
+    fun verifySystemMediaNotificationExists(notificationMessage: String) {
+        assertTrue(systemMediaNotification.waitForExists(waitingTime))
+        assertTrue(systemMediaNotificationTitle(notificationMessage).waitForExists(waitingTime))
     }
 
     fun clickSystemMediaNotificationControlButton(state: String) {
@@ -113,10 +69,29 @@ fun notificationShade(interact: NotificationRobot.() -> Unit): NotificationRobot
 private fun systemMediaNotificationControlButton(state: String) =
     mDevice.findObject(
         UiSelector()
-            .resourceId("android:id/action0")
+            .resourceId("com.android.systemui:id/action0")
+            .className("android.widget.ImageButton")
+            .packageName("com.android.systemui")
             .descriptionContains(state)
+    )
+
+private fun systemMediaNotificationTitle(title: String) =
+    mDevice.findObject(
+        UiSelector()
+            .textContains(title)
+            .resourceId("com.android.systemui:id/header_title")
+            .className("android.widget.TextView")
+            .packageName("com.android.systemui")
     )
 
 private val notificationTray = UiScrollable(
     UiSelector().resourceId("com.android.systemui:id/notification_stack_scroller")
 ).setAsVerticalList()
+
+private val systemMediaNotification =
+    mDevice.findObject(
+        UiSelector()
+            .resourceId("com.android.systemui:id/qs_media_controls")
+            .className("android.view.ViewGroup")
+            .packageName("com.android.systemui")
+    )
