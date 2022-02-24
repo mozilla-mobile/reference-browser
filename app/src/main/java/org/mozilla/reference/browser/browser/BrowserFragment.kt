@@ -8,7 +8,6 @@ import android.os.Bundle
 import android.view.View
 import androidx.preference.PreferenceManager
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import mozilla.components.browser.awesomebar.BrowserAwesomeBar
 import mozilla.components.browser.thumbnails.BrowserThumbnails
 import mozilla.components.browser.toolbar.BrowserToolbar
 import mozilla.components.concept.engine.EngineView
@@ -23,6 +22,7 @@ import mozilla.components.support.base.feature.ViewBoundFeatureWrapper
 import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.ext.components
 import org.mozilla.reference.browser.ext.requireComponents
+import org.mozilla.reference.browser.search.AwesomeBarWrapper
 import org.mozilla.reference.browser.tabs.TabsTrayFragment
 
 /**
@@ -33,7 +33,7 @@ class BrowserFragment : BaseBrowserFragment(), UserInteractionHandler {
     private val readerViewFeature = ViewBoundFeatureWrapper<ReaderViewIntegration>()
     private val webExtToolbarFeature = ViewBoundFeatureWrapper<WebExtensionToolbarFeature>()
 
-    private val awesomeBar: BrowserAwesomeBar
+    private val awesomeBar: AwesomeBarWrapper
         get() = requireView().findViewById(R.id.awesomeBar)
     private val toolbar: BrowserToolbar
         get() = requireView().findViewById(R.id.toolbar)
@@ -60,15 +60,18 @@ class BrowserFragment : BaseBrowserFragment(), UserInteractionHandler {
                 fetchClient = requireComponents.core.client,
                 mode = SearchSuggestionProvider.Mode.MULTIPLE_SUGGESTIONS,
                 engine = requireComponents.core.engine,
+                limit = 5,
                 filterExactMatch = true
             )
             .addSessionProvider(
                 resources,
                 requireComponents.core.store,
-                requireComponents.useCases.tabsUseCases.selectTab)
+                requireComponents.useCases.tabsUseCases.selectTab
+            )
             .addHistoryProvider(
                 requireComponents.core.historyStorage,
-                requireComponents.useCases.sessionUseCases.loadUrl)
+                requireComponents.useCases.sessionUseCases.loadUrl
+            )
             .addClipboardProvider(requireContext(), requireComponents.useCases.sessionUseCases.loadUrl)
 
         // We cannot really add a `addSyncedTabsProvider` to `AwesomeBarFeature` coz that would create
@@ -90,11 +93,13 @@ class BrowserFragment : BaseBrowserFragment(), UserInteractionHandler {
         )
 
         thumbnailsFeature.set(
-                feature = BrowserThumbnails(requireContext(),
-                        engineView,
-                        requireComponents.core.store),
-                owner = this,
-                view = view
+            feature = BrowserThumbnails(
+                requireContext(),
+                engineView,
+                requireComponents.core.store
+            ),
+            owner = this,
+            view = view
         )
 
         readerViewFeature.set(

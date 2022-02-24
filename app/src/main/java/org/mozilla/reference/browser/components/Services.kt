@@ -30,9 +30,9 @@ class Services(
             redirectUrl = BackgroundServices.REDIRECT_URL
         ) {
             _, authUrl ->
-                MainScope().launch {
-                    tabsUseCases.addTab.invoke(authUrl)
-                }
+            MainScope().launch {
+                tabsUseCases.addTab.invoke(authUrl)
+            }
         }
     }
 

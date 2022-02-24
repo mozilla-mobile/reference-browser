@@ -30,7 +30,7 @@ class TabsToolbar @JvmOverloads constructor(
             when (it.itemId) {
                 R.id.newTab -> {
                     when (isPrivateTray) {
-                        true -> tabsUseCases.addPrivateTab.invoke("about:privatebrowsing", selectTab = true)
+                        true -> tabsUseCases.addTab.invoke("about:privatebrowsing", selectTab = true, private = true)
                         false -> tabsUseCases.addTab.invoke("about:blank", selectTab = true)
                     }
                     closeTabsTray?.invoke()

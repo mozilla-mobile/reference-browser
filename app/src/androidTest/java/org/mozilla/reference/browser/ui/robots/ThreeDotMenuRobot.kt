@@ -15,8 +15,10 @@ import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.uiautomator.UiSelector
 import junit.framework.Assert.assertFalse
 import junit.framework.Assert.assertTrue
+import junit.framework.AssertionFailedError
 import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.helpers.TestAssetHelper.waitingTime
+import org.mozilla.reference.browser.helpers.TestHelper.packageName
 import org.mozilla.reference.browser.helpers.click
 
 /**
@@ -78,13 +80,38 @@ class ThreeDotMenuRobot {
             return ContentPanelRobot.Transition()
         }
 
+        @Suppress("SwallowedException")
         fun switchRequestDesktopSiteToggle(
             interact: NavigationToolbarRobot.() -> Unit
         ): NavigationToolbarRobot.Transition {
-            mDevice.findObject(UiSelector().textContains("Request desktop site"))
-                .waitForExists(waitingTime)
-            requestDesktopSiteToggle().click()
-            mDevice.waitForIdle()
+            try {
+                mDevice.findObject(UiSelector().textContains("Request desktop site"))
+                    .waitForExists(waitingTime)
+                requestDesktopSiteToggle().click()
+                mDevice.waitForIdle()
+                assertTrue(
+                    mDevice.findObject(
+                        UiSelector()
+                            .resourceId("$packageName:id/mozac_browser_menu_recyclerView")
+                    ).waitUntilGone(waitingTime)
+                )
+            } catch (e: AssertionFailedError) {
+                println("Failed to click request desktop toggle")
+                // If the click didn't succeed the main menu remains displayed and should be dismissed
+                mDevice.pressBack()
+                threeDotMenuButton().click()
+                mDevice.findObject(UiSelector().textContains("Request desktop site"))
+                    .waitForExists(waitingTime)
+                // Click again the Request desktop site toggle
+                requestDesktopSiteToggle().click()
+                mDevice.waitForIdle()
+                assertTrue(
+                    mDevice.findObject(
+                        UiSelector()
+                            .resourceId("$packageName:id/mozac_browser_menu_recyclerView")
+                    ).waitUntilGone(waitingTime)
+                )
+            }
             NavigationToolbarRobot().interact()
             return NavigationToolbarRobot.Transition()
         }
@@ -143,6 +170,7 @@ private fun threeDotMenuRecyclerViewExists() {
     onView(withId(R.id.mozac_browser_menu_recyclerView)).check(matches(isDisplayed()))
 }
 
+private fun threeDotMenuButton() = onView(withId(R.id.mozac_browser_toolbar_menu))
 private fun forwardButton() = onView(ViewMatchers.withContentDescription("Forward"))
 private fun refreshButton() = onView(ViewMatchers.withContentDescription("Refresh"))
 private fun stopButton() = onView(ViewMatchers.withContentDescription("Stop"))
@@ -157,36 +185,36 @@ private fun syncedTabsButton() = onView(ViewMatchers.withText("Synced Tabs"))
 
 private fun assertShareButtonDoesntExist() = shareButton().check(ViewAssertions.doesNotExist())
 private fun assertRequestDesktopSiteToggleDoesntExist() =
-        requestDesktopSiteToggle().check(ViewAssertions.doesNotExist())
+    requestDesktopSiteToggle().check(ViewAssertions.doesNotExist())
 private fun assertFindInPageButtonDoesntExist() = findInPageButton().check(ViewAssertions.doesNotExist())
 private fun assertForwardButtonDoesntExist() = forwardButton().check(ViewAssertions.doesNotExist())
 private fun assertRefreshButtonDoesntExist() = refreshButton().check(ViewAssertions.doesNotExist())
 private fun assertStopButtonDoesntExist() = stopButton().check(ViewAssertions.doesNotExist())
 private fun assertAddToHomescreenButtonDoesntExist() = addToHomescreenButton()
-        .check(ViewAssertions.doesNotExist())
+    .check(ViewAssertions.doesNotExist())
 
 private fun assertForwardButton() = forwardButton()
-        .check(ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+    .check(ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
 private fun assertRefreshButton() = refreshButton()
-        .check(ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+    .check(ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
 private fun assertStopButton() = stopButton()
-        .check(ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+    .check(ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
 private fun assertShareButton() = shareButton()
-        .check(ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+    .check(ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
 private fun assertRequestDesktopSiteToggle() = requestDesktopSiteToggle()
-        .check(ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+    .check(ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
 private fun assertAddToHomescreenButton() = addToHomescreenButton()
-        .check(matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+    .check(matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
 private fun assertFindInPageButton() = findInPageButton()
-        .check(ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+    .check(ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
 private fun assertAddOnsButton() = addOnsButton()
-        .check(matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+    .check(matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
 private fun assertSyncedTabsButton() = syncedTabsButton()
-        .check(matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+    .check(matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
 private fun assertReportIssueButton() = reportIssueButton()
-        .check(ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+    .check(ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
 private fun assertSettingsButton() = settingsButton()
-        .check(ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+    .check(ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
 private fun assertRequestDesktopSiteIsTurnedOff() {
     assertFalse(
         mDevice.findObject(UiSelector().textContains("Request desktop site")).isChecked

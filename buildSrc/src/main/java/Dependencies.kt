@@ -7,17 +7,17 @@
 
 // Synchronized version numbers for dependencies used by (some) modules
 private object Versions {
-    const val kotlin = "1.4.30"
-    const val coroutines = "1.3.9"
+    const val kotlin = "1.5.10"
+    const val coroutines = "1.5.0"
 
     const val androidx_appcompat = "1.3.0-rc01"
     const val androidx_constraintlayout = "1.1.3"
     const val androidx_preference = "1.0.0"
 
-    const val workmanager = "2.0.0"
+    const val workmanager = "2.7.1"
     const val google_material = "1.0.0"
 
-    const val android_gradle_plugin = "7.0.0-alpha14"
+    const val android_gradle_plugin = "7.0.0"
 
     const val mozilla_android_components = AndroidComponents.VERSION
 
@@ -31,10 +31,14 @@ private object Versions {
     const val tools_test_runner = "1.1.0"
     const val uiautomator = "2.2.0"
 
+    const val compose_version = "1.0.0-rc02"
+
     object AndroidX {
-        const val activity_compose = "1.3.0-alpha05"
+        const val activity_compose = "1.3.0-rc02"
         const val core = "1.1.0"
-        const val compose = "1.0.0-beta03"
+        const val compose = compose_version
+        const val lifecycle = "2.2.0"
+        const val swiperefreshlayout = "1.1.0"
     }
 }
 
@@ -43,6 +47,7 @@ object Deps {
     const val kotlin_stdlib = "org.jetbrains.kotlin:kotlin-stdlib-jdk7:${Versions.kotlin}"
     const val kotlin_coroutines = "org.jetbrains.kotlinx:kotlinx-coroutines-android:${Versions.coroutines}"
 
+    const val mozilla_concept_awesomebar = "org.mozilla.components:concept-awesomebar:${Versions.mozilla_android_components}"
     const val mozilla_concept_engine = "org.mozilla.components:concept-engine:${Versions.mozilla_android_components}"
     const val mozilla_concept_menu = "org.mozilla.components:concept-menu:${Versions.mozilla_android_components}"
     const val mozilla_concept_tabstray = "org.mozilla.components:concept-tabstray:${Versions.mozilla_android_components}"
@@ -51,10 +56,10 @@ object Deps {
     const val mozilla_concept_sync = "org.mozilla.components:concept-sync:${Versions.mozilla_android_components}"
     const val mozilla_concept_push = "org.mozilla.components:concept-push:${Versions.mozilla_android_components}"
 
-    const val mozilla_browser_awesomebar = "org.mozilla.components:browser-awesomebar:${Versions.mozilla_android_components}"
+    const val mozilla_compose_awesomebar = "org.mozilla.components:compose-awesomebar:${Versions.mozilla_android_components}"
+
     const val mozilla_browser_engine_gecko = "org.mozilla.components:browser-engine-gecko:${Versions.mozilla_android_components}"
     const val mozilla_browser_domains = "org.mozilla.components:browser-domains:${Versions.mozilla_android_components}"
-    const val mozilla_browser_session = "org.mozilla.components:browser-session:${Versions.mozilla_android_components}"
     const val mozilla_browser_session_storage = "org.mozilla.components:browser-session-storage:${Versions.mozilla_android_components}"
     const val mozilla_browser_state = "org.mozilla.components:browser-state:${Versions.mozilla_android_components}"
     const val mozilla_browser_tabstray = "org.mozilla.components:browser-tabstray:${Versions.mozilla_android_components}"
@@ -120,6 +125,7 @@ object Deps {
     const val androidx_appcompat = "androidx.appcompat:appcompat:${Versions.androidx_appcompat}"
     const val androidx_core_ktx = "androidx.core:core-ktx:${Versions.AndroidX.core}"
     const val androidx_constraintlayout = "androidx.constraintlayout:constraintlayout:${Versions.androidx_constraintlayout}"
+    const val androidx_lifecycle_process = "androidx.lifecycle:lifecycle-process:${Versions.AndroidX.lifecycle}"
     const val androidx_preference_ktx = "androidx.preference:preference-ktx:${Versions.androidx_preference}"
     const val androidx_work_runtime_ktx = "androidx.work:work-runtime-ktx:${Versions.workmanager}"
     const val androidx_compose_ui = "androidx.compose.ui:ui:${Versions.AndroidX.compose}"
@@ -127,6 +133,7 @@ object Deps {
     const val androidx_compose_foundation = "androidx.compose.foundation:foundation:${Versions.AndroidX.compose}"
     const val androidx_compose_material = "androidx.compose.material:material:${Versions.AndroidX.compose}"
     const val androidx_activity_compose = "androidx.activity:activity-compose:${Versions.AndroidX.activity_compose}"
+    const val androidx_swiperefreshlayout = "androidx.swiperefreshlayout:swiperefreshlayout:${Versions.AndroidX.swiperefreshlayout}"
 
     const val google_material = "com.google.android.material:material:${Versions.google_material}"
 

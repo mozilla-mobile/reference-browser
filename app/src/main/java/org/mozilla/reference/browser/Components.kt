@@ -7,14 +7,15 @@ package org.mozilla.reference.browser
 import android.content.Context
 import mozilla.components.feature.autofill.AutofillConfiguration
 import org.mozilla.reference.browser.autofill.AutofillConfirmActivity
+import org.mozilla.reference.browser.autofill.AutofillSearchActivity
 import org.mozilla.reference.browser.autofill.AutofillUnlockActivity
-import org.mozilla.reference.browser.components.Core
 import org.mozilla.reference.browser.components.Analytics
 import org.mozilla.reference.browser.components.BackgroundServices
+import org.mozilla.reference.browser.components.Core
 import org.mozilla.reference.browser.components.Push
 import org.mozilla.reference.browser.components.Services
-import org.mozilla.reference.browser.components.Utilities
 import org.mozilla.reference.browser.components.UseCases
+import org.mozilla.reference.browser.components.Utilities
 
 /**
  * Provides access to all components.
@@ -25,7 +26,6 @@ class Components(private val context: Context) {
         UseCases(
             context,
             core.engine,
-            core.sessionManager,
             core.store,
             core.shortcutManager
         )
@@ -61,6 +61,7 @@ class Components(private val context: Context) {
             publicSuffixList = utils.publicSuffixList,
             unlockActivity = AutofillUnlockActivity::class.java,
             confirmActivity = AutofillConfirmActivity::class.java,
+            searchActivity = AutofillSearchActivity::class.java,
             applicationName = context.getString(R.string.app_name),
             httpClient = core.client
         )

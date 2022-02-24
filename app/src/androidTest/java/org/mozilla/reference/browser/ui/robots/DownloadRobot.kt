@@ -10,20 +10,8 @@ import org.mozilla.reference.browser.helpers.TestHelper.packageName
 
 class DownloadRobot {
 
-    fun verifyDownloadPopup() = assertDownloadPopup()
-    fun clickCancelDownloadButton() = cancelDownloadButton().clickAndWaitForNewWindow()
-    fun clickDownloadButton() = downloadButton().clickAndWaitForNewWindow()
-    fun clickAllowButton() {
-        mDevice.waitForIdle()
-        mDevice.wait(Until.findObject(
-            By.res(getPermissionAllowID() + ":id/permission_message")), waitingTime)
-        mDevice.wait(Until.findObject(
-            By.res(getPermissionAllowID() + ":id/permission_allow_button")), waitingTime)
-
-        val allowButton = mDevice.findObject(
-            By.res(getPermissionAllowID() + ":id/permission_allow_button"))
-        allowButton.click()
-    }
+    fun clickCancelDownloadButton() = cancelDownload()
+    fun clickDownloadButton() = confirmDownload()
 
     class Transition
 }
@@ -34,8 +22,35 @@ fun downloadRobot(interact: DownloadRobot.() -> Unit): DownloadRobot.Transition 
     return DownloadRobot.Transition()
 }
 
-private fun cancelDownloadButton() = mDevice.findObject(UiSelector().resourceId("$packageName:id/close_button"))
-private fun downloadButton() = mDevice.findObject(UiSelector().resourceId("$packageName:id/download_button"))
+@Suppress("SwallowedException")
+private fun cancelDownload() {
+    try {
+        // Allow storage permission if displayed
+        clickAllowButton()
+        assertDownloadPopup()
+        mDevice.findObject(UiSelector().resourceId("$packageName:id/close_button")).clickAndWaitForNewWindow()
+    } catch (e: NullPointerException) {
+        println("The storage permission pop-up wasn't displayed")
+        assertDownloadPopup()
+        // Close RB's download prompt
+        mDevice.findObject(UiSelector().resourceId("$packageName:id/close_button")).clickAndWaitForNewWindow()
+    }
+}
+
+@Suppress("SwallowedException")
+private fun confirmDownload() {
+    try {
+        // Allow storage permission if displayed
+        clickAllowButton()
+        assertDownloadPopup()
+        mDevice.findObject(UiSelector().resourceId("$packageName:id/download_button")).clickAndWaitForNewWindow()
+    } catch (e: NullPointerException) {
+        println("The storage permission pop-up wasn't displayed")
+        assertDownloadPopup()
+        // Proceed with the download, click download from RB's download prompt
+        mDevice.findObject(UiSelector().resourceId("$packageName:id/download_button")).clickAndWaitForNewWindow()
+    }
+}
 
 private fun assertDownloadPopup() {
     mDevice.waitForIdle()
@@ -43,4 +58,25 @@ private fun assertDownloadPopup() {
         mDevice.findObject(UiSelector().resourceId("$packageName:id/filename"))
             .waitForExists(waitingTime)
     )
+}
+
+private fun clickAllowButton() {
+    mDevice.waitForIdle()
+    mDevice.wait(
+        Until.findObject(
+            By.res(getPermissionAllowID() + ":id/permission_message")
+        ),
+        waitingTime
+    )
+    mDevice.wait(
+        Until.findObject(
+            By.res(getPermissionAllowID() + ":id/permission_allow_button")
+        ),
+        waitingTime
+    )
+
+    val allowButton = mDevice.findObject(
+        By.res(getPermissionAllowID() + ":id/permission_allow_button")
+    )
+    allowButton.click()
 }

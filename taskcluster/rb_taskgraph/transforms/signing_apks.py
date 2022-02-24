@@ -6,7 +6,6 @@ Apply some defaults and minor modifications to the jobs defined in the build
 kind.
 """
 
-from __future__ import absolute_import, print_function, unicode_literals
 
 from taskgraph.transforms.base import TransformSequence
 
@@ -22,7 +21,7 @@ def build_signing_task(config, tasks):
             {
                 "taskId": {"task-reference": "<build>"},
                 "taskType": "build",
-                "paths": dep.attributes["apks"].values(),
+                "paths": list(dep.attributes["apks"].values()),
                 "formats": ["autograph_apk"],
             }
         ]

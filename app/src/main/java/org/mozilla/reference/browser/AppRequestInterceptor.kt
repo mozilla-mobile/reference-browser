@@ -60,7 +60,7 @@ class AppRequestInterceptor(private val context: Context) : RequestInterceptor {
         session: EngineSession,
         errorType: ErrorType,
         uri: String?
-    ): RequestInterceptor.ErrorResponse? {
+    ): RequestInterceptor.ErrorResponse {
         val errorPage = ErrorPages.createUrlEncodedErrorPage(context, errorType, uri)
         return RequestInterceptor.ErrorResponse(errorPage)
     }

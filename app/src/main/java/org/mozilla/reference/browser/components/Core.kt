@@ -5,17 +5,18 @@
 package org.mozilla.reference.browser.components
 
 import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
+import androidx.core.net.toUri
 import androidx.preference.PreferenceManager
+import mozilla.components.browser.engine.gecko.permission.GeckoSitePermissionsStorage
 import mozilla.components.browser.icons.BrowserIcons
-import mozilla.components.browser.session.Session
-import mozilla.components.browser.session.SessionManager
-import mozilla.components.browser.session.engine.EngineMiddleware
 import mozilla.components.browser.session.storage.SessionStorage
+import mozilla.components.browser.state.engine.EngineMiddleware
+import mozilla.components.browser.state.state.BrowserState
 import mozilla.components.browser.state.store.BrowserStore
 import mozilla.components.browser.storage.sync.PlacesHistoryStorage
 import mozilla.components.browser.storage.sync.RemoteTabsStorage
-import mozilla.components.service.sync.logins.SyncableLoginsStorage
 import mozilla.components.browser.thumbnails.ThumbnailsMiddleware
 import mozilla.components.browser.thumbnails.storage.ThumbnailStorage
 import mozilla.components.concept.engine.DefaultSettings
@@ -24,6 +25,8 @@ import mozilla.components.concept.engine.EngineSession.TrackingProtectionPolicy
 import mozilla.components.concept.fetch.Client
 import mozilla.components.feature.addons.AddonManager
 import mozilla.components.feature.addons.amo.AddonCollectionProvider
+import mozilla.components.feature.addons.migration.DefaultSupportedAddonsChecker
+import mozilla.components.feature.addons.migration.SupportedAddonsChecker
 import mozilla.components.feature.addons.update.AddonUpdater
 import mozilla.components.feature.addons.update.DefaultAddonUpdater
 import mozilla.components.feature.customtabs.store.CustomTabsServiceStore
@@ -36,20 +39,20 @@ import mozilla.components.feature.readerview.ReaderViewMiddleware
 import mozilla.components.feature.search.middleware.SearchMiddleware
 import mozilla.components.feature.search.region.RegionMiddleware
 import mozilla.components.feature.session.HistoryDelegate
-import mozilla.components.feature.sitepermissions.SitePermissionsStorage
+import mozilla.components.feature.sitepermissions.OnDiskSitePermissionsStorage
 import mozilla.components.feature.webnotifications.WebNotificationFeature
 import mozilla.components.lib.dataprotect.SecureAbove22Preferences
-import mozilla.components.lib.dataprotect.generateEncryptionKey
 import mozilla.components.service.location.LocationService
+import mozilla.components.service.sync.logins.SyncableLoginsStorage
 import org.mozilla.reference.browser.AppRequestInterceptor
 import org.mozilla.reference.browser.BrowserActivity
 import org.mozilla.reference.browser.EngineProvider
-import org.mozilla.reference.browser.ext.getPreferenceKey
 import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.R.string.pref_key_remote_debugging
 import org.mozilla.reference.browser.R.string.pref_key_tracking_protection_normal
 import org.mozilla.reference.browser.R.string.pref_key_tracking_protection_private
 import org.mozilla.reference.browser.downloads.DownloadService
+import org.mozilla.reference.browser.ext.getPreferenceKey
 import org.mozilla.reference.browser.media.MediaSessionService
 import org.mozilla.reference.browser.settings.Settings
 import java.util.concurrent.TimeUnit
@@ -99,12 +102,17 @@ class Core(private val context: Context) {
                 ),
                 SearchMiddleware(context),
                 RecordingDevicesMiddleware(context)
-            ) + EngineMiddleware.create(engine, ::findSessionById)
-        )
-    }
+            ) + EngineMiddleware.create(engine)
+        ).apply {
+            icons.install(engine, this)
 
-    private fun findSessionById(tabId: String): Session? {
-        return sessionManager.findSessionById(tabId)
+            WebNotificationFeature(
+                context, engine, icons, R.drawable.ic_notification,
+                geckoSitePermissionsStorage, BrowserActivity::class.java
+            )
+
+            MediaSessionFeature(context, MediaSessionService::class.java, this).start()
+        }
     }
 
     /**
@@ -113,24 +121,8 @@ class Core(private val context: Context) {
     val customTabsStore by lazy { CustomTabsServiceStore() }
 
     /**
-     * The session manager component provides access to a centralized registry of
-     * all browser sessions (i.e. tabs). It is initialized here to persist and restore
-     * sessions from the [SessionStorage], and with a default session (about:blank) in
-     * case all sessions/tabs are closed.
+     * The storage component for persisting browser tab sessions.
      */
-    val sessionManager by lazy {
-        SessionManager(engine, store).apply {
-
-            // Install the "icons" WebExtension to automatically load icons for every visited website.
-            icons.install(engine, store)
-
-            WebNotificationFeature(context, engine, icons, R.drawable.ic_notification,
-                sitePermissionsStorage, BrowserActivity::class.java)
-
-            MediaSessionFeature(context, MediaSessionService::class.java, store).start()
-        }
-    }
-
     val sessionStorage: SessionStorage by lazy {
         SessionStorage(context, engine)
     }
@@ -149,7 +141,7 @@ class Core(private val context: Context) {
     /**
      * The storage component to persist logins data (username/password) for websites.
      */
-    val lazyLoginsStorage = lazy { SyncableLoginsStorage(context, loginsEncryptionKey) }
+    val lazyLoginsStorage = lazy { SyncableLoginsStorage(context, lazySecurePrefs) }
 
     /**
      * A convenience accessor to the [SyncableLoginsStorage].
@@ -174,7 +166,10 @@ class Core(private val context: Context) {
     /**
      * A storage component for site permissions.
      */
-    val sitePermissionsStorage by lazy { SitePermissionsStorage(context) }
+    val geckoSitePermissionsStorage by lazy {
+        val geckoRuntime = EngineProvider.getOrCreateRuntime(context)
+        GeckoSitePermissionsStorage(geckoRuntime, OnDiskSitePermissionsStorage(context))
+    }
 
     /**
      * Icons component for loading, caching and processing website icons.
@@ -196,6 +191,18 @@ class Core(private val context: Context) {
         } else {
             provideDefaultAddonCollectionProvider()
         }
+    }
+
+    @Suppress("MagicNumber")
+    val supportedAddonsChecker by lazy {
+        DefaultSupportedAddonsChecker(
+            context, SupportedAddonsChecker.Frequency(12, TimeUnit.HOURS),
+            onNotificationClickIntent = Intent(context, BrowserActivity::class.java).apply {
+                action = Intent.ACTION_VIEW
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                data = "not-clear-what-to-put-here-scheme://settings_addon_manager".toUri()
+            }
+        )
     }
 
     private fun provideDefaultAddonCollectionProvider(): AddonCollectionProvider {
@@ -242,16 +249,9 @@ class Core(private val context: Context) {
         }
     }
 
-    private val loginsEncryptionKey by lazy {
-        val securePrefs = SecureAbove22Preferences(context, KEY_STORAGE_NAME)
-        securePrefs.getString(LOGINS_STORAGE_KEY) ?: generateEncryptionKey(KEY_STRENGTH).also {
-            securePrefs.putString(LOGINS_STORAGE_KEY, it)
-        }
-    }
+    private val lazySecurePrefs = lazy { SecureAbove22Preferences(context, KEY_STORAGE_NAME) }
 
     companion object {
-        private const val KEY_STRENGTH = 256
         private const val KEY_STORAGE_NAME = "core_prefs"
-        private const val LOGINS_STORAGE_KEY = "logins_storage"
     }
 }

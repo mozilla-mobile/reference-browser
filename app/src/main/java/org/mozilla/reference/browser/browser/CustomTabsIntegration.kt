@@ -11,9 +11,8 @@ import androidx.core.content.ContextCompat
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.map
 import mozilla.components.browser.menu2.BrowserMenuController
-import mozilla.components.browser.session.Session
-import mozilla.components.browser.session.SessionManager
 import mozilla.components.browser.state.selector.findCustomTab
+import mozilla.components.browser.state.state.CustomTabSessionState
 import mozilla.components.browser.state.state.SessionState
 import mozilla.components.browser.state.store.BrowserStore
 import mozilla.components.browser.toolbar.BrowserToolbar
@@ -38,9 +37,9 @@ import org.mozilla.reference.browser.BrowserActivity
 import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.ext.share
 
+@Suppress("LongParameterList")
 class CustomTabsIntegration(
     private val context: Context,
-    private val sessionManager: SessionManager,
     store: BrowserStore,
     toolbar: BrowserToolbar,
     private val engineView: EngineView,
@@ -50,7 +49,7 @@ class CustomTabsIntegration(
     private val activity: Activity?
 ) : LifecycleAwareFeature, UserInteractionHandler {
 
-    private val session = sessionManager.findSessionById(sessionId)
+    private val session = store.state.findCustomTab(sessionId)
     private val logger = Logger("CustomTabsIntegration")
 
     init {
@@ -61,8 +60,9 @@ class CustomTabsIntegration(
         toolbar.display.setUrlBackground(null)
     }
 
-    private fun menuToolbar(session: Session?): RowMenuCandidate {
+    private fun menuToolbar(session: CustomTabSessionState?): RowMenuCandidate {
         val tint = ContextCompat.getColor(context, R.color.icons)
+        val tabId = session?.id
 
         val forward = SmallMenuCandidate(
             contentDescription = "Forward",
@@ -72,7 +72,7 @@ class CustomTabsIntegration(
                 tint = tint
             )
         ) {
-            sessionUseCases.goForward.invoke(session)
+            sessionUseCases.goForward.invoke(tabId)
         }
 
         val refresh = SmallMenuCandidate(
@@ -83,7 +83,7 @@ class CustomTabsIntegration(
                 tint = tint
             )
         ) {
-            sessionUseCases.reload.invoke(session)
+            sessionUseCases.reload.invoke(tabId)
         }
 
         val stop = SmallMenuCandidate(
@@ -94,13 +94,13 @@ class CustomTabsIntegration(
                 tint = tint
             )
         ) {
-            sessionUseCases.stopLoading.invoke(session)
+            sessionUseCases.stopLoading.invoke(tabId)
         }
 
         return RowMenuCandidate(listOf(forward, refresh, stop))
     }
 
-    private fun menuItems(session: Session?, sessionState: SessionState?): List<MenuCandidate> {
+    private fun menuItems(sessionState: SessionState?): List<MenuCandidate> {
         return listOf(
             menuToolbar(session),
 
@@ -114,7 +114,7 @@ class CustomTabsIntegration(
                 isChecked = sessionState?.content?.desktopMode == true,
                 end = CompoundMenuCandidate.ButtonType.SWITCH
             ) { checked ->
-                sessionUseCases.requestDesktopSite.invoke(checked, session)
+                sessionUseCases.requestDesktopSite.invoke(checked, sessionState?.id)
             },
 
             TextMenuCandidate("Find in Page") {
@@ -126,9 +126,8 @@ class CustomTabsIntegration(
                 engineView.release()
 
                 // Stip the CustomTabConfig to turn this Session into a regular tab and then select it
-                session?.let { session ->
-                    session.customTabConfig = null
-                    sessionManager.select(session)
+                (sessionState as? CustomTabSessionState)?.let { session ->
+                    customTabsUseCases.migrate(session.id)
                 }
 
                 // Close this activity since it is no longer displaying any session
@@ -159,8 +158,7 @@ class CustomTabsIntegration(
             flow.map { state -> state.findCustomTab(sessionId) }
                 .ifChanged()
                 .collect { tab ->
-                    val session = sessionManager.findSessionById(sessionId)
-                    val items = menuItems(session, tab)
+                    val items = menuItems(tab)
                     val customTabItems = tab?.createCustomTabMenuCandidates(context).orEmpty()
                     menuController.submitList(items + customTabItems)
                 }

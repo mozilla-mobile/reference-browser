@@ -6,7 +6,6 @@ Apply some defaults and minor modifications to the jobs defined in the build
 kind.
 """
 
-from __future__ import absolute_import, print_function, unicode_literals
 
 from taskgraph.transforms.base import TransformSequence
 from taskgraph.util.treeherder import inherit_treeherder_from_dep
@@ -30,7 +29,7 @@ def build_pushapk_task(config, tasks):
             {
                 "taskId": {"task-reference": "<signing>"},
                 "taskType": "signing",
-                "paths": dep.attributes["apks"].values(),
+                "paths": list(dep.attributes["apks"].values()),
             }
         ]
         task["worker"]["dep"] = config.params["level"] != "3"

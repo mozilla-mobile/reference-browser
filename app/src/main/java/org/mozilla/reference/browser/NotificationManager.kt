@@ -7,7 +7,6 @@ package org.mozilla.reference.browser
 import android.annotation.TargetApi
 import android.app.Notification
 import android.app.NotificationChannel
-import android.app.NotificationManager as AndroidNotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
@@ -23,6 +22,7 @@ import mozilla.components.concept.sync.TabData
 import mozilla.components.support.base.log.logger.Logger
 import org.mozilla.reference.browser.IntentRequestCodes.REQUEST_CODE_DATA_REPORTING
 import org.mozilla.reference.browser.IntentRequestCodes.REQUEST_CODE_SEND_TAB
+import android.app.NotificationManager as AndroidNotificationManager
 
 /**
  * Manages notification channels and allows displaying different supported types of notifications.
@@ -58,11 +58,17 @@ object NotificationManager {
             val intent = Intent(Intent.ACTION_VIEW, Uri.parse(tab.url)).apply {
                 flags = Intent.FLAG_ACTIVITY_NEW_TASK
             }
+            val flags = if (SDK_INT >= Build.VERSION_CODES.S) {
+                PendingIntent.FLAG_MUTABLE or PendingIntent.FLAG_ONE_SHOT
+            } else {
+                PendingIntent.FLAG_ONE_SHOT
+            }
+
             val pendingIntent: PendingIntent = PendingIntent.getActivity(
                 context,
                 REQUEST_CODE_SEND_TAB,
                 intent,
-                PendingIntent.FLAG_ONE_SHOT
+                flags
             )
             val importance = if (SDK_INT >= Build.VERSION_CODES.N) {
                 // We pick 'IMPORTANCE_HIGH' priority because this is a user-triggered action that is
@@ -123,8 +129,14 @@ object NotificationManager {
             setPackage(context.packageName)
         }
 
+        val flags = if (SDK_INT >= Build.VERSION_CODES.S) {
+            PendingIntent.FLAG_MUTABLE
+        } else {
+            0
+        }
+
         val pendingIntent =
-            PendingIntent.getActivity(context, REQUEST_CODE_DATA_REPORTING, intent, 0)
+            PendingIntent.getActivity(context, REQUEST_CODE_DATA_REPORTING, intent, flags)
 
         val notificationBuilder = NotificationCompat.Builder(
             context,

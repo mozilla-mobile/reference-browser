@@ -34,6 +34,10 @@ android {
         compose true
     }
 
+    composeOptions {
+        kotlinCompilerExtensionVersion = Versions.compose_version
+    }
+
     buildTypes {
         debug {
             applicationIdSuffix ".debug"
@@ -195,7 +199,21 @@ if (project.hasProperty("telemetry") && project.property("telemetry") == "true")
     }
 }
 
+// Select the Glean from GeckoView.
+// `service-sync-logins` requires Glean, which pulls in glean-native,
+// but that's also provided by geckoview-omni, so now we need to select which one to use.
+project.configurations.all {
+    resolutionStrategy.capabilitiesResolution.withCapability("org.mozilla.telemetry:glean-native") {
+        def toBeSelected = candidates.find { it.id instanceof ModuleComponentIdentifier && it.id.module.contains('geckoview') }
+        if (toBeSelected != null) {
+            select(toBeSelected)
+        }
+        because 'use GeckoView Glean instead of standalone Glean'
+    }
+}
+
 dependencies {
+    implementation Deps.mozilla_concept_awesomebar
     implementation Deps.mozilla_concept_engine
     implementation Deps.mozilla_concept_menu
     implementation Deps.mozilla_concept_tabstray
@@ -204,15 +222,15 @@ dependencies {
     implementation Deps.mozilla_concept_sync
     implementation Deps.mozilla_concept_push
 
+    implementation Deps.mozilla_compose_awesomebar
+
     implementation Deps.mozilla_browser_engine_gecko
 
-    implementation Deps.mozilla_browser_awesomebar
     implementation Deps.mozilla_browser_domains
     implementation Deps.mozilla_browser_tabstray
     implementation Deps.mozilla_browser_toolbar
     implementation Deps.mozilla_browser_menu
     implementation Deps.mozilla_browser_menu2
-    implementation Deps.mozilla_browser_session
     implementation Deps.mozilla_browser_session_storage
     implementation Deps.mozilla_browser_state
     implementation Deps.mozilla_browser_storage_sync
@@ -275,7 +293,9 @@ dependencies {
     implementation Deps.androidx_appcompat
     implementation Deps.androidx_core_ktx
     implementation Deps.androidx_constraintlayout
+    implementation Deps.androidx_lifecycle_process
     implementation Deps.androidx_preference_ktx
+    implementation Deps.androidx_swiperefreshlayout
     implementation Deps.androidx_work_runtime_ktx
 
     implementation Deps.androidx_activity_compose

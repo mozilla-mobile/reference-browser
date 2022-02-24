@@ -51,15 +51,40 @@ class CustomTabRobot {
         link.click()
     }
 
+    @Suppress("SwallowedException")
     fun switchRequestDesktopSiteToggle() {
-        mDevice.findObject(UiSelector().textContains("Request desktop site"))
-            .waitForExists(waitingTime)
-        requestDesktopButton().click()
-        mDevice.waitForIdle()
+        try {
+            // Click the Request desktop site toggle
+            mDevice.findObject(UiSelector().textContains("Request desktop site"))
+                .waitForExists(waitingTime)
+            requestDesktopButton().click()
+            mDevice.waitForIdle()
+            assertTrue(
+                mDevice.findObject(
+                    UiSelector()
+                        .resourceId("$packageName:id/mozac_browser_menu_recyclerView")
+                ).waitUntilGone(waitingTime)
+            )
+        } catch (e: AssertionError) {
+            println("Failed to click request desktop toggle")
+            // If the click didn't succeed the main menu remains displayed and should be dismissed
+            mDevice.pressBack()
+            customTabScreen {
+            }.openMainMenu {
+            }
+            // Click again the Request desktop site toggle
+            mDevice.findObject(UiSelector().textContains("Request desktop site"))
+                .waitForExists(waitingTime)
+            requestDesktopButton().click()
+            mDevice.waitForIdle()
+        }
     }
 
     class Transition {
         fun openMainMenu(interact: CustomTabRobot.() -> Unit): Transition {
+            mDevice.findObject(UiSelector().resourceId("$packageName:id/mozac_browser_toolbar_menu"))
+                .waitForExists(waitingTime)
+
             menuButton().click()
 
             CustomTabRobot().interact()

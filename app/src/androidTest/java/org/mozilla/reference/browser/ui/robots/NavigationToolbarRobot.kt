@@ -43,10 +43,14 @@ class NavigationToolbarRobot {
         fun enterUrlAndEnterToBrowser(url: Uri, interact: BrowserRobot.() -> Unit): BrowserRobot.Transition {
             mDevice.waitForIdle()
             urlBar().perform(click())
-            awesomeBar().perform(replaceText(url.toString()),
-                    pressImeActionButton())
-            mDevice.findObject(UiSelector()
-                .resourceId("$packageName:id/mozac_browser_toolbar_progress")).waitForExists(waitingTime)
+            awesomeBar().perform(
+                replaceText(url.toString()),
+                pressImeActionButton()
+            )
+            mDevice.findObject(
+                UiSelector()
+                    .resourceId("$packageName:id/mozac_browser_toolbar_progress")
+            ).waitForExists(waitingTime)
             mDevice.waitForIdle()
 
             BrowserRobot().interact()
@@ -54,8 +58,10 @@ class NavigationToolbarRobot {
         }
 
         fun openThreeDotMenu(interact: ThreeDotMenuRobot.() -> Unit): ThreeDotMenuRobot.Transition {
-            mDevice.findObject(UiSelector()
-                .resourceId("$packageName:id/mozac_browser_toolbar_menu"))
+            mDevice.findObject(
+                UiSelector()
+                    .resourceId("$packageName:id/mozac_browser_toolbar_menu")
+            )
                 .waitForExists(waitingTime)
             threeDotMenuButton().click()
 
@@ -71,6 +77,9 @@ class NavigationToolbarRobot {
 
         fun clickToolbar(interact: AwesomeBarRobot.() -> Unit): AwesomeBarRobot.Transition {
             urlBar().click()
+            mDevice.waitForIdle()
+            mDevice.findObject(UiSelector().textContains("Search or enter address"))
+                .waitForExists(waitingTime)
             AwesomeBarRobot().interact()
             return AwesomeBarRobot.Transition()
         }

@@ -19,8 +19,11 @@ class NotificationRobot {
             try {
                 notificationFound =
                     notificationTray()
-                        .getChildByText(UiSelector()
-                            .text(notificationMessage), notificationMessage, true)
+                        .getChildByText(
+                            UiSelector()
+                                .text(notificationMessage),
+                            notificationMessage, true
+                        )
                         .waitForExists(waitingTime)
                 assertFalse(notificationFound)
             } catch (e: UiObjectNotFoundException) {
@@ -41,8 +44,11 @@ class NotificationRobot {
             try {
                 notificationFound =
                     notificationTray()
-                        .getChildByText(UiSelector()
-                            .text(notificationMessage), notificationMessage, true)
+                        .getChildByText(
+                            UiSelector()
+                                .text(notificationMessage),
+                            notificationMessage, true
+                        )
                         .waitForExists(waitingTime)
                 assertTrue(notificationFound)
             } catch (e: UiObjectNotFoundException) {
