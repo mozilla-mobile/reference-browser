@@ -21,7 +21,7 @@ private object Versions {
 
     const val mozilla_android_components = AndroidComponents.VERSION
 
-    const val thirdparty_sentry = "1.7.10"
+    const val thirdparty_sentry = "5.6.2"
 
     const val espresso_core = "3.1.0"
     const val espresso_version = "3.1.0"
@@ -116,6 +116,7 @@ object Deps {
     const val mozilla_support_webextensions = "org.mozilla.components:support-webextensions:${Versions.mozilla_android_components}"
 
     const val mozilla_lib_crash = "org.mozilla.components:lib-crash:${Versions.mozilla_android_components}"
+    const val mozilla_lib_crash_sentry = "org.mozilla.components:lib-crash-sentry:${Versions.mozilla_android_components}"
     const val mozilla_lib_push_firebase = "org.mozilla.components:lib-push-firebase:${Versions.mozilla_android_components}"
     const val mozilla_lib_dataprotect = "org.mozilla.components:lib-dataprotect:${Versions.mozilla_android_components}"
     const val mozilla_lib_publicsuffixlist = "org.mozilla.components:lib-publicsuffixlist:${Versions.mozilla_android_components}"

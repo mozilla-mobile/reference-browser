@@ -10,9 +10,9 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import mozilla.components.lib.crash.CrashReporter
+import mozilla.components.lib.crash.sentry.SentryService
 import mozilla.components.lib.crash.service.CrashReporterService
 import mozilla.components.lib.crash.service.MozillaSocorroService
-import mozilla.components.lib.crash.service.SentryService
 import org.mozilla.geckoview.BuildConfig.MOZ_APP_BUILDID
 import org.mozilla.geckoview.BuildConfig.MOZ_APP_VENDOR
 import org.mozilla.geckoview.BuildConfig.MOZ_APP_VERSION
