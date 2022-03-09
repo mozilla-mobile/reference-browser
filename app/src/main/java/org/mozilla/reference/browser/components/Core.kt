@@ -26,8 +26,6 @@ import mozilla.components.concept.fetch.Client
 import mozilla.components.feature.addons.AddonManager
 import mozilla.components.feature.addons.amo.AddonCollectionProvider
 import mozilla.components.feature.addons.migration.DefaultSupportedAddonsChecker
-import mozilla.components.feature.addons.migration.SupportedAddonsChecker
-import mozilla.components.feature.addons.update.AddonUpdater
 import mozilla.components.feature.addons.update.DefaultAddonUpdater
 import mozilla.components.feature.customtabs.store.CustomTabsServiceStore
 import mozilla.components.feature.downloads.DownloadMiddleware
@@ -44,6 +42,7 @@ import mozilla.components.feature.webnotifications.WebNotificationFeature
 import mozilla.components.lib.dataprotect.SecureAbove22Preferences
 import mozilla.components.service.location.LocationService
 import mozilla.components.service.sync.logins.SyncableLoginsStorage
+import mozilla.components.support.base.worker.Frequency
 import org.mozilla.reference.browser.AppRequestInterceptor
 import org.mozilla.reference.browser.BrowserActivity
 import org.mozilla.reference.browser.EngineProvider
@@ -182,7 +181,7 @@ class Core(private val context: Context) {
     }
 
     val addonUpdater by lazy {
-        DefaultAddonUpdater(context, AddonUpdater.Frequency(1, TimeUnit.DAYS))
+        DefaultAddonUpdater(context, Frequency(1, TimeUnit.DAYS))
     }
 
     val addonCollectionProvider by lazy {
@@ -196,7 +195,7 @@ class Core(private val context: Context) {
     @Suppress("MagicNumber")
     val supportedAddonsChecker by lazy {
         DefaultSupportedAddonsChecker(
-            context, SupportedAddonsChecker.Frequency(12, TimeUnit.HOURS),
+            context, Frequency(12, TimeUnit.HOURS),
             onNotificationClickIntent = Intent(context, BrowserActivity::class.java).apply {
                 action = Intent.ACTION_VIEW
                 flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
