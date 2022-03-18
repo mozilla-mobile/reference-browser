@@ -22,7 +22,7 @@ job-defaults:
     apk-artifact-template:
         type: file
         name: public/target.{abi}.apk
-        path: '/builds/worker/checkouts/src/app/build/outputs/apk/{gradle_build_type}/{fileName}'
+        path: '/builds/worker/checkouts/vcs/app/build/outputs/apk/{gradle_build_type}/{fileName}'
     description: Build Reference Browser from source code.
     fetches:
         toolchain:

@@ -3,12 +3,7 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 
-import os
-
 from importlib import import_module
-from six import text_type
-from taskgraph.parameters import extend_parameters_schema
-from voluptuous import Required
 
 
 def register(graph_config):
