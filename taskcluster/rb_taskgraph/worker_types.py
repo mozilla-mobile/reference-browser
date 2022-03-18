@@ -3,8 +3,6 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 
-from six import text_type
-
 from voluptuous import Required
 
 from taskgraph.util.schema import taskref_or_string
