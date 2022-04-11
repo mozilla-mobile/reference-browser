@@ -60,7 +60,8 @@ class ContextMenusTest {
         }.enterUrlAndEnterToBrowser(pageLinks.url) {
             longClickMatchingText("Link 1")
             clickContextOpenLinkInNewTab()
-        }.openNavigationToolbar {
+        }
+        navigationToolbar {
         }.openTabTrayMenu {
             verifyRegularBrowsingTab()
             verifyExistingOpenTabs(pageLinks.title)
@@ -77,7 +78,8 @@ class ContextMenusTest {
         }.enterUrlAndEnterToBrowser(pageLinks.url) {
             longClickMatchingText("Link 1")
             clickContextOpenLinkInPrivateTab()
-        }.openNavigationToolbar {
+        }
+        navigationToolbar {
         }.openTabTrayMenu {
             openPrivateBrowsing()
             verifyPrivateBrowsingTab()
@@ -94,7 +96,8 @@ class ContextMenusTest {
         }.enterUrlAndEnterToBrowser(pageLinks.url) {
             longClickMatchingText("Link 1")
             clickContextCopyLink()
-        }.openNavigationToolbar {
+        }
+        navigationToolbar {
         }.clickToolbar {
             pasteAndLoadCopiedLink()
         }
@@ -123,7 +126,8 @@ class ContextMenusTest {
         navigationToolbar {
         }.enterUrlAndEnterToBrowser(genericURL.url) {
             longClickAndCopyText("content")
-        }.openNavigationToolbar {
+        }
+        navigationToolbar {
         }.clickToolbar {
             clickClearToolbarButton()
             longClickToolbar()
@@ -139,7 +143,8 @@ class ContextMenusTest {
         navigationToolbar {
         }.enterUrlAndEnterToBrowser(genericURL.url) {
             longClickAndCopyText("content", true)
-        }.openNavigationToolbar {
+        }
+        navigationToolbar {
         }.clickToolbar {
             clickClearToolbarButton()
             longClickToolbar()

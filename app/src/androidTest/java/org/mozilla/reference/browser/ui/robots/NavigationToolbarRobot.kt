@@ -6,9 +6,6 @@ package org.mozilla.reference.browser.ui.robots
 
 import android.net.Uri
 import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.action.ViewActions.click
-import androidx.test.espresso.action.ViewActions.pressImeActionButton
-import androidx.test.espresso.action.ViewActions.replaceText
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibility
@@ -41,17 +38,14 @@ class NavigationToolbarRobot {
         val mDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
 
         fun enterUrlAndEnterToBrowser(url: Uri, interact: BrowserRobot.() -> Unit): BrowserRobot.Transition {
-            mDevice.waitForIdle()
-            urlBar().perform(click())
-            awesomeBar().perform(
-                replaceText(url.toString()),
-                pressImeActionButton()
-            )
+            urlBar().click()
+            awesomeBar().setText(url.toString())
+            mDevice.pressEnter()
+
             mDevice.findObject(
                 UiSelector()
                     .resourceId("$packageName:id/mozac_browser_toolbar_progress")
-            ).waitForExists(waitingTime)
-            mDevice.waitForIdle()
+            ).waitUntilGone(waitingTime)
 
             BrowserRobot().interact()
             return BrowserRobot.Transition()
@@ -100,8 +94,10 @@ fun navigationToolbar(interact: NavigationToolbarRobot.() -> Unit): NavigationTo
 
 private fun openTabTray() = onView(withId(R.id.counter_box))
 private var numberOfOpenTabsTabCounter = onView(withId(R.id.counter_text))
-private fun urlBar() = onView(withId(R.id.mozac_browser_toolbar_url_view))
-private fun awesomeBar() = onView(withId(R.id.mozac_browser_toolbar_edit_url_view))
+private fun urlBar() =
+    mDevice.findObject(UiSelector().resourceId("$packageName:id/mozac_browser_toolbar_url_view"))
+private fun awesomeBar() =
+    mDevice.findObject(UiSelector().resourceId("$packageName:id/mozac_browser_toolbar_edit_url_view"))
 private fun threeDotMenuButton() = onView(withId(R.id.mozac_browser_toolbar_menu))
 private fun readerViewButton() = onView(withId(R.id.mozac_browser_toolbar_page_actions))
 

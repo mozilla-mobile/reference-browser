@@ -46,7 +46,7 @@ class DownloadTest {
         }.enterUrlAndEnterToBrowser(downloadPage.url) {}
 
         downloadRobot {
-            clickCancelDownloadButton()
+            cancelDownload()
         }
 
         notificationShade {
@@ -63,7 +63,7 @@ class DownloadTest {
         }.enterUrlAndEnterToBrowser(downloadPage.url) {}
 
         downloadRobot {
-            clickDownloadButton()
+            confirmDownload()
         }
 
         notificationShade {

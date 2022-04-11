@@ -15,14 +15,13 @@ import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.uiautomator.By
 import androidx.test.uiautomator.UiDevice
 import androidx.test.uiautomator.UiSelector
-import androidx.test.uiautomator.Until
 import junit.framework.Assert.assertTrue
 import org.hamcrest.CoreMatchers.allOf
 import org.mozilla.reference.browser.R
-import org.mozilla.reference.browser.ext.waitAndInteract
 import org.mozilla.reference.browser.helpers.Constants.LONG_CLICK_DURATION
 import org.mozilla.reference.browser.helpers.TestAssetHelper.waitingTime
 import org.mozilla.reference.browser.helpers.TestHelper.packageName
+import org.mozilla.reference.browser.helpers.TestHelper.waitForObjects
 
 /**
  * Implementation of Robot Pattern for browser action.
@@ -32,8 +31,13 @@ class BrowserRobot {
     * document.querySelector('#testContent').innerText == expectedText
     */
     fun verifyPageContent(expectedText: String) {
-        val mDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
-        mDevice.waitAndInteract(Until.findObject(By.textContains(expectedText))) {}
+        mDevice.waitForObjects(mDevice.findObject(UiSelector().resourceId("android.webkit.WebView")))
+        assertTrue(
+            mDevice.findObject(
+                UiSelector()
+                    .textContains(expectedText)
+            ).waitForExists(waitingTime)
+        )
     }
 
     fun verifyFXAUrl() {
@@ -232,13 +236,6 @@ class BrowserRobot {
     class Transition {
         private val device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
 
-        fun openNavigationToolbar(interact: NavigationToolbarRobot.() -> Unit): NavigationToolbarRobot.Transition {
-            device.pressMenu()
-
-            NavigationToolbarRobot().interact()
-            return NavigationToolbarRobot.Transition()
-        }
-
         fun checkExternalApps(interact: ExternalAppsRobot.() -> Unit): ExternalAppsRobot.Transition {
             mDevice.waitForWindowUpdate(packageName, waitingTime)
             ExternalAppsRobot().interact()
@@ -260,6 +257,10 @@ class BrowserRobot {
 
         fun goBack(interact: BrowserRobot.() -> Unit): BrowserRobot.Transition {
             mDevice.pressBack()
+            mDevice.findObject(
+                UiSelector()
+                    .resourceId("$packageName:id/mozac_browser_toolbar_progress")
+            ).waitUntilGone(waitingTime)
             BrowserRobot().interact()
             return BrowserRobot.Transition()
         }
