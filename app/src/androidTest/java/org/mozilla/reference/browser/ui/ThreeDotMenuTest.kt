@@ -202,6 +202,7 @@ class ThreeDotMenuTest {
 
         navigationToolbar {
         }.enterUrlAndEnterToBrowser(defaultWebPage.url) {
+            verifyPageContent("Page content: 1")
         }
         navigationToolbar {
         }.openThreeDotMenu {

@@ -15,6 +15,7 @@ import org.junit.Assert.assertTrue
 import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.helpers.TestAssetHelper.waitingTime
 import org.mozilla.reference.browser.helpers.TestHelper.packageName
+import org.mozilla.reference.browser.helpers.TestHelper.waitForObjects
 import org.mozilla.reference.browser.helpers.click
 
 /**
@@ -52,7 +53,7 @@ private fun findInPagePreviousButton() = onView(withId(R.id.find_in_page_prev_bt
 private fun findInPageCloseButton() = onView(withId(R.id.find_in_page_close_btn))
 
 private fun assertFindInPageBarExists() {
-    mDevice.findObject(UiSelector().resourceId("$packageName:id/findInPageBar")).waitForExists(waitingTime)
+    mDevice.waitForObjects(mDevice.findObject(UiSelector().resourceId("$packageName:id/findInPageBar")))
     findInPageBar().check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
     findInPagePreviousButton().check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
     findInPageNextButton().check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
