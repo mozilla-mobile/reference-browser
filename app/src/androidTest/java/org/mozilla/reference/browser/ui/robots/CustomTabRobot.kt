@@ -128,7 +128,7 @@ private fun actionButton() = onView(withContentDescription("Share link"))
 private fun forwardButton() = onView(withContentDescription("Forward"))
 private fun refreshButton() = onView(withContentDescription("Refresh"))
 private fun stopButton() = onView(withContentDescription("Stop"))
-private fun shareButton() = onView(withText("Share"))
+private fun shareButton() = mDevice.findObject(UiSelector().textContains("Share"))
 private fun requestDesktopButton() = onView(withSubstring("Request desktop site"))
 private fun findInPage() = onView(withText("Find in Page"))
 private fun openInBrowserButton() = onView(withText("Open in Browser"))
@@ -160,7 +160,7 @@ private fun assertRefreshButton() =
 private fun assertStopButton() =
     stopButton().check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
 private fun assertShareButton() =
-    shareButton().check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+    assertTrue(shareButton().waitForExists(waitingTime))
 private fun assertRequestDesktopButton() =
     requestDesktopButton().check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
 private fun assertFindInPageButton() =
