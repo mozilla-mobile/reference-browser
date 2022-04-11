@@ -55,6 +55,10 @@ class ThreeDotMenuRobot {
 
         fun goForward(interact: BrowserRobot.() -> Unit): BrowserRobot.Transition {
             forwardButton().click()
+            mDevice.findObject(
+                UiSelector()
+                    .resourceId("$packageName:id/mozac_browser_toolbar_progress")
+            ).waitUntilGone(waitingTime)
             mDevice.waitForIdle()
 
             BrowserRobot().interact()

@@ -9,47 +9,22 @@ import org.mozilla.reference.browser.helpers.TestHelper.getPermissionAllowID
 import org.mozilla.reference.browser.helpers.TestHelper.packageName
 
 class DownloadRobot {
+    fun cancelDownload() {
+        closeDownloadButton.waitForExists(waitingTime)
+        closeDownloadButton.click()
+    }
 
-    fun clickCancelDownloadButton() = cancelDownload()
-    fun clickDownloadButton() = confirmDownload()
+    fun confirmDownload() {
+        downloadButton.waitForExists(waitingTime)
+        downloadButton.click()
+    }
 
     class Transition
 }
 
 fun downloadRobot(interact: DownloadRobot.() -> Unit): DownloadRobot.Transition {
-    mDevice.waitForIdle()
     DownloadRobot().interact()
     return DownloadRobot.Transition()
-}
-
-@Suppress("SwallowedException")
-private fun cancelDownload() {
-    try {
-        // Allow storage permission if displayed
-        clickAllowButton()
-        assertDownloadPopup()
-        mDevice.findObject(UiSelector().resourceId("$packageName:id/close_button")).clickAndWaitForNewWindow()
-    } catch (e: NullPointerException) {
-        println("The storage permission pop-up wasn't displayed")
-        assertDownloadPopup()
-        // Close RB's download prompt
-        mDevice.findObject(UiSelector().resourceId("$packageName:id/close_button")).clickAndWaitForNewWindow()
-    }
-}
-
-@Suppress("SwallowedException")
-private fun confirmDownload() {
-    try {
-        // Allow storage permission if displayed
-        clickAllowButton()
-        assertDownloadPopup()
-        mDevice.findObject(UiSelector().resourceId("$packageName:id/download_button")).clickAndWaitForNewWindow()
-    } catch (e: NullPointerException) {
-        println("The storage permission pop-up wasn't displayed")
-        assertDownloadPopup()
-        // Proceed with the download, click download from RB's download prompt
-        mDevice.findObject(UiSelector().resourceId("$packageName:id/download_button")).clickAndWaitForNewWindow()
-    }
 }
 
 private fun assertDownloadPopup() {
@@ -80,3 +55,6 @@ private fun clickAllowButton() {
     )
     allowButton.click()
 }
+
+private val closeDownloadButton = mDevice.findObject(UiSelector().resourceId("$packageName:id/close_button"))
+private val downloadButton = mDevice.findObject(UiSelector().resourceId("$packageName:id/download_button"))

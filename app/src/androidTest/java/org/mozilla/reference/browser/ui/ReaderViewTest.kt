@@ -41,7 +41,8 @@ class ReaderViewTest {
 
         navigationToolbar {
         }.enterUrlAndEnterToBrowser(readerViewPage.url) {
-        }.openNavigationToolbar {
+        }
+        navigationToolbar {
             verifyReaderViewButton()
         }.clickReaderViewButton {
             verifyAppearanceButtonExists()
@@ -61,7 +62,8 @@ class ReaderViewTest {
 
         navigationToolbar {
         }.enterUrlAndEnterToBrowser(readerViewPage.url) {
-        }.openNavigationToolbar {
+        }
+        navigationToolbar {
             verifyReaderViewButton()
         }.clickReaderViewButton {
             verifyAppearanceButtonExists()
@@ -81,7 +83,8 @@ class ReaderViewTest {
 
         navigationToolbar {
         }.enterUrlAndEnterToBrowser(readerViewPage.url) {
-        }.openNavigationToolbar {
+        }
+        navigationToolbar {
             verifyReaderViewButton()
         }.clickReaderViewButton {
             verifyAppearanceButtonExists()
@@ -103,7 +106,8 @@ class ReaderViewTest {
 
         navigationToolbar {
         }.enterUrlAndEnterToBrowser(readerViewPage.url) {
-        }.openNavigationToolbar {
+        }
+        navigationToolbar {
             verifyReaderViewButton()
         }.clickReaderViewButton {
             verifyAppearanceButtonExists()

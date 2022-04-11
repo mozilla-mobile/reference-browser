@@ -90,7 +90,8 @@ class ThreeDotMenuTest {
             // pull up URL to ensure this is not a first-user 3 dot menu
         }.enterUrlAndEnterToBrowser(defaultWebPage.url) {
             mDevice.waitForIdle()
-        }.openNavigationToolbar {
+        }
+        navigationToolbar {
         }.openThreeDotMenu {
             verifyThreeDotMenuExists()
             verifyForwardButtonExists()
@@ -115,16 +116,18 @@ class ThreeDotMenuTest {
 
         navigationToolbar {
         }.enterUrlAndEnterToBrowser(defaultWebPage.url) {
-            verifyUrl(defaultWebPage.url.toString())
-        }.openNavigationToolbar {
+            verifyPageContent("Page content: 1")
+        }
+        navigationToolbar {
         }.enterUrlAndEnterToBrowser(nextWebPage.url) {
-            verifyUrl(nextWebPage.url.toString())
+            verifyPageContent("Page content: 2")
         }.goBack {
-            verifyUrl(defaultWebPage.url.toString())
-        }.openNavigationToolbar {
+            verifyPageContent("Page content: 1")
+        }
+        navigationToolbar {
         }.openThreeDotMenu {
         }.goForward {
-            verifyUrl(nextWebPage.url.toString())
+            verifyPageContent("Page content: 2")
         }
     }
 
@@ -140,12 +143,14 @@ class ThreeDotMenuTest {
         }.openNewTab {
         }.enterUrlAndEnterToBrowser(defaultWebPage.url) {
             verifyUrl(defaultWebPage.url.toString())
-        }.openNavigationToolbar {
+        }
+        navigationToolbar {
         }.enterUrlAndEnterToBrowser(nextWebPage.url) {
             verifyUrl(nextWebPage.url.toString())
         }.goBack {
             verifyUrl(defaultWebPage.url.toString())
-        }.openNavigationToolbar {
+        }
+        navigationToolbar {
         }.openThreeDotMenu {
         }.goForward {
             verifyUrl(nextWebPage.url.toString())
@@ -167,13 +172,13 @@ class ThreeDotMenuTest {
 
         }.enterUrlAndEnterToBrowser(refreshWebPage.url) {
             verifyPageContent("DEFAULT")
-        }.openNavigationToolbar {
+        }
+        navigationToolbar {
         }.openThreeDotMenu {
 
             // refresh page and verify
         }.refreshPage {
             verifyPageContent("REFRESHED")
-        }.openNavigationToolbar {
         }
     }
 
@@ -183,7 +188,8 @@ class ThreeDotMenuTest {
 
         navigationToolbar {
         }.enterUrlAndEnterToBrowser(genericURL.url) {
-        }.openNavigationToolbar {
+        }
+        navigationToolbar {
         }.openThreeDotMenu {
         }.openShare {
             verifyShareContentPanel()
@@ -196,7 +202,8 @@ class ThreeDotMenuTest {
 
         navigationToolbar {
         }.enterUrlAndEnterToBrowser(defaultWebPage.url) {
-        }.openNavigationToolbar {
+        }
+        navigationToolbar {
         }.openThreeDotMenu {
         }.openFindInPage {
             verifyFindInPageBar()
@@ -220,7 +227,8 @@ class ThreeDotMenuTest {
         navigationToolbar {
         }.enterUrlAndEnterToBrowser(loremIpsumWebPage.url) {
             mDevice.waitForIdle()
-        }.openNavigationToolbar {
+        }
+        navigationToolbar {
         }.openThreeDotMenu {
         }.reportIssue {
             mDevice.waitForIdle()
@@ -244,7 +252,8 @@ class ThreeDotMenuTest {
 
         navigationToolbar {
         }.enterUrlAndEnterToBrowser(defaultWebPage.url) {
-        }.openNavigationToolbar {
+        }
+        navigationToolbar {
         }.openThreeDotMenu {
         }.openSyncedTabs {
             verifyNotSignedInSyncTabsView()
@@ -257,7 +266,8 @@ class ThreeDotMenuTest {
 
         navigationToolbar {
         }.enterUrlAndEnterToBrowser(defaultWebPage.url) {
-        }.openNavigationToolbar {
+        }
+        navigationToolbar {
         }.openThreeDotMenu {
         }.switchRequestDesktopSiteToggle {
         }.openThreeDotMenu {
@@ -276,7 +286,8 @@ class ThreeDotMenuTest {
 
         navigationToolbar {
         }.enterUrlAndEnterToBrowser(defaultWebPage.url) {
-        }.openNavigationToolbar {
+        }
+        navigationToolbar {
         }.openThreeDotMenu {
         }.openAddToHomeScreen {
             clickCancelAddToHomeScreenButton()

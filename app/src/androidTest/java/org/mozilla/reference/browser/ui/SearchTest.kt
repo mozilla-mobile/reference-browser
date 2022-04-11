@@ -45,7 +45,8 @@ class SearchTest {
 
         navigationToolbar {
         }.enterUrlAndEnterToBrowser(defaultWebPage.url) {
-        }.openNavigationToolbar {
+        }
+        navigationToolbar {
         }.openTabTrayMenu {
         }.openNewTab {
         }.clickToolbar {

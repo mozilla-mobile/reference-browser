@@ -168,7 +168,8 @@ class TabTrayMenuTest {
         }.openNewTab {
         }.enterUrlAndEnterToBrowser(genericURL.url) {
             verifyUrl(genericURL.url.toString())
-        }.openNavigationToolbar {
+        }
+        navigationToolbar {
             checkNumberOfTabsTabCounter("2")
         }.openTabTrayMenu {
             verifyExistingOpenTabs("about:blank")
@@ -194,8 +195,9 @@ class TabTrayMenuTest {
             openPrivateBrowsing()
         }.openNewTab {
         }.enterUrlAndEnterToBrowser(firstGenericURL.url) {
-            verifyUrl(firstGenericURL.url.toString())
-        }.openNavigationToolbar {
+            verifyPageContent("Page content: 1")
+        }
+        navigationToolbar {
             checkNumberOfTabsTabCounter("2")
         }.openTabTrayMenu {
             openPrivateBrowsing()
@@ -203,8 +205,9 @@ class TabTrayMenuTest {
             verifyExistingOpenTabs(firstGenericURL.title)
         }.openNewTab {
         }.enterUrlAndEnterToBrowser(secondGenericURL.url) {
-            verifyUrl(secondGenericURL.url.toString())
-        }.openNavigationToolbar {
+            verifyPageContent("Page content: 2")
+        }
+        navigationToolbar {
             checkNumberOfTabsTabCounter("3")
         }
     }
