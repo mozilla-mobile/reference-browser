@@ -81,6 +81,14 @@ class AwesomeBarRobot {
             BrowserRobot().interact()
             return BrowserRobot.Transition()
         }
+
+        fun loadPastedUrl(interact: BrowserRobot.() -> Unit): BrowserRobot.Transition {
+            mDevice.pressEnter()
+            mDevice.waitForWindowUpdate(packageName, waitingTime)
+
+            BrowserRobot().interact()
+            return BrowserRobot.Transition()
+        }
     }
 }
 

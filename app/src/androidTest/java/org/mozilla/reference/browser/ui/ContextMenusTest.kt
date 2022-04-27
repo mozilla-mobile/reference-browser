@@ -90,8 +90,11 @@ class ContextMenusTest {
             clickContextCopyLink()
         }.openNavigationToolbar {
         }.clickToolbar {
-            verifyLinkFromClipboard(genericURL.url.toString())
-        }.clickLinkFromClipboard(genericURL.url.toString()) {
+            clickClearToolbarButton()
+            longClickToolbar()
+            clickPasteText()
+            verifyPastedToolbarText(genericURL.url.toString())
+        }.loadPastedUrl {
             verifyUrl(genericURL.url.toString())
         }
     }
