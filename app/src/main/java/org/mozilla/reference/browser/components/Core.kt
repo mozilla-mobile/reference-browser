@@ -150,7 +150,7 @@ class Core(private val context: Context) {
     /**
      * The storage component to sync and persist tabs in a Firefox Sync account.
      */
-    val lazyRemoteTabsStorage = lazy { RemoteTabsStorage() }
+    val lazyRemoteTabsStorage = lazy { RemoteTabsStorage(context) }
 
     /**
      * A storage component for persisting thumbnail images of tabs.
