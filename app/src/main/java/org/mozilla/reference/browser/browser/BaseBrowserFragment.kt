@@ -24,6 +24,7 @@ import mozilla.components.concept.engine.EngineView
 import mozilla.components.feature.app.links.AppLinksFeature
 import mozilla.components.feature.downloads.DownloadsFeature
 import mozilla.components.feature.downloads.manager.FetchDownloadManager
+import mozilla.components.feature.downloads.share.ShareDownloadFeature
 import mozilla.components.feature.findinpage.view.FindInPageBar
 import mozilla.components.feature.findinpage.view.FindInPageView
 import mozilla.components.feature.prompts.PromptFeature
@@ -64,6 +65,7 @@ abstract class BaseBrowserFragment : Fragment(), UserInteractionHandler, Activit
     private val toolbarIntegration = ViewBoundFeatureWrapper<ToolbarIntegration>()
     private val contextMenuIntegration = ViewBoundFeatureWrapper<ContextMenuIntegration>()
     private val downloadsFeature = ViewBoundFeatureWrapper<DownloadsFeature>()
+    private val shareDownloadsFeature = ViewBoundFeatureWrapper<ShareDownloadFeature>()
     private val appLinksFeature = ViewBoundFeatureWrapper<AppLinksFeature>()
     private val promptsFeature = ViewBoundFeatureWrapper<PromptFeature>()
     private val fullScreenFeature = ViewBoundFeatureWrapper<FullScreenFeature>()
@@ -157,6 +159,16 @@ abstract class BaseBrowserFragment : Fragment(), UserInteractionHandler, Activit
                 engineView,
                 view,
                 sessionId
+            ),
+            owner = this,
+            view = view
+        )
+        shareDownloadsFeature.set(
+            ShareDownloadFeature(
+                context = requireContext().applicationContext,
+                httpClient = requireComponents.core.client,
+                store = requireComponents.core.store,
+                tabId = null
             ),
             owner = this,
             view = view
