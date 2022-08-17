@@ -168,7 +168,7 @@ abstract class BaseBrowserFragment : Fragment(), UserInteractionHandler, Activit
                 context = requireContext().applicationContext,
                 httpClient = requireComponents.core.client,
                 store = requireComponents.core.store,
-                tabId = null
+                tabId = sessionId
             ),
             owner = this,
             view = view
