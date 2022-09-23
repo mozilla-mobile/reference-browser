@@ -7,10 +7,10 @@
 
 // Synchronized version numbers for dependencies used by (some) modules
 private object Versions {
-    const val kotlin = "1.5.10"
-    const val coroutines = "1.5.0"
+    const val kotlin = "1.6.10"
+    const val coroutines = "1.6.1"
 
-    const val androidx_appcompat = "1.3.0-rc01"
+    const val androidx_appcompat = "1.3.0"
     const val androidx_constraintlayout = "1.1.3"
     const val androidx_preference = "1.0.0"
 
@@ -32,12 +32,12 @@ private object Versions {
     const val uiautomator = "2.2.0"
     const val junit_ktx = "1.1.3"
 
-    const val compose_version = "1.0.0-rc02"
+    const val compose_compiler = "1.1.1"
 
     object AndroidX {
-        const val activity_compose = "1.3.0-rc02"
+        const val activity_compose = "1.3.0"
         const val core = "1.1.0"
-        const val compose = compose_version
+        const val compose = "1.2.1"
         const val lifecycle = "2.2.0"
         const val swiperefreshlayout = "1.1.0"
     }
