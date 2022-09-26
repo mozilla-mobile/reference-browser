@@ -4,6 +4,7 @@
 
 package org.mozilla.reference.browser
 
+import android.annotation.SuppressLint
 import android.content.Context
 import mozilla.components.feature.autofill.AutofillConfiguration
 import org.mozilla.reference.browser.autofill.AutofillConfirmActivity
@@ -55,6 +56,7 @@ class Components(private val context: Context) {
     val services by lazy { Services(context, backgroundServices.accountManager, useCases.tabsUseCases) }
     val push by lazy { Push(context, analytics.crashReporter) }
 
+    @delegate:SuppressLint("NewApi")
     val autofillConfiguration by lazy {
         AutofillConfiguration(
             storage = core.loginsStorage,
