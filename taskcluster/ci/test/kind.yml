@@ -56,13 +56,13 @@ jobs:
             build-type: debug
         treeherder:
             platform: 'ui-test/opt'
-            symbol: debug(ui-test-x86)
+            symbol: debug(ui-test-arm)
         run-on-tasks-for: [github-push]
         run:
             # TODO Generate APKs in a build task instead
             gradlew: ['clean', 'assembleDebug', 'assembleAndroidTest']
             post-gradlew:
-                - ['automation/taskcluster/androidTest/ui-test.sh', 'x86', '-1']
+                - ['automation/taskcluster/androidTest/ui-test.sh', 'arm64-v8a', '50']
             secrets:
                 - name: project/mobile/reference-browser/firebase
                   key: firebaseToken
