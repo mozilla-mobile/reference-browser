@@ -42,7 +42,7 @@ class CustomColorPreference @JvmOverloads constructor(
         }
     }
 
-    override fun onBindViewHolder(holder: PreferenceViewHolder?) {
+    override fun onBindViewHolder(holder: PreferenceViewHolder) {
         super.onBindViewHolder(holder)
         holder?.let {
             val title = it.itemView.findViewById(android.R.id.title) as TextView
