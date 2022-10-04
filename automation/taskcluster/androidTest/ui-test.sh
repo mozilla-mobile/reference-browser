@@ -68,18 +68,10 @@ echo
 # and try to download the artifacts. We will exit with the actual error code later.
 set +e
 
-if [[ "${device_type,,}" == "aarch64" ]]
+if [[ "${device_type,,}" == "arm64-v8a" ]]
 then
-    flank_template="${PATH_TEST}/flank-aarch64.yml"
+    flank_template="${PATH_TEST}/flank-arm64-v8a.yml"
     APK_APP="${PATH_APK}/app-arm64-v8a-debug.apk"
-elif [[ "${device_type,,}" == "arm" ]]
-then
-    flank_template="${PATH_TEST}/flank-arm.yml"
-    APK_APP="${PATH_APK}/app-armeabi-v7a-debug.apk"
-elif [[ "${device_type,,}" == "x86_64" ]]
-then
-    flank_template="${PATH_TEST}/flank-x86-64.yml"
-    APK_APP="${PATH_APK}/app-x86_64-debug.apk"
 elif [[ "${device_type,,}" == "x86" ]]
 then
     flank_template="${PATH_TEST}/flank-x86.yml"
