@@ -10,11 +10,6 @@ private object Versions {
     const val kotlin = "1.7.10"
     const val coroutines = "1.6.4"
 
-    const val androidx_appcompat = "1.3.0"
-    const val androidx_constraintlayout = "1.1.3"
-    const val androidx_preference = "1.0.0"
-
-    const val workmanager = "2.7.1"
     const val google_material = "1.0.0"
 
     const val android_gradle_plugin = "7.3.0"
@@ -23,23 +18,25 @@ private object Versions {
 
     const val thirdparty_sentry = "5.6.2"
 
-    const val espresso_core = "3.1.0"
-    const val espresso_version = "3.4.0"
     const val mockwebserver = "4.9.0"
-    const val orchestrator = "1.4.1"
-    const val tools_test_rules = "1.1.0"
-    const val tools_test_runner = "1.4.0"
-    const val uiautomator = "2.2.0"
-    const val junit_ktx = "1.1.3"
 
     const val compose_compiler = "1.3.1"
 
     object AndroidX {
-        const val activity_compose = "1.3.0"
-        const val core = "1.3.2"
+        const val activity_compose = "1.5.1"
+        const val appcompat = "1.5.1"
         const val compose = "1.2.1"
-        const val lifecycle = "2.2.0"
+        const val core = "1.8.0"
+        const val constraintlayout = "2.1.4"
+        const val espresso = "3.4.0"
+        const val lifecycle = "2.5.1"
+        const val orchestrator = "1.4.1"
+        const val preference = "1.2.0"
         const val swiperefreshlayout = "1.1.0"
+        const val test_ext = "1.1.3"
+        const val tools = "1.4.0"
+        const val uiautomator = "2.2.0"
+        const val work = "2.7.1"
     }
 }
 
@@ -124,12 +121,12 @@ object Deps {
 
     const val thirdparty_sentry = "io.sentry:sentry-android:${Versions.thirdparty_sentry}"
 
-    const val androidx_appcompat = "androidx.appcompat:appcompat:${Versions.androidx_appcompat}"
+    const val androidx_appcompat = "androidx.appcompat:appcompat:${Versions.AndroidX.appcompat}"
     const val androidx_core_ktx = "androidx.core:core-ktx:${Versions.AndroidX.core}"
-    const val androidx_constraintlayout = "androidx.constraintlayout:constraintlayout:${Versions.androidx_constraintlayout}"
+    const val androidx_constraintlayout = "androidx.constraintlayout:constraintlayout:${Versions.AndroidX.constraintlayout}"
     const val androidx_lifecycle_process = "androidx.lifecycle:lifecycle-process:${Versions.AndroidX.lifecycle}"
-    const val androidx_preference_ktx = "androidx.preference:preference-ktx:${Versions.androidx_preference}"
-    const val androidx_work_runtime_ktx = "androidx.work:work-runtime-ktx:${Versions.workmanager}"
+    const val androidx_preference_ktx = "androidx.preference:preference-ktx:${Versions.AndroidX.preference}"
+    const val androidx_work_runtime_ktx = "androidx.work:work-runtime-ktx:${Versions.AndroidX.work}"
     const val androidx_compose_ui = "androidx.compose.ui:ui:${Versions.AndroidX.compose}"
     const val androidx_compose_ui_tooling = "androidx.compose.ui:ui-tooling:${Versions.AndroidX.compose}"
     const val androidx_compose_foundation = "androidx.compose.foundation:foundation:${Versions.AndroidX.compose}"
@@ -142,14 +139,14 @@ object Deps {
     const val tools_androidgradle = "com.android.tools.build:gradle:${Versions.android_gradle_plugin}"
     const val tools_kotlingradle = "org.jetbrains.kotlin:kotlin-gradle-plugin:${Versions.kotlin}"
 
-    const val espresso_contrib = "androidx.test.espresso:espresso-contrib:${Versions.espresso_version}"
-    const val espresso_core = "androidx.test.espresso:espresso-core:${Versions.espresso_core}"
-    const val espresso_idling_resources = "androidx.test.espresso:espresso-idling-resource:${Versions.espresso_version}"
-    const val espresso_web = "androidx.test.espresso:espresso-web:${Versions.espresso_version}"
+    const val espresso_contrib = "androidx.test.espresso:espresso-contrib:${Versions.AndroidX.espresso}"
+    const val espresso_core = "androidx.test.espresso:espresso-core:${Versions.AndroidX.espresso}"
+    const val espresso_idling_resources = "androidx.test.espresso:espresso-idling-resource:${Versions.AndroidX.espresso}"
+    const val espresso_web = "androidx.test.espresso:espresso-web:${Versions.AndroidX.espresso}"
     const val mockwebserver = "com.squareup.okhttp3:mockwebserver:${Versions.mockwebserver}"
-    const val orchestrator =  "androidx.test:orchestrator:${Versions.orchestrator}"
-    const val tools_test_rules = "androidx.test:rules:${Versions.tools_test_rules}"
-    const val tools_test_runner = "androidx.test:runner:${Versions.tools_test_runner}"
-    const val uiautomator = "androidx.test.uiautomator:uiautomator:${Versions.uiautomator}"
-    const val junit_ktx = "androidx.test.ext:junit-ktx:${Versions.junit_ktx}"
+    const val orchestrator =  "androidx.test:orchestrator:${Versions.AndroidX.orchestrator}"
+    const val tools_test_rules = "androidx.test:rules:${Versions.AndroidX.tools}"
+    const val tools_test_runner = "androidx.test:runner:${Versions.AndroidX.tools}"
+    const val uiautomator = "androidx.test.uiautomator:uiautomator:${Versions.AndroidX.uiautomator}"
+    const val junit_ktx = "androidx.test.ext:junit-ktx:${Versions.AndroidX.test_ext}"
 }
