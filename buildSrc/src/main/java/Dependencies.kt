@@ -7,7 +7,7 @@
 
 // Synchronized version numbers for dependencies used by (some) modules
 private object Versions {
-    const val kotlin = "1.7.10"
+    const val kotlin = "1.7.20"
     const val coroutines = "1.6.4"
 
     const val google_material = "1.0.0"
@@ -20,7 +20,7 @@ private object Versions {
 
     const val mockwebserver = "4.9.0"
 
-    const val compose_compiler = "1.3.1"
+    const val compose_compiler = "1.3.2"
 
     object AndroidX {
         const val activity_compose = "1.5.1"
