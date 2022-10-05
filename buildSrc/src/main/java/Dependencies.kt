@@ -10,15 +10,15 @@ private object Versions {
     const val kotlin = "1.7.20"
     const val coroutines = "1.6.4"
 
-    const val google_material = "1.0.0"
+    const val google_material = "1.6.1"
 
     const val android_gradle_plugin = "7.3.0"
 
     const val mozilla_android_components = AndroidComponents.VERSION
 
-    const val thirdparty_sentry = "5.6.2"
+    const val thirdparty_sentry = "6.4.2"
 
-    const val mockwebserver = "4.9.0"
+    const val mockwebserver = "4.10.0"
 
     const val compose_compiler = "1.3.2"
 
