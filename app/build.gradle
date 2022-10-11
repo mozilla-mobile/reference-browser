@@ -35,7 +35,7 @@ android {
     }
 
     composeOptions {
-        kotlinCompilerExtensionVersion = Versions.compose_compiler
+        kotlinCompilerExtensionVersion = Versions.google_compose_compiler
     }
 
     buildTypes {
@@ -289,7 +289,6 @@ dependencies {
 
     implementation Deps.thirdparty_sentry
 
-    implementation Deps.kotlin_stdlib
     implementation Deps.kotlin_coroutines
 
     implementation Deps.androidx_appcompat
