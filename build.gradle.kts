@@ -30,7 +30,7 @@ buildscript {
 }
 
 plugins {
-    id "io.gitlab.arturbosch.detekt" version "1.19.0" // Variables in plugins {} aren't supported
+    id("io.gitlab.arturbosch.detekt") version "1.19.0" // Variables in plugins {} aren"t supported
 }
 
 allprojects {
@@ -77,17 +77,17 @@ allprojects {
     }
 
     tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
-        kotlinOptions.freeCompilerArgs += [
+        kotlinOptions.freeCompilerArgs += listOf(
                 "-opt-in=kotlin.RequiresOptIn"
-        ]
+        )
     }
 }
 
 subprojects {
-    apply plugin: 'jacoco'
+    apply(plugin = "jacoco")
 
     afterEvaluate {
-        if (it.hasProperty('android')) {
+        if (it.hasProperty("android")) {
             jacoco {
                 toolVersion = Versions.jacoco_version
             }
@@ -101,7 +101,7 @@ subprojects {
 
                 lintOptions {
                     warningsAsErrors true
-                    abortOnError true
+                    isAbortOnError = true
                 }
             }
 
@@ -117,22 +117,22 @@ subprojects {
                         html.enabled = true
                     }
 
-                    def fileFilter = ['**/R.class', '**/R$*.class', '**/BuildConfig.*', '**/Manifest*.*',
-                                      '**/*Test*.*', 'android/**/*.*', '**/*$[0-9].*']
-                    def kotlinDebugTree = fileTree(dir: "$project.buildDir/tmp/kotlin-classes/debug", excludes: fileFilter)
-                    def javaDebugTree = fileTree(dir: "$project.buildDir/intermediates/classes/debug", excludes: fileFilter)
-                    def mainSrc = "$project.projectDir/src/main/java"
+                    val fileFilter = listOf("**/R.class", "**/R$*.class", "**/BuildConfig.*", "**/Manifest*.*",
+                                      "**/*Test*.*", "android/**/*.*", "**/*$[0-9).*"]
+                    val kotlinDebugTree = fileTree(dir = "$project.buildDir/tmp/kotlin-classes/debug", excludes: fileFilter)
+                    val javaDebugTree = fileTree(dir = "$project.buildDir/intermediates/classes/debug", excludes: fileFilter)
+                    val mainSrc = "$project.projectDir/src/main/java"
 
-                    sourceDirectories = files([mainSrc])
-                    classDirectories = files([kotlinDebugTree, javaDebugTree])
-                    executionData = fileTree(dir: project.buildDir, includes: [
-                            'jacoco/testDebugUnitTest.exec', 'outputs/code-coverage/connected/*coverage.ec'
-                    ])
+                    sourceDirectories = files(listOf(mainSrc))
+                    classDirectories = files(listOf(kotlinDebugTree, javaDebugTree))
+                    executionData = fileTree(dir: project.buildDir, includes: listOf(
+                            "jacoco/testDebugUnitTest.exec", "outputs/code-coverage/connected/*coverage.ec"
+                    ))
                 }
 
                 android {
                     buildTypes {
-                        debug {
+                        named("debug") {
                             testCoverageEnabled true
                         }
                     }
@@ -143,53 +143,6 @@ subprojects {
 }
 
 
-task clean(type: Delete) {
-    delete rootProject.buildDir
-}
-
-detekt {
-    buildUponDefaultConfig = true
-    input = files("$projectDir/app")
-    config = files("$projectDir/config/detekt.yml")
-    baseline = file("$projectDir/config/detekt-baseline.xml")
-
-    reports {
-        html {
-            enabled = true
-            destination = file("$projectDir/build/reports/detekt.html")
-        }
-    }
-}
-
-configurations {
-    ktlint
-}
-
-dependencies {
-    ktlint("com.pinterest:ktlint:${Versions.ktlint_version}") {
-        attributes {
-            attribute(Bundling.BUNDLING_ATTRIBUTE, getObjects().named(Bundling, Bundling.EXTERNAL))
-        }
-    }
-}
-
-task ktlint(type: JavaExec, group: "verification") {
-    description = "Check Kotlin code style."
-    classpath = configurations.ktlint
-    main = "com.pinterest.ktlint.Main"
-    args "app/src/**/*.kt", "!**/build/**/*.kt"
-}
-
-task ktlintFormat(type: JavaExec, group: "formatting") {
-    description = "Fix Kotlin code style deviations."
-    classpath = configurations.ktlint
-    main = "com.pinterest.ktlint.Main"
-    args "-F", "app/src/**/*.kt", "!**/build/**/*.kt"
-}
-
-task listRepositories {
-    doLast {
-        println "Repositories:"
-        project.repositories.each { println "Name: " + it.name + "; url: " + it.url }
-   }
+tasks.register<Delete>("clean").configure {
+    delete(rootProject.buildDir)
 }
