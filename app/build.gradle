@@ -15,7 +15,7 @@ android {
     defaultConfig {
         applicationId "org.mozilla.reference.browser"
         minSdkVersion Config.minSdkVersion
-        compileSdkVersion Config.targetSdkVersion
+        compileSdkVersion Config.compileSdkVersion
         targetSdkVersion Config.targetSdkVersion
         versionCode 1
         versionName Config.generateDebugVersionName()
