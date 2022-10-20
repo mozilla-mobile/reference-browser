@@ -6,6 +6,7 @@
 
 package org.mozilla.reference.browser.components
 
+import android.annotation.SuppressLint
 import android.content.Context
 import mozilla.components.feature.push.AutoPushFeature
 import mozilla.components.feature.push.PushConfig
@@ -17,6 +18,7 @@ import org.mozilla.reference.browser.push.FirebasePush
  * Component group for push services. These components use services that strongly depend on
  * push messaging (e.g. WebPush, SendTab).
  */
+@SuppressLint("DiscouragedApi")
 class Push(
     context: Context,
     crashReporter: CrashReporter
