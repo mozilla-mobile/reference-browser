@@ -8,11 +8,11 @@
 // Synchronized version numbers for dependencies used by (some) modules
 object Versions {
     object AndroidX {
-        const val activity_compose = "1.5.1"
+        const val activity_compose = "1.6.0"
         const val appcompat = "1.5.1"
         const val compose = "1.2.1"
         const val constraintlayout = "2.1.4"
-        const val core = "1.8.0"
+        const val core = "1.9.0"
         const val lifecycle = "2.5.1"
         const val preference = "1.2.0"
         const val swiperefreshlayout = "1.1.0"
@@ -21,7 +21,7 @@ object Versions {
 
     object Google {
         const val compose_compiler = "1.3.2"
-        const val material = "1.6.1"
+        const val material = "1.7.0"
     }
 
     object Gradle {
