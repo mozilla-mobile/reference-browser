@@ -3,7 +3,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 // If you ever need to force a toolchain rebuild (taskcluster) then edit the following comment.
-// FORCE REBUILD 2021-04-12
+// FORCE REBUILD 2022-10-22
 
 // Synchronized version numbers for dependencies used by (some) modules
 object Versions {
@@ -40,6 +40,7 @@ object Versions {
         const val androidx_ext_junit = "1.1.4"
         const val androidx_orchestrator = "1.4.2"
         const val androidx_uiautomator = "2.2.0"
+        const val detekt = "1.21.0"
         const val jacoco = "0.8.8"
         const val ktlint = "0.47.1"
         const val mockwebserver = "4.10.0"
@@ -52,6 +53,7 @@ object Versions {
     // Workaround for a Gradle parsing bug that prevents using nested objects directly in Gradle files.
     // These might be removable if we switch to kts files instead.
     // https://github.com/gradle/gradle/issues/9251
+    const val detekt_version = Versions.Testing.detekt
     const val google_compose_compiler = Versions.Google.compose_compiler
     const val jacoco_version = Versions.Testing.jacoco
     const val ktlint_version = Versions.Testing.ktlint
