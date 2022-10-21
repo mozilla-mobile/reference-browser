@@ -3,21 +3,11 @@
   <ManuallySuppressedIssues></ManuallySuppressedIssues>
   <CurrentIssues>
     <ID>ForbiddenComment:AppRequestInterceptor.kt$AppRequestInterceptor$* NB, and FIXME: this class is consumed by a 'Core' component group, but itself relies on 'firefoxAccountsFeature' * component; this creates a circular dependency, since firefoxAccountsFeature relies on tabsUseCases * which in turn needs 'core' itself.</ID>
-    <ID>ForbiddenComment:ThreeDotMenuTest.kt$ThreeDotMenuTest$* Tests for verifying the main three dot menu options * * Including: * - Verify all menu items present * - Forward button navigates forward to a page * - Refresh button refreshes page content * - Share button opens app overlay menu * - Request desktop site toggle forwards to desktop view of web page (TBD) * - Find in page button can locate web page text * - Report issue button forwards to gitubh issues (TBD) * - Open settings button opens Settings sub-menu * * Not included: * - TODO: Request desktop site (user mockWebServer to parse request headers) * - Stop button stops page loading (covered by smoke tests)</ID>
-    <ID>LargeClass:BaseBrowserFragment.kt$BaseBrowserFragment : FragmentUserInteractionHandlerActivityResultHandler</ID>
-    <ID>LargeClass:ThreeDotMenuTest.kt$ThreeDotMenuTest</ID>
+    <ID>ForbiddenComment:InstalledAddonDetailsActivity.kt$InstalledAddonDetailsActivity$* FIXME: This should be used in bindUI above, but doing so causes UI test failures/crashes. * Remove the Detekt suppression when fixed.</ID>
+    <ID>FunctionNaming:BrowserToolbar.kt$@Composable fun BrowserDisplayToolbar( url: String, onUrlClicked: () -&gt; Unit = {} )</ID>
+    <ID>FunctionNaming:BrowserToolbar.kt$@Composable fun BrowserEditToolbar( url: String, onUrlCommitted: (String) -&gt; Unit = {} )</ID>
+    <ID>FunctionNaming:BrowserToolbar.kt$@Composable fun BrowserToolbar()</ID>
     <ID>LongMethod:BaseBrowserFragment.kt$BaseBrowserFragment$@CallSuper override fun onViewCreated(view: View, savedInstanceState: Bundle?)</ID>
-    <ID>LongParameterList:ReaderViewIntegration.kt$ReaderViewIntegration$( context: Context, engine: Engine, store: BrowserStore, toolbar: BrowserToolbar, view: ReaderViewControlsView, readerViewAppearanceButton: FloatingActionButton )</ID>
-    <ID>LongParameterList:Utilities.kt$Utilities$( private val context: Context, private val store: BrowserStore, private val sessionUseCases: SessionUseCases, private val searchUseCases: SearchUseCases, private val tabsUseCases: TabsUseCases, private val customTabsUseCases: CustomTabsUseCases )</ID>
-    <ID>MaxLineLength:AddToHomeScreenRobot.kt$AddToHomeScreenRobot$private fun addAutomaticallyToHomeScreenButton()</ID>
-    <ID>MaxLineLength:AddonsManagerRobot.kt$AddonsManagerRobot$hasDescendant(withText("Finally, an efficient wide-spectrum content blocker. Easy on CPU and memory."))</ID>
-    <ID>MaxLineLength:AwesomeBarRobot.kt$AwesomeBarRobot.Transition$fun</ID>
-    <ID>MaxLineLength:SettingsViewRobot.kt$private fun openLinksInAppsToggle()</ID>
-    <ID>MaxLineLength:SettingsViewRobot.kt$private fun remoteDebuggingToggle()</ID>
-    <ID>MaxLineLength:SettingsViewTest.kt$SettingsViewTest$@Ignore("Test instrumentation process is crashing, see: https://github.com/mozilla-mobile/reference-browser/issues/1502")</ID>
-    <ID>MaxLineLength:TabTrayMenuRobot.kt$TabTrayMenuRobot.Transition$// The 3dot "More options" button is actually an Android Options Menu (check tabstray_menu.xml) not a View that we treat as a menu</ID>
-    <ID>MaxLineLength:TabTrayMenuRobot.kt$TabTrayMenuRobot.Transition$fun</ID>
-    <ID>MaxLineLength:ThreeDotMenuTest.kt$ThreeDotMenuTest$// Verifies the Synced tabs menu opens from a tab's 3 dot menu and displays the correct view if the user isn't signed in</ID>
     <ID>UndocumentedPublicClass:AboutFragment.kt$AboutFragment : Fragment</ID>
     <ID>UndocumentedPublicClass:AccountSettingsFragment.kt$AccountSettingsFragment : PreferenceFragmentCompat</ID>
     <ID>UndocumentedPublicClass:AppPermissionCodes.kt$AppPermissionCodes</ID>
@@ -63,5 +53,43 @@
     <ID>UndocumentedPublicClass:TabsTouchHelper.kt$TabsTouchHelper : ItemTouchHelper</ID>
     <ID>UndocumentedPublicClass:ToolbarIntegration.kt$ToolbarIntegration : LifecycleAwareFeatureUserInteractionHandler</ID>
     <ID>UndocumentedPublicClass:WebPushEngineIntegration.kt$WebPushEngineIntegration : Observer</ID>
+    <ID>UndocumentedPublicFunction:AccountSettingsFragment.kt$AccountSettingsFragment$fun updateLastSyncedTimePref(context: Context, pref: Preference?, failed: Boolean = false)</ID>
+    <ID>UndocumentedPublicFunction:Analytics.kt$fun isSentryEnabled()</ID>
+    <ID>UndocumentedPublicFunction:AutofillPreference.kt$AutofillPreference$fun updateSwitch()</ID>
+    <ID>UndocumentedPublicFunction:AutofillPreference.kt$AutofillPreference.Companion$fun isSupported(context: Context): Boolean</ID>
+    <ID>UndocumentedPublicFunction:BrowserFragment.kt$BrowserFragment.Companion$fun create(sessionId: String? = null)</ID>
+    <ID>UndocumentedPublicFunction:BrowserToolbar.kt$@Composable fun BrowserDisplayToolbar( url: String, onUrlClicked: () -&gt; Unit = {} )</ID>
+    <ID>UndocumentedPublicFunction:BrowserToolbar.kt$@Composable fun BrowserEditToolbar( url: String, onUrlCommitted: (String) -&gt; Unit = {} )</ID>
+    <ID>UndocumentedPublicFunction:BrowserToolbar.kt$@Composable fun BrowserToolbar()</ID>
+    <ID>UndocumentedPublicFunction:ComposableComponents.kt$@Composable fun sessionUseCases(): SessionUseCases</ID>
+    <ID>UndocumentedPublicFunction:Context.kt$fun Context.getPreferenceKey(@StringRes resourceId: Int): String</ID>
+    <ID>UndocumentedPublicFunction:CrashIntegration.kt$CrashIntegration$@OnLifecycleEvent(Lifecycle.Event.ON_START) fun start()</ID>
+    <ID>UndocumentedPublicFunction:CrashIntegration.kt$CrashIntegration$@OnLifecycleEvent(Lifecycle.Event.ON_STOP) fun stop()</ID>
+    <ID>UndocumentedPublicFunction:CrashIntegration.kt$CrashIntegration$@OptIn(DelicateCoroutinesApi::class) fun sendCrashReport(crash: Crash)</ID>
+    <ID>UndocumentedPublicFunction:EngineProvider.kt$EngineProvider$@Synchronized fun getOrCreateRuntime(context: Context): GeckoRuntime</ID>
+    <ID>UndocumentedPublicFunction:EngineProvider.kt$EngineProvider$fun createClient(context: Context): Client</ID>
+    <ID>UndocumentedPublicFunction:EngineProvider.kt$EngineProvider$fun createEngine(context: Context, defaultSettings: DefaultSettings): Engine</ID>
+    <ID>UndocumentedPublicFunction:ExternalAppBrowserFragment.kt$ExternalAppBrowserFragment.Companion$fun create( sessionId: String, manifest: WebAppManifest?, trustedScopes: List&lt;Uri&gt; )</ID>
+    <ID>UndocumentedPublicFunction:Long.kt$@Suppress("MagicNumber") fun Long.timeSince(context: Context, time: Long): String</ID>
+    <ID>UndocumentedPublicFunction:NotificationManager.kt$NotificationManager$fun checkAndNotifyPolicy(context: Context)</ID>
+    <ID>UndocumentedPublicFunction:NotificationManager.kt$NotificationManager$fun showReceivedTabs(context: Context, device: Device?, tabs: List&lt;TabData&gt;)</ID>
+    <ID>UndocumentedPublicFunction:PictureInPictureIntegration.kt$PictureInPictureIntegration$fun onHomePressed()</ID>
+    <ID>UndocumentedPublicFunction:Settings.kt$Settings$fun getOverrideAmoCollection(context: Context): String</ID>
+    <ID>UndocumentedPublicFunction:Settings.kt$Settings$fun getOverrideAmoUser(context: Context): String</ID>
+    <ID>UndocumentedPublicFunction:Settings.kt$Settings$fun isAmoCollectionOverrideConfigured(context: Context): Boolean</ID>
+    <ID>UndocumentedPublicFunction:Settings.kt$Settings$fun isTelemetryEnabled(context: Context): Boolean</ID>
+    <ID>UndocumentedPublicFunction:Settings.kt$Settings$fun setOverrideAmoCollection(context: Context, value: String)</ID>
+    <ID>UndocumentedPublicFunction:Settings.kt$Settings$fun setOverrideAmoUser(context: Context, value: String)</ID>
+    <ID>UndocumentedPublicFunction:SettingsFragment.kt$SettingsFragment.ActionBarUpdater$fun updateTitle(titleResId: Int)</ID>
+    <ID>UndocumentedPublicFunction:SyncedTabsIntegration.kt$SyncedTabsIntegration$fun launch()</ID>
+    <ID>UndocumentedPublicFunction:SyncedTabsViewHolder.kt$SyncedTabsViewHolder$abstract fun &lt;T : AdapterItem&gt; bind(item: T, interactor: (Tab) -&gt; Unit)</ID>
+    <ID>UndocumentedPublicFunction:TabsPanel.kt$TabsPanel$fun initialize(tabsFeature: TabsFeature?, updateTabsToolbar: (isPrivate: Boolean) -&gt; Unit)</ID>
+    <ID>UndocumentedPublicFunction:TabsToolbar.kt$TabsToolbar$fun initialize(tabsFeature: TabsFeature?, closeTabsTray: () -&gt; Unit)</ID>
+    <ID>UndocumentedPublicFunction:TabsToolbar.kt$TabsToolbar$fun updateToolbar(isPrivate: Boolean)</ID>
+    <ID>UndocumentedPublicFunction:ToggleImageButton.kt$ToggleImageButton$fun setOnCheckedChangeListener(listener: (ToggleImageButton, Boolean) -&gt; Unit)</ID>
+    <ID>UndocumentedPublicFunction:WebPushEngineIntegration.kt$WebPushEngineIntegration$fun start()</ID>
+    <ID>UndocumentedPublicFunction:WebPushEngineIntegration.kt$WebPushEngineIntegration$fun stop()</ID>
+    <ID>UnusedPrivateMember:InstalledAddonDetailsActivity.kt$InstalledAddonDetailsActivity$private fun bindVersion(addon: Addon)</ID>
+    <ID>UnusedPrivateMember:SyncedTabsViewHolder.kt$SyncedTabsViewHolder.TabViewHolder$private val image = itemView.findViewById&lt;ImageView&gt;(R.id.synced_tabs_item_image)</ID>
   </CurrentIssues>
 </SmellBaseline>
