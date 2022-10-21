@@ -153,7 +153,6 @@ task clean(type: Delete) {
 }
 
 detekt {
-    buildUponDefaultConfig = true
     input = files("$projectDir/app")
     config = files("$projectDir/config/detekt.yml")
     baseline = file("$projectDir/config/detekt-baseline.xml")
@@ -163,7 +162,32 @@ detekt {
             enabled = true
             destination = file("$projectDir/build/reports/detekt.html")
         }
+        xml {
+            enabled = false
+        }
+        txt {
+            enabled = false
+        }
     }
+}
+
+tasks.withType(io.gitlab.arturbosch.detekt.Detekt).configureEach() {
+    autoCorrect = true
+
+    exclude "**/test/**"
+    exclude "**/androidTest/**"
+    exclude "**/build/**"
+    exclude "**/resources/**"
+    exclude "**/tmp/**"
+}
+
+// Apply same path exclusions as for the main task
+tasks.withType(io.gitlab.arturbosch.detekt.DetektCreateBaselineTask).configureEach() {
+    exclude "**/test/**"
+    exclude "**/androidTest/**"
+    exclude "**/build/**"
+    exclude "**/resources/**"
+    exclude "**/tmp/**"
 }
 
 configurations {
