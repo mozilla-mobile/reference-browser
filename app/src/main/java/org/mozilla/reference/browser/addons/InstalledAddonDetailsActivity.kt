@@ -78,6 +78,10 @@ class InstalledAddonDetailsActivity : AppCompatActivity() {
         bindRemoveButton(addon)
     }
 
+    /**
+     * FIXME: This should be used in bindUI above, but doing so causes UI test failures/crashes.
+     * Remove the Detekt suppression when fixed.
+     */
     private fun bindVersion(addon: Addon) {
         val versionView = findViewById<TextView>(R.id.version_text)
         versionView.text = addon.version
