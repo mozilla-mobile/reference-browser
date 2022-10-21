@@ -32,8 +32,11 @@ class Analytics(private val context: Context) {
      */
     val crashReporter: CrashReporter by lazy {
         val socorroService = MozillaSocorroService(
-            context, appName = "ReferenceBrowser",
-            version = MOZ_APP_VERSION, buildId = MOZ_APP_BUILDID, vendor = MOZ_APP_VENDOR,
+            context,
+            appName = "ReferenceBrowser",
+            version = MOZ_APP_VERSION,
+            buildId = MOZ_APP_BUILDID,
+            vendor = MOZ_APP_VENDOR,
             releaseChannel = MOZ_UPDATE_CHANNEL
         )
 

@@ -110,7 +110,6 @@ class ThreeDotMenuTest {
 
     @Test
     fun normalBrowsingTabNavigationTest() {
-
         val defaultWebPage = TestAssetHelper.getGenericAsset(mockWebServer, 1)
         val nextWebPage = TestAssetHelper.getGenericAsset(mockWebServer, 2)
 
@@ -133,7 +132,6 @@ class ThreeDotMenuTest {
 
     @Test
     fun privateBrowsingTabNavigationTest() {
-
         val defaultWebPage = TestAssetHelper.getGenericAsset(mockWebServer, 1)
         val nextWebPage = TestAssetHelper.getGenericAsset(mockWebServer, 2)
 
@@ -157,16 +155,14 @@ class ThreeDotMenuTest {
         }
     }
 
-    @Test
-    @Ignore("https://github.com/mozilla-mobile/reference-browser/issues/1314")
     // need to add clear cache setup to ensure correct starting page
     // also, investigate why this periodically causes mockWebServer to crash
+    @Test
+    @Ignore("https://github.com/mozilla-mobile/reference-browser/issues/1314")
     fun refreshPageTest() {
-
         val refreshWebPage = TestAssetHelper.getRefreshAsset(mockWebServer)
 
         navigationToolbar {
-
             // load the default page, to be refreshed
             // (test assumes no cookies cached at test start)
 
@@ -175,7 +171,6 @@ class ThreeDotMenuTest {
         }
         navigationToolbar {
         }.openThreeDotMenu {
-
             // refresh page and verify
         }.refreshPage {
             verifyPageContent("REFRESHED")
@@ -219,9 +214,9 @@ class ThreeDotMenuTest {
         }
     }
 
-    @Test
     // so less flaky, we only test redirect to github login
     // (redirect happens with / without WIFI enabled)
+    @Test
     fun reportIssueTest() {
         val loremIpsumWebPage = TestAssetHelper.getLoremIpsumAsset(mockWebServer)
 
@@ -246,8 +241,8 @@ class ThreeDotMenuTest {
         }
     }
 
-    @Test
     // Verifies the Synced tabs menu opens from a tab's 3 dot menu and displays the correct view if the user isn't signed in
+    @Test
     fun openSyncedTabsTest() {
         val defaultWebPage = TestAssetHelper.getGenericAsset(mockWebServer, 1)
 

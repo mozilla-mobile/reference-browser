@@ -41,8 +41,8 @@ class TabTrayMenuTest {
     @JvmField
     val retryTestRule = RetryTestRule(3)
 
-    @Before
     // SetUp to close all tabs before starting each test
+    @Before
     fun setUp() {
         val mDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
 
@@ -75,8 +75,8 @@ class TabTrayMenuTest {
     }
 
     /* ktlint-disable no-blank-line-before-rbrace */ // This imposes unreadable grouping.
-    @Test
     // This test verifies the tab tray menu items are all in place
+    @Test
     fun tabTrayUITest() {
         navigationToolbar {
         }.openTabTrayMenu {
@@ -89,8 +89,8 @@ class TabTrayMenuTest {
         }
     }
 
-    @Test
     // This test verifies that close all tabs option works as expected
+    @Test
     fun closeAllTabsTest() {
         navigationToolbar {
         }.openTabTrayMenu {
@@ -106,8 +106,8 @@ class TabTrayMenuTest {
         }
     }
 
-    @Test
     // This test verifies that close all tabs option works as expected
+    @Test
     fun closeAllPrivateTabsTest() {
         navigationToolbar {
         }.openTabTrayMenu {
@@ -139,8 +139,8 @@ class TabTrayMenuTest {
         }
     }
 
-    @Test
     // This test verifies the change between regular-private browsing works
+    @Test
     fun privateRegularModeChangeTest() {
         navigationToolbar {
         }.openTabTrayMenu {
@@ -154,8 +154,8 @@ class TabTrayMenuTest {
         }
     }
 
-    @Test
     // This test verifies the new tab is open and that its items are all in place
+    @Test
     fun openNewTabTest() {
         val genericURL = TestAssetHelper.getGenericAsset(mockWebServer, 1)
 
@@ -179,8 +179,8 @@ class TabTrayMenuTest {
         }
     }
 
-    @Test
     // This test verifies the new tab is open and that its items are all in place
+    @Test
     fun openNewPrivateTabTest() {
         val firstGenericURL = TestAssetHelper.getGenericAsset(mockWebServer, 1)
         val secondGenericURL = TestAssetHelper.getGenericAsset(mockWebServer, 2)
@@ -212,8 +212,8 @@ class TabTrayMenuTest {
         }
     }
 
-    @Test
     // This test verifies the back button functionality
+    @Test
     fun goBackFromTabTrayTest() {
         navigationToolbar {
         }.openTabTrayMenu {

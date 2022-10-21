@@ -33,7 +33,6 @@ class AddonDetailsActivity : AppCompatActivity() {
     }
 
     private fun bind(addon: Addon) {
-
         title = addon.translateName(this)
 
         bindDetails(addon)

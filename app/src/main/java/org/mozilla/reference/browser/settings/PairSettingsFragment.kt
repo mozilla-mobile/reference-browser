@@ -36,7 +36,8 @@ class PairSettingsFragment : Fragment(), UserInteractionHandler {
                 },
                 onScanResult = { pairingUrl ->
                     requireComponents.services.accountsAuthFeature.beginPairingAuthentication(
-                        requireContext(), pairingUrl
+                        requireContext(),
+                        pairingUrl
                     )
                     activity?.finish()
                 }

@@ -192,7 +192,6 @@ class SettingsFragment : PreferenceFragmentCompat() {
     private fun getActionBarUpdater() = activity as ActionBarUpdater
 
     private fun getClickListenerForCustomAddons(): OnPreferenceClickListener {
-
         return OnPreferenceClickListener {
             val context = requireContext()
             val dialogView = View.inflate(context, R.layout.amo_collection_override_dialog, null)

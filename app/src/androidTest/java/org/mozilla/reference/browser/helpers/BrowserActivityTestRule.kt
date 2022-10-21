@@ -35,7 +35,6 @@ class BrowserActivityTestRule(
     private lateinit var loadingIdlingResource: SessionLoadedIdlingResource
 
     override fun beforeActivityLaunched() {
-
         loadingIdlingResource = SessionLoadedIdlingResource().also {
             IdlingRegistry.getInstance().register(it)
         }
