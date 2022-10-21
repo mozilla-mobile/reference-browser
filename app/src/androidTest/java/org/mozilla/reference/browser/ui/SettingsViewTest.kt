@@ -148,12 +148,12 @@ class SettingsViewTest {
         }
     }
 
-    @Test
     /* Can't check further because after creating the custom add-on collection
     the currently running process is terminated see:
     /blob/master/app/src/main/java/org/mozilla/reference/browser/settings/SettingsFragment.kt#L217
     Confirming the custom add-on collection creation or trying to continue testing afterwards
     will cause the test instrumentation process to crash */
+    @Test
     fun customAddonsCollectionTest() {
         navigationToolbar {
         }.openThreeDotMenu {

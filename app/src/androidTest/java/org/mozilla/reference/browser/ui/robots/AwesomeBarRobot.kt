@@ -68,7 +68,6 @@ class AwesomeBarRobot {
     class Transition {
 
         fun openWebPage(interact: NavigationToolbarRobot.() -> Unit): NavigationToolbarRobot.Transition {
-
             NavigationToolbarRobot().interact()
             return NavigationToolbarRobot.Transition()
         }

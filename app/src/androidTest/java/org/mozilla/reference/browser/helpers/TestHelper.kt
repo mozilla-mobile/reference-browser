@@ -52,7 +52,9 @@ object TestHelper {
             .setShareState(CustomTabsIntent.SHARE_STATE_ON)
             .setActionButton(
                 createTestBitmap(),
-                customActionButtonDescription, pendingIntent, true
+                customActionButtonDescription,
+                pendingIntent,
+                true
             )
             .build()
         customTabsIntent.intent.data = Uri.parse(pageUrl)

@@ -82,16 +82,13 @@ internal class OneTimePushMessageObserver(
     private val pushFeature: AutoPushFeature
 ) : AutoPushFeature.Observer {
     override fun onMessageReceived(scope: PushScope, message: ByteArray?) {
-
         // Ignore empty push messages.
         val rawBytes = message ?: return
 
         // If the push scope has the FxA prefix, we know this is for us.
         if (scope.contains(FxaPushSupportFeature.PUSH_SCOPE_PREFIX)) {
-
             // If we aren't initialized, then we should do the initialization and message delivery.
             if (!lazyAccountManager.isInitialized()) {
-
                 CoroutineScope(Dispatchers.Main).launch {
                     val fxaObserver = OneTimeMessageDeliveryObserver(lazyAccountManager, rawBytes)
 

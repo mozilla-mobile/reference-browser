@@ -29,7 +29,7 @@ class Services(
             accountManager,
             redirectUrl = BackgroundServices.REDIRECT_URL
         ) {
-            _, authUrl ->
+                _, authUrl ->
             MainScope().launch {
                 tabsUseCases.addTab.invoke(authUrl)
             }

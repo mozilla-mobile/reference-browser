@@ -25,7 +25,9 @@ class CustomTabsTest {
 
     @get: Rule
     val intentReceiverActivityTestRule = ActivityTestRule(
-        IntentReceiverActivity::class.java, true, false
+        IntentReceiverActivity::class.java,
+        true,
+        false
     )
 
     @Rule

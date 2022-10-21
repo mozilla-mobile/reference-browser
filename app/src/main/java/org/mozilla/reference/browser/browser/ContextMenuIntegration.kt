@@ -49,7 +49,11 @@ class ContextMenuIntegration(
     }
 
     private val feature = ContextMenuFeature(
-        fragmentManager, browserStore, candidates, engineView, contextMenuUseCases
+        fragmentManager,
+        browserStore,
+        candidates,
+        engineView,
+        contextMenuUseCases
     )
 
     override fun start() {
