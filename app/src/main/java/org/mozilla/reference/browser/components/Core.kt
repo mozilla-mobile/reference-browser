@@ -5,9 +5,7 @@
 package org.mozilla.reference.browser.components
 
 import android.content.Context
-import android.content.Intent
 import android.content.SharedPreferences
-import androidx.core.net.toUri
 import androidx.preference.PreferenceManager
 import mozilla.components.browser.engine.gecko.permission.GeckoSitePermissionsStorage
 import mozilla.components.browser.icons.BrowserIcons
@@ -200,12 +198,7 @@ class Core(private val context: Context) {
     val supportedAddonsChecker by lazy {
         DefaultSupportedAddonsChecker(
             context,
-            Frequency(12, TimeUnit.HOURS),
-            onNotificationClickIntent = Intent(context, BrowserActivity::class.java).apply {
-                action = Intent.ACTION_VIEW
-                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                data = "not-clear-what-to-put-here-scheme://settings_addon_manager".toUri()
-            }
+            Frequency(12, TimeUnit.HOURS)
         )
     }
 
