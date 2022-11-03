@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+<resources>
+    <string name="app_name">Referans Tarayıcı</string>
+
+    <!-- Text shown in the toolbar if it is empty -->
+    <string name="toolbar_hint">Adres arayın veya girin</string>
+
+    <!-- Menu option on the toolbar to open a new tab-->
+    <string name="menu_action_add_tab">Yeni Sekme Ekle</string>
+
+    <!-- Menu option on the toolbar to close all tabs-->
+    <string name="menu_action_close_tabs">Tüm Sekmeleri Kapat</string>
+    <string name="menu_action_close_tabs_private">Özel Sekmeleri Kapat</string>
+
+    <!-- Preference summary for settings related sign in -->
+    <string name="preferences_sign_in_summary">Sekmelerinizi ve geçmişinizi senkronize edin</string>
+
+    <!-- Preference summary for pairing sign in -->
+    <string name="preferences_pair_sign_in_summary">Firefox Masaüstü ile eşleştirin</string>
+
+    <!-- Preference summary for settings related to send telemetry data -->
+    <string name="preferences_use_telemetry_summary">Kullanım verilerini gönder</string>
+
+    <!-- Preference for settings related to changing the default browser -->
+    <string name="preferences_make_default_browser">Varsayılan tarayıcı yap</string>
+
+    <string name="preferences_compose_ui">Deneysel Jetpack Oluşturma Kullanıcı Arayüzü kullanın</string>
+
+    <string name="preferences_autofill">Otomatik doldurma uygulamaları</string>
+    <string name="preferences_autofill_summary">Diğer uygulamalarda oturum açma bilgilerini ve şifreleri otomatik doldurma</string>
+
+    <!-- Preference enables sync for history -->
+    <string name="preferences_sync_history">Geçmiş</string>
+
+    <!-- Preference enables sync for synced tabs -->
+    <string name="preferences_sync_tabs">Sekmeleri aç</string>
+
+    <!-- Preference enables sync for synced tabs -->
+    <string name="preferences_sync_passwords">Şifreler</string>
+
+    <!-- Preference enabling remote debugging -->
+    <string name="preferences_remote_debugging">USB üzerinden uzaktan hata ayıklama</string>
+
+    <!-- Preference for enabling tracking protection in normal mode -->
+    <string name="preferences_tracking_protection_normal">Normal Tarama Modunda Etkinleştir</string>
+
+    <!-- Preference for enabling tracking protection in private mode -->
+    <string name="preferences_tracking_protection_private">Özel Tarama Modunda Etkinleştir</string>
+
+    <!-- Preference about page -->
+    <string name="preferences_about_page">Referans Tarayıcı Hakkında</string>
+
+    <!-- Preference for signing in -->
+    <string name="sign_in">Kayıt ol</string>
+
+    <!-- Preference for signing in -->
+    <string name="pair_sign_in">QR koduyla oturum açın</string>
+
+    <!-- Preference for settings related to the signed in Firefox Account -->
+    <string name="firefox_account">Firefox Hesabı</string>
+
+    <!-- Preference for signing out -->
+    <string name="sign_out">Oturumu kapat</string>
+
+    <!-- Preference for syncing immediately -->
+    <string name="sync_now">Şimdi senkronize et</string>
+
+    <!-- Preference for syncing immediately -->
+    <string name="syncing">Senkronizasyon</string>
+
+    <!-- Preference summary indicating that sync failed along with last time it succeeded -->
+    <string name="preferences_sync_failed_summary">Senkronizasyon başarısız oldu. Son başarı: %s</string>
+
+    <!-- Preference summary showing never synced -->
+    <string name="preferences_sync_failed_never_synced_summary">Senkronizasyon başarısız oldu. Son senkronizasyon: asla</string>
+
+    <!-- Preference summary showing last time synced -->
+    <string name="preferences_sync_last_synced_summary">Son senkronizasyon: %s</string>
+
+    <!-- Preference summary showing never synced -->
+    <string name="preferences_sync_never_synced_summary">Son senkronizasyon: asla</string>
+
+    <!-- Preference for privacy -->
+    <string name="privacy">Gizlilik</string>
+
+    <!-- Preference summary for privacy -->
+    <string name="preferences_privacy_summary">İzleme, çerezler, veri seçenekleri</string>
+
+    <!-- Preference category for sync settings -->
+    <string name="sync_category">Neyin senkronize edileceğini seçin</string>
+
+    <!-- Preference for open links in apps -->
+    <string name="open_links_in_apps">Bağlantıları uygulamalarda açın</string>
+
+    <!-- Preference category for developer tools -->
+    <string name="developer_tools_category">Geliştirici araçları</string>
+
+    <!-- Preference for settings related turn on telemetry data-->
+    <string name="use_telemetry">Telemetri kullanın</string>
+
+    <!-- Preference category for Mozilla about/legal etc. -->
+    <string name="mozilla_category">Mozilla</string>
+
+    <!-- Preference category for tracking protection -->
+    <string name="tracker_category">İzleme Koruması</string>
+
+    <!-- Preference category for data choices e.g. usage data -->
+    <string name="data_choices_category">Veri Seçenekleri</string>
+
+    <!-- Menu option on the toolbar that takes you to settings page-->
+    <string name="settings">Ayarlar</string>
+
+    <!-- Menu option on the toolbar that takes you to synced tabs page-->
+    <string name="synced_tabs">Senkronize Sekmeler</string>
+
+    <!-- Menu option on the toolbar that takes you to account settings page-->
+    <string name="account_settings">Hesap Ayarları</string>
+
+    <!-- Menu option on the toolbar that takes you to privacy settings page-->
+    <string name="privacy_settings">Gizlilik Ayarları</string>
+
+    <!-- Menu option on the toolbar that takes you to pairing QR code page-->
+    <string name="pair_preferences">Eşleştirme</string>
+    <string name="pair_instructions">Eşleştirme kodunuz için firefox.com/pair'i Firefox Desktop'ta açın</string>
+
+    <!-- Snackbar message when a non fatal crash happen-->
+    <string name="crash_report_non_fatal_message">Afedersiniz. düştük</string>
+
+    <!-- Snackbar action button when a non fatal crash happen-->
+    <string name="crash_report_non_fatal_action">Bildir</string>
+
+    <!-- Private Browsing -->
+    <string name="private_browsing_title">Özel Tarama</string>
+    <string name="private_browsing_body"><![CDATA[
+<h1>Özel Tarama</h1>
+<p>Özel Pencerede göz attığınızda, Referans Tarayıcı <strong>kaydetmez</strong>:</p>
+<ul class="two-column">
+    <li>ziyaret edilen sayfalar</li>
+    <li>aramalar</li>
+    <li>çerezler</li>
+    <li>geçici dosyalar</li>
+</ul>
+<p>Özel Tarama <strong>doesn\'t make you anonymous</strong> internette. İşvereniniz veya İnternet servis sağlayıcınız hangi sayfayı ziyaret ettiğinizi yine de bilebilir.</p>
+<p class="about-info">Hakkında daha fazla öğren <a id="learnMore">Özel Tarama</a>.</p>
+     ]]></string>
+
+    <!-- Title of the notification shown on app startup informing about the data policy -->
+    <string name="datareporting_notification_title">Referans Tarayıcı</string>
+
+    <!-- Summary of the notification shown on app startup informing about the data policy -->
+    <string name="datareporting_notification_summary">Referans Tarayıcı, deneyiminizi geliştirmek için Mozilla'ya bazı bilgileri otomatik olarak gönderir.</string>
+    
+    <string name="default_notification_channel">Tarayıcı</string>
+
+    <!-- About content -->
+    <string name="about_content"><![CDATA[
+<p>%1$s seni kontrol altına alır.</p>
+<p>Referans olarak kullanın:
+    <br>&bull; Kendi tarayıcınızı nasıl oluşturacağınızı öğrenin.
+    <br>&bull; Tarayıcı oluşturmayı kolaylaştırmaya katkıda bulunun.
+    <br>&bull; Hata raporlarını dosyalayın!
+</p>
+<p>%1$s Mozilla tarafından üretilmektedir. Misyonumuz sağlıklı ve açık bir İnterneti teşvik etmektir.<br/>
+    ]]></string>
+
+    <string name="menu_share_with">İle paylaş…</string>
+    <string name="toast_copied">Kopyalandı!</string>
+
+    <!-- Send Tab -->
+    <!-- Name of the "receive tabs" notification channel. Displayed in the "App notifications" system settings for the app -->
+    <string name="fxa_received_tab_channel_name">Alınan sekmeler</string>
+    <!-- Description of the "receive tabs" notification channel. Displayed in the "App notifications" system settings for the app -->
+    <string name="fxa_received_tab_channel_description">Diğer Firefox cihazlarından alınan sekmeler için bildirimler.</string>
+    <!--  The body for these is the URL of the tab received  -->
+    <string name="fxa_tab_received_notification_name">Sekme Alındı</string>
+    <!-- %s is the device name -->
+    <string name="fxa_tab_received_from_notification_name">Sekmesi %s</string>
+
+    <!-- Synced Tabs -->
+    <string name="synced_tabs_connect_to_sync_account">Bir Firefox Hesabı ile bağlanın.</string>
+    <string name="synced_tabs_connect_another_device">Başka bir cihaz bağlayın.</string>
+    <string name="synced_tabs_reauth">Lütfen yeniden kimlik doğrulaması yapın.</string>
+    <string name="synced_tabs_enable_tab_syncing">Lütfen sekme senkronizasyonunu etkinleştirin.</string>
+
+    <!-- Add-on Preferences -->
+    <!-- Preference to customize the configured AMO (addons.mozilla.org) collection -->
+    <string name="preferences_customize_amo_collection">Özel Eklenti koleksiyonu</string>
+    <!-- Button caption to confirm the add-on collection configuration -->
+    <string name="customize_addon_collection_ok">TAMAM</string>
+    <!-- Button caption to abort the add-on collection configuration -->
+    <string name="customize_addon_collection_cancel">İptal</string>
+    <!-- Hint displayed on input field for custom collection name -->
+    <string name="customize_addon_collection_hint">Koleksiyon adı</string>
+    <!-- Hint displayed on input field for custom collection user ID-->
+    <string name="customize_addon_collection_user_hint">Koleksiyon sahibi (User ID)</string>
+    <!-- Toast shown after confirming the custom add-on collection configuration -->
+    <string name="toast_customize_addon_collection_done">Eklenti koleksiyonu değiştirildi. Değişiklikleri uygulamak için uygulamadan çıkılıyor…</string>
+</resources>
