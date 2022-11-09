@@ -30,7 +30,7 @@ object Versions {
     }
 
     object Kotlin {
-        const val compiler = "1.7.20"
+        const val compiler = "1.7.21"
         const val coroutines = "1.6.4"
     }
 
