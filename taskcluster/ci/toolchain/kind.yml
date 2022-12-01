@@ -13,7 +13,7 @@ transforms:
     - taskgraph.transforms.task:transforms
 
 
-job-defaults:
+task-defaults:
     treeherder:
         kind: build
         platform: toolchains/opt
@@ -23,6 +23,6 @@ job-defaults:
         using: toolchain-script
 
 
-jobs-from:
+tasks-from:
     - android.yml
     - minidump-stackwalk.yml

@@ -4,7 +4,7 @@ transforms:
     - taskgraph.transforms.job:transforms
     - taskgraph.transforms.task:transforms
 
-jobs:
+tasks:
     nightly:
         description: "upstream nightly job"
         run:

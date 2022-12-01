@@ -13,7 +13,7 @@ kind-dependencies:
     - toolchain
 
 
-job-defaults:
+task-defaults:
     description: Test Reference Browser
     fetches:
         toolchain:
@@ -33,7 +33,7 @@ job-defaults:
         chain-of-trust: true
 
 
-jobs:
+tasks:
     nightly:
         attributes:
             nightly: true
