@@ -15,7 +15,7 @@ only-for-abis:
     - armeabi-v7a
     - arm64-v8a
 
-job-defaults:
+task-defaults:
     worker-type:
         by-abi:
             # TODO arm32 on arm64
@@ -73,7 +73,7 @@ job-defaults:
         linux64-minidump-stackwalk:
             - artifact: minidump_stackwalk.tar.xz
 
-jobs:
+tasks:
     speedometer:
         test-name: raptor-speedometer
         treeherder:
