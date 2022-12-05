@@ -29,7 +29,7 @@ class NotificationRobot {
         val downloadFilename = mDevice.findObject(UiSelector().text(fileName))
 
         while (!notificationFound) {
-            notificationTray.swipeUp(2)
+            scrollToEnd()
             notificationFound = mDevice.findObject(notification).waitForExists(waitingTime)
         }
         assertTrue(notificationFound)
@@ -95,3 +95,11 @@ private val systemMediaNotification =
             .className("android.view.ViewGroup")
             .packageName("com.android.systemui")
     )
+
+private fun notificationTray() = UiScrollable(
+    UiSelector().resourceId("com.android.systemui:id/notification_stack_scroller")
+).setAsVerticalList()
+
+private fun scrollToEnd() {
+    notificationTray().scrollToEnd(1)
+}
