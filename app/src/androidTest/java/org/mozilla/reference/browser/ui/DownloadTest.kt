@@ -55,7 +55,7 @@ class DownloadTest {
         }.closeNotification {}
     }
 
-    @Ignore("Disabled - Timeouts with notification shade - https://github.com/mozilla-mobile/reference-browser/issues/2130")
+    @Ignore("Disabled - https://github.com/mozilla-mobile/reference-browser/issues/2130")
     @Test
     fun fileDownloadTest() {
         val downloadPage = TestAssetHelper.getDownloadAsset(mockWebServer)
