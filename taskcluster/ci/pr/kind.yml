@@ -13,7 +13,7 @@ transforms:
     - taskgraph.transforms.code_review:transforms
     - taskgraph.transforms.task:transforms
 
-jobs:
+tasks:
     complete:
         description: PR Summary Task
         run-on-tasks-for: [github-pull-request]

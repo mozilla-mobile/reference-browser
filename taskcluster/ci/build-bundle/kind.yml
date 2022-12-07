@@ -14,7 +14,7 @@ kind-dependencies:
     - toolchain
 
 
-job-defaults:
+task-defaults:
     aab-artifact-template:
         type: file
         name: public/target.aab
@@ -38,7 +38,7 @@ job-defaults:
         chain-of-trust: true
 
 
-jobs:
+tasks:
     nightly:
         attributes:
             nightly: true
