@@ -16,7 +16,7 @@ import org.mozilla.reference.browser.R
  */
 class TabMatcher<T : View>(
     val id: Int,
-    val matcher: (T) -> Boolean
+    val matcher: (T) -> Boolean,
 ) : TypeSafeMatcher<T>() {
     override fun describeTo(description: Description?) {
         description?.appendText("with expected tab item")
@@ -36,7 +36,7 @@ class TabMatcher<T : View>(
     companion object {
         fun withText(text: String): Matcher<View> {
             return TabMatcher<View>(
-                R.id.mozac_browser_tabstray_title
+                R.id.mozac_browser_tabstray_title,
             ) {
                 (it as TextView).text == text
             }

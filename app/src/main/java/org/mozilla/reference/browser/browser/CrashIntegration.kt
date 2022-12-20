@@ -22,7 +22,7 @@ import org.mozilla.reference.browser.ext.isCrashReportActive
 class CrashIntegration(
     private val context: Context,
     private val crashReporter: CrashReporter,
-    private val onCrash: (Crash) -> Unit
+    private val onCrash: (Crash) -> Unit,
 ) : LifecycleObserver {
 
     private val receiver = object : BroadcastReceiver() {

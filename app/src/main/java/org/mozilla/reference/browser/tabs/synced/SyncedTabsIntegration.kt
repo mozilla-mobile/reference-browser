@@ -14,7 +14,7 @@ import org.mozilla.reference.browser.ext.components
 
 class SyncedTabsIntegration(
     private val context: Context,
-    private val accountManager: FxaAccountManager
+    private val accountManager: FxaAccountManager,
 ) {
     fun launch() {
         val accountObserver = SyncedTabsAccountObserver(context)
@@ -22,7 +22,7 @@ class SyncedTabsIntegration(
         accountManager.register(
             accountObserver,
             owner = ProcessLifecycleOwner.get(),
-            autoPause = true
+            autoPause = true,
         )
     }
 }

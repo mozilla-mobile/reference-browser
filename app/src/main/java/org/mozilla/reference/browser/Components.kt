@@ -28,7 +28,7 @@ class Components(private val context: Context) {
             context,
             core.engine,
             core.store,
-            core.shortcutManager
+            core.shortcutManager,
         )
     }
 
@@ -39,7 +39,7 @@ class Components(private val context: Context) {
             push,
             core.lazyHistoryStorage,
             core.lazyRemoteTabsStorage,
-            core.lazyLoginsStorage
+            core.lazyLoginsStorage,
         )
     }
     val analytics by lazy { Analytics(context) }
@@ -50,7 +50,7 @@ class Components(private val context: Context) {
             useCases.sessionUseCases,
             useCases.searchUseCases,
             useCases.tabsUseCases,
-            useCases.customTabsUseCases
+            useCases.customTabsUseCases,
         )
     }
     val services by lazy { Services(context, backgroundServices.accountManager, useCases.tabsUseCases) }
@@ -65,7 +65,7 @@ class Components(private val context: Context) {
             confirmActivity = AutofillConfirmActivity::class.java,
             searchActivity = AutofillSearchActivity::class.java,
             applicationName = context.getString(R.string.app_name),
-            httpClient = core.client
+            httpClient = core.client,
         )
     }
 }

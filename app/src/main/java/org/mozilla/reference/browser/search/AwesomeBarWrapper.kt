@@ -25,7 +25,7 @@ import org.mozilla.reference.browser.ext.components
 class AwesomeBarWrapper @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
-    defStyleAttr: Int = 0
+    defStyleAttr: Int = 0,
 ) : AbstractComposeView(context, attrs, defStyleAttr), AwesomeBar {
     private val providers = mutableStateOf(emptyList<AwesomeBar.SuggestionProvider>())
     private val text = mutableStateOf("")
@@ -47,7 +47,7 @@ class AwesomeBarWrapper @JvmOverloads constructor(
                 background = Color(0xff222222),
                 title = Color(0xffffffff),
                 description = Color(0xffdddddd),
-                autocompleteIcon = Color(0xffdddddd)
+                autocompleteIcon = Color(0xffdddddd),
             ),
             onSuggestionClicked = { suggestion ->
                 suggestion.onSuggestionClicked?.invoke()
@@ -57,7 +57,7 @@ class AwesomeBarWrapper @JvmOverloads constructor(
                 onEditSuggestionListener?.invoke(suggestion.editSuggestion!!)
             },
             onScroll = { hideKeyboard() },
-            profiler = context.components.core.engine.profiler
+            profiler = context.components.core.engine.profiler,
         )
     }
 

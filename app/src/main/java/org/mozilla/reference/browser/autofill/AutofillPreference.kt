@@ -19,7 +19,7 @@ import org.mozilla.reference.browser.R
 
 class AutofillPreference @JvmOverloads constructor(
     context: Context,
-    attrs: AttributeSet? = null
+    attrs: AttributeSet? = null,
 ) : Preference(context, attrs) {
     private var switchView: SwitchCompat? = null
 

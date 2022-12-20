@@ -91,23 +91,23 @@ private fun awesomeBar() =
     onView(
         allOf(
             withId(R.id.mozac_browser_toolbar_edit_url_view),
-            isDescendantOfA(withId(R.id.mozac_browser_toolbar_container))
-        )
+            isDescendantOfA(withId(R.id.mozac_browser_toolbar_container)),
+        ),
     )
 
 private fun clearToolbarButton() =
     onView(
         allOf(
             withId(R.id.mozac_browser_toolbar_clear_view),
-            isDescendantOfA(withId(R.id.mozac_browser_toolbar_container))
-        )
+            isDescendantOfA(withId(R.id.mozac_browser_toolbar_container)),
+        ),
     )
 
 private fun assertSearchSuggestion(searchSuggestionTitle: String) {
     mDevice.waitForIdle()
     assertTrue(
         mDevice.findObject(UiSelector().textContains(searchSuggestionTitle))
-            .waitForExists(waitingTime)
+            .waitForExists(waitingTime),
     )
 }
 
@@ -119,7 +119,7 @@ private fun assertLinkFromClipboard(clipboardLink: String) {
         .waitForExists(waitingTime)
     assertTrue(
         mDevice.findObject(UiSelector().textContains(clipboardLink))
-            .waitForExists(waitingTime)
+            .waitForExists(waitingTime),
     )
 }
 
@@ -131,7 +131,7 @@ private fun assertPastedToolbarText(expectedText: String) {
     onView(
         allOf(
             withSubstring(expectedText),
-            withId(R.id.mozac_browser_toolbar_edit_url_view)
-        )
+            withId(R.id.mozac_browser_toolbar_edit_url_view),
+        ),
     ).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
 }

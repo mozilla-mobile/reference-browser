@@ -45,7 +45,7 @@ class AboutFragment : Fragment() {
             String.format(
                 "%s (Build #%s)\n",
                 packageInfo.versionName,
-                geckoVersion
+                geckoVersion,
             )
         } catch (e: PackageManager.NameNotFoundException) {
             ""
@@ -56,11 +56,11 @@ class AboutFragment : Fragment() {
             aboutText,
             Build.version,
             Build.gitHash,
-            Build.applicationServicesVersion
+            Build.applicationServicesVersion,
         )
         val content = HtmlCompat.fromHtml(
             resources.getString(R.string.about_content, appName),
-            FROM_HTML_SEPARATOR_LINE_BREAK_LIST_ITEM
+            FROM_HTML_SEPARATOR_LINE_BREAK_LIST_ITEM,
         )
 
         val aboutView = view.findViewById<TextView>(R.id.about_content)

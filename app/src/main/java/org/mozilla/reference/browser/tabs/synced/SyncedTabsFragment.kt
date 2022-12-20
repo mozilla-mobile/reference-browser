@@ -23,7 +23,7 @@ class SyncedTabsFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View? {
         return inflater.inflate(R.layout.fragment_synced_tabs, container, false)
     }
@@ -40,10 +40,10 @@ class SyncedTabsFragment : Fragment() {
                 accountManager = backgroundServices.accountManager,
                 view = view.findViewById<SyncedTabsLayout>(R.id.synced_tabs_layout),
                 lifecycleOwner = this,
-                onTabClicked = ::handleTabClicked
+                onTabClicked = ::handleTabClicked,
             ),
             owner = this,
-            view = view
+            view = view,
         )
     }
 

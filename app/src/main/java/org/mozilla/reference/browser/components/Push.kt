@@ -21,7 +21,7 @@ import org.mozilla.reference.browser.push.FirebasePush
 @SuppressLint("DiscouragedApi")
 class Push(
     context: Context,
-    crashReporter: CrashReporter
+    crashReporter: CrashReporter,
 ) {
     val feature by lazy {
         pushConfig?.let { config ->
@@ -29,7 +29,7 @@ class Push(
                 context = context,
                 service = pushService,
                 config = config,
-                crashReporter = crashReporter
+                crashReporter = crashReporter,
             )
         }
     }

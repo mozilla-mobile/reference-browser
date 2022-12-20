@@ -51,7 +51,7 @@ open class BrowserApplication : Application() {
 
         GlobalAddonDependencyProvider.initialize(
             components.core.addonManager,
-            components.core.addonUpdater
+            components.core.addonUpdater,
         )
         WebExtensionSupport.initialize(
             runtime = components.core.engine,
@@ -60,7 +60,7 @@ open class BrowserApplication : Application() {
                 val tabId = components.useCases.tabsUseCases.addTab(
                     url = url,
                     selectTab = true,
-                    engineSession = engineSession
+                    engineSession = engineSession,
                 )
                 tabId
             },
@@ -83,7 +83,7 @@ open class BrowserApplication : Application() {
                     checker.unregisterForChecks()
                 }
             },
-            onUpdatePermissionRequest = components.core.addonUpdater::onUpdatePermissionRequest
+            onUpdatePermissionRequest = components.core.addonUpdater::onUpdatePermissionRequest,
         )
 
         components.push.feature?.let {

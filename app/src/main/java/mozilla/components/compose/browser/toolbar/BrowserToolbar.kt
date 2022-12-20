@@ -34,12 +34,12 @@ fun BrowserToolbar() {
             onUrlCommitted = { text ->
                 useCases.loadUrl(text)
                 editMode.value = false
-            }
+            },
         )
     } else {
         BrowserDisplayToolbar(
             url = url ?: "<empty>",
-            onUrlClicked = { editMode.value = true }
+            onUrlClicked = { editMode.value = true },
         )
     }
 }
@@ -47,19 +47,19 @@ fun BrowserToolbar() {
 @Composable
 fun BrowserDisplayToolbar(
     url: String,
-    onUrlClicked: () -> Unit = {}
+    onUrlClicked: () -> Unit = {},
 ) {
     Text(
         url,
         modifier = Modifier.clickable { onUrlClicked() },
-        maxLines = 1
+        maxLines = 1,
     )
 }
 
 @Composable
 fun BrowserEditToolbar(
     url: String,
-    onUrlCommitted: (String) -> Unit = {}
+    onUrlCommitted: (String) -> Unit = {},
 ) {
     var input by remember { mutableStateOf(url) }
 
@@ -69,7 +69,7 @@ fun BrowserEditToolbar(
         singleLine = true,
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Uri, imeAction = ImeAction.Go),
         keyboardActions = KeyboardActions(
-            onGo = { onUrlCommitted(input) }
-        )
+            onGo = { onUrlCommitted(input) },
+        ),
     )
 }

@@ -72,7 +72,7 @@ private fun systemMediaNotificationControlButton(state: String) =
             .resourceId("com.android.systemui:id/action0")
             .className("android.widget.ImageButton")
             .packageName("com.android.systemui")
-            .descriptionContains(state)
+            .descriptionContains(state),
     )
 
 private fun systemMediaNotificationTitle(title: String) =
@@ -81,11 +81,11 @@ private fun systemMediaNotificationTitle(title: String) =
             .textContains(title)
             .resourceId("com.android.systemui:id/header_title")
             .className("android.widget.TextView")
-            .packageName("com.android.systemui")
+            .packageName("com.android.systemui"),
     )
 
 private val notificationTray = UiScrollable(
-    UiSelector().resourceId("com.android.systemui:id/notification_stack_scroller")
+    UiSelector().resourceId("com.android.systemui:id/notification_stack_scroller"),
 ).setAsVerticalList()
 
 private val systemMediaNotification =
@@ -93,5 +93,5 @@ private val systemMediaNotification =
         UiSelector()
             .resourceId("com.android.systemui:id/qs_media_controls")
             .className("android.view.ViewGroup")
-            .packageName("com.android.systemui")
+            .packageName("com.android.systemui"),
     )

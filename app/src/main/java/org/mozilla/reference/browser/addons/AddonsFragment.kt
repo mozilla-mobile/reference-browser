@@ -39,7 +39,7 @@ class AddonsFragment : Fragment(), AddonsManagerAdapterDelegate {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View {
         return inflater.inflate(R.layout.fragment_add_ons, container, false)
     }
@@ -74,7 +74,7 @@ class AddonsFragment : Fragment(), AddonsManagerAdapterDelegate {
                     val adapter = AddonsManagerAdapter(
                         requireContext().components.core.addonCollectionProvider,
                         this@AddonsFragment,
-                        addons
+                        addons,
                     )
                     recyclerView.adapter = adapter
                 }
@@ -83,7 +83,7 @@ class AddonsFragment : Fragment(), AddonsManagerAdapterDelegate {
                     Toast.makeText(
                         activity,
                         R.string.mozac_feature_addons_failed_to_query_add_ons,
-                        Toast.LENGTH_SHORT
+                        Toast.LENGTH_SHORT,
                     ).show()
                 }
             }
@@ -121,7 +121,7 @@ class AddonsFragment : Fragment(), AddonsManagerAdapterDelegate {
 
         val dialog = PermissionsDialogFragment.newInstance(
             addon = addon,
-            onPositiveButtonClicked = onPositiveButtonClicked
+            onPositiveButtonClicked = onPositiveButtonClicked,
         )
 
         if (!isAlreadyADialogCreated()) {
@@ -141,10 +141,10 @@ class AddonsFragment : Fragment(), AddonsManagerAdapterDelegate {
                 if (allowInPrivateBrowsing) {
                     requireContext().components.core.addonManager.setAddonAllowedInPrivateBrowsing(
                         addon,
-                        allowInPrivateBrowsing
+                        allowInPrivateBrowsing,
                     )
                 }
-            }
+            },
         )
 
         if (!isAlreadyADialogCreated()) {
@@ -174,13 +174,13 @@ class AddonsFragment : Fragment(), AddonsManagerAdapterDelegate {
                         Toast.makeText(
                             requireContext(),
                             getString(R.string.mozac_feature_addons_failed_to_install, addon.translateName(it)),
-                            Toast.LENGTH_SHORT
+                            Toast.LENGTH_SHORT,
                         ).show()
                     }
                     addonProgressOverlay.visibility = View.GONE
                     isInstallationInProgress = false
                 }
-            }
+            },
         )
     }
 

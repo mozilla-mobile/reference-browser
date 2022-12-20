@@ -26,7 +26,7 @@ import org.mozilla.reference.browser.R
 class ToggleImageButton @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
-    defStyle: Int = androidx.appcompat.R.attr.imageButtonStyle
+    defStyle: Int = androidx.appcompat.R.attr.imageButtonStyle,
 ) : AppCompatImageButton(context, attrs, defStyle), Checkable {
     private var onCheckedChangeListener: ((ToggleImageButton, Boolean) -> Unit)? = null
 
@@ -44,7 +44,7 @@ class ToggleImageButton @JvmOverloads constructor(
                     info.isCheckable = true
                     info.isChecked = this@ToggleImageButton.isChecked
                 }
-            }
+            },
         )
 
         TypedValue().apply {

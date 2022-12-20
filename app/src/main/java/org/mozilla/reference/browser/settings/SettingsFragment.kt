@@ -115,7 +115,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
         return if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
             OnPreferenceClickListener {
                 val intent = Intent(
-                    Settings.ACTION_MANAGE_DEFAULT_APPS_SETTINGS
+                    Settings.ACTION_MANAGE_DEFAULT_APPS_SETTINGS,
                 )
                 startActivity(intent)
                 true
@@ -212,14 +212,14 @@ class SettingsFragment : PreferenceFragmentCompat() {
                     Toast.makeText(
                         context,
                         getString(R.string.toast_customize_addon_collection_done),
-                        Toast.LENGTH_LONG
+                        Toast.LENGTH_LONG,
                     ).show()
 
                     Handler().postDelayed(
                         {
                             exitProcess(0)
                         },
-                        AMO_COLLECTION_OVERRIDE_EXIT_DELAY
+                        AMO_COLLECTION_OVERRIDE_EXIT_DELAY,
                     )
                 }
 

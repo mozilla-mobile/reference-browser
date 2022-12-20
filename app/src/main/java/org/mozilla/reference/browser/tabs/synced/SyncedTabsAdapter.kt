@@ -14,9 +14,9 @@ import mozilla.components.browser.storage.sync.Tab as SyncTab
 import mozilla.components.concept.sync.Device as SyncDevice
 
 class SyncedTabsAdapter(
-    private val listener: (SyncTab) -> Unit
+    private val listener: (SyncTab) -> Unit,
 ) : ListAdapter<SyncedTabsAdapter.AdapterItem, SyncedTabsViewHolder>(
-    DiffCallback
+    DiffCallback,
 ) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SyncedTabsViewHolder {

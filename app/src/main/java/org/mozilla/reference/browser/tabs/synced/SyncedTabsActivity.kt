@@ -17,7 +17,7 @@ class SyncedTabsActivity : AppCompatActivity() {
             supportFragmentManager.beginTransaction().apply {
                 replace(
                     R.id.container,
-                    SyncedTabsFragment()
+                    SyncedTabsFragment(),
                 )
                 commit()
             }

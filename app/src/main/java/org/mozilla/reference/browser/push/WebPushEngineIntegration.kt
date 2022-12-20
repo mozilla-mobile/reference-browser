@@ -19,7 +19,7 @@ import mozilla.components.support.base.log.logger.Logger
 
 class WebPushEngineIntegration(
     private val engine: Engine,
-    private val pushFeature: AutoPushFeature
+    private val pushFeature: AutoPushFeature,
 ) : AutoPushFeature.Observer {
 
     private var handler: WebPushHandler? = null
@@ -49,7 +49,7 @@ class WebPushEngineIntegration(
 }
 
 internal class WebPushEngineDelegate(
-    private val pushFeature: AutoPushFeature
+    private val pushFeature: AutoPushFeature,
 ) : WebPushDelegate {
     private val logger = Logger("WebPushEngineDelegate")
 
@@ -64,7 +64,7 @@ internal class WebPushEngineDelegate(
     override fun onSubscribe(
         scope: String,
         serverKey: ByteArray?,
-        onSubscribe: (WebPushSubscription?) -> Unit
+        onSubscribe: (WebPushSubscription?) -> Unit,
     ) {
         pushFeature.subscribe(
             scope = scope,
@@ -77,7 +77,7 @@ internal class WebPushEngineDelegate(
             },
             onSubscribe = { subscription ->
                 onSubscribe(subscription.toEnginePushSubscription())
-            }
+            },
         )
     }
 
@@ -90,7 +90,7 @@ internal class WebPushEngineDelegate(
             },
             onUnsubscribe = { result ->
                 onUnsubscribe(result)
-            }
+            },
         )
     }
 }
@@ -105,7 +105,7 @@ internal fun AutoPushSubscription.toEnginePushSubscription() = WebPushSubscripti
     // Our workaround for now is to not put the server key in to begin with (which
     // will probably break a lot of sites).
     // See: https://github.com/mozilla/application-services/issues/2698
-    appServerKey = null
+    appServerKey = null,
 )
 
 private fun String.toDecodedByteArray() =

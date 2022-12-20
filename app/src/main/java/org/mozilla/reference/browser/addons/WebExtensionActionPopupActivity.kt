@@ -104,7 +104,7 @@ class WebExtensionActionPopupActivity : AppCompatActivity() {
 
         private fun consumePopupSession() {
             requireContext().components.core.store.dispatch(
-                WebExtensionAction.UpdatePopupSessionAction(webExtensionId, popupSession = null)
+                WebExtensionAction.UpdatePopupSessionAction(webExtensionId, popupSession = null),
             )
         }
 

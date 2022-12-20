@@ -37,13 +37,13 @@ class PairSettingsFragment : Fragment(), UserInteractionHandler {
                 onScanResult = { pairingUrl ->
                     requireComponents.services.accountsAuthFeature.beginPairingAuthentication(
                         requireContext(),
-                        pairingUrl
+                        pairingUrl,
                     )
                     activity?.finish()
-                }
+                },
             ),
             owner = this,
-            view = view
+            view = view,
         )
 
         qrFeature.withFeature {

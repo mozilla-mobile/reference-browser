@@ -62,8 +62,8 @@ class CustomTabRobot {
             assertTrue(
                 mDevice.findObject(
                     UiSelector()
-                        .resourceId("$packageName:id/mozac_browser_menu_recyclerView")
-                ).waitUntilGone(waitingTime)
+                        .resourceId("$packageName:id/mozac_browser_menu_recyclerView"),
+                ).waitUntilGone(waitingTime),
             )
         } catch (e: AssertionError) {
             println("Failed to click request desktop toggle")
@@ -169,11 +169,11 @@ private fun assertOpenInBrowserButton() =
     openInBrowserButton().check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
 private fun assertRequestDesktopSiteIsTurnedOff() {
     assertFalse(
-        mDevice.findObject(UiSelector().textContains("Request desktop site")).isChecked
+        mDevice.findObject(UiSelector().textContains("Request desktop site")).isChecked,
     )
 }
 private fun assertRequestDesktopSiteIsTurnedOn() {
     assertTrue(
-        mDevice.findObject(UiSelector().textContains("Request desktop site")).isChecked
+        mDevice.findObject(UiSelector().textContains("Request desktop site")).isChecked,
     )
 }

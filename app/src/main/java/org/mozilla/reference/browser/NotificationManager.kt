@@ -68,7 +68,7 @@ object NotificationManager {
                 context,
                 REQUEST_CODE_SEND_TAB,
                 intent,
-                flags
+                flags,
             )
             val importance = if (SDK_INT >= Build.VERSION_CODES.N) {
                 // We pick 'IMPORTANCE_HIGH' priority because this is a user-triggered action that is
@@ -83,7 +83,7 @@ object NotificationManager {
                 RECEIVE_TABS_CHANNEL_ID,
                 context.getString(R.string.fxa_received_tab_channel_name),
                 context.getString(R.string.fxa_received_tab_channel_description),
-                importance
+                importance,
             )
 
             val builder = NotificationCompat.Builder(context, channelId)
@@ -100,7 +100,7 @@ object NotificationManager {
             NotificationManagerCompat.from(context).notify(
                 RECEIVE_TABS_TAG,
                 notificationIdCount++,
-                builder.build()
+                builder.build(),
             )
         }
     }
@@ -140,7 +140,7 @@ object NotificationManager {
 
         val notificationBuilder = NotificationCompat.Builder(
             context,
-            getNotificationChannelId(context)
+            getNotificationChannelId(context),
         ).apply {
             setContentTitle(notificationTitle)
             setContentText(notificationSummary)
@@ -164,7 +164,7 @@ object NotificationManager {
         channelId: String = NOTIFICATION_CHANNEL_ID,
         channelName: String = context.resources.getString(R.string.default_notification_channel),
         description: String? = null,
-        channelImportance: Int? = null
+        channelImportance: Int? = null,
     ): String {
         if (SDK_INT >= Build.VERSION_CODES.O) {
             val importance = channelImportance ?: AndroidNotificationManager.IMPORTANCE_DEFAULT
@@ -173,7 +173,7 @@ object NotificationManager {
                 channelId,
                 channelName,
                 description,
-                importance
+                importance,
             )
         }
 
@@ -186,7 +186,7 @@ object NotificationManager {
         channelId: String,
         channelName: String,
         channelDescription: String?,
-        importance: Int = AndroidNotificationManager.IMPORTANCE_DEFAULT
+        importance: Int = AndroidNotificationManager.IMPORTANCE_DEFAULT,
     ) {
         val notificationManager =
             context.getSystemService(Context.NOTIFICATION_SERVICE) as AndroidNotificationManager
@@ -198,7 +198,7 @@ object NotificationManager {
         val channel = NotificationChannel(
             channelId,
             channelName,
-            importance
+            importance,
         ).apply {
             description = channelDescription
         }
@@ -209,14 +209,14 @@ object NotificationManager {
     private fun NotificationCompat.Builder.setSendTabTitle(
         context: Context,
         device: Device?,
-        tab: TabData
+        tab: TabData,
     ): NotificationCompat.Builder {
         device?.let {
             setContentTitle(
                 context.getString(
                     R.string.fxa_tab_received_from_notification_name,
-                    it.displayName
-                )
+                    it.displayName,
+                ),
             )
             return this
         }

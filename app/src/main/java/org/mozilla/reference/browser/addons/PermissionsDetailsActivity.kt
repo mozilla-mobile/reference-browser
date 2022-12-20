@@ -51,7 +51,7 @@ class PermissionsDetailsActivity : AppCompatActivity(), View.OnClickListener {
      * An adapter for displaying the permissions of an add-on.
      */
     class PermissionsAdapter(
-        private val permissions: List<String>
+        private val permissions: List<String>,
     ) :
         RecyclerView.Adapter<PermissionViewHolder>() {
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PermissionViewHolder {
@@ -61,7 +61,7 @@ class PermissionsDetailsActivity : AppCompatActivity(), View.OnClickListener {
             val titleView = view.findViewById<TextView>(R.id.permission)
             return PermissionViewHolder(
                 view,
-                titleView
+                titleView,
             )
         }
 
@@ -78,7 +78,7 @@ class PermissionsDetailsActivity : AppCompatActivity(), View.OnClickListener {
      */
     class PermissionViewHolder(
         val view: View,
-        val textView: TextView
+        val textView: TextView,
     ) : RecyclerView.ViewHolder(view)
 
     override fun onClick(v: View?) {

@@ -133,7 +133,7 @@ private fun assertExistingOpenTabs(title: String) {
     mDevice.findObject(UiSelector().resourceId("${TestHelper.packageName}:id/tabsTray"))
         .waitForExists(waitingTime)
     Assert.assertTrue(
-        mDevice.findObject(UiSelector().textContains(title)).waitForExists(waitingTime)
+        mDevice.findObject(UiSelector().textContains(title)).waitForExists(waitingTime),
     )
 }
 
