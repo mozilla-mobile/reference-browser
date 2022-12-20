@@ -32,7 +32,7 @@ object TestAssetHelper {
             TestAsset(
                 server.url("pages/generic$it.html").toString().toUri()!!,
                 "Page content: $it",
-                ""
+                "",
             )
         }
     }

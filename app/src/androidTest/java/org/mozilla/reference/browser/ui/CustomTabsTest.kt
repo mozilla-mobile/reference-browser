@@ -27,7 +27,7 @@ class CustomTabsTest {
     val intentReceiverActivityTestRule = ActivityTestRule(
         IntentReceiverActivity::class.java,
         true,
-        false
+        false,
     )
 
     @Rule
@@ -53,8 +53,8 @@ class CustomTabsTest {
 
         intentReceiverActivityTestRule.launchActivity(
             createCustomTabIntent(
-                customTabPage.url.toString()
-            )
+                customTabPage.url.toString(),
+            ),
         )
 
         customTabScreen {
@@ -74,8 +74,8 @@ class CustomTabsTest {
 
         intentReceiverActivityTestRule.launchActivity(
             createCustomTabIntent(
-                customTabPage.url.toString()
-            )
+                customTabPage.url.toString(),
+            ),
         )
 
         customTabScreen {
@@ -97,8 +97,8 @@ class CustomTabsTest {
 
         intentReceiverActivityTestRule.launchActivity(
             createCustomTabIntent(
-                pageLinks.url.toString()
-            )
+                pageLinks.url.toString(),
+            ),
         )
 
         customTabScreen {
@@ -121,8 +121,8 @@ class CustomTabsTest {
 
         intentReceiverActivityTestRule.launchActivity(
             createCustomTabIntent(
-                customTabPage.url.toString()
-            )
+                customTabPage.url.toString(),
+            ),
         )
 
         customTabScreen {
@@ -138,8 +138,8 @@ class CustomTabsTest {
 
         intentReceiverActivityTestRule.launchActivity(
             createCustomTabIntent(
-                customTabPage.url.toString()
-            )
+                customTabPage.url.toString(),
+            ),
         )
 
         customTabScreen {
@@ -159,8 +159,8 @@ class CustomTabsTest {
 
         intentReceiverActivityTestRule.launchActivity(
             createCustomTabIntent(
-                customTabPage.url.toString()
-            )
+                customTabPage.url.toString(),
+            ),
         )
 
         customTabScreen {

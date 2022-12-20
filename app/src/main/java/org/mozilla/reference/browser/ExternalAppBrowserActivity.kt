@@ -20,17 +20,19 @@ class ExternalAppBrowserActivity : BrowserActivity() {
             val manifest = intent.getWebAppManifest()
             val scope = when (manifest?.display) {
                 WebAppManifest.DisplayMode.FULLSCREEN,
-                WebAppManifest.DisplayMode.STANDALONE -> Uri.parse(manifest.scope ?: manifest.startUrl)
+                WebAppManifest.DisplayMode.STANDALONE,
+                -> Uri.parse(manifest.scope ?: manifest.startUrl)
 
                 WebAppManifest.DisplayMode.MINIMAL_UI,
-                WebAppManifest.DisplayMode.BROWSER -> null
+                WebAppManifest.DisplayMode.BROWSER,
+                -> null
                 else -> null
             }
 
             ExternalAppBrowserFragment.create(
                 sessionId,
                 manifest,
-                listOfNotNull(scope)
+                listOfNotNull(scope),
             )
         } else {
             // Fall back to browser fragment

@@ -37,7 +37,7 @@ class Analytics(private val context: Context) {
             version = MOZ_APP_VERSION,
             buildId = MOZ_APP_BUILDID,
             vendor = MOZ_APP_VENDOR,
-            releaseChannel = MOZ_UPDATE_CHANNEL
+            releaseChannel = MOZ_UPDATE_CHANNEL,
         )
 
         val services: MutableList<CrashReporterService> = mutableListOf(socorroService)
@@ -47,7 +47,7 @@ class Analytics(private val context: Context) {
                 context,
                 BuildConfig.SENTRY_TOKEN,
                 mapOf("geckoview" to "$MOZ_APP_VERSION-$MOZ_APP_BUILDID"),
-                sendEventForNativeCrashes = true
+                sendEventForNativeCrashes = true,
             )
             services.add(sentryService)
         }
@@ -65,11 +65,11 @@ class Analytics(private val context: Context) {
             shouldPrompt = CrashReporter.Prompt.ALWAYS,
             promptConfiguration = CrashReporter.PromptConfiguration(
                 appName = context.getString(R.string.app_name),
-                organizationName = "Mozilla"
+                organizationName = "Mozilla",
             ),
             nonFatalCrashIntent = PendingIntent
                 .getBroadcast(context, 0, Intent(BrowserApplication.NON_FATAL_CRASH_BROADCAST), flags),
-            enabled = true
+            enabled = true,
         )
     }
 }

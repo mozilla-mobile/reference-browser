@@ -22,7 +22,7 @@ class FindInPageIntegration(
     private val store: BrowserStore,
     private val sessionId: String? = null,
     private val view: FindInPageView,
-    engineView: EngineView
+    engineView: EngineView,
 ) : LifecycleAwareFeature, UserInteractionHandler {
     private val feature = FindInPageFeature(store, view, engineView, ::onClose)
 
@@ -70,7 +70,7 @@ class FindInPageIntegration(
 @Suppress("unused") // Referenced from XML
 class FindInPageBarBehavior(
     context: Context,
-    attrs: AttributeSet
+    attrs: AttributeSet,
 ) : CoordinatorLayout.Behavior<FindInPageBar>(context, attrs) {
     override fun layoutDependsOn(parent: CoordinatorLayout, child: FindInPageBar, dependency: View): Boolean {
         if (dependency is BrowserToolbar) {

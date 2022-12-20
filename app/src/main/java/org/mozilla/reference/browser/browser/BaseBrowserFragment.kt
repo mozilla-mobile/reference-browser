@@ -89,12 +89,12 @@ abstract class BaseBrowserFragment : Fragment(), UserInteractionHandler, Activit
         fullScreenFeature,
         findInPageIntegration,
         toolbarIntegration,
-        sessionFeature
+        sessionFeature,
     )
 
     private val activityResultHandler: List<ViewBoundFeatureWrapper<*>> = listOf(
         webAuthnFeature,
-        promptsFeature
+        promptsFeature,
     )
 
     protected val sessionId: String?
@@ -105,7 +105,7 @@ abstract class BaseBrowserFragment : Fragment(), UserInteractionHandler, Activit
     final override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View {
         return inflater.inflate(R.layout.fragment_browser, container, false)
     }
@@ -121,17 +121,17 @@ abstract class BaseBrowserFragment : Fragment(), UserInteractionHandler, Activit
                 requireComponents.core.store,
                 requireComponents.useCases.sessionUseCases.goBack,
                 engineView,
-                sessionId
+                sessionId,
             ),
             owner = this,
-            view = view
+            view = view,
         )
 
         (toolbar.layoutParams as? CoordinatorLayout.LayoutParams)?.apply {
             behavior = BrowserToolbarBehavior(
                 view.context,
                 null,
-                MozacToolbarBehaviorToolbarPosition.BOTTOM
+                MozacToolbarBehaviorToolbarPosition.BOTTOM,
             )
         }
         toolbarIntegration.set(
@@ -143,10 +143,10 @@ abstract class BaseBrowserFragment : Fragment(), UserInteractionHandler, Activit
                 requireComponents.useCases.sessionUseCases,
                 requireComponents.useCases.tabsUseCases,
                 requireComponents.useCases.webAppUseCases,
-                sessionId
+                sessionId,
             ),
             owner = this,
-            view = view
+            view = view,
         )
 
         contextMenuIntegration.set(
@@ -158,20 +158,20 @@ abstract class BaseBrowserFragment : Fragment(), UserInteractionHandler, Activit
                 requireComponents.useCases.contextMenuUseCases,
                 engineView,
                 view,
-                sessionId
+                sessionId,
             ),
             owner = this,
-            view = view
+            view = view,
         )
         shareDownloadsFeature.set(
             ShareDownloadFeature(
                 context = requireContext().applicationContext,
                 httpClient = requireComponents.core.client,
                 store = requireComponents.core.store,
-                tabId = sessionId
+                tabId = sessionId,
             ),
             owner = this,
-            view = view
+            view = view,
         )
 
         downloadsFeature.set(
@@ -183,16 +183,16 @@ abstract class BaseBrowserFragment : Fragment(), UserInteractionHandler, Activit
                 downloadManager = FetchDownloadManager(
                     requireContext().applicationContext,
                     requireComponents.core.store,
-                    DownloadService::class
+                    DownloadService::class,
                 ),
                 onNeedToRequestPermissions = { permissions ->
                     // The Fragment class wants us to use registerForActivityResult
                     @Suppress("DEPRECATION")
                     requestPermissions(permissions, REQUEST_CODE_DOWNLOAD_PERMISSIONS)
-                }
+                },
             ),
             owner = this,
-            view = view
+            view = view,
         )
 
         appLinksFeature.set(
@@ -203,10 +203,10 @@ abstract class BaseBrowserFragment : Fragment(), UserInteractionHandler, Activit
                 fragmentManager = parentFragmentManager,
                 launchInApp = {
                     prefs.getBoolean(requireContext().getPreferenceKey(R.string.pref_key_launch_external_app), false)
-                }
+                },
             ),
             owner = this,
-            view = view
+            view = view,
         )
 
         promptsFeature.set(
@@ -219,16 +219,16 @@ abstract class BaseBrowserFragment : Fragment(), UserInteractionHandler, Activit
                     // The Fragment class wants us to use registerForActivityResult
                     @Suppress("DEPRECATION")
                     requestPermissions(permissions, REQUEST_CODE_PROMPT_PERMISSIONS)
-                }
+                },
             ),
             owner = this,
-            view = view
+            view = view,
         )
 
         windowFeature.set(
             feature = WindowFeature(requireComponents.core.store, requireComponents.useCases.tabsUseCases),
             owner = this,
-            view = view
+            view = view,
         )
 
         fullScreenFeature.set(
@@ -237,10 +237,10 @@ abstract class BaseBrowserFragment : Fragment(), UserInteractionHandler, Activit
                 sessionUseCases = requireComponents.useCases.sessionUseCases,
                 tabId = sessionId,
                 viewportFitChanged = ::viewportFitChanged,
-                fullScreenChanged = ::fullScreenChanged
+                fullScreenChanged = ::fullScreenChanged,
             ),
             owner = this,
-            view = view
+            view = view,
         )
 
         findInPageIntegration.set(
@@ -248,10 +248,10 @@ abstract class BaseBrowserFragment : Fragment(), UserInteractionHandler, Activit
                 requireComponents.core.store,
                 sessionId,
                 findInPageBar as FindInPageView,
-                engineView
+                engineView,
             ),
             owner = this,
-            view = view
+            view = view,
         )
 
         sitePermissionFeature.set(
@@ -266,20 +266,20 @@ abstract class BaseBrowserFragment : Fragment(), UserInteractionHandler, Activit
                     requestPermissions(permissions, REQUEST_CODE_APP_PERMISSIONS)
                 },
                 onShouldShowRequestPermissionRationale = { shouldShowRequestPermissionRationale(it) },
-                store = requireComponents.core.store
+                store = requireComponents.core.store,
             ),
             owner = this,
-            view = view
+            view = view,
         )
 
         pictureInPictureIntegration.set(
             feature = PictureInPictureIntegration(
                 requireComponents.core.store,
                 requireActivity(),
-                sessionId
+                sessionId,
             ),
             owner = this,
-            view = view
+            view = view,
         )
 
         (swipeRefresh.layoutParams as? CoordinatorLayout.LayoutParams)?.apply {
@@ -288,27 +288,27 @@ abstract class BaseBrowserFragment : Fragment(), UserInteractionHandler, Activit
                 null,
                 swipeRefresh,
                 toolbar.height,
-                MozacEngineBehaviorToolbarPosition.BOTTOM
+                MozacEngineBehaviorToolbarPosition.BOTTOM,
             )
         }
         swipeRefreshFeature.set(
             feature = SwipeRefreshFeature(
                 requireComponents.core.store,
                 requireComponents.useCases.sessionUseCases.reload,
-                swipeRefresh
+                swipeRefresh,
             ),
             owner = this,
-            view = view
+            view = view,
         )
 
         if (BuildConfig.MOZILLA_OFFICIAL) {
             webAuthnFeature.set(
                 feature = WebAuthnFeature(
                     requireComponents.core.engine,
-                    requireActivity()
+                    requireActivity(),
                 ),
                 owner = this,
-                view = view
+                view = view,
             )
         }
 
@@ -363,7 +363,7 @@ abstract class BaseBrowserFragment : Fragment(), UserInteractionHandler, Activit
     final override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<String>,
-        grantResults: IntArray
+        grantResults: IntArray,
     ) {
         val feature: PermissionsFeature? = when (requestCode) {
             REQUEST_CODE_DOWNLOAD_PERMISSIONS -> downloadsFeature.get()
@@ -386,7 +386,7 @@ abstract class BaseBrowserFragment : Fragment(), UserInteractionHandler, Activit
     override fun onActivityResult(requestCode: Int, data: Intent?, resultCode: Int): Boolean {
         Logger.info(
             "Fragment onActivityResult received with " +
-                "requestCode: $requestCode, resultCode: $resultCode, data: $data"
+                "requestCode: $requestCode, resultCode: $resultCode, data: $data",
         )
 
         return activityResultHandler.any { it.onActivityResult(requestCode, data, resultCode) }

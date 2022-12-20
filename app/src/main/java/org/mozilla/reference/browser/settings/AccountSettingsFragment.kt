@@ -95,7 +95,7 @@ class AccountSettingsFragment : PreferenceFragmentCompat() {
         requireComponents.backgroundServices.accountManager.registerForSyncEvents(
             syncStatusObserver,
             owner = this,
-            autoPause = true
+            autoPause = true,
         )
     }
 
@@ -112,13 +112,13 @@ class AccountSettingsFragment : PreferenceFragmentCompat() {
             // Successfully synced.
             getString(
                 R.string.preferences_sync_last_synced_summary,
-                DateUtils.getRelativeTimeSpanString(lastSyncTime)
+                DateUtils.getRelativeTimeSpanString(lastSyncTime),
             )
         } else {
             // Failed to sync, succeeded before.
             getString(
                 R.string.preferences_sync_failed_summary,
-                DateUtils.getRelativeTimeSpanString(lastSyncTime)
+                DateUtils.getRelativeTimeSpanString(lastSyncTime),
             )
         }
     }

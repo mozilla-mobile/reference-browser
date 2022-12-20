@@ -35,8 +35,8 @@ class BrowserRobot {
         assertTrue(
             mDevice.findObject(
                 UiSelector()
-                    .textContains(expectedText)
-            ).waitForExists(waitingTime)
+                    .textContains(expectedText),
+            ).waitForExists(waitingTime),
         )
     }
 
@@ -51,12 +51,12 @@ class BrowserRobot {
     fun verifyUrl(expectedUrl: String) {
         mDevice.findObject(
             UiSelector()
-                .resourceId("$packageName:id/toolbar")
+                .resourceId("$packageName:id/toolbar"),
         )
             .waitForExists(waitingTime)
         mDevice.findObject(
             UiSelector()
-                .resourceId("$packageName:id/mozac_browser_toolbar_url_view")
+                .resourceId("$packageName:id/mozac_browser_toolbar_url_view"),
         )
             .waitForExists(waitingTime)
         mDevice.findObject(UiSelector().textContains(expectedUrl))
@@ -65,19 +65,19 @@ class BrowserRobot {
             allOf(
                 withSubstring(expectedUrl),
                 withId(R.id.mozac_browser_toolbar_url_view),
-                isDescendantOfA(withId(R.id.mozac_browser_toolbar_origin_view))
-            )
+                isDescendantOfA(withId(R.id.mozac_browser_toolbar_origin_view)),
+            ),
         ).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
     }
 
     fun verifyAboutBrowser() {
         assertTrue(
             mDevice.findObject(UiSelector().resourceId("$packageName:id/about_content"))
-                .waitForExists(waitingTime)
+                .waitForExists(waitingTime),
         )
         assertTrue(
             mDevice.findObject(UiSelector().resourceId("$packageName:id/version_info"))
-                .waitForExists(waitingTime)
+                .waitForExists(waitingTime),
         )
     }
 
@@ -149,23 +149,23 @@ class BrowserRobot {
             .waitForExists(waitingTime)
         assertTrue(
             mDevice.findObject(UiSelector().resourceId("$packageName:id/titleView"))
-                .waitForExists(waitingTime)
+                .waitForExists(waitingTime),
         )
         assertTrue(
             mDevice.findObject(UiSelector().textContains("Open link in new tab"))
-                .waitForExists(waitingTime)
+                .waitForExists(waitingTime),
         )
         assertTrue(
             mDevice.findObject(UiSelector().textContains("Open link in private tab"))
-                .waitForExists(waitingTime)
+                .waitForExists(waitingTime),
         )
         assertTrue(
             mDevice.findObject(UiSelector().textContains("Copy link"))
-                .waitForExists(waitingTime)
+                .waitForExists(waitingTime),
         )
         assertTrue(
             mDevice.findObject(UiSelector().textContains("Share link"))
-                .waitForExists(waitingTime)
+                .waitForExists(waitingTime),
         )
     }
 
@@ -175,19 +175,19 @@ class BrowserRobot {
             .waitForExists(waitingTime)
         assertTrue(
             mDevice.findObject(UiSelector().resourceId("$packageName:id/titleView"))
-                .waitForExists(waitingTime)
+                .waitForExists(waitingTime),
         )
         assertTrue(
             mDevice.findObject(UiSelector().textContains("Copy link"))
-                .waitForExists(waitingTime)
+                .waitForExists(waitingTime),
         )
         assertTrue(
             mDevice.findObject(UiSelector().textContains("Share link"))
-                .waitForExists(waitingTime)
+                .waitForExists(waitingTime),
         )
         assertTrue(
             mDevice.findObject(UiSelector().textContains("Save file to device"))
-                .waitForExists(waitingTime)
+                .waitForExists(waitingTime),
         )
     }
 
@@ -259,7 +259,7 @@ class BrowserRobot {
             mDevice.pressBack()
             mDevice.findObject(
                 UiSelector()
-                    .resourceId("$packageName:id/mozac_browser_toolbar_progress")
+                    .resourceId("$packageName:id/mozac_browser_toolbar_progress"),
             ).waitUntilGone(waitingTime)
             BrowserRobot().interact()
             return BrowserRobot.Transition()
@@ -276,5 +276,5 @@ private fun mediaPlayerPlayButton(state: String) =
     mDevice.findObject(
         UiSelector()
             .className("android.widget.Button")
-            .text(state)
+            .text(state),
     )

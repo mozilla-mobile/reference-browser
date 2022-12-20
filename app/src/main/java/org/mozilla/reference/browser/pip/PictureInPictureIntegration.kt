@@ -22,7 +22,7 @@ class PictureInPictureIntegration(
     private val store: BrowserStore,
     activity: Activity,
     private val customTabId: String?,
-    private val whiteList: List<String> = listOf("youtube.com/tv")
+    private val whiteList: List<String> = listOf("youtube.com/tv"),
 ) : LifecycleAwareFeature {
     private var scope: CoroutineScope? = null
     private val pictureFeature = PictureInPictureFeature(store, activity)

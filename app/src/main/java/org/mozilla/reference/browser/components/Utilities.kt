@@ -25,7 +25,7 @@ class Utilities(
     private val sessionUseCases: SessionUseCases,
     private val searchUseCases: SearchUseCases,
     private val tabsUseCases: TabsUseCases,
-    private val customTabsUseCases: CustomTabsUseCases
+    private val customTabsUseCases: CustomTabsUseCases,
 ) {
 
     /**
@@ -35,14 +35,14 @@ class Utilities(
         listOf(
             CustomTabIntentProcessor(
                 customTabsUseCases.add,
-                context.resources
+                context.resources,
             ),
             WebAppIntentProcessor(
                 store,
                 customTabsUseCases.addWebApp,
                 sessionUseCases.loadUrl,
-                ManifestStorage(context)
-            )
+                ManifestStorage(context),
+            ),
         )
     }
 

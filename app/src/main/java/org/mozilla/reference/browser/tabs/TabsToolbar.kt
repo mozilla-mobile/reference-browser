@@ -12,7 +12,7 @@ import org.mozilla.reference.browser.ext.components
 
 class TabsToolbar @JvmOverloads constructor(
     context: Context,
-    attrs: AttributeSet? = null
+    attrs: AttributeSet? = null,
 ) : androidx.appcompat.widget.Toolbar(context, attrs) {
     private var tabsFeature: TabsFeature? = null
     private var isPrivateTray = false

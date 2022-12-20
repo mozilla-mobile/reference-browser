@@ -57,7 +57,7 @@ class ThreeDotMenuRobot {
             forwardButton().click()
             mDevice.findObject(
                 UiSelector()
-                    .resourceId("$packageName:id/mozac_browser_toolbar_progress")
+                    .resourceId("$packageName:id/mozac_browser_toolbar_progress"),
             ).waitUntilGone(waitingTime)
             mDevice.waitForIdle()
 
@@ -86,7 +86,7 @@ class ThreeDotMenuRobot {
 
         @Suppress("SwallowedException")
         fun switchRequestDesktopSiteToggle(
-            interact: NavigationToolbarRobot.() -> Unit
+            interact: NavigationToolbarRobot.() -> Unit,
         ): NavigationToolbarRobot.Transition {
             try {
                 mDevice.findObject(UiSelector().textContains("Request desktop site"))
@@ -96,8 +96,8 @@ class ThreeDotMenuRobot {
                 assertTrue(
                     mDevice.findObject(
                         UiSelector()
-                            .resourceId("$packageName:id/mozac_browser_menu_recyclerView")
-                    ).waitUntilGone(waitingTime)
+                            .resourceId("$packageName:id/mozac_browser_menu_recyclerView"),
+                    ).waitUntilGone(waitingTime),
                 )
             } catch (e: AssertionFailedError) {
                 println("Failed to click request desktop toggle")
@@ -112,8 +112,8 @@ class ThreeDotMenuRobot {
                 assertTrue(
                     mDevice.findObject(
                         UiSelector()
-                            .resourceId("$packageName:id/mozac_browser_menu_recyclerView")
-                    ).waitUntilGone(waitingTime)
+                            .resourceId("$packageName:id/mozac_browser_menu_recyclerView"),
+                    ).waitUntilGone(waitingTime),
                 )
             }
             NavigationToolbarRobot().interact()
@@ -222,11 +222,11 @@ private fun assertSettingsButton() = settingsButton()
     .check(ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
 private fun assertRequestDesktopSiteIsTurnedOff() {
     assertFalse(
-        mDevice.findObject(UiSelector().textContains("Request desktop site")).isChecked
+        mDevice.findObject(UiSelector().textContains("Request desktop site")).isChecked,
     )
 }
 private fun assertRequestDesktopSiteIsTurnedOn() {
     assertTrue(
-        mDevice.findObject(UiSelector().textContains("Request desktop site")).isChecked
+        mDevice.findObject(UiSelector().textContains("Request desktop site")).isChecked,
     )
 }

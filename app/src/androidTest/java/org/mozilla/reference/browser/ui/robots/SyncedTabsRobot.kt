@@ -31,16 +31,16 @@ class SyncedTabsRobot {
         assertTrue(
             mDevice.findObject(
                 UiSelector()
-                    .resourceId("$packageName:id/synced_tabs_status")
+                    .resourceId("$packageName:id/synced_tabs_status"),
             )
-                .waitForExists(TestAssetHelper.waitingTime)
+                .waitForExists(TestAssetHelper.waitingTime),
         )
 
         onView(
             allOf(
                 withText(R.string.synced_tabs),
-                withText(R.string.synced_tabs_connect_to_sync_account)
-            )
+                withText(R.string.synced_tabs_connect_to_sync_account),
+            ),
         )
     }
 }

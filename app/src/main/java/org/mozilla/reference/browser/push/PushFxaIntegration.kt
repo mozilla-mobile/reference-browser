@@ -55,12 +55,12 @@ import org.mozilla.reference.browser.components.Push
  */
 class PushFxaIntegration(
     private val pushFeature: AutoPushFeature,
-    lazyAccountManager: Lazy<FxaAccountManager>
+    lazyAccountManager: Lazy<FxaAccountManager>,
 ) {
     private val observer =
         OneTimePushMessageObserver(
             lazyAccountManager,
-            pushFeature
+            pushFeature,
         )
 
     /**
@@ -79,7 +79,7 @@ class PushFxaIntegration(
  */
 internal class OneTimePushMessageObserver(
     private val lazyAccountManager: Lazy<FxaAccountManager>,
-    private val pushFeature: AutoPushFeature
+    private val pushFeature: AutoPushFeature,
 ) : AutoPushFeature.Observer {
     override fun onMessageReceived(scope: PushScope, message: ByteArray?) {
         // Ignore empty push messages.
@@ -112,11 +112,11 @@ internal class OneTimePushMessageObserver(
  */
 internal class OneTimeMessageDeliveryObserver(
     private val lazyAccount: Lazy<FxaAccountManager>,
-    private val message: ByteArray
+    private val message: ByteArray,
 ) : AccountObserver {
     override fun onAuthenticated(
         account: OAuthAccount,
-        authType: AuthType
+        authType: AuthType,
     ) {
         MainScope().launch {
             lazyAccount.value.withConstellation {

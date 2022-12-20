@@ -53,7 +53,7 @@ class ToolbarIntegration(
     private val sessionUseCases: SessionUseCases,
     private val tabsUseCases: TabsUseCases,
     private val webAppUseCases: WebAppUseCases,
-    sessionId: String? = null
+    sessionId: String? = null,
 ) : LifecycleAwareFeature, UserInteractionHandler {
     private val shippedDomainsProvider = ShippedDomainsProvider().also {
         it.initialize(context)
@@ -69,11 +69,11 @@ class ToolbarIntegration(
             icon = DrawableMenuIcon(
                 context,
                 mozilla.components.ui.icons.R.drawable.mozac_ic_forward,
-                tint = tint
+                tint = tint,
             ),
             containerStyle = ContainerStyle(
-                isEnabled = session?.content?.canGoForward == true
-            )
+                isEnabled = session?.content?.canGoForward == true,
+            ),
         ) {
             sessionUseCases.goForward.invoke()
         }
@@ -83,8 +83,8 @@ class ToolbarIntegration(
             icon = DrawableMenuIcon(
                 context,
                 mozilla.components.ui.icons.R.drawable.mozac_ic_refresh,
-                tint = tint
-            )
+                tint = tint,
+            ),
         ) {
             sessionUseCases.reload.invoke()
         }
@@ -94,8 +94,8 @@ class ToolbarIntegration(
             icon = DrawableMenuIcon(
                 context,
                 mozilla.components.ui.icons.R.drawable.mozac_ic_stop,
-                tint = tint
-            )
+                tint = tint,
+            ),
         ) {
             sessionUseCases.stopLoading.invoke()
         }
@@ -115,7 +115,7 @@ class ToolbarIntegration(
             CompoundMenuCandidate(
                 text = "Request desktop site",
                 isChecked = sessionState.content.desktopMode,
-                end = CompoundMenuCandidate.ButtonType.SWITCH
+                end = CompoundMenuCandidate.ButtonType.SWITCH,
             ) { checked ->
                 sessionUseCases.requestDesktopSite.invoke(checked)
             },
@@ -124,8 +124,8 @@ class ToolbarIntegration(
                 TextMenuCandidate(
                     text = "Add to homescreen",
                     containerStyle = ContainerStyle(
-                        isVisible = webAppUseCases.isPinningSupported()
-                    )
+                        isVisible = webAppUseCases.isPinningSupported(),
+                    ),
                 ) {
                     scope.launch { webAppUseCases.addToHomescreen() }
                 }
@@ -134,10 +134,10 @@ class ToolbarIntegration(
             },
 
             TextMenuCandidate(
-                text = "Find in Page"
+                text = "Find in Page",
             ) {
                 FindInPageIntegration.launch?.invoke()
-            }
+            },
         )
     }
 
@@ -163,7 +163,7 @@ class ToolbarIntegration(
 
             TextMenuCandidate(text = "Report issue") {
                 tabsUseCases.addTab(
-                    url = "https://github.com/mozilla-mobile/reference-browser/issues/new"
+                    url = "https://github.com/mozilla-mobile/reference-browser/issues/new",
                 )
             },
 
@@ -171,7 +171,7 @@ class ToolbarIntegration(
                 val intent = Intent(context, SettingsActivity::class.java)
                 intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
                 context.startActivity(intent)
-            }
+            },
         )
     }
 
@@ -180,7 +180,7 @@ class ToolbarIntegration(
     init {
         toolbar.display.indicators = listOf(
             DisplayToolbar.Indicators.SECURITY,
-            DisplayToolbar.Indicators.TRACKING_PROTECTION
+            DisplayToolbar.Indicators.TRACKING_PROTECTION,
         )
         toolbar.display.displayIndicatorSeparator = true
         toolbar.display.menuController = menuController
@@ -194,7 +194,7 @@ class ToolbarIntegration(
         }
 
         toolbar.display.setUrlBackground(
-            ResourcesCompat.getDrawable(context.resources, R.drawable.url_background, context.theme)
+            ResourcesCompat.getDrawable(context.resources, R.drawable.url_background, context.theme),
         )
 
         scope.launch {
@@ -215,10 +215,10 @@ class ToolbarIntegration(
             context.components.useCases.searchUseCases.defaultSearch.invoke(
                 searchTerms = searchTerms,
                 searchEngine = null,
-                parentSessionId = null
+                parentSessionId = null,
             )
         },
-        sessionId
+        sessionId,
     )
 
     override fun start() {

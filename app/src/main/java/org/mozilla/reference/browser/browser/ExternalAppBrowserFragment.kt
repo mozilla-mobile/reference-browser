@@ -58,22 +58,22 @@ class ExternalAppBrowserFragment : BaseBrowserFragment(), UserInteractionHandler
                 requireComponents.useCases.sessionUseCases,
                 requireComponents.useCases.customTabsUseCases,
                 sessionId!!,
-                activity
+                activity,
             ),
             owner = this,
-            view = view
+            view = view,
         )
 
         windowFeature.set(
             feature = CustomTabWindowFeature(
                 requireActivity(),
                 requireComponents.core.store,
-                sessionId
+                sessionId,
             ) { uri ->
                 requireComponents.analytics.crashReporter.submitCaughtException(Exception("Unknown scheme error $uri"))
             },
             owner = this,
-            view = view
+            view = view,
         )
 
         hideToolbarFeature.set(
@@ -81,14 +81,14 @@ class ExternalAppBrowserFragment : BaseBrowserFragment(), UserInteractionHandler
                 requireComponents.core.store,
                 requireComponents.core.customTabsStore,
                 sessionId,
-                manifest
+                manifest,
             ) { toolbarVisible ->
                 toolbar.isVisible = toolbarVisible
                 webAppToolbarShouldBeVisible = toolbarVisible
                 if (!toolbarVisible) { engineView.setDynamicToolbarMaxHeight(0) }
             },
             owner = this,
-            view = toolbar
+            view = toolbar,
         )
 
         if (manifest != null) {
@@ -98,15 +98,15 @@ class ExternalAppBrowserFragment : BaseBrowserFragment(), UserInteractionHandler
                 WebAppActivityFeature(
                     activity,
                     requireComponents.core.icons,
-                    manifest
+                    manifest,
                 ),
                 WebAppSiteControlsFeature(
                     requireContext().applicationContext,
                     requireComponents.core.store,
                     requireComponents.useCases.sessionUseCases.reload,
                     sessionId,
-                    manifest
-                )
+                    manifest,
+                ),
             )
         }
     }
@@ -124,7 +124,7 @@ class ExternalAppBrowserFragment : BaseBrowserFragment(), UserInteractionHandler
         fun create(
             sessionId: String,
             manifest: WebAppManifest?,
-            trustedScopes: List<Uri>
+            trustedScopes: List<Uri>,
         ) = ExternalAppBrowserFragment().apply {
             arguments = Bundle().apply {
                 putSessionId(sessionId)

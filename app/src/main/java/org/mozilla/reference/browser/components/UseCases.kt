@@ -25,7 +25,7 @@ class UseCases(
     private val context: Context,
     private val engine: Engine,
     private val store: BrowserStore,
-    private val shortcutManager: WebAppShortcutManager
+    private val shortcutManager: WebAppShortcutManager,
 ) {
     /**
      * Use cases that provide engine interactions for a given browser session.

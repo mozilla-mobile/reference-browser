@@ -21,13 +21,13 @@ import org.mozilla.reference.browser.ext.getPreferenceKey
 class Services(
     private val context: Context,
     private val accountManager: FxaAccountManager,
-    private val tabsUseCases: TabsUseCases
+    private val tabsUseCases: TabsUseCases,
 ) {
     private val prefs = PreferenceManager.getDefaultSharedPreferences(context)
     val accountsAuthFeature by lazy {
         FirefoxAccountsAuthFeature(
             accountManager,
-            redirectUrl = BackgroundServices.REDIRECT_URL
+            redirectUrl = BackgroundServices.REDIRECT_URL,
         ) {
                 _, authUrl ->
             MainScope().launch {
@@ -42,7 +42,7 @@ class Services(
             interceptLinkClicks = true,
             launchInApp = {
                 prefs.getBoolean(context.getPreferenceKey(R.string.pref_key_launch_external_app), false)
-            }
+            },
         )
     }
 }

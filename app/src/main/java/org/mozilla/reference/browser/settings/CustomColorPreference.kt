@@ -19,7 +19,7 @@ import org.mozilla.reference.browser.R
 class CustomColorPreference @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
-    defStyle: Int = 0
+    defStyle: Int = 0,
 ) : Preference(context, attrs, defStyle) {
     private var titleColor: Int = 0
     private var summaryColor: Int = 0
@@ -32,11 +32,11 @@ class CustomColorPreference @JvmOverloads constructor(
         context.obtainStyledAttributes(attrs, R.styleable.CustomColorPreference).apply {
             titleColor = getColor(
                 R.styleable.CustomColorPreference_titleColor,
-                ContextCompat.getColor(context, R.color.placeholder_grey)
+                ContextCompat.getColor(context, R.color.placeholder_grey),
             )
             summaryColor = getColor(
                 R.styleable.CustomColorPreference_summaryColor,
-                ContextCompat.getColor(context, R.color.placeholder_grey)
+                ContextCompat.getColor(context, R.color.placeholder_grey),
             )
             recycle()
         }

@@ -42,7 +42,7 @@ object TestHelper {
 
     fun createCustomTabIntent(
         pageUrl: String,
-        customActionButtonDescription: String = ""
+        customActionButtonDescription: String = "",
     ): Intent {
         val appContext = InstrumentationRegistry.getInstrumentation()
             .targetContext
@@ -54,7 +54,7 @@ object TestHelper {
                 createTestBitmap(),
                 customActionButtonDescription,
                 pendingIntent,
-                true
+                true,
             )
             .build()
         customTabsIntent.intent.data = Uri.parse(pageUrl)

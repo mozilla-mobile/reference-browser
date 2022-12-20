@@ -44,7 +44,7 @@ class TabsTrayFragment : Fragment(), UserInteractionHandler {
         tabsFeature = TabsFeature(
             trayAdapter,
             requireComponents.core.store,
-            ::closeTabsTray
+            ::closeTabsTray,
         ) { !it.content.private }
 
         val tabsPanel: TabsPanel = view.findViewById(R.id.tabsPanel)
@@ -106,7 +106,7 @@ class TabsTrayFragment : Fragment(), UserInteractionHandler {
                 override fun onTabClosed(tab: TabSessionState, source: String?) {
                     requireComponents.useCases.tabsUseCases.removeTab(tab.id)
                 }
-            }
+            },
         )
 
         val tabsTray = requireView().findViewById<RecyclerView>(R.id.tabsTray)

@@ -44,7 +44,7 @@ class NavigationToolbarRobot {
 
             mDevice.findObject(
                 UiSelector()
-                    .resourceId("$packageName:id/mozac_browser_toolbar_progress")
+                    .resourceId("$packageName:id/mozac_browser_toolbar_progress"),
             ).waitUntilGone(waitingTime)
 
             BrowserRobot().interact()
@@ -54,7 +54,7 @@ class NavigationToolbarRobot {
         fun openThreeDotMenu(interact: ThreeDotMenuRobot.() -> Unit): ThreeDotMenuRobot.Transition {
             mDevice.findObject(
                 UiSelector()
-                    .resourceId("$packageName:id/mozac_browser_toolbar_menu")
+                    .resourceId("$packageName:id/mozac_browser_toolbar_menu"),
             )
                 .waitForExists(waitingTime)
             threeDotMenuButton().click()
@@ -112,7 +112,7 @@ private fun assertNewTabAddressText(url: String) {
 private fun assertReaderViewButton() {
     mDevice.waitForWindowUpdate(packageName, waitingTime)
     mDevice.findObject(
-        UiSelector().resourceId("$packageName:id/mozac_browser_toolbar_page_actions")
+        UiSelector().resourceId("$packageName:id/mozac_browser_toolbar_page_actions"),
     ).waitForExists(waitingTime)
 
     readerViewButton().check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))

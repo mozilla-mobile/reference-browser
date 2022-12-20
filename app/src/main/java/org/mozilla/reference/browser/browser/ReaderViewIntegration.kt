@@ -29,7 +29,7 @@ class ReaderViewIntegration(
     store: BrowserStore,
     toolbar: BrowserToolbar,
     view: ReaderViewControlsView,
-    readerViewAppearanceButton: FloatingActionButton
+    readerViewAppearanceButton: FloatingActionButton,
 ) : LifecycleAwareFeature, UserInteractionHandler {
 
     private var readerViewButtonVisible = false
@@ -42,7 +42,7 @@ class ReaderViewIntegration(
         contentDescription = "Enable Reader View",
         contentDescriptionSelected = "Disable Reader View",
         selected = store.state.selectedTab?.readerState?.active ?: false,
-        visible = { readerViewButtonVisible }
+        visible = { readerViewButtonVisible },
     ) { enabled ->
         if (enabled) {
             feature.showReaderView()
@@ -87,7 +87,7 @@ class ReaderViewIntegration(
 @Suppress("unused") // Referenced from XML
 class ReaderViewAppearanceButtonBehavior(
     context: Context,
-    attrs: AttributeSet
+    attrs: AttributeSet,
 ) : CoordinatorLayout.Behavior<FloatingActionButton>(context, attrs) {
     override fun layoutDependsOn(parent: CoordinatorLayout, child: FloatingActionButton, dependency: View): Boolean {
         if (dependency is FindInPageBar || dependency is BrowserToolbar) {
@@ -100,7 +100,7 @@ class ReaderViewAppearanceButtonBehavior(
     override fun onDependentViewChanged(
         parent: CoordinatorLayout,
         child: FloatingActionButton,
-        dependency: View
+        dependency: View,
     ): Boolean {
         return if (dependency is FindInPageBar || dependency is BrowserToolbar) {
             repositionReaderViewAppearanceButton(child, dependency)

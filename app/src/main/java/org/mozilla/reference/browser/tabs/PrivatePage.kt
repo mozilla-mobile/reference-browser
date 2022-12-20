@@ -18,7 +18,7 @@ object PrivatePage {
         context: Context,
         url: String,
         @RawRes htmlRes: Int = R.raw.private_mode,
-        @RawRes cssRes: Int = R.raw.private_style
+        @RawRes cssRes: Int = R.raw.private_style,
     ): String {
         val css = context.resources.openRawResource(cssRes).bufferedReader().use {
             it.readText()

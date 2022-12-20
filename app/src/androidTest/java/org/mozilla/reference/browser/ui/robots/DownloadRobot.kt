@@ -31,7 +31,7 @@ private fun assertDownloadPopup() {
     mDevice.waitForIdle()
     assertTrue(
         mDevice.findObject(UiSelector().resourceId("$packageName:id/filename"))
-            .waitForExists(waitingTime)
+            .waitForExists(waitingTime),
     )
 }
 
@@ -39,19 +39,19 @@ private fun clickAllowButton() {
     mDevice.waitForIdle()
     mDevice.wait(
         Until.findObject(
-            By.res(getPermissionAllowID() + ":id/permission_message")
+            By.res(getPermissionAllowID() + ":id/permission_message"),
         ),
-        waitingTime
+        waitingTime,
     )
     mDevice.wait(
         Until.findObject(
-            By.res(getPermissionAllowID() + ":id/permission_allow_button")
+            By.res(getPermissionAllowID() + ":id/permission_allow_button"),
         ),
-        waitingTime
+        waitingTime,
     )
 
     val allowButton = mDevice.findObject(
-        By.res(getPermissionAllowID() + ":id/permission_allow_button")
+        By.res(getPermissionAllowID() + ":id/permission_allow_button"),
     )
     allowButton.click()
 }
