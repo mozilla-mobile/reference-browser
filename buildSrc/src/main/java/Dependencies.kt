@@ -46,7 +46,7 @@ object Versions {
     }
 
     object ThirdParty {
-        const val sentry = "6.8.0"
+        const val sentry = "6.11.0"
     }
 
     // Workaround for a Gradle parsing bug that prevents using nested objects directly in Gradle files.
