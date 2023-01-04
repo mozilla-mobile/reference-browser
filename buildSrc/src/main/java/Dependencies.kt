@@ -36,9 +36,10 @@ object Versions {
 
     object Testing {
         const val androidx_core = "1.5.0"
-        const val androidx_espresso = "3.5.0"
-        const val androidx_ext_junit = "1.1.4"
+        const val androidx_espresso = "3.5.1"
+        const val androidx_ext_junit = "1.1.5"
         const val androidx_orchestrator = "1.4.2"
+        const val androidx_runner = "1.5.2"
         const val androidx_uiautomator = "2.2.0"
         const val jacoco = "0.8.8"
         const val ktlint = "0.47.1"
@@ -162,7 +163,7 @@ object Deps {
     const val mockwebserver = "com.squareup.okhttp3:mockwebserver:${Versions.Testing.mockwebserver}"
     const val orchestrator =  "androidx.test:orchestrator:${Versions.Testing.androidx_orchestrator}"
     const val tools_test_rules = "androidx.test:rules:${Versions.Testing.androidx_core}"
-    const val tools_test_runner = "androidx.test:runner:${Versions.Testing.androidx_core}"
+    const val tools_test_runner = "androidx.test:runner:${Versions.Testing.androidx_runner}"
     const val uiautomator = "androidx.test.uiautomator:uiautomator:${Versions.Testing.androidx_uiautomator}"
     const val junit_ktx = "androidx.test.ext:junit-ktx:${Versions.Testing.androidx_ext_junit}"
 }
