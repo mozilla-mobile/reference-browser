@@ -28,7 +28,7 @@ class ExternalAppsRobot {
     fun verifyYouTubeApp() = assertYouTubeApp()
 
     class Transition {
-        fun externalApps(interact: ExternalAppsRobot.() -> Unit): ExternalAppsRobot.Transition {
+        fun externalApps(): ExternalAppsRobot.Transition {
             return ExternalAppsRobot.Transition()
         }
     }

@@ -41,7 +41,7 @@ class FindInPagePanelRobot {
     }
 
     class Transition {
-        fun findInPage(interact: FindInPagePanelRobot.() -> Unit): FindInPagePanelRobot.Transition {
+        fun findInPage(): FindInPagePanelRobot.Transition {
             return FindInPagePanelRobot.Transition()
         }
     }
