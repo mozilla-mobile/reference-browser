@@ -19,7 +19,7 @@ import androidx.test.uiautomator.By
 import androidx.test.uiautomator.UiDevice
 import androidx.test.uiautomator.UiSelector
 import androidx.test.uiautomator.Until
-import junit.framework.Assert
+import org.junit.Assert
 import org.junit.Assert.assertNull
 import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.ext.waitAndInteract
