@@ -28,7 +28,7 @@ class SettingsViewPrivacyRobot {
     fun verifyTelemetrySummary() = assertTelemetrySummary()
 
     class Transition {
-        fun settingsViewPrivacy(interact: SettingsViewPrivacyRobot.() -> Unit): SettingsViewPrivacyRobot.Transition {
+        fun settingsViewPrivacy(): SettingsViewPrivacyRobot.Transition {
             return SettingsViewPrivacyRobot.Transition()
         }
     }

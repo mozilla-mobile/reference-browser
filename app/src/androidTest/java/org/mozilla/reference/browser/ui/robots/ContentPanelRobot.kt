@@ -19,7 +19,7 @@ class ContentPanelRobot {
     class Transition {
         val mDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
 
-        fun contentPanel(interact: ContentPanelRobot.() -> Unit): ContentPanelRobot.Transition {
+        fun contentPanel(): ContentPanelRobot.Transition {
             mDevice.waitForIdle()
             return ContentPanelRobot.Transition()
         }

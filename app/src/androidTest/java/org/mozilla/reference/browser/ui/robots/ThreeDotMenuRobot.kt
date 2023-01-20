@@ -13,9 +13,9 @@ import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.uiautomator.UiSelector
-import junit.framework.Assert.assertFalse
-import junit.framework.Assert.assertTrue
 import junit.framework.AssertionFailedError
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertTrue
 import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.helpers.TestAssetHelper.waitingTime
 import org.mozilla.reference.browser.helpers.TestHelper.packageName

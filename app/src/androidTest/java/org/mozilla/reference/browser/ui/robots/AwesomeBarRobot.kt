@@ -14,8 +14,8 @@ import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withSubstring
 import androidx.test.uiautomator.By
 import androidx.test.uiautomator.UiSelector
-import junit.framework.Assert.assertTrue
 import org.hamcrest.CoreMatchers.allOf
+import org.junit.Assert.assertTrue
 import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.helpers.Constants.LONG_CLICK_DURATION
 import org.mozilla.reference.browser.helpers.TestAssetHelper.waitingTime
