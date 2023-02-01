@@ -9,7 +9,6 @@ import android.content.Intent
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import mozilla.components.browser.domains.autocomplete.ShippedDomainsProvider
@@ -17,6 +16,7 @@ import mozilla.components.browser.menu2.BrowserMenuController
 import mozilla.components.browser.state.selector.selectedTab
 import mozilla.components.browser.state.state.SessionState
 import mozilla.components.browser.state.store.BrowserStore
+import mozilla.components.browser.storage.sync.PlacesHistoryStorage
 import mozilla.components.browser.toolbar.BrowserToolbar
 import mozilla.components.browser.toolbar.display.DisplayToolbar
 import mozilla.components.concept.menu.MenuController
@@ -27,7 +27,6 @@ import mozilla.components.concept.menu.candidate.MenuCandidate
 import mozilla.components.concept.menu.candidate.RowMenuCandidate
 import mozilla.components.concept.menu.candidate.SmallMenuCandidate
 import mozilla.components.concept.menu.candidate.TextMenuCandidate
-import mozilla.components.concept.storage.HistoryStorage
 import mozilla.components.feature.pwa.WebAppUseCases
 import mozilla.components.feature.session.SessionUseCases
 import mozilla.components.feature.tabs.TabsUseCases
@@ -48,7 +47,7 @@ import org.mozilla.reference.browser.tabs.synced.SyncedTabsActivity
 class ToolbarIntegration(
     private val context: Context,
     toolbar: BrowserToolbar,
-    historyStorage: HistoryStorage,
+    historyStorage: PlacesHistoryStorage,
     store: BrowserStore,
     private val sessionUseCases: SessionUseCases,
     private val tabsUseCases: TabsUseCases,
@@ -189,8 +188,9 @@ class ToolbarIntegration(
         toolbar.edit.hint = context.getString(R.string.toolbar_hint)
 
         ToolbarAutocompleteFeature(toolbar).apply {
-            addHistoryStorageProvider(historyStorage)
-            addDomainProvider(shippedDomainsProvider)
+            updateAutocompleteProviders(
+                listOf(historyStorage, shippedDomainsProvider),
+            )
         }
 
         toolbar.display.setUrlBackground(
