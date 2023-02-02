@@ -221,6 +221,13 @@ class BrowserRobot {
         contextCopyLink.click()
     }
 
+    fun waitUntilCopyLinkSnackbarIsGone() =
+        mDevice.findObject(
+            UiSelector()
+                .resourceId("$packageName:id/snackbar_text")
+                .textContains("Link copied to clipboard"),
+        ).waitUntilGone(waitingTime)
+
     fun verifyMediaPlayerControlButtonState(state: String) {
         mDevice.findObject(UiSelector().textContains("Audio_Test_Page")).waitForExists(waitingTime)
         mDevice.findObject(UiSelector().textContains("audio player")).waitForExists(waitingTime)
