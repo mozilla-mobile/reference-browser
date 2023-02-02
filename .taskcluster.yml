@@ -12,6 +12,9 @@ tasks:
               else:
                   $if: 'tasks_for == "cron"'
                   then: '${ownTaskId}'
+          isPullRequest:
+              # We now support both github-pull-request and github-pull-request-untrusted
+              $eval: 'tasks_for[:19] == "github-pull-request"'
       in:
           $let:
             # Github events have this stuff in different places...
@@ -25,7 +28,7 @@ tasks:
                         then: '${event.pusher.email}'
                         else: '${event.pusher.name}@users.noreply.github.com'
                     else:
-                        $if: 'tasks_for == "github-pull-request"'
+                        $if: 'isPullRequest'
                         then: '${event.pull_request.user.login}@users.noreply.github.com'
                         else:
                             $if: 'tasks_for == "github-release"'
@@ -34,7 +37,7 @@ tasks:
                 $if: 'tasks_for in ["github-push", "github-release"]'
                 then: '${event.repository.html_url}'
                 else:
-                    $if: 'tasks_for == "github-pull-request"'
+                    $if: 'isPullRequest'
                     then: '${event.pull_request.base.repo.html_url}'
                     else:
                         $if: 'tasks_for in ["cron", "action"]'
@@ -43,7 +46,7 @@ tasks:
                 $if: 'tasks_for in ["github-push", "github-release"]'
                 then: '${event.repository.html_url}'
                 else:
-                    $if: 'tasks_for == "github-pull-request"'
+                    $if: 'isPullRequest'
                     then: '${event.pull_request.head.repo.html_url}'
                     else:
                         $if: 'tasks_for in ["cron", "action"]'
@@ -52,13 +55,13 @@ tasks:
                 $if: 'tasks_for in ["github-push", "github-release"]'
                 then: '${event.repository.name}'
                 else:
-                    $if: 'tasks_for == "github-pull-request"'
+                    $if: 'isPullRequest'
                     then: '${event.pull_request.head.repo.name}'
                     else:
                         $if: 'tasks_for in ["cron", "action"]'
                         then: '${repository.project}'
             head_branch:
-                $if: 'tasks_for == "github-pull-request"'
+                $if: 'isPullRequest'
                 then: ${event.pull_request.head.ref}
                 else:
                     $if: 'tasks_for == "github-push"'
@@ -73,7 +76,7 @@ tasks:
                 $if: 'tasks_for == "github-push"'
                 then: '${event.after}'
                 else:
-                    $if: 'tasks_for == "github-pull-request"'
+                    $if: 'isPullRequest'
                     then: '${event.pull_request.head.sha}'
                     else:
                         $if: 'tasks_for == "github-release"'
@@ -86,7 +89,7 @@ tasks:
                 then: '${event.release.tag_name}'
                 else: ''
             pullRequestAction:
-                $if: 'tasks_for == "github-pull-request"'
+                $if: 'isPullRequest'
                 then: ${event.action}
                 else: 'UNDEFINED'
             releaseAction:
@@ -96,7 +99,7 @@ tasks:
           in:
               $if: >
                 tasks_for in ["action", "cron"]
-                || (tasks_for == "github-pull-request" && pullRequestAction in ["opened", "reopened", "synchronize"])
+                || (isPullRequest && pullRequestAction in ["opened", "reopened", "synchronize"])
                 || (tasks_for == "github-push" && head_branch[:10] != "refs/tags/" && head_branch != "staging.tmp" && head_branch != "trying.tmp")
                 || (tasks_for == "github-release" && releaseAction == "published")
               then:
@@ -128,7 +131,7 @@ tasks:
                                 $merge:
                                     - owner: "${ownerEmail}"
                                       source: '${repoUrl}/raw/${head_sha}/.taskcluster.yml'
-                                    - $if: 'tasks_for in ["github-push", "github-pull-request", "github-release"]'
+                                    - $if: 'isPullRequest || tasks_for in ["github-push", "github-release"]'
                                       then:
                                           name: "Decision Task"
                                           description: 'The task that creates all of the other tasks in the task graph'
@@ -146,7 +149,7 @@ tasks:
                             provisionerId: "mobile-${level}"
                             workerType: "decision-gcp"
                             tags:
-                                $if: 'tasks_for in ["github-push", "github-pull-request"]'
+                                $if: 'isPullRequest || tasks_for in ["github-push"]'
                                 then:
                                     kind: decision-task
                                 else:
@@ -180,7 +183,7 @@ tasks:
                                     # `https://` is 8 characters so, ${repoUrl[8:]} is the repository without the protocol.
                                     - 'assume:repo:${repoUrl[8:]}:branch:${short_head_branch}'
                                 else:
-                                    $if: 'tasks_for == "github-pull-request"'
+                                    $if: 'isPullRequest'
                                     then:
                                         - 'assume:repo:github.com/${event.pull_request.base.repo.full_name}:pull-request'
                                     else:
@@ -213,7 +216,7 @@ tasks:
                                           MOBILE_REPOSITORY_TYPE: git
                                           REPOSITORIES: {$json: {mobile: "Reference Browser"}}
                                           ANDROID_SDK_ROOT: /builds/worker/android-sdk
-                                        - $if: 'tasks_for in ["github-pull-request"]'
+                                        - $if: 'isPullRequest'
                                           then:
                                               MOBILE_PULL_REQUEST_NUMBER: '${event.pull_request.number}'
                                         - $if: 'tasks_for == "action"'
@@ -288,7 +291,7 @@ tasks:
                                           $merge:
                                               - machine:
                                                     platform: gecko-decision
-                                              - $if: 'tasks_for in ["github-push", "github-pull-request"]'
+                                              - $if: 'isPullRequest || tasks_for in ["github-push"]'
                                                 then:
                                                     symbol: D
                                                 else:
