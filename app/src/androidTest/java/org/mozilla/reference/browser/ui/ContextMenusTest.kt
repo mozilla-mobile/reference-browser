@@ -60,6 +60,7 @@ class ContextMenusTest {
         }.enterUrlAndEnterToBrowser(pageLinks.url) {
             longClickMatchingText("Link 1")
             clickContextOpenLinkInNewTab()
+            clickSnackbarSwitchButton()
         }
         navigationToolbar {
         }.openTabTrayMenu {
@@ -78,6 +79,7 @@ class ContextMenusTest {
         }.enterUrlAndEnterToBrowser(pageLinks.url) {
             longClickMatchingText("Link 1")
             clickContextOpenLinkInPrivateTab()
+            clickSnackbarSwitchButton()
         }
         navigationToolbar {
         }.openTabTrayMenu {
