@@ -233,6 +233,16 @@ class BrowserRobot {
         mDevice.waitForIdle()
     }
 
+    fun clickOpenInAppPromptButton() =
+        mDevice.findObject(
+            UiSelector()
+                .resourceId("android:id/button1")
+                .textContains("OPEN"),
+        ).also {
+            it.waitForExists(waitingTime)
+            it.click()
+        }
+
     class Transition {
         private val device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
 
