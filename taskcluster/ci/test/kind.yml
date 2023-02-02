@@ -42,7 +42,9 @@ tasks:
         run:
             gradlew: ['clean', 'testNightlyUnitTest']
     raptor:
-        run-on-tasks-for: [github-push]
+        run-on-tasks-for:
+            - github-push
+            - github-pull-request
         run:
             gradlew: ['clean', 'testRaptorUnitTest']
     debug:
