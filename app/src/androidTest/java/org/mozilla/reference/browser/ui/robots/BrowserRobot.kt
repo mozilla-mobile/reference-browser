@@ -243,6 +243,16 @@ class BrowserRobot {
             it.click()
         }
 
+    fun clickSnackbarSwitchButton() =
+        mDevice.findObject(
+            UiSelector()
+                .resourceId("$packageName:id/snackbar_action")
+                .textContains("SWITCH"),
+        ).also {
+            it.waitForExists(waitingTime)
+            it.click()
+        }
+
     class Transition {
         private val device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
 
