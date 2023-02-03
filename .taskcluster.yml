@@ -2,7 +2,7 @@
 version: 1
 reporting: checks-v1
 policy:
-    pullRequests: public
+    pullRequests: public_restricted
 tasks:
     - $let:
           trustDomain: mobile
