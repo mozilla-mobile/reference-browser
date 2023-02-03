@@ -185,7 +185,7 @@ tasks:
                                 else:
                                     $if: 'isPullRequest'
                                     then:
-                                        - 'assume:repo:github.com/${event.pull_request.base.repo.full_name}:pull-request'
+                                        - 'assume:repo:github.com/${event.pull_request.base.repo.full_name}:${tasks_for[7:]}'
                                     else:
                                         $if: 'tasks_for == "github-release"'
                                         then:
