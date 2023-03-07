@@ -16,7 +16,7 @@ object Versions {
         const val lifecycle = "2.5.1"
         const val preference = "1.2.0"
         const val swiperefreshlayout = "1.1.0"
-        const val work = "2.7.1"
+        const val work = "2.8.0"
     }
 
     object Google {
