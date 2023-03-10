@@ -24,7 +24,7 @@ import mozilla.components.concept.engine.EngineView
 import mozilla.components.feature.app.links.AppLinksFeature
 import mozilla.components.feature.downloads.DownloadsFeature
 import mozilla.components.feature.downloads.manager.FetchDownloadManager
-import mozilla.components.feature.downloads.share.ShareDownloadFeature
+import mozilla.components.feature.downloads.temporary.ShareDownloadFeature
 import mozilla.components.feature.findinpage.view.FindInPageBar
 import mozilla.components.feature.findinpage.view.FindInPageView
 import mozilla.components.feature.prompts.PromptFeature

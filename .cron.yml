@@ -10,7 +10,7 @@ jobs:
           treeherder-symbol: Nd
           target-tasks-method: nightly
       when:
-          - {hour: 6, minute: 0}
+          - {hour: 9, minute: 0}
     # Cannot name the following entry "bump-android-component" because the full hookId is larger
     # than 64 characters. For more details see: https://phabricator.services.mozilla.com/D67443
     - name: bump-android-comp
@@ -18,4 +18,4 @@ jobs:
           type: decision-task
           treeherder-symbol: bump-ac
           target-tasks-method: bump_android_components
-      when: [{hour: 16, minute: 0}]
+      when: [{hour: 7, minute: 0}]
