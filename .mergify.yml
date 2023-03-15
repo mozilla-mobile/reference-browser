@@ -15,7 +15,6 @@ pull_request_rules:
       queue:
         method: rebase
         name: default
-        rebase_fallback: none
   - name: Needs landing - Merge
     conditions:
       - status-success=pr-complete
@@ -25,4 +24,3 @@ pull_request_rules:
       queue:
         method: rebase
         name: default
-        rebase_fallback: none
