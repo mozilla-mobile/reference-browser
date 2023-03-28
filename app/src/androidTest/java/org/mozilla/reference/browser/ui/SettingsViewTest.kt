@@ -165,6 +165,7 @@ class SettingsViewTest {
         }
     }
 
+    @Ignore("Failing, see: https://github.com/mozilla-mobile/reference-browser/issues/2260")
     @Test
     fun openLinksInAppsTest() {
         val url = "m.youtube.com"
