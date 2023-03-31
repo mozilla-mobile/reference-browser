@@ -118,6 +118,7 @@ object Deps {
     const val mozilla_ui_colors = "org.mozilla.components:ui-colors:${AndroidComponents.VERSION}"
     const val mozilla_ui_icons = "org.mozilla.components:ui-icons:${AndroidComponents.VERSION}"
     const val mozilla_ui_tabcounter = "org.mozilla.components:ui-tabcounter:${AndroidComponents.VERSION}"
+    const val mozilla_ui_widgets = "org.mozilla.components:ui-widgets:${AndroidComponents.VERSION}"
 
     const val mozilla_service_firefox_accounts = "org.mozilla.components:service-firefox-accounts:${AndroidComponents.VERSION}"
     const val mozilla_service_location = "org.mozilla.components:service-location:${AndroidComponents.VERSION}"
