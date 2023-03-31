@@ -6,7 +6,9 @@ package org.mozilla.reference.browser
 
 import android.annotation.SuppressLint
 import android.content.Context
+import androidx.core.app.NotificationManagerCompat
 import mozilla.components.feature.autofill.AutofillConfiguration
+import mozilla.components.support.base.android.NotificationsDelegate
 import org.mozilla.reference.browser.autofill.AutofillConfirmActivity
 import org.mozilla.reference.browser.autofill.AutofillSearchActivity
 import org.mozilla.reference.browser.autofill.AutofillUnlockActivity
@@ -66,6 +68,14 @@ class Components(private val context: Context) {
             searchActivity = AutofillSearchActivity::class.java,
             applicationName = context.getString(R.string.app_name),
             httpClient = core.client,
+        )
+    }
+
+    private val notificationManagerCompat = NotificationManagerCompat.from(context)
+
+    val notificationsDelegate: NotificationsDelegate by lazy {
+        NotificationsDelegate(
+            notificationManagerCompat,
         )
     }
 }

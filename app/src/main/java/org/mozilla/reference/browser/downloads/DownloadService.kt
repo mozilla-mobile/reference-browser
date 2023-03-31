@@ -6,9 +6,11 @@ package org.mozilla.reference.browser.downloads
 
 import mozilla.components.browser.state.store.BrowserStore
 import mozilla.components.feature.downloads.AbstractFetchDownloadService
+import mozilla.components.support.base.android.NotificationsDelegate
 import org.mozilla.reference.browser.ext.components
 
 class DownloadService : AbstractFetchDownloadService() {
     override val httpClient by lazy { components.core.client }
     override val store: BrowserStore by lazy { components.core.store }
+    override val notificationsDelegate: NotificationsDelegate by lazy { components.notificationsDelegate }
 }

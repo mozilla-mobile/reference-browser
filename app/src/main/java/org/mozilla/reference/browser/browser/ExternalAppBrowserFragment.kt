@@ -106,6 +106,7 @@ class ExternalAppBrowserFragment : BaseBrowserFragment(), UserInteractionHandler
                     requireComponents.useCases.sessionUseCases.reload,
                     sessionId,
                     manifest,
+                    notificationsDelegate = requireComponents.notificationsDelegate,
                 ),
             )
         }
