@@ -20,6 +20,7 @@ import org.mozilla.geckoview.BuildConfig.MOZ_UPDATE_CHANNEL
 import org.mozilla.reference.browser.BrowserApplication
 import org.mozilla.reference.browser.BuildConfig
 import org.mozilla.reference.browser.R
+import org.mozilla.reference.browser.ext.components
 
 /**
  * Component group for all functionality related to analytics e.g. crash
@@ -70,6 +71,7 @@ class Analytics(private val context: Context) {
             nonFatalCrashIntent = PendingIntent
                 .getBroadcast(context, 0, Intent(BrowserApplication.NON_FATAL_CRASH_BROADCAST), flags),
             enabled = true,
+            notificationsDelegate = context.components.notificationsDelegate,
         )
     }
 }

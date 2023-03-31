@@ -49,6 +49,7 @@ import org.mozilla.reference.browser.R.string.pref_key_remote_debugging
 import org.mozilla.reference.browser.R.string.pref_key_tracking_protection_normal
 import org.mozilla.reference.browser.R.string.pref_key_tracking_protection_private
 import org.mozilla.reference.browser.downloads.DownloadService
+import org.mozilla.reference.browser.ext.components
 import org.mozilla.reference.browser.ext.getPreferenceKey
 import org.mozilla.reference.browser.media.MediaSessionService
 import org.mozilla.reference.browser.settings.Settings
@@ -98,7 +99,7 @@ class Core(private val context: Context) {
                     LocationService.default(),
                 ),
                 SearchMiddleware(context),
-                RecordingDevicesMiddleware(context),
+                RecordingDevicesMiddleware(context, context.components.notificationsDelegate),
             ) + EngineMiddleware.create(engine),
         ).apply {
             icons.install(engine, this)
@@ -110,6 +111,7 @@ class Core(private val context: Context) {
                 R.drawable.ic_notification,
                 geckoSitePermissionsStorage,
                 BrowserActivity::class.java,
+                notificationsDelegate = context.components.notificationsDelegate,
             )
 
             MediaSessionFeature(context, MediaSessionService::class.java, this).start()
@@ -183,7 +185,11 @@ class Core(private val context: Context) {
     }
 
     val addonUpdater by lazy {
-        DefaultAddonUpdater(context, Frequency(1, TimeUnit.DAYS))
+        DefaultAddonUpdater(
+            context,
+            Frequency(1, TimeUnit.DAYS),
+            notificationsDelegate = context.components.notificationsDelegate,
+        )
     }
 
     val addonCollectionProvider by lazy {
