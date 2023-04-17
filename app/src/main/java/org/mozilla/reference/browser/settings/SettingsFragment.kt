@@ -32,6 +32,7 @@ import org.mozilla.reference.browser.R.string.pref_key_sign_in
 import org.mozilla.reference.browser.autofill.AutofillPreference
 import org.mozilla.reference.browser.ext.getPreferenceKey
 import org.mozilla.reference.browser.ext.requireComponents
+import org.mozilla.reference.browser.sync.BrowserFxAEntryPoint
 import kotlin.system.exitProcess
 
 private typealias RBSettings = org.mozilla.reference.browser.settings.Settings
@@ -127,7 +128,10 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
     private fun getClickListenerForSignIn(): OnPreferenceClickListener {
         return OnPreferenceClickListener {
-            requireComponents.services.accountsAuthFeature.beginAuthentication(requireContext())
+            requireComponents.services.accountsAuthFeature.beginAuthentication(
+                requireContext(),
+                BrowserFxAEntryPoint.HomeMenu,
+            )
             activity?.finish()
             true
         }
