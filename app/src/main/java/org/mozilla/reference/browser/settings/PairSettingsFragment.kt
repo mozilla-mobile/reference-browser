@@ -15,6 +15,7 @@ import mozilla.components.support.base.feature.ViewBoundFeatureWrapper
 import org.mozilla.reference.browser.AppPermissionCodes.REQUEST_CODE_CAMERA_PERMISSIONS
 import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.ext.requireComponents
+import org.mozilla.reference.browser.sync.BrowserFxAEntryPoint
 
 class PairSettingsFragment : Fragment(), UserInteractionHandler {
     private val qrFeature = ViewBoundFeatureWrapper<QrFeature>()
@@ -38,6 +39,7 @@ class PairSettingsFragment : Fragment(), UserInteractionHandler {
                     requireComponents.services.accountsAuthFeature.beginPairingAuthentication(
                         requireContext(),
                         pairingUrl,
+                        BrowserFxAEntryPoint.HomeMenu,
                     )
                     activity?.finish()
                 },
