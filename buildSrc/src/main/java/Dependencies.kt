@@ -8,15 +8,15 @@
 // Synchronized version numbers for dependencies used by (some) modules
 object Versions {
     object AndroidX {
-        const val activity_compose = "1.6.1"
+        const val activity_compose = "1.7.1"
         const val appcompat = "1.6.1"
         const val compose = "1.4.2"
         const val constraintlayout = "2.1.4"
-        const val core = "1.9.0"
-        const val lifecycle = "2.6.0"
+        const val core = "1.10.0"
+        const val lifecycle = "2.6.1"
         const val preference = "1.2.0"
         const val swiperefreshlayout = "1.1.0"
-        const val work = "2.8.0"
+        const val work = "2.8.1"
     }
 
     object Google {
@@ -47,7 +47,7 @@ object Versions {
     }
 
     object ThirdParty {
-        const val sentry = "6.17.0"
+        const val sentry = "6.18.1"
     }
 
     // Workaround for a Gradle parsing bug that prevents using nested objects directly in Gradle files.
