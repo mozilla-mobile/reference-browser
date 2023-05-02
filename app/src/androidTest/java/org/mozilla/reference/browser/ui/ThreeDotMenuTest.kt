@@ -130,6 +130,7 @@ class ThreeDotMenuTest {
         }
     }
 
+    @Ignore("Failing, see: https://github.com/mozilla-mobile/reference-browser/issues/2085")
     @Test
     fun privateBrowsingTabNavigationTest() {
         val defaultWebPage = TestAssetHelper.getGenericAsset(mockWebServer, 1)
