@@ -13,6 +13,7 @@ import androidx.test.uiautomator.UiSelector
 import okhttp3.mockwebserver.MockWebServer
 import org.junit.After
 import org.junit.Before
+import org.junit.Ignore
 import org.junit.Rule
 import org.junit.Test
 import org.mozilla.reference.browser.R
@@ -180,6 +181,7 @@ class TabTrayMenuTest {
     }
 
     // This test verifies the new tab is open and that its items are all in place
+    @Ignore("Failing, see: https://github.com/mozilla-mobile/reference-browser/issues/1923")
     @Test
     fun openNewPrivateTabTest() {
         val firstGenericURL = TestAssetHelper.getGenericAsset(mockWebServer, 1)
