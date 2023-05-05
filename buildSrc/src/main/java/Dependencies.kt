@@ -21,7 +21,7 @@ object Versions {
 
     object Google {
         const val compose_compiler = "1.4.7"
-        const val material = "1.8.0"
+        const val material = "1.9.0"
     }
 
     object Gradle {
