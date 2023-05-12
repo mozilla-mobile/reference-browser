@@ -41,9 +41,9 @@ object Versions {
         const val androidx_orchestrator = "1.4.2"
         const val androidx_runner = "1.5.2"
         const val androidx_uiautomator = "2.2.0"
-        const val jacoco = "0.8.8"
+        const val jacoco = "0.8.10"
         const val ktlint = "0.48.2"
-        const val mockwebserver = "4.10.0"
+        const val mockwebserver = "4.11.0"
     }
 
     object ThirdParty {
