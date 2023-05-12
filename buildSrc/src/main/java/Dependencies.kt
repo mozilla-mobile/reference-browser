@@ -31,7 +31,7 @@ object Versions {
 
     object Kotlin {
         const val compiler = "1.8.21"
-        const val coroutines = "1.7.0"
+        const val coroutines = "1.7.1"
     }
 
     object Testing {
