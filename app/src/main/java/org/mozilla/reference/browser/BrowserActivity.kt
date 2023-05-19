@@ -58,6 +58,8 @@ open class BrowserActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        components.notificationsDelegate.bindToActivity(this)
+
         if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction().apply {
                 replace(R.id.container, createBrowserFragment(sessionId))
@@ -102,6 +104,11 @@ open class BrowserActivity : AppCompatActivity() {
         }
 
         super.onActivityResult(requestCode, resultCode, data)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        components.notificationsDelegate.unBindActivity(this)
     }
 
     /**
