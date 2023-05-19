@@ -51,6 +51,7 @@ import org.mozilla.reference.browser.downloads.DownloadService
 import org.mozilla.reference.browser.ext.getPreferenceKey
 import org.mozilla.reference.browser.ext.requireComponents
 import org.mozilla.reference.browser.pip.PictureInPictureIntegration
+import org.mozilla.reference.browser.tabs.LastTabFeature
 import mozilla.components.ui.widgets.behavior.ToolbarPosition as MozacEngineBehaviorToolbarPosition
 import mozilla.components.ui.widgets.behavior.ViewPosition as MozacToolbarBehaviorToolbarPosition
 
@@ -75,6 +76,7 @@ abstract class BaseBrowserFragment : Fragment(), UserInteractionHandler, Activit
     private val swipeRefreshFeature = ViewBoundFeatureWrapper<SwipeRefreshFeature>()
     private val windowFeature = ViewBoundFeatureWrapper<WindowFeature>()
     private val webAuthnFeature = ViewBoundFeatureWrapper<WebAuthnFeature>()
+    private val lastTabFeature = ViewBoundFeatureWrapper<LastTabFeature>()
 
     private val engineView: EngineView
         get() = requireView().findViewById<View>(R.id.engineView) as EngineView
@@ -91,6 +93,7 @@ abstract class BaseBrowserFragment : Fragment(), UserInteractionHandler, Activit
         toolbarIntegration,
 
         sessionFeature,
+        lastTabFeature,
     )
 
     private val activityResultHandler: List<ViewBoundFeatureWrapper<*>> = listOf(
@@ -349,6 +352,17 @@ abstract class BaseBrowserFragment : Fragment(), UserInteractionHandler, Activit
                 requireComponents.core.store,
                 requireComponents.useCases.sessionUseCases.reload,
                 swipeRefresh,
+            ),
+            owner = this,
+            view = view,
+        )
+
+        lastTabFeature.set(
+            feature = LastTabFeature(
+                requireComponents.core.store,
+                sessionId,
+                requireComponents.useCases.tabsUseCases.removeTab,
+                requireActivity(),
             ),
             owner = this,
             view = view,

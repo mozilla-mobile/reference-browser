@@ -15,6 +15,7 @@ import mozilla.components.feature.awesomebar.AwesomeBarFeature
 import mozilla.components.feature.awesomebar.provider.SearchSuggestionProvider
 import mozilla.components.feature.readerview.view.ReaderViewControlsBar
 import mozilla.components.feature.syncedtabs.SyncedTabsStorageSuggestionProvider
+import mozilla.components.feature.tabs.WindowFeature
 import mozilla.components.feature.tabs.toolbar.TabsToolbarFeature
 import mozilla.components.feature.toolbar.WebExtensionToolbarFeature
 import mozilla.components.support.base.feature.UserInteractionHandler
@@ -32,6 +33,7 @@ class BrowserFragment : BaseBrowserFragment(), UserInteractionHandler {
     private val thumbnailsFeature = ViewBoundFeatureWrapper<BrowserThumbnails>()
     private val readerViewFeature = ViewBoundFeatureWrapper<ReaderViewIntegration>()
     private val webExtToolbarFeature = ViewBoundFeatureWrapper<WebExtensionToolbarFeature>()
+    private val windowFeature = ViewBoundFeatureWrapper<WindowFeature>()
 
     private val awesomeBar: AwesomeBarWrapper
         get() = requireView().findViewById(R.id.awesomeBar)
@@ -50,6 +52,7 @@ class BrowserFragment : BaseBrowserFragment(), UserInteractionHandler {
             false,
         )
 
+    @Suppress("LongMethod")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -120,6 +123,15 @@ class BrowserFragment : BaseBrowserFragment(), UserInteractionHandler {
             feature = WebExtensionToolbarFeature(
                 toolbar,
                 requireContext().components.core.store,
+            ),
+            owner = this,
+            view = view,
+        )
+
+        windowFeature.set(
+            feature = WindowFeature(
+                store = requireComponents.core.store,
+                tabsUseCases = requireComponents.useCases.tabsUseCases,
             ),
             owner = this,
             view = view,

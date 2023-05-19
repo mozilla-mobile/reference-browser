@@ -13,9 +13,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.snackbar.Snackbar.LENGTH_LONG
-import mozilla.components.browser.state.selector.findCustomTabOrSelectedTab
-import mozilla.components.browser.state.state.SessionState
-import mozilla.components.browser.state.state.TabSessionState
 import mozilla.components.browser.state.state.WebExtensionState
 import mozilla.components.concept.engine.EngineView
 import mozilla.components.feature.intent.ext.EXTRA_SESSION_ID
@@ -40,9 +37,6 @@ open class BrowserActivity : AppCompatActivity() {
 
     private val sessionId: String?
         get() = SafeIntent(intent).getStringExtra(EXTRA_SESSION_ID)
-
-    private val tab: SessionState?
-        get() = components.core.store.state.findCustomTabOrSelectedTab(sessionId)
 
     private val webExtensionPopupObserver by lazy {
         WebExtensionPopupObserver(components.core.store, ::openPopup)
@@ -86,8 +80,6 @@ open class BrowserActivity : AppCompatActivity() {
         }
 
         super.onBackPressedDispatcher.onBackPressed()
-
-        removeSessionIfNeeded()
     }
 
     @Suppress("DEPRECATION") // ComponentActivity wants us to use registerForActivityResult
@@ -109,32 +101,6 @@ open class BrowserActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         components.notificationsDelegate.unBindActivity(this)
-    }
-
-    /**
-     * If needed remove the current session.
-     *
-     * If a session is a custom tab or was opened from an external app then the session gets removed once you go back
-     * to the third-party app.
-     *
-     * Eventually we may want to move this functionality into one of our feature components.
-     */
-    private fun removeSessionIfNeeded(): Boolean {
-        val session = tab ?: return false
-
-        return if (session.source is SessionState.Source.External && !session.restored) {
-            finish()
-            components.useCases.tabsUseCases.removeTab(session.id)
-            true
-        } else {
-            val hasParentSession = session is TabSessionState && session.parentId != null
-            if (hasParentSession) {
-                components.useCases.tabsUseCases.removeTab(session.id, selectParentIfExists = true)
-            }
-            // We want to return to home if this session didn't have a parent session to select.
-            val goToOverview = !hasParentSession
-            !goToOverview
-        }
     }
 
     override fun onUserLeaveHint() {
