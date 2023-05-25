@@ -511,7 +511,7 @@ style:
     active: false
   BracesOnIfStatements:
     active: true # Enabled in https://github.com/mozilla-mobile/android-components/issues/1015
-    singleLine: 'never'
+    singleLine: 'consistent' # (Default: never)
     multiLine: 'always'
   BracesOnWhenStatements:
     active: false
