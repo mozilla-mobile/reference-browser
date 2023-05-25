@@ -41,7 +41,7 @@ object Versions {
         const val androidx_orchestrator = "1.4.2"
         const val androidx_runner = "1.5.2"
         const val androidx_uiautomator = "2.2.0"
-        const val detekt = "1.22.0"
+        const val detekt = "1.23.0"
         const val jacoco = "0.8.10"
         const val ktlint = "0.48.2"
         const val mockwebserver = "4.11.0"
