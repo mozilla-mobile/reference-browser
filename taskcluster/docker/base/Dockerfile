@@ -2,7 +2,7 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-FROM ubuntu:18.04
+FROM ubuntu:22.04
 
 MAINTAINER Tom Prince "mozilla@hocat.ca"
 
@@ -32,21 +32,16 @@ RUN apt-get update -qq \
     # We need to install tzdata before all of the other packages. Otherwise it will show an interactive dialog that
     # we cannot navigate while building the Docker image.
     && apt-get install -y tzdata \
-    # For the Android build system we want Java 11. However the local Nexus installation for the
-    # toolchain cache requires Java 8.
-    && apt-get install -y openjdk-8-jdk \
-                          openjdk-11-jdk \
+    && apt-get install -y openjdk-17-jdk \
                           wget \
                           expect \
                           git \
                           curl \
-                          python \
-                          python-pip \
                           python3 \
                           python3-pip \
                           locales \
                           unzip \
-			  mercurial \
+                          mercurial \
     && apt-get clean
 
 RUN pip3 install --upgrade pip
