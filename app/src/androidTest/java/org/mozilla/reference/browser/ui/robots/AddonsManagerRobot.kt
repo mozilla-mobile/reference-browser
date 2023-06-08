@@ -176,6 +176,8 @@ class AddonsManagerRobot {
     }
 
     private fun allowInstallAddonButton() {
+        assertTrue(mDevice.findObject(UiSelector().text("Add")).waitForExists(waitingTime))
+
         onView(
             allOf(
                 withId(R.id.allow_button),

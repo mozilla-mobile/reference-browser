@@ -21,8 +21,8 @@ import mozilla.components.feature.addons.AddonManagerException
 import mozilla.components.feature.addons.ui.AddonInstallationDialogFragment
 import mozilla.components.feature.addons.ui.AddonsManagerAdapter
 import mozilla.components.feature.addons.ui.AddonsManagerAdapterDelegate
-import mozilla.components.feature.addons.ui.PermissionsDialogFragment
 import mozilla.components.feature.addons.ui.translateName
+import mozilla.components.support.base.feature.ViewBoundFeatureWrapper
 import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.ext.components
 
@@ -30,8 +30,10 @@ import org.mozilla.reference.browser.ext.components
  * Fragment use for managing add-ons.
  */
 class AddonsFragment : Fragment(), AddonsManagerAdapterDelegate {
+    private val webExtensionPromptFeature = ViewBoundFeatureWrapper<WebExtensionPromptFeature>()
     private lateinit var recyclerView: RecyclerView
     private val scope = CoroutineScope(Dispatchers.IO)
+    private lateinit var addons: List<Addon>
 
     private val addonProgressOverlay: View
         get() = requireView().findViewById(R.id.addonProgressOverlay)
@@ -47,6 +49,17 @@ class AddonsFragment : Fragment(), AddonsManagerAdapterDelegate {
     override fun onViewCreated(rootView: View, savedInstanceState: Bundle?) {
         super.onViewCreated(rootView, savedInstanceState)
         bindRecyclerView(rootView)
+        webExtensionPromptFeature.set(
+            feature = WebExtensionPromptFeature(
+                store = requireContext().components.core.store,
+                provideAddons = { addons },
+                context = requireContext(),
+                fragmentManager = parentFragmentManager,
+                view = rootView,
+            ),
+            owner = this,
+            view = rootView,
+        )
     }
 
     override fun onStart() {
@@ -57,10 +70,6 @@ class AddonsFragment : Fragment(), AddonsManagerAdapterDelegate {
         }
 
         addonProgressOverlay.visibility = View.GONE
-
-        findPreviousDialogFragment()?.let { dialog ->
-            dialog.onPositiveButtonClicked = onPositiveButtonClicked
-        }
     }
 
     private fun bindRecyclerView(rootView: View) {
@@ -68,7 +77,7 @@ class AddonsFragment : Fragment(), AddonsManagerAdapterDelegate {
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
         scope.launch {
             try {
-                val addons = requireContext().components.core.addonManager.getAddons()
+                addons = requireContext().components.core.addonManager.getAddons()
 
                 scope.launch(Dispatchers.Main) {
                     val adapter = AddonsManagerAdapter(
@@ -103,30 +112,10 @@ class AddonsFragment : Fragment(), AddonsManagerAdapterDelegate {
     }
 
     override fun onInstallAddonButtonClicked(addon: Addon) {
-        showPermissionDialog(addon)
-    }
-
-    private fun isAlreadyADialogCreated(): Boolean {
-        return findPreviousDialogFragment() != null
-    }
-
-    private fun findPreviousDialogFragment(): PermissionsDialogFragment? {
-        return parentFragmentManager.findFragmentByTag(PERMISSIONS_DIALOG_FRAGMENT_TAG) as? PermissionsDialogFragment
-    }
-
-    private fun showPermissionDialog(addon: Addon) {
         if (isInstallationInProgress) {
             return
         }
-
-        val dialog = PermissionsDialogFragment.newInstance(
-            addon = addon,
-            onPositiveButtonClicked = onPositiveButtonClicked,
-        )
-
-        if (!isAlreadyADialogCreated()) {
-            dialog.show(parentFragmentManager, PERMISSIONS_DIALOG_FRAGMENT_TAG)
-        }
+        installAddon(addon)
     }
 
     private fun showInstallationDialog(addon: Addon) {
@@ -146,13 +135,10 @@ class AddonsFragment : Fragment(), AddonsManagerAdapterDelegate {
                 }
             },
         )
-
-        if (!isAlreadyADialogCreated()) {
-            dialog.show(parentFragmentManager, INSTALLATION_DIALOG_FRAGMENT_TAG)
-        }
+        dialog.show(parentFragmentManager, INSTALLATION_DIALOG_FRAGMENT_TAG)
     }
 
-    private val onPositiveButtonClicked: ((Addon) -> Unit) = { addon ->
+    private val installAddon: ((Addon) -> Unit) = { addon ->
         addonProgressOverlay.visibility = View.VISIBLE
         isInstallationInProgress = true
         requireContext().components.core.addonManager.installAddon(
@@ -173,7 +159,10 @@ class AddonsFragment : Fragment(), AddonsManagerAdapterDelegate {
                     context?.let {
                         Toast.makeText(
                             requireContext(),
-                            getString(R.string.mozac_feature_addons_failed_to_install, addon.translateName(it)),
+                            getString(
+                                R.string.mozac_feature_addons_failed_to_install,
+                                addon.translateName(it),
+                            ),
                             Toast.LENGTH_SHORT,
                         ).show()
                     }
@@ -190,7 +179,6 @@ class AddonsFragment : Fragment(), AddonsManagerAdapterDelegate {
     private var isInstallationInProgress = false
 
     companion object {
-        private const val PERMISSIONS_DIALOG_FRAGMENT_TAG = "ADDONS_PERMISSIONS_DIALOG_FRAGMENT"
         private const val INSTALLATION_DIALOG_FRAGMENT_TAG = "ADDONS_INSTALLATION_DIALOG_FRAGMENT"
     }
 }
