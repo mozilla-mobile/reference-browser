@@ -61,7 +61,6 @@ class ThreeDotMenuTest {
         mockWebServer.shutdown()
     }
 
-    /* ktlint-disable no-blank-line-before-rbrace */ // This imposes unreadable grouping.
     @Test
     fun homeScreenMenuTest() {
         navigationToolbar {
@@ -166,7 +165,6 @@ class ThreeDotMenuTest {
         navigationToolbar {
             // load the default page, to be refreshed
             // (test assumes no cookies cached at test start)
-
         }.enterUrlAndEnterToBrowser(refreshWebPage.url) {
             verifyPageContent("DEFAULT")
         }
