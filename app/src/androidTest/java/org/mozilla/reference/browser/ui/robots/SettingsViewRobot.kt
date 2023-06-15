@@ -73,8 +73,7 @@ class SettingsViewRobot {
     }
 
     class Transition {
-        fun openSettingsViewPrivacy(interact: SettingsViewPrivacyRobot.() -> Unit):
-            SettingsViewPrivacyRobot.Transition {
+        fun openSettingsViewPrivacy(interact: SettingsViewPrivacyRobot.() -> Unit): SettingsViewPrivacyRobot.Transition {
             privacyButton().click()
             SettingsViewPrivacyRobot().interact()
             return SettingsViewPrivacyRobot.Transition()
@@ -92,15 +91,13 @@ class SettingsViewRobot {
             return ExternalAppsRobot.Transition()
         }
 
-        fun makeDefaultBrowser(interact: ExternalAppsRobot.() -> Unit):
-            ExternalAppsRobot.Transition {
+        fun makeDefaultBrowser(interact: ExternalAppsRobot.() -> Unit): ExternalAppsRobot.Transition {
             makeDefaultBrowserButton().click()
             ExternalAppsRobot().interact()
             return ExternalAppsRobot.Transition()
         }
 
-        fun clickAutofillAppsButton(interact: ExternalAppsRobot.() -> Unit):
-            ExternalAppsRobot.Transition {
+        fun clickAutofillAppsButton(interact: ExternalAppsRobot.() -> Unit): ExternalAppsRobot.Transition {
             autofillAppsButton().click()
             ExternalAppsRobot().interact()
             return ExternalAppsRobot.Transition()

@@ -24,8 +24,6 @@ import org.mozilla.reference.browser.ui.robots.navigationToolbar
  */
 
 class SettingsViewTest {
-    /* ktlint-disable no-blank-line-before-rbrace */ // This imposes unrgeadable grouping.
-
     // Grant the app access to the camera so that we can test the Firefox Accounts QR code reader
     @Rule @JvmField
     val grantPermissionRule: GrantPermissionRule = GrantPermissionRule.grant(android.Manifest.permission.CAMERA)
@@ -86,7 +84,6 @@ class SettingsViewTest {
             verifyFxAQrCode()
             mDevice.pressBack()
         }
-
     }
 
     @Test

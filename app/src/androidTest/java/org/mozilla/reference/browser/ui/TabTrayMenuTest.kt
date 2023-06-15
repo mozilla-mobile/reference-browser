@@ -75,7 +75,6 @@ class TabTrayMenuTest {
         mockWebServer.shutdown()
     }
 
-    /* ktlint-disable no-blank-line-before-rbrace */ // This imposes unreadable grouping.
     // This test verifies the tab tray menu items are all in place
     @Test
     fun tabTrayUITest() {

@@ -28,8 +28,8 @@ import org.mozilla.reference.browser.helpers.TestHelper.waitForObjects
  */
 class BrowserRobot {
     /* Asserts that the text within DOM element with ID="testContent" has the given text, i.e.
-    * document.querySelector('#testContent').innerText == expectedText
-    */
+     * document.querySelector('#testContent').innerText == expectedText
+     */
     fun verifyPageContent(expectedText: String) {
         mDevice.waitForObjects(mDevice.findObject(UiSelector().resourceId("android.webkit.WebView")))
         assertTrue(
