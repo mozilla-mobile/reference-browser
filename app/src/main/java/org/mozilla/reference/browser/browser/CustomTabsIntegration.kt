@@ -8,7 +8,7 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import androidx.core.content.ContextCompat
-import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import mozilla.components.browser.menu2.BrowserMenuController
 import mozilla.components.browser.state.selector.findCustomTab
@@ -32,7 +32,6 @@ import mozilla.components.lib.state.ext.flowScoped
 import mozilla.components.support.base.feature.LifecycleAwareFeature
 import mozilla.components.support.base.feature.UserInteractionHandler
 import mozilla.components.support.base.log.logger.Logger
-import mozilla.components.support.ktx.kotlinx.coroutines.flow.ifChanged
 import org.mozilla.reference.browser.BrowserActivity
 import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.ext.share
@@ -156,7 +155,7 @@ class CustomTabsIntegration(
 
         store.flowScoped { flow ->
             flow.map { state -> state.findCustomTab(sessionId) }
-                .ifChanged()
+                .distinctUntilChanged()
                 .collect { tab ->
                     val items = menuItems(tab)
                     val customTabItems = tab?.createCustomTabMenuCandidates(context).orEmpty()
