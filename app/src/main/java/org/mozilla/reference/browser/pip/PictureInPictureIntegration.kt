@@ -9,14 +9,13 @@ package org.mozilla.reference.browser.pip
 import android.app.Activity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.cancel
-import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.distinctUntilChangedBy
 import kotlinx.coroutines.flow.mapNotNull
 import mozilla.components.browser.state.selector.findTabOrCustomTabOrSelectedTab
 import mozilla.components.browser.state.store.BrowserStore
 import mozilla.components.feature.session.PictureInPictureFeature
 import mozilla.components.lib.state.ext.flowScoped
 import mozilla.components.support.base.feature.LifecycleAwareFeature
-import mozilla.components.support.ktx.kotlinx.coroutines.flow.ifChanged
 
 class PictureInPictureIntegration(
     private val store: BrowserStore,
@@ -31,7 +30,7 @@ class PictureInPictureIntegration(
     override fun start() {
         scope = store.flowScoped { flow ->
             flow.mapNotNull { state -> state.findTabOrCustomTabOrSelectedTab(customTabId) }
-                .ifChanged { it.content.url }
+                .distinctUntilChangedBy { it.content.url }
                 .collect { whiteListed = isWhitelisted(it.content.url) }
         }
     }
