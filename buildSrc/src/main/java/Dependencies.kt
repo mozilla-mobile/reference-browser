@@ -20,7 +20,7 @@ object Versions {
     }
 
     object Google {
-        const val compose_compiler = "1.4.7"
+        const val compose_compiler = "1.4.8"
         const val material = "1.9.0"
     }
 
@@ -30,8 +30,8 @@ object Versions {
     }
 
     object Kotlin {
-        const val compiler = "1.8.21"
-        const val coroutines = "1.7.1"
+        const val compiler = "1.8.22"
+        const val coroutines = "1.7.2"
     }
 
     object Testing {
