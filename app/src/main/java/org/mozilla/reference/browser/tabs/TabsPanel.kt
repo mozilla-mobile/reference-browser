@@ -34,7 +34,7 @@ class TabsPanel @JvmOverloads constructor(
 
         privateTab = newTab().apply {
             contentDescription = "Private tabs"
-            icon = resources.getThemedDrawable(R.drawable.mozac_ic_private_browsing)
+            icon = resources.getThemedDrawable(R.drawable.mozac_ic_private_mode_24)
         }
 
         addOnTabSelectedListener(this)

@@ -68,6 +68,6 @@
         app:layout_constraintTop_toTopOf="parent"
         android:contentDescription="@string/mozac_browser_tabstray_close_tab"
         android:background="?android:attr/selectableItemBackgroundBorderless"
-        app:srcCompat="@drawable/mozac_ic_close" />
+        app:srcCompat="@drawable/mozac_ic_cross_24" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -20,7 +20,7 @@ class TabsToolbar @JvmOverloads constructor(
 
     init {
         navigationContentDescription = "back"
-        setNavigationIcon(R.drawable.mozac_ic_back)
+        setNavigationIcon(R.drawable.mozac_ic_back_24)
         setNavigationOnClickListener {
             closeTabsTray?.invoke()
         }
