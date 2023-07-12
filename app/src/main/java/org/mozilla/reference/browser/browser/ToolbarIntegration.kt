@@ -67,7 +67,7 @@ class ToolbarIntegration(
             contentDescription = "Forward",
             icon = DrawableMenuIcon(
                 context,
-                mozilla.components.ui.icons.R.drawable.mozac_ic_forward,
+                mozilla.components.ui.icons.R.drawable.mozac_ic_forward_24,
                 tint = tint,
             ),
             containerStyle = ContainerStyle(
@@ -81,7 +81,7 @@ class ToolbarIntegration(
             contentDescription = "Refresh",
             icon = DrawableMenuIcon(
                 context,
-                mozilla.components.ui.icons.R.drawable.mozac_ic_refresh,
+                mozilla.components.ui.icons.R.drawable.mozac_ic_arrow_clockwise_24,
                 tint = tint,
             ),
         ) {
