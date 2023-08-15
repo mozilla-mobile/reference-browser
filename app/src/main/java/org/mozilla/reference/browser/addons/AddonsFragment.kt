@@ -81,7 +81,7 @@ class AddonsFragment : Fragment(), AddonsManagerAdapterDelegate {
 
                 scope.launch(Dispatchers.Main) {
                     val adapter = AddonsManagerAdapter(
-                        requireContext().components.core.addonCollectionProvider,
+                        requireContext().components.core.addonProvider,
                         this@AddonsFragment,
                         addons,
                     )
@@ -125,7 +125,7 @@ class AddonsFragment : Fragment(), AddonsManagerAdapterDelegate {
 
         val dialog = AddonInstallationDialogFragment.newInstance(
             addon = addon,
-            addonCollectionProvider = requireContext().components.core.addonCollectionProvider,
+            addonsProvider = requireContext().components.core.addonProvider,
             onConfirmButtonClicked = { _, allowInPrivateBrowsing ->
                 if (allowInPrivateBrowsing) {
                     requireContext().components.core.addonManager.setAddonAllowedInPrivateBrowsing(
