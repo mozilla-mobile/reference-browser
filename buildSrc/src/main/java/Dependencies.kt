@@ -8,11 +8,11 @@
 // Synchronized version numbers for dependencies used by (some) modules
 object Versions {
     object AndroidX {
-        const val activity_compose = "1.7.1"
+        const val activity_compose = "1.7.2"
         const val appcompat = "1.6.1"
         const val compose = "1.4.3"
         const val constraintlayout = "2.1.4"
-        const val core = "1.10.0"
+        const val core = "1.10.1"
         const val lifecycle = "2.6.1"
         const val preference = "1.2.0"
         const val swiperefreshlayout = "1.1.0"
@@ -41,7 +41,7 @@ object Versions {
         const val androidx_orchestrator = "1.4.2"
         const val androidx_runner = "1.5.2"
         const val androidx_uiautomator = "2.2.0"
-        const val detekt = "1.23.0"
+        const val detekt = "1.23.1"
         const val jacoco = "0.8.10"
         const val ktlint = "0.50.0"
         const val mockwebserver = "4.11.0"
