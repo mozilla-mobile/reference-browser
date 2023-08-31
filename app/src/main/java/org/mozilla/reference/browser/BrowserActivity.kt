@@ -85,7 +85,7 @@ open class BrowserActivity : AppCompatActivity() {
             }
         }
 
-        super.onBackPressed()
+        super.onBackPressedDispatcher.onBackPressed()
 
         removeSessionIfNeeded()
     }

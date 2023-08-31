@@ -98,7 +98,7 @@ class WebExtensionActionPopupActivity : AppCompatActivity() {
 
         override fun onWindowRequest(windowRequest: WindowRequest) {
             if (windowRequest.type == WindowRequest.Type.CLOSE) {
-                activity?.onBackPressed()
+                activity?.onBackPressedDispatcher?.onBackPressed()
             }
         }
 

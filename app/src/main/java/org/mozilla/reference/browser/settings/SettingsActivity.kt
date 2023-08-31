@@ -25,7 +25,7 @@ class SettingsActivity : AppCompatActivity(), SettingsFragment.ActionBarUpdater 
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean = when (item.itemId) {
         android.R.id.home -> {
-            onBackPressed()
+            onBackPressedDispatcher.onBackPressed()
             true
         }
         else -> super.onOptionsItemSelected(item)
@@ -40,7 +40,7 @@ class SettingsActivity : AppCompatActivity(), SettingsFragment.ActionBarUpdater 
             if (it is UserInteractionHandler && it.onBackPressed()) {
                 return
             } else {
-                super.onBackPressed()
+                super.onBackPressedDispatcher.onBackPressed()
             }
         }
     }
