@@ -20,6 +20,7 @@ import mozilla.components.feature.pwa.feature.WebAppSiteControlsFeature
 import mozilla.components.support.base.feature.UserInteractionHandler
 import mozilla.components.support.base.feature.ViewBoundFeatureWrapper
 import mozilla.components.support.ktx.android.arch.lifecycle.addObservers
+import mozilla.components.support.utils.ext.getParcelableArrayListCompat
 import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.ext.requireComponents
 
@@ -41,7 +42,7 @@ class ExternalAppBrowserFragment : BaseBrowserFragment(), UserInteractionHandler
     private val manifest: WebAppManifest?
         get() = arguments?.getWebAppManifest()
     private val trustedScopes: List<Uri>
-        get() = arguments?.getParcelableArrayList<Uri>(ARG_TRUSTED_SCOPES).orEmpty()
+        get() = arguments?.getParcelableArrayListCompat(ARG_TRUSTED_SCOPES, Uri::class.java).orEmpty()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
