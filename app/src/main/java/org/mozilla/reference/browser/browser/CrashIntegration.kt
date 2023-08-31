@@ -8,6 +8,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import kotlinx.coroutines.DelicateCoroutinesApi
@@ -15,6 +16,7 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import mozilla.components.lib.crash.Crash
 import mozilla.components.lib.crash.CrashReporter
+import mozilla.components.support.utils.ext.registerReceiverCompat
 import org.mozilla.reference.browser.BrowserApplication.Companion.NON_FATAL_CRASH_BROADCAST
 import org.mozilla.reference.browser.ext.isCrashReportActive
 
@@ -38,7 +40,11 @@ class CrashIntegration(
     override fun onStart(owner: LifecycleOwner) {
         super.onStart(owner)
         if (isCrashReportActive) {
-            context.registerReceiver(receiver, IntentFilter(NON_FATAL_CRASH_BROADCAST))
+            context.registerReceiverCompat(
+                receiver,
+                IntentFilter(NON_FATAL_CRASH_BROADCAST),
+                ContextCompat.RECEIVER_NOT_EXPORTED,
+            )
         }
     }
 
