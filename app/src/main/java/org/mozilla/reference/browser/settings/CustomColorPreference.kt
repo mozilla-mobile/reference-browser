@@ -44,9 +44,9 @@ class CustomColorPreference @JvmOverloads constructor(
 
     override fun onBindViewHolder(holder: PreferenceViewHolder) {
         super.onBindViewHolder(holder)
-        holder?.let {
-            val title = it.itemView.findViewById(android.R.id.title) as TextView
-            val summary = it.itemView.findViewById(android.R.id.summary) as TextView
+        holder.apply {
+            val title = this.itemView.findViewById(android.R.id.title) as TextView
+            val summary = this.itemView.findViewById(android.R.id.summary) as TextView
             title.setTextColor(titleColor)
             summary.setTextColor(summaryColor)
         }
