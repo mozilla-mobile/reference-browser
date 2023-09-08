@@ -119,7 +119,7 @@ subprojects {
                     doLast { jacocoTestReport.execute() }
                 }
 
-                task jacocoTestReport(type: JacocoReport) {
+                tasks.register('jacocoTestReport', JacocoReport) {
                     reports {
                         xml.enabled = true
                         html.enabled = true
@@ -151,7 +151,7 @@ subprojects {
 }
 
 
-task clean(type: Delete) {
+tasks.register('clean', Delete) {
     delete rootProject.buildDir
 }
 
@@ -186,23 +186,23 @@ dependencies {
     }
 }
 
-task ktlint(type: JavaExec, group: "verification") {
+tasks.register('ktlint', JavaExec) {
     description = "Check Kotlin code style."
     classpath = configurations.ktlint
     main = "com.pinterest.ktlint.Main"
     args "app/src/**/*.kt", "!**/build/**/*.kt"
 }
 
-task ktlintFormat(type: JavaExec, group: "formatting") {
+tasks.register('ktlintFormat', JavaExec) {
     description = "Fix Kotlin code style deviations."
     classpath = configurations.ktlint
     main = "com.pinterest.ktlint.Main"
     args "-F", "app/src/**/*.kt", "!**/build/**/*.kt"
 }
 
-task listRepositories {
+tasks.register('listRepositories') {
     doLast {
         println "Repositories:"
         project.repositories.each { println "Name: " + it.name + "; url: " + it.url }
-   }
+    }
 }

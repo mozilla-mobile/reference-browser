@@ -345,21 +345,25 @@ dependencies {
 // Task for printing APK information for the requested variant
 // Usage: ./gradlew printVariants
 // -------------------------------------------------------------------------------------------------
-task printVariants {
+tasks.register('printVariants') {
     doLast {
-        def variants = android.applicationVariants.collect { variant -> [
-                apks: variant.outputs.collect { output -> [
-                        abi: output.getFilter(VariantOutput.FilterType.ABI),
-                        fileName: output.outputFile.name
-                ]},
-                build_type: variant.buildType.name,
-                name: variant.name,
-        ]}
+        def variants = android.applicationVariants.collect { variant ->
+            [
+                    apks      : variant.outputs.collect { output ->
+                        [
+                                abi     : output.getFilter(VariantOutput.FilterType.ABI),
+                                fileName: output.outputFile.name
+                        ]
+                    },
+                    build_type: variant.buildType.name,
+                    name      : variant.name,
+            ]
+        }
         println 'variants: ' + JsonOutput.toJson(variants)
     }
 }
 
-task printGeckoviewVersion {
+tasks.register('printGeckoviewVersion') {
     doLast {
         def configuration = configurations.implementationDependenciesMetadata
         def dependencies = configuration.incoming.resolutionResult.allDependencies
