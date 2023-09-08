@@ -121,8 +121,8 @@ subprojects {
 
                 tasks.register('jacocoTestReport', JacocoReport) {
                     reports {
-                        xml.enabled = true
-                        html.enabled = true
+                        xml.required = true
+                        html.required = true
                     }
 
                     def fileFilter = ['**/R.class', '**/R$*.class', '**/BuildConfig.*', '**/Manifest*.*',
@@ -162,14 +162,14 @@ detekt {
 
     reports {
         html {
-            enabled = true
+            required = true
             destination = file("$projectDir/build/reports/detekt.html")
         }
         xml {
-            enabled = false
+            required = false
         }
         txt {
-            enabled = false
+            required = false
         }
     }
 }
