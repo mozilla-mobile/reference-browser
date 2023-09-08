@@ -93,12 +93,12 @@ android {
 }
 
 tasks.withType(KotlinCompile).configureEach {
-    kotlinOptions {
-        allWarningsAsErrors = true
-        freeCompilerArgs += "-opt-in=kotlinx.coroutines.ExperimentalCoroutinesApi"
-        freeCompilerArgs += "-Xjvm-default=all"
-        jvmTarget = "17"
-    }
+    kotlinOptions.allWarningsAsErrors = true
+    kotlinOptions.freeCompilerArgs += [
+            "-opt-in=kotlinx.coroutines.ExperimentalCoroutinesApi",
+            "-Xjvm-default=all"
+    ]
+    kotlinOptions.jvmTarget = "17"
 }
 
 def baseVersionCode = generatedVersionCode
