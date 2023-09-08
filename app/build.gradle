@@ -6,8 +6,12 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply from: "$project.rootDir/automation/gradle/versionCode.gradle"
 
+
+import com.android.build.VariantOutput
 import com.android.build.gradle.internal.tasks.AppPreBuildTask
 import com.android.build.OutputFile
+import groovy.json.JsonOutput
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 android {
     compileSdkVersion Config.compileSdkVersion
@@ -88,7 +92,7 @@ android {
     }
 }
 
-tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
+tasks.withType(KotlinCompile).all {
     kotlinOptions {
         allWarningsAsErrors = true
         freeCompilerArgs += "-opt-in=kotlinx.coroutines.ExperimentalCoroutinesApi"
@@ -347,13 +351,13 @@ task printVariants {
     doLast {
         def variants = android.applicationVariants.collect { variant -> [
                 apks: variant.outputs.collect { output -> [
-                        abi: output.getFilter(com.android.build.VariantOutput.FilterType.ABI),
+                        abi: output.getFilter(VariantOutput.FilterType.ABI),
                         fileName: output.outputFile.name
                 ]},
                 build_type: variant.buildType.name,
                 name: variant.name,
         ]}
-        println 'variants: ' + groovy.json.JsonOutput.toJson(variants)
+        println 'variants: ' + JsonOutput.toJson(variants)
     }
 }
 
@@ -362,7 +366,7 @@ task printGeckoviewVersion {
         def configuration = configurations.implementationDependenciesMetadata
         def dependencies = configuration.incoming.resolutionResult.allDependencies
         def geckoviewDependency = dependencies.find { it.selected.id.moduleIdentifier.group == 'org.mozilla.geckoview' }
-        println('geckoviewVersion: ' + groovy.json.JsonOutput.toJson(geckoviewDependency.selected.moduleVersion.version))
+        println('geckoviewVersion: ' + JsonOutput.toJson(geckoviewDependency.selected.moduleVersion.version))
     }
 }
 
