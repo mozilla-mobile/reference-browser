@@ -170,7 +170,7 @@ if (project.hasProperty("telemetry") && project.property("telemetry") == "true")
         }
 
         // If this is a release build, validate that "versionName" is set
-        tasks.withType(AppPreBuildTask) { prebuildTask ->
+        tasks.withType(AppPreBuildTask).configureEach { prebuildTask ->
             // You can't add a closure to a variant, so we need to look for an early variant-specific type
             // of task (AppPreBuildTask is the first) and filter to make sure we're looking at the task for
             // this variant that we're currently configuring
