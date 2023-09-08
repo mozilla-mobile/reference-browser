@@ -87,6 +87,8 @@ android {
             include "x86", "armeabi-v7a", "arm64-v8a", "x86_64"
         }
     }
+
+    namespace 'org.mozilla.reference.browser'
 }
 
 tasks.withType(KotlinCompile).configureEach {
