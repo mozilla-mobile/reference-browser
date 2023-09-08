@@ -163,7 +163,7 @@ detekt {
     reports {
         html {
             required = true
-            destination = file("$projectDir/build/reports/detekt.html")
+            outputLocation.set(file("$projectDir/build/reports/detekt.html"))
         }
         xml {
             required = false
