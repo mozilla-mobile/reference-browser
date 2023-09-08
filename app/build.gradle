@@ -14,12 +14,10 @@ import groovy.json.JsonOutput
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 android {
-    compileSdkVersion Config.compileSdkVersion
-
     defaultConfig {
         applicationId "org.mozilla.reference.browser"
         minSdkVersion Config.minSdkVersion
-        compileSdkVersion Config.compileSdkVersion
+        compileSdk Config.compileSdkVersion
         targetSdkVersion Config.targetSdkVersion
         versionCode 1
         versionName Config.generateDebugVersionName()
