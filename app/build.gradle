@@ -7,9 +7,8 @@ apply plugin: 'kotlin-android'
 apply from: "$project.rootDir/automation/gradle/versionCode.gradle"
 
 
-import com.android.build.VariantOutput
+import com.android.build.api.variant.FilterConfiguration
 import com.android.build.gradle.internal.tasks.AppPreBuildTask
-import com.android.build.OutputFile
 import groovy.json.JsonOutput
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
@@ -149,7 +148,7 @@ if (project.hasProperty("telemetry") && project.property("telemetry") == "true")
         def versionName = Config.releaseVersionName(project)
 
         variant.outputs.each { output ->
-            def abi = output.getFilter(OutputFile.ABI)
+            def abi = output.getFilter(FilterConfiguration.FilterType.ABI.name())
 
             def versionCodeOverride = baseVersionCode
 
@@ -351,7 +350,7 @@ tasks.register('printVariants') {
             [
                     apks      : variant.outputs.collect { output ->
                         [
-                                abi     : output.getFilter(VariantOutput.FilterType.ABI),
+                                abi     : output.getFilter(FilterConfiguration.FilterType.ABI.name()),
                                 fileName: output.outputFile.name
                         ]
                     },
