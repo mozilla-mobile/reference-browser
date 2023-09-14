@@ -21,7 +21,6 @@ import mozilla.components.feature.addons.AddonManagerException
 import mozilla.components.feature.addons.ui.AddonInstallationDialogFragment
 import mozilla.components.feature.addons.ui.AddonsManagerAdapter
 import mozilla.components.feature.addons.ui.AddonsManagerAdapterDelegate
-import mozilla.components.feature.addons.ui.translateName
 import mozilla.components.support.base.feature.ViewBoundFeatureWrapper
 import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.ext.components
@@ -34,6 +33,7 @@ class AddonsFragment : Fragment(), AddonsManagerAdapterDelegate {
     private lateinit var recyclerView: RecyclerView
     private val scope = CoroutineScope(Dispatchers.IO)
     private lateinit var addons: List<Addon>
+    private var adapter: AddonsManagerAdapter? = null
 
     private val addonProgressOverlay: View
         get() = requireView().findViewById(R.id.addonProgressOverlay)
@@ -52,10 +52,13 @@ class AddonsFragment : Fragment(), AddonsManagerAdapterDelegate {
         webExtensionPromptFeature.set(
             feature = WebExtensionPromptFeature(
                 store = requireContext().components.core.store,
-                provideAddons = { addons },
                 context = requireContext(),
                 fragmentManager = parentFragmentManager,
-                view = rootView,
+                onAddonChanged = {
+                    runIfFragmentIsAttached {
+                        adapter?.updateAddon(it)
+                    }
+                },
             ),
             owner = this,
             view = rootView,
@@ -80,7 +83,7 @@ class AddonsFragment : Fragment(), AddonsManagerAdapterDelegate {
                 addons = requireContext().components.core.addonManager.getAddons()
 
                 scope.launch(Dispatchers.Main) {
-                    val adapter = AddonsManagerAdapter(
+                    adapter = AddonsManagerAdapter(
                         requireContext().components.core.addonProvider,
                         this@AddonsFragment,
                         addons,
@@ -156,16 +159,6 @@ class AddonsFragment : Fragment(), AddonsManagerAdapterDelegate {
             },
             onError = { _, _ ->
                 runIfFragmentIsAttached {
-                    context?.let {
-                        Toast.makeText(
-                            requireContext(),
-                            getString(
-                                R.string.mozac_feature_addons_failed_to_install,
-                                addon.translateName(it),
-                            ),
-                            Toast.LENGTH_SHORT,
-                        ).show()
-                    }
                     addonProgressOverlay.visibility = View.GONE
                     isInstallationInProgress = false
                 }
