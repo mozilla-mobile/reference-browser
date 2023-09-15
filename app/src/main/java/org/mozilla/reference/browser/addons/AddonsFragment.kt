@@ -18,7 +18,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import mozilla.components.feature.addons.Addon
 import mozilla.components.feature.addons.AddonManagerException
-import mozilla.components.feature.addons.ui.AddonInstallationDialogFragment
 import mozilla.components.feature.addons.ui.AddonsManagerAdapter
 import mozilla.components.feature.addons.ui.AddonsManagerAdapterDelegate
 import mozilla.components.support.base.feature.ViewBoundFeatureWrapper
@@ -121,26 +120,6 @@ class AddonsFragment : Fragment(), AddonsManagerAdapterDelegate {
         installAddon(addon)
     }
 
-    private fun showInstallationDialog(addon: Addon) {
-        if (isInstallationInProgress) {
-            return
-        }
-
-        val dialog = AddonInstallationDialogFragment.newInstance(
-            addon = addon,
-            addonsProvider = requireContext().components.core.addonProvider,
-            onConfirmButtonClicked = { _, allowInPrivateBrowsing ->
-                if (allowInPrivateBrowsing) {
-                    requireContext().components.core.addonManager.setAddonAllowedInPrivateBrowsing(
-                        addon,
-                        allowInPrivateBrowsing,
-                    )
-                }
-            },
-        )
-        dialog.show(parentFragmentManager, INSTALLATION_DIALOG_FRAGMENT_TAG)
-    }
-
     private val installAddon: ((Addon) -> Unit) = { addon ->
         addonProgressOverlay.visibility = View.VISIBLE
         isInstallationInProgress = true
@@ -151,9 +130,7 @@ class AddonsFragment : Fragment(), AddonsManagerAdapterDelegate {
                     isInstallationInProgress = false
                     this@AddonsFragment.view?.let { view ->
                         bindRecyclerView(view)
-                        showInstallationDialog(it)
                     }
-
                     addonProgressOverlay.visibility = View.GONE
                 }
             },
@@ -170,8 +147,4 @@ class AddonsFragment : Fragment(), AddonsManagerAdapterDelegate {
      * Whether or not an add-on installation is in progress.
      */
     private var isInstallationInProgress = false
-
-    companion object {
-        private const val INSTALLATION_DIALOG_FRAGMENT_TAG = "ADDONS_INSTALLATION_DIALOG_FRAGMENT"
-    }
 }
