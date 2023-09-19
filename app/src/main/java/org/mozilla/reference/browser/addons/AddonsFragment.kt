@@ -18,10 +18,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import mozilla.components.feature.addons.Addon
 import mozilla.components.feature.addons.AddonManagerException
-import mozilla.components.feature.addons.ui.AddonInstallationDialogFragment
 import mozilla.components.feature.addons.ui.AddonsManagerAdapter
 import mozilla.components.feature.addons.ui.AddonsManagerAdapterDelegate
-import mozilla.components.feature.addons.ui.translateName
 import mozilla.components.support.base.feature.ViewBoundFeatureWrapper
 import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.ext.components
@@ -34,6 +32,7 @@ class AddonsFragment : Fragment(), AddonsManagerAdapterDelegate {
     private lateinit var recyclerView: RecyclerView
     private val scope = CoroutineScope(Dispatchers.IO)
     private lateinit var addons: List<Addon>
+    private var adapter: AddonsManagerAdapter? = null
 
     private val addonProgressOverlay: View
         get() = requireView().findViewById(R.id.addonProgressOverlay)
@@ -52,10 +51,13 @@ class AddonsFragment : Fragment(), AddonsManagerAdapterDelegate {
         webExtensionPromptFeature.set(
             feature = WebExtensionPromptFeature(
                 store = requireContext().components.core.store,
-                provideAddons = { addons },
                 context = requireContext(),
                 fragmentManager = parentFragmentManager,
-                view = rootView,
+                onAddonChanged = {
+                    runIfFragmentIsAttached {
+                        adapter?.updateAddon(it)
+                    }
+                },
             ),
             owner = this,
             view = rootView,
@@ -80,7 +82,7 @@ class AddonsFragment : Fragment(), AddonsManagerAdapterDelegate {
                 addons = requireContext().components.core.addonManager.getAddons()
 
                 scope.launch(Dispatchers.Main) {
-                    val adapter = AddonsManagerAdapter(
+                    adapter = AddonsManagerAdapter(
                         requireContext().components.core.addonProvider,
                         this@AddonsFragment,
                         addons,
@@ -118,26 +120,6 @@ class AddonsFragment : Fragment(), AddonsManagerAdapterDelegate {
         installAddon(addon)
     }
 
-    private fun showInstallationDialog(addon: Addon) {
-        if (isInstallationInProgress) {
-            return
-        }
-
-        val dialog = AddonInstallationDialogFragment.newInstance(
-            addon = addon,
-            addonsProvider = requireContext().components.core.addonProvider,
-            onConfirmButtonClicked = { _, allowInPrivateBrowsing ->
-                if (allowInPrivateBrowsing) {
-                    requireContext().components.core.addonManager.setAddonAllowedInPrivateBrowsing(
-                        addon,
-                        allowInPrivateBrowsing,
-                    )
-                }
-            },
-        )
-        dialog.show(parentFragmentManager, INSTALLATION_DIALOG_FRAGMENT_TAG)
-    }
-
     private val installAddon: ((Addon) -> Unit) = { addon ->
         addonProgressOverlay.visibility = View.VISIBLE
         isInstallationInProgress = true
@@ -148,24 +130,12 @@ class AddonsFragment : Fragment(), AddonsManagerAdapterDelegate {
                     isInstallationInProgress = false
                     this@AddonsFragment.view?.let { view ->
                         bindRecyclerView(view)
-                        showInstallationDialog(it)
                     }
-
                     addonProgressOverlay.visibility = View.GONE
                 }
             },
             onError = { _, _ ->
                 runIfFragmentIsAttached {
-                    context?.let {
-                        Toast.makeText(
-                            requireContext(),
-                            getString(
-                                R.string.mozac_feature_addons_failed_to_install,
-                                addon.translateName(it),
-                            ),
-                            Toast.LENGTH_SHORT,
-                        ).show()
-                    }
                     addonProgressOverlay.visibility = View.GONE
                     isInstallationInProgress = false
                 }
@@ -177,8 +147,4 @@ class AddonsFragment : Fragment(), AddonsManagerAdapterDelegate {
      * Whether or not an add-on installation is in progress.
      */
     private var isInstallationInProgress = false
-
-    companion object {
-        private const val INSTALLATION_DIALOG_FRAGMENT_TAG = "ADDONS_INSTALLATION_DIALOG_FRAGMENT"
-    }
 }

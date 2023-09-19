@@ -35,7 +35,7 @@ object EngineProvider {
 
             // About config it's no longer enabled by default
             builder.aboutConfigEnabled(true)
-
+            builder.extensionsWebAPIEnabled(true)
             runtime = GeckoRuntime.create(context, builder.build())
         }
 
