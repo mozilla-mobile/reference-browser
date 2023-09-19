@@ -13,7 +13,7 @@ task-defaults:
     docker-image: {in-tree: base}
 
 tasks:
-    android-sdk-3859397:
+    android-sdk:
         description: Android SDK
         fetch:
             type: static-url
