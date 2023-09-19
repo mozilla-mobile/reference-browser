@@ -39,7 +39,7 @@ sealed class SyncedTabsViewHolder(itemView: View) : RecyclerView.ViewHolder(item
         }
 
         companion object {
-            const val LAYOUT_ID = R.layout.view_synced_tabs_item
+            val LAYOUT_ID = R.layout.view_synced_tabs_item
         }
     }
 
@@ -55,7 +55,7 @@ sealed class SyncedTabsViewHolder(itemView: View) : RecyclerView.ViewHolder(item
         }
 
         companion object {
-            const val LAYOUT_ID = R.layout.view_synced_tabs_group
+            val LAYOUT_ID = R.layout.view_synced_tabs_group
         }
     }
 }
