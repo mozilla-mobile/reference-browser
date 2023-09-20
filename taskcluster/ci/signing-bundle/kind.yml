@@ -19,9 +19,16 @@ job-template:
         kind: build
         symbol: S-AAB
         tier: 2
-    # TODO Use "signing" once Nightly AABs have their own production key
-    worker-type: dep-signing
+    worker-type:
+        by-variant:
+            nightly: signing
+            default: dep-signing
     worker:
         max-run-time: 3600
-        # TODO Use "release-signing" once Nightly AABs have their own production key
-        signing-type: dep-signing
+        signing-type:
+            by-variant:
+                nightly:
+                    by-level:
+                        '3': release-signing
+                        default: dep-signing
+                default: dep-signing
