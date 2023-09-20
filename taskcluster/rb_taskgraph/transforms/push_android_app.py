@@ -33,7 +33,7 @@ def build_android_app_task(config, tasks):
         task["treeherder"] = inherit_treeherder_from_dep(task, dep)
         task["worker"]["upstream-artifacts"] = [
             {
-                "taskId": {"task-reference": f"<signing>"},
+                "taskId": {"task-reference": f"<{task_type}>"},
                 "taskType": "signing",
                 "paths": paths,
             }
