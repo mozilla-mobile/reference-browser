@@ -12,7 +12,7 @@ only-for-attributes:
     - nightly
 
 transforms:
-    - rb_taskgraph.transforms.push_bundle:transforms
+    - rb_taskgraph.transforms.push_android_app:transforms
     - taskgraph.transforms.task:transforms
 
 job-template:
