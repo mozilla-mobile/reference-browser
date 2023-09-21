@@ -215,7 +215,6 @@ tasks:
                                           MOBILE_PIP_REQUIREMENTS: taskcluster/requirements.txt
                                           MOBILE_REPOSITORY_TYPE: git
                                           REPOSITORIES: {$json: {mobile: "Reference Browser"}}
-                                          ANDROID_SDK_ROOT: /builds/worker/android-sdk
                                         - $if: 'isPullRequest'
                                           then:
                                               MOBILE_PULL_REQUEST_NUMBER: '${event.pull_request.number}'
@@ -248,11 +247,9 @@ tasks:
                                           $if: 'tasks_for == "action"'
                                           then: >
                                               cd /builds/worker/checkouts/vcs &&
-                                              taskcluster/scripts/decision-install-sdk.sh &&
                                               ln -s /builds/worker/artifacts artifacts &&
                                               ~/.local/bin/taskgraph action-callback
                                           else: >
-                                              taskcluster/scripts/decision-install-sdk.sh &&
                                               ln -s /builds/worker/artifacts artifacts &&
                                               ~/.local/bin/taskgraph decision
                                               --pushlog-id='0'
