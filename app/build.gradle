@@ -161,7 +161,7 @@ if (project.hasProperty("telemetry") && project.property("telemetry") == "true")
             def versionCodeOverride = baseVersionCode
 
             if (aab) {
-                versionCodeOverride = ("1" + baseVersionCode) as int
+                versionCodeOverride = ("9" + baseVersionCode) as int
                 println("versionCode for AAB = $versionCodeOverride")
             } else {
                 if (abi == "x86_64") {
