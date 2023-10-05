@@ -22,6 +22,6 @@ job-template:
         symbol: gp-aab
     worker-type: push-apk
     worker:
-        channel: internal
+        channel: nightly
         commit: true
         product: reference-browser
