@@ -82,6 +82,11 @@ class WebExtensionPromptFeature(
             is WebExtensionPromptRequest.AfterInstallation.PostInstallation -> handlePostInstallationRequest(
                 addon.copy(installedState = promptRequest.extension.toInstalledState()),
             )
+
+            is WebExtensionPromptRequest.AfterInstallation.OptionalPermissions -> handleOptionalPermissionsRequest(
+                addon,
+                promptRequest,
+            )
         }
     }
 
@@ -98,7 +103,29 @@ class WebExtensionPromptFeature(
         if (hasExistingPermissionDialogFragment()) return
         showPermissionDialog(
             addon,
-            promptRequest,
+            onConfirm = promptRequest.onConfirm,
+        )
+    }
+
+    private fun handleOptionalPermissionsRequest(
+        addon: Addon,
+        promptRequest: WebExtensionPromptRequest.AfterInstallation.OptionalPermissions,
+    ) {
+        val shouldGrantWithoutPrompt = Addon.localizePermissions(promptRequest.permissions, context).isEmpty()
+
+        // If we don't have any promptable permissions, just proceed.
+        if (shouldGrantWithoutPrompt) {
+            promptRequest.onConfirm(true)
+            consumePromptRequest()
+            return
+        }
+
+        showPermissionDialog(
+            // This is a bit of a hack so that the permission prompt only lists
+            // the optional permissions that are requested.
+            addon = addon.copy(permissions = promptRequest.permissions),
+            onConfirm = promptRequest.onConfirm,
+            forOptionalPermissions = true,
         )
     }
 
@@ -141,16 +168,20 @@ class WebExtensionPromptFeature(
     @VisibleForTesting
     internal fun showPermissionDialog(
         addon: Addon,
-        promptRequest: WebExtensionPromptRequest.AfterInstallation.Permissions,
+        onConfirm: (Boolean) -> Unit,
+        forOptionalPermissions: Boolean = false,
     ) {
         if (!isInstallationInProgress && !hasExistingPermissionDialogFragment()) {
             val dialog = PermissionsDialogFragment.newInstance(
                 addon = addon,
+                forOptionalPermissions = forOptionalPermissions,
                 onPositiveButtonClicked = {
-                    handleApprovedPermissions(promptRequest)
+                    onConfirm(true)
+                    consumePromptRequest()
                 },
                 onNegativeButtonClicked = {
-                    handleDeniedPermissions(promptRequest)
+                    onConfirm(false)
+                    consumePromptRequest()
                 },
             )
             dialog.show(
