@@ -46,4 +46,4 @@ tasks:
         include-nightly-version: true
         include-shippable-secrets: true
         run:
-            gradlew: ["-PcrashReportEnabled=true", "-Ptelemetry=true", "bundleNightly"]
+            gradlew: ["-PcrashReportEnabled=true", "-Ptelemetry=true", "-Paab", "bundleNightly"]
