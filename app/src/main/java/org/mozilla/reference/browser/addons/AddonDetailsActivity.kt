@@ -40,7 +40,7 @@ class AddonDetailsActivity : AppCompatActivity() {
 
         bindDetails(addon)
 
-        bindAuthors(addon)
+        bindAuthor(addon)
 
         bindVersion(addon)
 
@@ -82,14 +82,10 @@ class AddonDetailsActivity : AppCompatActivity() {
         versionView.text = addon.version
     }
 
-    private fun bindAuthors(addon: Addon) {
+    private fun bindAuthor(addon: Addon) {
         val authorsView = findViewById<TextView>(R.id.author_text)
 
-        val authorText = addon.authors.joinToString { author ->
-            author.name + " \n"
-        }
-
-        authorsView.text = authorText
+        authorsView.text = addon.author?.name.orEmpty()
     }
 
     private fun bindDetails(addon: Addon) {

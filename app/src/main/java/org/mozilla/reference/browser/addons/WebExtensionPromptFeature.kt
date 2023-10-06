@@ -74,7 +74,7 @@ class WebExtensionPromptFeature(
         // opens the add-ons manager.
         val addon = Addon.newFromWebExtension(promptRequest.extension)
         when (promptRequest) {
-            is WebExtensionPromptRequest.AfterInstallation.Permissions -> handlePermissionRequest(
+            is WebExtensionPromptRequest.AfterInstallation.Permissions.Required -> handlePermissionRequest(
                 addon,
                 promptRequest,
             )
@@ -83,7 +83,7 @@ class WebExtensionPromptFeature(
                 addon.copy(installedState = promptRequest.extension.toInstalledState()),
             )
 
-            is WebExtensionPromptRequest.AfterInstallation.OptionalPermissions -> handleOptionalPermissionsRequest(
+            is WebExtensionPromptRequest.AfterInstallation.Permissions.Optional -> handleOptionalPermissionsRequest(
                 addon,
                 promptRequest,
             )
@@ -98,7 +98,7 @@ class WebExtensionPromptFeature(
 
     private fun handlePermissionRequest(
         addon: Addon,
-        promptRequest: WebExtensionPromptRequest.AfterInstallation.Permissions,
+        promptRequest: WebExtensionPromptRequest.AfterInstallation.Permissions.Required,
     ) {
         if (hasExistingPermissionDialogFragment()) return
         showPermissionDialog(
@@ -109,7 +109,7 @@ class WebExtensionPromptFeature(
 
     private fun handleOptionalPermissionsRequest(
         addon: Addon,
-        promptRequest: WebExtensionPromptRequest.AfterInstallation.OptionalPermissions,
+        promptRequest: WebExtensionPromptRequest.AfterInstallation.Permissions.Optional,
     ) {
         val shouldGrantWithoutPrompt = Addon.localizePermissions(promptRequest.permissions, context).isEmpty()
 
