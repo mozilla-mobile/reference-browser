@@ -86,6 +86,7 @@ class AddonsFragment : Fragment(), AddonsManagerAdapterDelegate {
                         requireContext().components.core.addonProvider,
                         this@AddonsFragment,
                         addons,
+                        store = requireContext().components.core.store,
                     )
                     recyclerView.adapter = adapter
                 }
