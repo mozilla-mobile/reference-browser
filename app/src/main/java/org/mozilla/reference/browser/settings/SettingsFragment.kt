@@ -8,6 +8,7 @@ import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
 import android.provider.Settings
 import android.view.View
 import android.widget.EditText
@@ -219,7 +220,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
                         Toast.LENGTH_LONG,
                     ).show()
 
-                    Handler().postDelayed(
+                    Handler(Looper.getMainLooper()).postDelayed(
                         {
                             exitProcess(0)
                         },

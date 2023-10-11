@@ -8,14 +8,15 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleObserver
-import androidx.lifecycle.OnLifecycleEvent
+import androidx.core.content.ContextCompat
+import androidx.lifecycle.DefaultLifecycleObserver
+import androidx.lifecycle.LifecycleOwner
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import mozilla.components.lib.crash.Crash
 import mozilla.components.lib.crash.CrashReporter
+import mozilla.components.support.utils.ext.registerReceiverCompat
 import org.mozilla.reference.browser.BrowserApplication.Companion.NON_FATAL_CRASH_BROADCAST
 import org.mozilla.reference.browser.ext.isCrashReportActive
 
@@ -23,7 +24,7 @@ class CrashIntegration(
     private val context: Context,
     private val crashReporter: CrashReporter,
     private val onCrash: (Crash) -> Unit,
-) : LifecycleObserver {
+) : DefaultLifecycleObserver {
 
     private val receiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
@@ -36,15 +37,19 @@ class CrashIntegration(
         }
     }
 
-    @OnLifecycleEvent(Lifecycle.Event.ON_START)
-    fun start() {
+    override fun onStart(owner: LifecycleOwner) {
+        super.onStart(owner)
         if (isCrashReportActive) {
-            context.registerReceiver(receiver, IntentFilter(NON_FATAL_CRASH_BROADCAST))
+            context.registerReceiverCompat(
+                receiver,
+                IntentFilter(NON_FATAL_CRASH_BROADCAST),
+                ContextCompat.RECEIVER_NOT_EXPORTED,
+            )
         }
     }
 
-    @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
-    fun stop() {
+    override fun onStop(owner: LifecycleOwner) {
+        super.onStop(owner)
         if (isCrashReportActive) {
             context.unregisterReceiver(receiver)
         }

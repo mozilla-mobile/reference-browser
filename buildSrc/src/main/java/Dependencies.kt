@@ -8,13 +8,13 @@
 // Synchronized version numbers for dependencies used by (some) modules
 object Versions {
     object AndroidX {
-        const val activity_compose = "1.7.1"
+        const val activity_compose = "1.7.2"
         const val appcompat = "1.6.1"
-        const val compose = "1.4.3"
+        const val compose = "1.5.3"
         const val constraintlayout = "2.1.4"
-        const val core = "1.10.0"
-        const val lifecycle = "2.6.1"
-        const val preference = "1.2.0"
+        const val core = "1.12.0"
+        const val lifecycle = "2.6.2"
+        const val preference = "1.2.1"
         const val swiperefreshlayout = "1.1.0"
         const val work = "2.8.1"
     }
@@ -25,7 +25,7 @@ object Versions {
     }
 
     object Gradle {
-        const val android_plugin = "7.4.2"
+        const val android_plugin = "8.0.2"
         const val kotlin_plugin = Kotlin.compiler
     }
 
@@ -41,14 +41,14 @@ object Versions {
         const val androidx_orchestrator = "1.4.2"
         const val androidx_runner = "1.5.2"
         const val androidx_uiautomator = "2.2.0"
-        const val detekt = "1.23.0"
+        const val detekt = "1.23.1"
         const val jacoco = "0.8.10"
         const val ktlint = "0.50.0"
         const val mockwebserver = "4.11.0"
     }
 
     object ThirdParty {
-        const val sentry = "6.27.0"
+        const val sentry = "6.30.0"
     }
 
     // Workaround for a Gradle parsing bug that prevents using nested objects directly in Gradle files.

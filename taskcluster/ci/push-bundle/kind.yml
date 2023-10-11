@@ -6,7 +6,7 @@
 loader: rb_taskgraph.loader.single_dep:loader
 
 kind-dependencies:
-    - signing
+    - signing-bundle
 
 only-for-attributes:
     - nightly
@@ -19,7 +19,7 @@ job-template:
     description: Publish Reference Browser
     treeherder:
         kind: build
-        symbol: gp
+        symbol: gp-aab
     worker-type: push-apk
     worker:
         channel: nightly

@@ -40,13 +40,14 @@ import mozilla.components.support.base.feature.PermissionsFeature
 import mozilla.components.support.base.feature.UserInteractionHandler
 import mozilla.components.support.base.feature.ViewBoundFeatureWrapper
 import mozilla.components.support.base.log.logger.Logger
-import mozilla.components.support.ktx.android.view.enterToImmersiveMode
+import mozilla.components.support.ktx.android.view.enterImmersiveMode
 import mozilla.components.support.ktx.android.view.exitImmersiveMode
 import org.mozilla.reference.browser.AppPermissionCodes.REQUEST_CODE_APP_PERMISSIONS
 import org.mozilla.reference.browser.AppPermissionCodes.REQUEST_CODE_DOWNLOAD_PERMISSIONS
 import org.mozilla.reference.browser.AppPermissionCodes.REQUEST_CODE_PROMPT_PERMISSIONS
 import org.mozilla.reference.browser.BuildConfig
 import org.mozilla.reference.browser.R
+import org.mozilla.reference.browser.addons.WebExtensionPromptFeature
 import org.mozilla.reference.browser.downloads.DownloadService
 import org.mozilla.reference.browser.ext.getPreferenceKey
 import org.mozilla.reference.browser.ext.requireComponents
@@ -68,6 +69,7 @@ abstract class BaseBrowserFragment : Fragment(), UserInteractionHandler, Activit
     private val shareDownloadsFeature = ViewBoundFeatureWrapper<ShareDownloadFeature>()
     private val appLinksFeature = ViewBoundFeatureWrapper<AppLinksFeature>()
     private val promptsFeature = ViewBoundFeatureWrapper<PromptFeature>()
+    private val webExtensionPromptFeature = ViewBoundFeatureWrapper<WebExtensionPromptFeature>()
     private val fullScreenFeature = ViewBoundFeatureWrapper<FullScreenFeature>()
     private val findInPageIntegration = ViewBoundFeatureWrapper<FindInPageIntegration>()
     private val sitePermissionFeature = ViewBoundFeatureWrapper<SitePermissionsFeature>()
@@ -227,6 +229,16 @@ abstract class BaseBrowserFragment : Fragment(), UserInteractionHandler, Activit
             view = view,
         )
 
+        webExtensionPromptFeature.set(
+            feature = WebExtensionPromptFeature(
+                store = requireComponents.core.store,
+                context = requireContext(),
+                fragmentManager = parentFragmentManager,
+            ),
+            owner = this,
+            view = view,
+        )
+
         windowFeature.set(
             feature = WindowFeature(requireComponents.core.store, requireComponents.useCases.tabsUseCases),
             owner = this,
@@ -327,7 +339,7 @@ abstract class BaseBrowserFragment : Fragment(), UserInteractionHandler, Activit
 
     private fun fullScreenChanged(enabled: Boolean) {
         if (enabled) {
-            activity?.enterToImmersiveMode()
+            activity?.enterImmersiveMode()
             toolbar.visibility = View.GONE
             engineView.setDynamicToolbarMaxHeight(0)
         } else {

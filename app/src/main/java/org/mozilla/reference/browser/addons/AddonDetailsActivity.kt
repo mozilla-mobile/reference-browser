@@ -16,6 +16,7 @@ import androidx.core.text.HtmlCompat
 import mozilla.components.feature.addons.Addon
 import mozilla.components.feature.addons.ui.translateDescription
 import mozilla.components.feature.addons.ui.translateName
+import mozilla.components.support.utils.ext.getParcelableExtraCompat
 import org.mozilla.reference.browser.R
 import java.text.DateFormat
 import java.text.SimpleDateFormat
@@ -28,7 +29,9 @@ class AddonDetailsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_on_details)
-        val addon = requireNotNull(intent.getParcelableExtra<Addon>("add_on"))
+        val addon = requireNotNull(
+            intent.getParcelableExtraCompat("add_on", Addon::class.java),
+        )
         bind(addon)
     }
 
@@ -37,7 +40,7 @@ class AddonDetailsActivity : AppCompatActivity() {
 
         bindDetails(addon)
 
-        bindAuthors(addon)
+        bindAuthor(addon)
 
         bindVersion(addon)
 
@@ -79,14 +82,10 @@ class AddonDetailsActivity : AppCompatActivity() {
         versionView.text = addon.version
     }
 
-    private fun bindAuthors(addon: Addon) {
+    private fun bindAuthor(addon: Addon) {
         val authorsView = findViewById<TextView>(R.id.author_text)
 
-        val authorText = addon.authors.joinToString { author ->
-            author.name + " \n"
-        }
-
-        authorsView.text = authorText
+        authorsView.text = addon.author?.name.orEmpty()
     }
 
     private fun bindDetails(addon: Addon) {

@@ -6,16 +6,17 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply from: "$project.rootDir/automation/gradle/versionCode.gradle"
 
+
+import com.android.build.api.variant.FilterConfiguration
 import com.android.build.gradle.internal.tasks.AppPreBuildTask
-import com.android.build.OutputFile
+import groovy.json.JsonOutput
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 android {
-    compileSdkVersion Config.compileSdkVersion
-
     defaultConfig {
         applicationId "org.mozilla.reference.browser"
         minSdkVersion Config.minSdkVersion
-        compileSdkVersion Config.compileSdkVersion
+        compileSdk Config.compileSdkVersion
         targetSdkVersion Config.targetSdkVersion
         versionCode 1
         versionName Config.generateDebugVersionName()
@@ -31,6 +32,7 @@ android {
     }
 
     buildFeatures {
+        buildConfig true
         compose true
     }
 
@@ -86,19 +88,22 @@ android {
             include "x86", "armeabi-v7a", "arm64-v8a", "x86_64"
         }
     }
+
+    namespace 'org.mozilla.reference.browser'
 }
 
-tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
-    kotlinOptions {
-        freeCompilerArgs += "-opt-in=kotlinx.coroutines.ExperimentalCoroutinesApi"
-        freeCompilerArgs += "-Xjvm-default=all"
-        jvmTarget = "17"
-    }
+tasks.withType(KotlinCompile).configureEach {
+    kotlinOptions.allWarningsAsErrors = true
+    kotlinOptions.freeCompilerArgs += [
+            "-opt-in=kotlinx.coroutines.ExperimentalCoroutinesApi",
+            "-Xjvm-default=all"
+    ]
+    kotlinOptions.jvmTarget = "17"
 }
 
 def baseVersionCode = generatedVersionCode
 
-android.applicationVariants.all { variant ->
+android.applicationVariants.configureEach { variant ->
 
 // -------------------------------------------------------------------------------------------------
 // Sentry: Read token from local file if it exists (Only release builds)
@@ -138,36 +143,53 @@ if (project.hasProperty("telemetry") && project.property("telemetry") == "true")
     if (variant.buildType.buildConfigFields['IS_RELEASED']?.value) {
         // The Google Play Store does not allow multiple APKs for the same app that all have the
         // same version code. Therefore we need to have different version codes for our ARM and x86
-        // builds.
+        // builds. See https://developer.android.com/studio/publish/versioning
 
         // Our x86 builds need a higher version code to avoid installing ARM builds on an x86 device
         // with ARM compatibility mode.
 
+        // AAB builds need a version code that is distinct from any APK builds. Since AAB and APK
+        // builds may run in parallel, AAB and APK version codes might be based on the same
+        // (minute granularity) time of day. To avoid conflicts, we ensure the minute portion
+        // of the version code is even for APKs and odd for AABs.
+
         def versionName = Config.releaseVersionName(project)
 
         variant.outputs.each { output ->
-            def abi = output.getFilter(OutputFile.ABI)
+            def abi = output.getFilter(FilterConfiguration.FilterType.ABI.name())
+            def aab = project.hasProperty("aab")
+
+            // ensure baseVersionCode is an even number
+            if (baseVersionCode % 2) {
+                baseVersionCode = baseVersionCode + 1
+            }
 
             def versionCodeOverride = baseVersionCode
 
-            if (abi == "x86_64") {
-                versionCodeOverride = baseVersionCode + 3
-            } else if (abi == "x86") {
-                versionCodeOverride = baseVersionCode + 2
-            } else if (abi == "arm64-v8a") {
+            if (aab) {
+                // AAB version code is odd
                 versionCodeOverride = baseVersionCode + 1
-            } else if (abi == "armeabi-v7a") {
-                versionCodeOverride = baseVersionCode
+                println("versionCode for AAB = $versionCodeOverride")
+            } else {
+                // APK version codes are even
+                if (abi == "x86_64") {
+                    versionCodeOverride = baseVersionCode + 6
+                } else if (abi == "x86") {
+                    versionCodeOverride = baseVersionCode + 4
+                } else if (abi == "arm64-v8a") {
+                    versionCodeOverride = baseVersionCode + 2
+                } else if (abi == "armeabi-v7a") {
+                    versionCodeOverride = baseVersionCode
+                }
+                println("versionCode for $abi = $versionCodeOverride")
             }
-
-            println("versionCode for $abi = $versionCodeOverride")
 
             output.versionNameOverride = versionName
             output.versionCodeOverride = versionCodeOverride
         }
 
         // If this is a release build, validate that "versionName" is set
-        tasks.withType(AppPreBuildTask) { prebuildTask ->
+        tasks.withType(AppPreBuildTask).configureEach { prebuildTask ->
             // You can't add a closure to a variant, so we need to look for an early variant-specific type
             // of task (AppPreBuildTask is the first) and filter to make sure we're looking at the task for
             // this variant that we're currently configuring
@@ -203,7 +225,7 @@ if (project.hasProperty("telemetry") && project.property("telemetry") == "true")
 // Select the Glean from GeckoView.
 // `service-sync-logins` requires Glean, which pulls in glean-native,
 // but that's also provided by geckoview-omni, so now we need to select which one to use.
-project.configurations.all {
+project.configurations.configureEach {
     resolutionStrategy.capabilitiesResolution.withCapability("org.mozilla.telemetry:glean-native") {
         def toBeSelected = candidates.find { it.id instanceof ModuleComponentIdentifier && it.id.module.contains('geckoview') }
         if (toBeSelected != null) {
@@ -342,26 +364,30 @@ dependencies {
 // Task for printing APK information for the requested variant
 // Usage: ./gradlew printVariants
 // -------------------------------------------------------------------------------------------------
-task printVariants {
+tasks.register('printVariants') {
     doLast {
-        def variants = android.applicationVariants.collect { variant -> [
-                apks: variant.outputs.collect { output -> [
-                        abi: output.getFilter(com.android.build.VariantOutput.FilterType.ABI),
-                        fileName: output.outputFile.name
-                ]},
-                build_type: variant.buildType.name,
-                name: variant.name,
-        ]}
-        println 'variants: ' + groovy.json.JsonOutput.toJson(variants)
+        def variants = android.applicationVariants.collect { variant ->
+            [
+                    apks      : variant.outputs.collect { output ->
+                        [
+                                abi     : output.getFilter(FilterConfiguration.FilterType.ABI.name()),
+                                fileName: output.outputFile.name
+                        ]
+                    },
+                    build_type: variant.buildType.name,
+                    name      : variant.name,
+            ]
+        }
+        println 'variants: ' + JsonOutput.toJson(variants)
     }
 }
 
-task printGeckoviewVersion {
+tasks.register('printGeckoviewVersion') {
     doLast {
         def configuration = configurations.implementationDependenciesMetadata
         def dependencies = configuration.incoming.resolutionResult.allDependencies
         def geckoviewDependency = dependencies.find { it.selected.id.moduleIdentifier.group == 'org.mozilla.geckoview' }
-        println('geckoviewVersion: ' + groovy.json.JsonOutput.toJson(geckoviewDependency.selected.moduleVersion.version))
+        println('geckoviewVersion: ' + JsonOutput.toJson(geckoviewDependency.selected.moduleVersion.version))
     }
 }
 

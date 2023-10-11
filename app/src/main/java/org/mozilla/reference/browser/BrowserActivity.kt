@@ -24,7 +24,7 @@ import mozilla.components.support.base.feature.ActivityResultHandler
 import mozilla.components.support.base.feature.UserInteractionHandler
 import mozilla.components.support.base.log.logger.Logger
 import mozilla.components.support.utils.SafeIntent
-import mozilla.components.support.webextensions.WebExtensionPopupFeature
+import mozilla.components.support.webextensions.WebExtensionPopupObserver
 import org.mozilla.reference.browser.addons.WebExtensionActionPopupActivity
 import org.mozilla.reference.browser.browser.BrowserFragment
 import org.mozilla.reference.browser.browser.CrashIntegration
@@ -44,8 +44,8 @@ open class BrowserActivity : AppCompatActivity() {
     private val tab: SessionState?
         get() = components.core.store.state.findCustomTabOrSelectedTab(sessionId)
 
-    private val webExtensionPopupFeature by lazy {
-        WebExtensionPopupFeature(components.core.store, ::openPopup)
+    private val webExtensionPopupObserver by lazy {
+        WebExtensionPopupObserver(components.core.store, ::openPopup)
     }
 
     /**
@@ -75,7 +75,7 @@ open class BrowserActivity : AppCompatActivity() {
         }
 
         NotificationManager.checkAndNotifyPolicy(this)
-        lifecycle.addObserver(webExtensionPopupFeature)
+        lifecycle.addObserver(webExtensionPopupObserver)
     }
 
     override fun onBackPressed() {
@@ -85,7 +85,7 @@ open class BrowserActivity : AppCompatActivity() {
             }
         }
 
-        super.onBackPressed()
+        super.onBackPressedDispatcher.onBackPressed()
 
         removeSessionIfNeeded()
     }

@@ -139,7 +139,7 @@ class AccountSettingsFragment : PreferenceFragmentCompat() {
         return OnPreferenceClickListener {
             CoroutineScope(Dispatchers.Main).launch {
                 requireComponents.backgroundServices.accountManager.logout()
-                activity?.onBackPressed()
+                activity?.onBackPressedDispatcher?.onBackPressed()
             }
             true
         }

@@ -16,6 +16,8 @@ import mozilla.components.concept.engine.EngineSession
 import mozilla.components.concept.engine.EngineView
 import mozilla.components.feature.addons.Addon
 import mozilla.components.feature.addons.ui.translateName
+import mozilla.components.support.utils.ext.getParcelableCompat
+import mozilla.components.support.utils.ext.getParcelableExtraCompat
 import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.ext.components
 
@@ -28,7 +30,10 @@ class AddonSettingsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_on_settings)
 
-        val addon = requireNotNull(intent.getParcelableExtra<Addon>("add_on"))
+        val addon = requireNotNull(
+            intent.getParcelableExtraCompat("add_on", Addon::class.java),
+        )
+
         title = addon.translateName(this)
 
         supportFragmentManager
@@ -51,7 +56,13 @@ class AddonSettingsActivity : AppCompatActivity() {
         private lateinit var engineSession: EngineSession
 
         override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-            optionsPageUrl = requireNotNull(arguments?.getParcelable<Addon>("add_on")?.installedState?.optionsPageUrl)
+            optionsPageUrl = requireNotNull(
+                arguments?.getParcelableCompat(
+                    "add_on",
+                    Addon::class.java,
+                )?.installedState?.optionsPageUrl,
+            )
+
             engineSession = requireContext().components.core.engine.createSession()
 
             return inflater.inflate(R.layout.fragment_add_on_settings, container, false)

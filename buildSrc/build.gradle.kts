@@ -3,7 +3,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 plugins {
-    `kotlin-dsl`
+    `kotlin-dsl-base`
 }
 
 repositories {
