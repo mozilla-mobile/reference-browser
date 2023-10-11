@@ -5,8 +5,12 @@
 package org.mozilla.reference.browser.settings
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.text.format.DateUtils
+import androidx.browser.customtabs.CustomTabsIntent
+import androidx.core.net.toUri
+import androidx.lifecycle.lifecycleScope
 import androidx.preference.CheckBoxPreference
 import androidx.preference.Preference
 import androidx.preference.Preference.OnPreferenceClickListener
@@ -19,15 +23,18 @@ import mozilla.components.service.fxa.manager.SyncEnginesStorage
 import mozilla.components.service.fxa.sync.SyncReason
 import mozilla.components.service.fxa.sync.SyncStatusObserver
 import mozilla.components.service.fxa.sync.getLastSynced
+import org.mozilla.reference.browser.IntentReceiverActivity
 import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.R.string.pref_key_sign_out
 import org.mozilla.reference.browser.R.string.pref_key_sync_history
+import org.mozilla.reference.browser.R.string.pref_key_sync_manage_account
 import org.mozilla.reference.browser.R.string.pref_key_sync_now
 import org.mozilla.reference.browser.R.string.pref_key_sync_passwords
 import org.mozilla.reference.browser.R.string.pref_key_sync_tabs
 import org.mozilla.reference.browser.components.BackgroundServices.Companion.SUPPORTED_SYNC_ENGINES
 import org.mozilla.reference.browser.ext.getPreferenceKey
 import org.mozilla.reference.browser.ext.requireComponents
+import org.mozilla.reference.browser.sync.BrowserFxAEntryPoint
 
 class AccountSettingsFragment : PreferenceFragmentCompat() {
     private val syncStatusObserver = object : SyncStatusObserver {
@@ -67,6 +74,7 @@ class AccountSettingsFragment : PreferenceFragmentCompat() {
 
         val signOutKey = requireContext().getPreferenceKey(pref_key_sign_out)
         val syncNowKey = requireContext().getPreferenceKey(pref_key_sync_now)
+        val manageAccountKey = requireContext().getPreferenceKey(pref_key_sync_manage_account)
 
         // Sign Out
         val preferenceSignOut = findPreference<CustomColorPreference>(signOutKey)
@@ -77,6 +85,10 @@ class AccountSettingsFragment : PreferenceFragmentCompat() {
         updateLastSyncedTimePref(requireContext(), preferenceSyncNow)
 
         preferenceSyncNow?.onPreferenceClickListener = getClickListenerForSyncNow()
+
+        // Manage Account
+        val preferenceManageAccount = findPreference<Preference>(manageAccountKey)
+        preferenceManageAccount?.onPreferenceClickListener = getClickListenerForManageAccount()
 
         SUPPORTED_SYNC_ENGINES.forEach {
             val preferenceKey = requireContext().getPreferenceKey(it.prefId())
@@ -148,6 +160,31 @@ class AccountSettingsFragment : PreferenceFragmentCompat() {
             true
         }
     }
+
+    private fun getClickListenerForManageAccount(): OnPreferenceClickListener {
+        return OnPreferenceClickListener {
+            viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Main) {
+                context?.let {
+                    val account =
+                        requireComponents.backgroundServices.accountManager.authenticatedAccount()
+                    if (account != null) {
+                        val url = account.getManageAccountURL(BrowserFxAEntryPoint.AccountSettings)
+                        val intent = createCustomTabIntent(it, url)
+                        startActivity(intent)
+                    }
+                }
+            }
+            true
+        }
+    }
+
+    private fun createCustomTabIntent(context: Context, url: String): Intent = CustomTabsIntent.Builder()
+        .setInstantAppsEnabled(false)
+        .build()
+        .intent
+        .setData(url.toUri())
+        .setClassName(context, IntentReceiverActivity::class.java.name)
+        .setPackage(context.packageName)
 
     private fun updateSyncEngineState(context: Context, engine: SyncEngine, newState: Boolean) {
         SyncEnginesStorage(context).setStatus(engine, newState)

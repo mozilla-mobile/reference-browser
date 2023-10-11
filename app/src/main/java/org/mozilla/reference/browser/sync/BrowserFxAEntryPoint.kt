@@ -14,4 +14,9 @@ enum class BrowserFxAEntryPoint(override val entryName: String) : FxAEntryPoint 
      * Authenticating from the home menu (the hamburger menu)
      */
     HomeMenu("home-menu"),
+
+    /**
+     * Authenticating from the account settings
+     */
+    AccountSettings("account-settings"),
 }
