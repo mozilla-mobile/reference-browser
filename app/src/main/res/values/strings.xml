@@ -71,6 +71,12 @@
     <!-- Preference for syncing immediately -->
     <string name="syncing">Syncing</string>
 
+    <!-- Preference for managing your account via accounts.firefox.com -->
+    <string name="manage_account">Manage account</string>
+
+    <!-- Summary of the preference for managing your account via accounts.firefox.com. -->
+    <string name="manage_account_summary">Change your password, manage data collection, or delete your account</string>
+
     <!-- Preference summary indicating that sync failed along with last time it succeeded -->
     <string name="preferences_sync_failed_summary">Sync failed. Last success: %s</string>
 
