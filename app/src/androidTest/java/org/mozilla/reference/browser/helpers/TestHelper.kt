@@ -20,6 +20,11 @@ import androidx.test.uiautomator.UiScrollable
 import androidx.test.uiautomator.UiSelector
 import mozilla.components.support.ktx.android.content.appName
 import org.junit.Assert
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertTrue
+import org.mozilla.reference.browser.helpers.TestAssetHelper.waitingTime
+import org.mozilla.reference.browser.helpers.TestAssetHelper.waitingTimeShort
+import org.mozilla.reference.browser.ui.robots.mDevice
 
 object TestHelper {
 
@@ -71,5 +76,32 @@ object TestHelper {
     fun UiDevice.waitForObjects(obj: UiObject, waitingTime: Long = TestAssetHelper.waitingTime) {
         this.waitForIdle()
         Assert.assertNotNull(obj.waitForExists(waitingTime))
+    }
+
+    fun itemWithResId(resourceId: String) =
+        mDevice.findObject(UiSelector().resourceId(resourceId))
+
+    fun itemWithResIdContainingText(resourceId: String, text: String) =
+        mDevice.findObject(UiSelector().resourceId(resourceId).textContains(text))
+
+    fun assertItemWithResIdExists(vararg appItems: UiObject, exists: Boolean = true) {
+        if (exists) {
+            for (appItem in appItems) {
+                assertTrue(appItem.waitForExists(waitingTime))
+            }
+        } else {
+            for (appItem in appItems) {
+                assertFalse(appItem.waitForExists(waitingTimeShort))
+            }
+        }
+    }
+    fun assertItemWithResIdAndTextExists(vararg appItems: UiObject, exists: Boolean = true) {
+        for (appItem in appItems) {
+            if (exists) {
+                assertTrue(appItem.waitForExists(waitingTime))
+            } else {
+                assertFalse(appItem.waitForExists(waitingTimeShort))
+            }
+        }
     }
 }
