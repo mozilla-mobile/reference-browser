@@ -25,6 +25,11 @@ import org.junit.Assert.assertTrue
 import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.ext.waitAndInteract
 import org.mozilla.reference.browser.helpers.TestAssetHelper.waitingTime
+import org.mozilla.reference.browser.helpers.TestAssetHelper.waitingTimeShort
+import org.mozilla.reference.browser.helpers.TestHelper.assertItemWithResIdAndTextExists
+import org.mozilla.reference.browser.helpers.TestHelper.assertItemWithResIdExists
+import org.mozilla.reference.browser.helpers.TestHelper.itemWithResId
+import org.mozilla.reference.browser.helpers.TestHelper.itemWithResIdContainingText
 import org.mozilla.reference.browser.helpers.TestHelper.packageName
 import org.mozilla.reference.browser.helpers.click
 
@@ -33,8 +38,23 @@ import org.mozilla.reference.browser.helpers.click
  */
 class AddonsManagerRobot {
 
-    fun verifyAddonsRecommendedView() = assertAddonsRecommendedView()
-    fun verifyAddonsEnabledView() = assertAddonsEnabledView()
+    fun verifyAddonsRecommendedView() {
+        assertTrue(mDevice.findObject(UiSelector().text("Recommended")).waitForExists(waitingTime))
+        // Check uBlock is displayed in the "Recommended" section
+        assertItemWithResIdAndTextExists(
+            itemWithResIdContainingText("$packageName:id/add_on_name", "uBlock Origin"),
+            itemWithResIdContainingText(
+                "$packageName:id/add_on_description",
+                "Finally, an efficient wide-spectrum content blocker. Easy on CPU and memory.",
+            ),
+        )
+        assertItemWithResIdExists(
+            itemWithResId("$packageName:id/rating"),
+            itemWithResId("$packageName:id/review_count"),
+            itemWithResId("$packageName:id/add_button"),
+        )
+    }
+
     fun verifyInstallAddonPrompt(addonName: String) = assertAddonPrompt(addonName)
     fun verifyAddonDownloadCompletedPrompt(addonName: String) = assertAddonDownloadCompletedPrompt(addonName)
     fun verifyAddonElementsView(addonName: String) = assertAddonElementsView(addonName)
@@ -42,18 +62,12 @@ class AddonsManagerRobot {
     fun clickCancelInstallButton() = cancelInstallButton()
     fun clickAllowInstallAddonButton() = allowInstallAddonButton()
     fun waitForAddonDownloadComplete() = waitForDownloadProgressUntilGone()
-    fun openAddon(addonName: String) {
-        mDevice.waitForIdle()
-        verifyAddonsEnabledView()
-        onView(
-            allOf(
-                withId(R.id.add_on_name),
-                withText(addonName),
-            ),
-        )
-            .check(matches(isCompletelyDisplayed()))
-            .perform(click())
-    }
+    fun openAddon(addonName: String) =
+        itemWithResIdContainingText("$packageName:id/add_on_name", addonName)
+            .also {
+                it.waitForExists(waitingTimeShort)
+                it.clickAndWaitForNewWindow()
+            }
 
     fun dismissAddonDownloadCompletedPrompt(addonName: String) {
         mDevice.waitForWindowUpdate(packageName, waitingTime)
@@ -74,36 +88,6 @@ class AddonsManagerRobot {
             AddonsManagerRobot().interact()
             return AddonsManagerRobot.Transition()
         }
-    }
-
-    private fun assertAddonsRecommendedView() {
-        assertTrue(mDevice.findObject(UiSelector().text("Recommended")).waitForExists(waitingTime))
-        // Check uBlock is displayed in the "Recommended" section
-        onView(
-            allOf(
-                withId(R.id.add_on_item),
-                hasDescendant(withText("uBlock Origin")),
-                hasDescendant(withText("Finally, an efficient wide-spectrum content blocker. Easy on CPU and memory.")),
-                hasDescendant(withId(R.id.rating)),
-                hasDescendant(withId(R.id.users_count)),
-                hasDescendant(withId(R.id.add_button)),
-            ),
-        ).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
-    }
-
-    private fun assertAddonsEnabledView() {
-        assertTrue(mDevice.findObject(UiSelector().text("Enabled")).waitForExists(waitingTime))
-        // Check uBlock is displayed in the "Enabled" section
-        onView(
-            allOf(
-                withId(R.id.add_on_item),
-                hasDescendant(withText("uBlock Origin")),
-                hasDescendant(withText("Finally, an efficient wide-spectrum content blocker. Easy on CPU and memory.")),
-                hasDescendant(withId(R.id.rating)),
-                hasDescendant(withId(R.id.users_count)),
-                hasDescendant(withId(R.id.add_button)),
-            ),
-        ).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
     }
 
     private fun installAddonButton(addonName: String) =
