@@ -3,7 +3,7 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 """
 Apply some defaults and minor modifications to the jobs defined in the
-push_apk and push_bundle kinds.
+push_bundle kind.
 """
 
 
