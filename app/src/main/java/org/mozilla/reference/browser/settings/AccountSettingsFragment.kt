@@ -167,8 +167,8 @@ class AccountSettingsFragment : PreferenceFragmentCompat() {
                 context?.let {
                     val account =
                         requireComponents.backgroundServices.accountManager.authenticatedAccount()
-                    if (account != null) {
-                        val url = account.getManageAccountURL(BrowserFxAEntryPoint.AccountSettings)
+                    val url = account?.getManageAccountURL(BrowserFxAEntryPoint.AccountSettings)
+                    if (url != null) {
                         val intent = createCustomTabIntent(it, url)
                         startActivity(intent)
                     }
