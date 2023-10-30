@@ -59,7 +59,7 @@ object NotificationManager {
                 flags = Intent.FLAG_ACTIVITY_NEW_TASK
             }
             val flags = if (SDK_INT >= Build.VERSION_CODES.S) {
-                PendingIntent.FLAG_MUTABLE or PendingIntent.FLAG_ONE_SHOT
+                PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_ONE_SHOT
             } else {
                 PendingIntent.FLAG_ONE_SHOT
             }
@@ -130,7 +130,7 @@ object NotificationManager {
         }
 
         val flags = if (SDK_INT >= Build.VERSION_CODES.S) {
-            PendingIntent.FLAG_MUTABLE
+            PendingIntent.FLAG_IMMUTABLE
         } else {
             0
         }
