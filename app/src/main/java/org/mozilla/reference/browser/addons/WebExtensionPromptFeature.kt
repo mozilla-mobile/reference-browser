@@ -17,7 +17,6 @@ import mozilla.components.browser.state.state.extension.WebExtensionPromptReques
 import mozilla.components.browser.state.store.BrowserStore
 import mozilla.components.concept.engine.webextension.WebExtensionInstallException
 import mozilla.components.feature.addons.Addon
-import mozilla.components.feature.addons.toInstalledState
 import mozilla.components.feature.addons.ui.AddonInstallationDialogFragment
 import mozilla.components.feature.addons.ui.PermissionsDialogFragment
 import mozilla.components.lib.state.ext.flowScoped
@@ -80,7 +79,7 @@ class WebExtensionPromptFeature(
             )
 
             is WebExtensionPromptRequest.AfterInstallation.PostInstallation -> handlePostInstallationRequest(
-                addon.copy(installedState = promptRequest.extension.toInstalledState()),
+                addon,
             )
 
             is WebExtensionPromptRequest.AfterInstallation.Permissions.Optional -> handleOptionalPermissionsRequest(
@@ -131,8 +130,6 @@ class WebExtensionPromptFeature(
 
     private fun showPostInstallationDialog(addon: Addon) {
         if (!isInstallationInProgress && !hasExistingAddonPostInstallationDialogFragment()) {
-            val addonsProvider = context.components.core.addonProvider
-
             // Fragment may not be attached to the context anymore during onConfirmButtonClicked handling,
             // but we still want to be able to process user selection of the 'allowInPrivateBrowsing' pref.
             // This is a best-effort attempt to do so - retain a weak reference to the application context
@@ -142,7 +139,6 @@ class WebExtensionPromptFeature(
 
             val dialog = AddonInstallationDialogFragment.newInstance(
                 addon = addon,
-                addonsProvider = addonsProvider,
                 onDismissed = {
                     consumePromptRequest()
                 },
