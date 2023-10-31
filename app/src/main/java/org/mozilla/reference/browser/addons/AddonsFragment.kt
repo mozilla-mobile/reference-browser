@@ -83,7 +83,6 @@ class AddonsFragment : Fragment(), AddonsManagerAdapterDelegate {
 
                 scope.launch(Dispatchers.Main) {
                     adapter = AddonsManagerAdapter(
-                        requireContext().components.core.addonProvider,
                         this@AddonsFragment,
                         addons,
                         store = requireContext().components.core.store,
