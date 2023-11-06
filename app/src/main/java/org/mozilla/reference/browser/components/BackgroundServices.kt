@@ -9,7 +9,7 @@ import android.os.Build
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import mozilla.appservices.fxaclient.Config.Server
+import mozilla.appservices.fxaclient.FxaServer
 import mozilla.components.browser.storage.sync.PlacesHistoryStorage
 import mozilla.components.browser.storage.sync.RemoteTabsStorage
 import mozilla.components.concept.sync.DeviceCapability
@@ -53,7 +53,7 @@ class BackgroundServices(
         GlobalSyncableStoreProvider.configureStore(SyncEngine.Passwords to loginsStorage)
     }
 
-    private val serverConfig = ServerConfig(Server.RELEASE, CLIENT_ID, REDIRECT_URL)
+    private val serverConfig = ServerConfig(FxaServer.Release, CLIENT_ID, REDIRECT_URL)
     private val deviceConfig = DeviceConfig(
         name = "Reference Browser on " + Build.MANUFACTURER + " " + Build.MODEL,
         type = DeviceType.MOBILE,
