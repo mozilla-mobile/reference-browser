@@ -41,14 +41,14 @@ object Versions {
         const val androidx_orchestrator = "1.4.2"
         const val androidx_runner = "1.5.2"
         const val androidx_uiautomator = "2.2.0"
-        const val detekt = "1.23.1"
+        const val detekt = "1.23.3"
         const val jacoco = "0.8.10"
         const val ktlint = "0.50.0"
         const val mockwebserver = "4.11.0"
     }
 
     object ThirdParty {
-        const val sentry = "6.32.0"
+        const val sentry = "6.33.0"
     }
 
     // Workaround for a Gradle parsing bug that prevents using nested objects directly in Gradle files.
