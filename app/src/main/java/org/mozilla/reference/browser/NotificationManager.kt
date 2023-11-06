@@ -19,9 +19,9 @@ import androidx.core.app.NotificationManagerCompat
 import androidx.preference.PreferenceManager
 import mozilla.components.concept.sync.Device
 import mozilla.components.concept.sync.TabData
+import mozilla.components.support.base.ids.SharedIdsHelper
 import mozilla.components.support.base.log.logger.Logger
 import org.mozilla.reference.browser.IntentRequestCodes.REQUEST_CODE_DATA_REPORTING
-import org.mozilla.reference.browser.IntentRequestCodes.REQUEST_CODE_SEND_TAB
 import android.app.NotificationManager as AndroidNotificationManager
 
 /**
@@ -45,8 +45,6 @@ object NotificationManager {
     // Default
     private const val NOTIFICATION_CHANNEL_ID = "default-notification-channel"
 
-    // Use an incrementing notification ID since they have the same tag.
-    private var notificationIdCount = 0
     private val logger = Logger("NotificationManager")
 
     fun showReceivedTabs(context: Context, device: Device?, tabs: List<TabData>) {
@@ -63,10 +61,10 @@ object NotificationManager {
             } else {
                 PendingIntent.FLAG_ONE_SHOT
             }
-
+            val notificationId = SharedIdsHelper.getNextIdForTag(context, RECEIVE_TABS_TAG)
             val pendingIntent: PendingIntent = PendingIntent.getActivity(
                 context,
-                REQUEST_CODE_SEND_TAB,
+                notificationId,
                 intent,
                 flags,
             )
@@ -99,7 +97,7 @@ object NotificationManager {
 
             NotificationManagerCompat.from(context).notify(
                 RECEIVE_TABS_TAG,
-                notificationIdCount++,
+                notificationId,
                 builder.build(),
             )
         }
