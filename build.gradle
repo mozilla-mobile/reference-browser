@@ -26,19 +26,13 @@ buildscript {
     }
 
     dependencies {
-        classpath Deps.tools_androidgradle
-        classpath Deps.tools_kotlingradle
-    }
-
-    // Variables in plugins {} aren't directly supported. Hack around it by setting an
-    // intermediate variable which can pull from Dependencies.kt and be used later.
-    ext {
-        detekt_version = Versions.detekt_version
+        classpath libs.tools.android.plugin
+        classpath libs.kotlin.gradle.plugin
     }
 }
 
 plugins {
-    id "io.gitlab.arturbosch.detekt" version "$detekt_version"
+    alias libs.plugins.detekt
 }
 
 allprojects {
@@ -97,7 +91,7 @@ subprojects {
     afterEvaluate {
         if (it.hasProperty('android')) {
             jacoco {
-                toolVersion = Versions.jacoco_version
+                toolVersion = libs.versions.jacoco
             }
 
             android {
@@ -179,12 +173,13 @@ configurations {
 }
 
 dependencies {
-    ktlint("com.pinterest:ktlint:${Versions.ktlint_version}") {
+    ktlint(libs.ktlint) {
         attributes {
             attribute(Bundling.BUNDLING_ATTRIBUTE, getObjects().named(Bundling, Bundling.EXTERNAL))
         }
     }
 }
+
 
 tasks.register('ktlint', JavaExec) {
     description = "Check Kotlin code style."
