@@ -1,0 +1,167 @@
+[versions]
+
+# Android Components
+android-components = "121.0.20231120040245"
+
+# AGP
+android-plugin = "8.1.3"
+
+#Kotlin
+kotlinx-coroutines = "1.7.3"
+kotlin-compiler = "1.9.20"
+
+#Google
+compose-compiler = "1.5.4"
+material = "1.9.0"
+
+#AndroidX
+activity-compose = "1.7.2"
+appcompat = "1.6.1"
+compose = "1.5.4"
+constraintlayout = "2.1.4"
+core = "1.12.0"
+lifecycle = "2.6.2"
+preference = "1.2.1"
+swiperefreshlayout = "1.1.0"
+work = "2.8.1"
+
+#AndroidX Testing
+androidx-core = "1.5.0"
+androidx-espresso = "3.5.1"
+androidx-ext-junit = "1.1.5"
+androidx-orchestrator = "1.4.2"
+androidx-runner = "1.5.2"
+androidx-uiautomator = "2.2.0"
+
+#Third Party
+sentry = "6.33.0"
+
+# Third Party Linting & Static Code Analysis
+detekt = "1.23.3"
+pinterest-ktlint = "0.50.0"
+
+#Third Party Testing
+jacoco = "0.8.11"
+mockwebserver = "4.12.0"
+
+[libraries]
+
+# AGP
+tools-android-plugin = { group = "com.android.tools.build", name = "gradle", version.ref = "android-plugin" }
+
+# Kotlin
+kotlin-gradle-plugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin-compiler" }
+kotlinx-coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "kotlinx-coroutines" }
+
+#Google
+google-material = { group = "com.google.android.material", name = "material", version.ref = "material" }
+
+# AndroidX
+androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
+androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "core" }
+androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
+androidx-lifecycle-process = { group = "androidx.lifecycle", name = "lifecycle-process", version.ref = "lifecycle" }
+androidx-preference-ktx = { group = "androidx.preference", name = "preference-ktx", version.ref = "preference" }
+androidx-work-runtime-ktx = { group = "androidx.work", name = "work-runtime-ktx", version.ref = "work" }
+androidx-compose-ui-base = { group = "androidx.compose.ui", name = "ui", version.ref = "compose" }
+androidx-compose-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling", version.ref = "compose" }
+androidx-compose-foundation = { group = "androidx.compose.foundation", name = "foundation", version.ref = "compose" }
+androidx-compose-material = { group = "androidx.compose.material", name = "material", version.ref = "compose" }
+androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activity-compose" }
+androidx-swiperefreshlayout = { group = "androidx.swiperefreshlayout", name = "swiperefreshlayout", version.ref = "swiperefreshlayout" }
+
+# AndroidX Testing
+espresso-contrib = { group = "androidx.test.espresso", name = "espresso-contrib", version.ref = "androidx-espresso" }
+espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "androidx-espresso" }
+espresso-idling-resources = { group = "androidx.test.espresso", name = "espresso-idling-resource", version.ref = "androidx-espresso" }
+espresso-web = { group = "androidx.test.espresso", name = "espresso-web", version.ref = "androidx-espresso" }
+junit-ktx = { group = "androidx.test.ext", name = "junit-ktx", version.ref = "androidx-ext-junit" }
+orchestrator = { group = "androidx.test", name = "orchestrator", version.ref = "androidx-orchestrator" }
+tools-test-rules = { group = "androidx.test", name = "rules", version.ref = "androidx-core" }
+tools-test-runner = { group = "androidx.test", name = "runner", version.ref = "androidx-runner" }
+uiautomator = { group = "androidx.test.uiautomator", name = "uiautomator", version.ref = "androidx-uiautomator" }
+
+# Third Party
+thirdparty-sentry = { group = "io.sentry", name = "sentry-android", version.ref = "sentry" }
+
+# Third Party Linting & Static Code Analysis
+ktlint = { module = "com.pinterest:ktlint", version.ref = "pinterest-ktlint" }
+
+# Third Party Testing
+mockwebserver = { group = "com.squareup.okhttp3", name = "mockwebserver", version.ref = "mockwebserver" }
+
+# Android Components
+mozilla-browser-engine-gecko = { group = "org.mozilla.components", name = "browser-engine-gecko", version.ref = "android-components" }
+mozilla-browser-domains = { group = "org.mozilla.components", name = "browser-domains", version.ref = "android-components" }
+mozilla-browser-session-storage = { group = "org.mozilla.components", name = "browser-session-storage", version.ref = "android-components" }
+mozilla-browser-state = { group = "org.mozilla.components", name = "browser-state", version.ref = "android-components" }
+mozilla-browser-tabstray = { group = "org.mozilla.components", name = "browser-tabstray", version.ref = "android-components" }
+mozilla-browser-toolbar = { group = "org.mozilla.components", name = "browser-toolbar", version.ref = "android-components" }
+mozilla-browser-menu = { group = "org.mozilla.components", name = "browser-menu", version.ref = "android-components" }
+mozilla-browser-menu2 = { group = "org.mozilla.components", name = "browser-menu2", version.ref = "android-components" }
+mozilla-browser-storage-sync = { group = "org.mozilla.components", name = "browser-storage-sync", version.ref = "android-components" }
+mozilla-browser-icons = { group = "org.mozilla.components", name = "browser-icons", version.ref = "android-components" }
+mozilla-browser-thumbnails = { group = "org.mozilla.components", name = "browser-thumbnails", version.ref = "android-components" }
+
+mozilla-compose-awesomebar = { group = "org.mozilla.components", name = "compose-awesomebar", version.ref = "android-components" }
+mozilla-concept-awesomebar = { group = "org.mozilla.components", name = "concept-awesomebar", version.ref = "android-components" }
+mozilla-concept-engine = { group = "org.mozilla.components", name = "concept-engine", version.ref = "android-components" }
+mozilla-concept-menu = { group = "org.mozilla.components", name = "concept-menu", version.ref = "android-components" }
+mozilla-concept-tabstray = { group = "org.mozilla.components", name = "concept-tabstray", version.ref = "android-components" }
+mozilla-concept-toolbar = { group = "org.mozilla.components", name = "concept-toolbar", version.ref = "android-components" }
+mozilla-concept-storage = { group = "org.mozilla.components", name = "concept-storage", version.ref = "android-components" }
+mozilla-concept-sync = { group = "org.mozilla.components", name = "concept-sync", version.ref = "android-components" }
+mozilla-concept-push = { group = "org.mozilla.components", name = "concept-push", version.ref = "android-components" }
+
+mozilla-feature-accounts-base = { group = "org.mozilla.components", name = "feature-accounts", version.ref = "android-components" }
+mozilla-feature-accounts-push = { group = "org.mozilla.components", name = "feature-accounts-push", version.ref = "android-components" }
+mozilla-feature-addons = { group = "org.mozilla.components", name = "feature-addons", version.ref = "android-components" }
+mozilla-feature-app-links = { group = "org.mozilla.components", name = "feature-app-links", version.ref = "android-components" }
+mozilla-feature-autofill = { group = "org.mozilla.components", name = "feature-autofill", version.ref = "android-components" }
+mozilla-feature-awesomebar = { group = "org.mozilla.components", name = "feature-awesomebar", version.ref = "android-components" }
+mozilla-feature-contextmenu = { group = "org.mozilla.components", name = "feature-contextmenu", version.ref = "android-components" }
+mozilla-feature-customtabs = { group = "org.mozilla.components", name = "feature-customtabs", version.ref = "android-components" }
+mozilla-feature-findinpage = { group = "org.mozilla.components", name = "feature-findinpage", version.ref = "android-components" }
+mozilla-feature-media = { group = "org.mozilla.components", name = "feature-media", version.ref = "android-components" }
+mozilla-feature-sitepermissions = { group = "org.mozilla.components", name = "feature-sitepermissions", version.ref = "android-components" }
+mozilla-feature-intent = { group = "org.mozilla.components", name = "feature-intent", version.ref = "android-components" }
+mozilla-feature-search = { group = "org.mozilla.components", name = "feature-search", version.ref = "android-components" }
+mozilla-feature-session = { group = "org.mozilla.components", name = "feature-session", version.ref = "android-components" }
+mozilla-feature-toolbar = { group = "org.mozilla.components", name = "feature-toolbar", version.ref = "android-components" }
+mozilla-feature-tabs = { group = "org.mozilla.components", name = "feature-tabs", version.ref = "android-components" }
+mozilla-feature-downloads = { group = "org.mozilla.components", name = "feature-downloads", version.ref = "android-components" }
+mozilla-feature-prompts = { group = "org.mozilla.components", name = "feature-prompts", version.ref = "android-components" }
+mozilla-feature-push = { group = "org.mozilla.components", name = "feature-push", version.ref = "android-components" }
+mozilla-feature-pwa = { group = "org.mozilla.components", name = "feature-pwa", version.ref = "android-components" }
+mozilla-feature-qr = { group = "org.mozilla.components", name = "feature-qr", version.ref = "android-components" }
+mozilla-feature-readerview = { group = "org.mozilla.components", name = "feature-readerview", version.ref = "android-components" }
+mozilla-feature-syncedtabs = { group = "org.mozilla.components", name = "feature-syncedtabs", version.ref = "android-components" }
+mozilla-feature-webauthn = { group = "org.mozilla.components", name = "feature-webauthn", version.ref = "android-components" }
+mozilla-feature-webcompat = { group = "org.mozilla.components", name = "feature-webcompat", version.ref = "android-components" }
+mozilla-feature-webnotifications = { group = "org.mozilla.components", name = "feature-webnotifications", version.ref = "android-components" }
+
+mozilla-lib-crash-base = { group = "org.mozilla.components", name = "lib-crash", version.ref = "android-components" }
+mozilla-lib-crash-sentry = { group = "org.mozilla.components", name = "lib-crash-sentry", version.ref = "android-components" }
+mozilla-lib-push-firebase = { group = "org.mozilla.components", name = "lib-push-firebase", version.ref = "android-components" }
+mozilla-lib-dataprotect = { group = "org.mozilla.components", name = "lib-dataprotect", version.ref = "android-components" }
+mozilla-lib-publicsuffixlist = { group = "org.mozilla.components", name = "lib-publicsuffixlist", version.ref = "android-components" }
+
+mozilla-ui-autocomplete = { group = "org.mozilla.components", name = "ui-autocomplete", version.ref = "android-components" }
+mozilla-ui-colors = { group = "org.mozilla.components", name = "ui-colors", version.ref = "android-components" }
+mozilla-ui-icons = { group = "org.mozilla.components", name = "ui-icons", version.ref = "android-components" }
+mozilla-ui-tabcounter = { group = "org.mozilla.components", name = "ui-tabcounter", version.ref = "android-components" }
+mozilla-ui-widgets = { group = "org.mozilla.components", name = "ui-widgets", version.ref = "android-components" }
+
+mozilla-service-firefox-accounts = { group = "org.mozilla.components", name = "service-firefox-accounts", version.ref = "android-components" }
+mozilla-service-location = { group = "org.mozilla.components", name = "service-location", version.ref = "android-components" }
+mozilla-service-sync-logins = { group = "org.mozilla.components", name = "service-sync-logins", version.ref = "android-components" }
+
+mozilla-support-images = { group = "org.mozilla.components", name = "support-images", version.ref = "android-components" }
+mozilla-support-utils = { group = "org.mozilla.components", name = "support-utils", version.ref = "android-components" }
+mozilla-support-ktx = { group = "org.mozilla.components", name = "support-ktx", version.ref = "android-components" }
+mozilla-support-rustlog = { group = "org.mozilla.components", name = "support-rustlog", version.ref = "android-components" }
+mozilla-support-rusthttp = { group = "org.mozilla.components", name = "support-rusthttp", version.ref = "android-components" }
+mozilla-support-webextensions = { group = "org.mozilla.components", name = "support-webextensions", version.ref = "android-components" }
+
+[plugins]
+detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
