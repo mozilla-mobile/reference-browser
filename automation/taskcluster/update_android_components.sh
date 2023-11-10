@@ -27,11 +27,11 @@ $CURL "$LATEST_POM_URL.asc" --output "$POM_FILE.asc"
 gpg --verify "$POM_FILE.asc" "$POM_FILE"
 
 # Updating version file
-sed -i "s/VERSION = \".*\"/VERSION = \"$LATEST_VERSION\"/g" "buildSrc/src/main/java/AndroidComponents.kt"
+sed -i "s/android-components = \".*\"/android-components = \"$LATEST_VERSION\"/g" "gradle/libs.versions.toml"
 
 # Create a branch and commit local changes
 git checkout -b "$BRANCH"
-git add buildSrc/src/main/java/AndroidComponents.kt
+git add gradle/libs.versions.toml
 git commit -m \
 	"Update Android Components version to $LATEST_VERSION." \
 	--author="MickeyMoz <sebastian@mozilla.com>" \
