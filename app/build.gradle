@@ -68,6 +68,7 @@ android {
     lintOptions {
         lintConfig file("lint.xml")
         baseline file("lint-baseline.xml")
+        disable 'GradleDependency', 'AndroidGradlePluginVersion'
     }
 
     compileOptions {
