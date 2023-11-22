@@ -7,7 +7,7 @@ pull_request_rules:
     conditions:
       - author=MickeyMoz
       - status-success=pr-complete
-      - files=buildSrc/src/main/java/AndroidComponents.kt
+      - files=gradle/libs.versions.toml
     actions:
       review:
         type: APPROVE
