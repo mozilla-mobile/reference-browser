@@ -26,9 +26,17 @@ android {
     }
 
     def releaseTemplate = {
-        minifyEnabled false
+        minifyEnabled true
         proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         matchingFallbacks = ['release'] // Use on the "release" build type in dependencies (AARs)
+
+        if (gradle.hasProperty("localProperties.autosignReleaseWithDebugKey")) {
+            signingConfig signingConfigs.debug
+        }
+
+        if (gradle.hasProperty("localProperties.debuggable")) {
+            debuggable true
+        }
     }
 
     buildFeatures {
