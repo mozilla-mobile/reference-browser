@@ -37,7 +37,7 @@ androidx-uiautomator = "2.2.0"
 sentry = "6.34.0"
 
 # Third Party Linting & Static Code Analysis
-detekt = "1.23.3"
+detekt = "1.23.4"
 pinterest-ktlint = "0.50.0"
 
 #Third Party Testing
