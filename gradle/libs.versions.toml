@@ -34,7 +34,7 @@ androidx-runner = "1.5.2"
 androidx-uiautomator = "2.2.0"
 
 #Third Party
-sentry = "6.34.0"
+sentry = "7.0.0"
 
 # Third Party Linting & Static Code Analysis
 detekt = "1.23.3"
