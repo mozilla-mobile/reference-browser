@@ -124,7 +124,7 @@ class AddonsFragment : Fragment(), AddonsManagerAdapterDelegate {
         addonProgressOverlay.visibility = View.VISIBLE
         isInstallationInProgress = true
         requireContext().components.core.addonManager.installAddon(
-            addon,
+            url = addon.downloadUrl,
             onSuccess = {
                 runIfFragmentIsAttached {
                     isInstallationInProgress = false
@@ -134,7 +134,7 @@ class AddonsFragment : Fragment(), AddonsManagerAdapterDelegate {
                     addonProgressOverlay.visibility = View.GONE
                 }
             },
-            onError = { _, _ ->
+            onError = { _ ->
                 runIfFragmentIsAttached {
                     addonProgressOverlay.visibility = View.GONE
                     isInstallationInProgress = false
