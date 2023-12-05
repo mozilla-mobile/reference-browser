@@ -74,6 +74,10 @@ class Core(private val context: Context) {
             testingModeEnabled = prefs.getBoolean(context.getPreferenceKey(R.string.pref_key_testing_mode), false),
             trackingProtectionPolicy = createTrackingProtectionPolicy(prefs),
             historyTrackingDelegate = HistoryDelegate(lazyHistoryStorage),
+            globalPrivacyControlEnabled = prefs.getBoolean(
+                context.getPreferenceKey(R.string.pref_key_global_privacy_control),
+                false,
+            ),
         )
         EngineProvider.createEngine(context, defaultSettings)
     }

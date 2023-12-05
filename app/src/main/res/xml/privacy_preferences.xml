@@ -21,6 +21,11 @@
 
     </PreferenceCategory>
 
+    <androidx.preference.SwitchPreferenceCompat
+        android:defaultValue="false"
+        android:title="@string/preferences_global_privacy_control"
+        android:key="@string/pref_key_global_privacy_control"/>
+
     <PreferenceCategory
         android:title="@string/data_choices_category">
 
