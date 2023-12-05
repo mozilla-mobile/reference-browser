@@ -50,6 +50,9 @@
     <!-- Preference for enabling tracking protection in private mode -->
     <string name="preferences_tracking_protection_private">Enable in Private Browsing Mode</string>
 
+    <!-- Preference for enabling global privacy control in normal mode -->
+    <string name="preferences_global_privacy_control">Tell websites not to share &amp; sell data</string>
+
     <!-- Preference about page -->
     <string name="preferences_about_page">About Reference Browser</string>
 
