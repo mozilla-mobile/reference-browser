@@ -1,17 +1,17 @@
 [versions]
 
 # Android Components
-android-components = "122.0.20231208040318"
+android-components = "122.0.20231212031804"
 
 # AGP
 android-plugin = "8.2.0"
 
 #Kotlin
 kotlinx-coroutines = "1.7.3"
-kotlin-compiler = "1.9.20"
+kotlin-compiler = "1.9.21"
 
 #Google
-compose-compiler = "1.5.5"
+compose-compiler = "1.5.6"
 material = "1.9.0"
 
 #AndroidX
