@@ -1,7 +1,7 @@
 [versions]
 
 # Android Components
-android-components = "123.0.20231229040307"
+android-components = "123.0.20231230040316"
 
 # AGP
 android-plugin = "8.2.0"
