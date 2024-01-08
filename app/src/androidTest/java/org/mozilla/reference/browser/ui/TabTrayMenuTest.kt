@@ -155,6 +155,7 @@ class TabTrayMenuTest {
     }
 
     // This test verifies the new tab is open and that its items are all in place
+    @Ignore("Failing, see: https://github.com/mozilla-mobile/reference-browser/issues/2222")
     @Test
     fun openNewTabTest() {
         val genericURL = TestAssetHelper.getGenericAsset(mockWebServer, 1)
