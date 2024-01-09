@@ -5,6 +5,7 @@
 package org.mozilla.reference.browser.ui.robots
 
 import android.net.Uri
+import android.util.Log
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers
@@ -31,7 +32,10 @@ class NavigationToolbarRobot {
     fun verifyNoTabAddressView() = assertNoTabAddressText()
     fun verifyNewTabAddressView(url: String) = assertNewTabAddressText(url)
     fun verifyReaderViewButton() = assertReaderViewButton()
-    fun checkNumberOfTabsTabCounter(numTabs: String) = numberOfOpenTabsTabCounter.check(matches(withText(numTabs)))
+    fun checkNumberOfTabsTabCounter(numTabs: String) {
+        numberOfOpenTabsTabCounter.check(matches(withText(numTabs)))
+        Log.i("Andi", "checkNumberOfTabsTabCounter: Verified number of open tabs is: $numTabs")
+    }
 
     class Transition {
 
@@ -39,13 +43,17 @@ class NavigationToolbarRobot {
 
         fun enterUrlAndEnterToBrowser(url: Uri, interact: BrowserRobot.() -> Unit): BrowserRobot.Transition {
             urlBar().click()
+            Log.i("Andi", "enterUrlAndEnterToBrowser: Clicked url bar")
             awesomeBar().setText(url.toString())
+            Log.i("Andi", "enterUrlAndEnterToBrowser: Set awesomebar text to: $url")
             mDevice.pressEnter()
+            Log.i("Andi", "enterUrlAndEnterToBrowser: Pressed device enter button")
 
             mDevice.findObject(
                 UiSelector()
                     .resourceId("$packageName:id/mozac_browser_toolbar_progress"),
             ).waitUntilGone(waitingTime)
+            Log.i("Andi", "enterUrlAndEnterToBrowser: Waited for progress bar to be gone")
 
             BrowserRobot().interact()
             return BrowserRobot.Transition()
@@ -65,6 +73,7 @@ class NavigationToolbarRobot {
 
         fun openTabTrayMenu(interact: TabTrayMenuRobot.() -> Unit): TabTrayMenuRobot.Transition {
             openTabTray().click()
+            Log.i("Andi", "openTabTrayMenu: Opened tabs tray")
             TabTrayMenuRobot().interact()
             return TabTrayMenuRobot.Transition()
         }
@@ -107,6 +116,7 @@ private fun assertNoTabAddressText() {
 
 private fun assertNewTabAddressText(url: String) {
     mDevice.waitAndInteract(Until.findObject(By.textContains(url))) {}
+    Log.i("Andi", "assertNewTabAddressText: Verified new tab address: $url")
 }
 
 private fun assertReaderViewButton() {

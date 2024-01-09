@@ -4,6 +4,7 @@
 
 package org.mozilla.reference.browser.ui.robots
 
+import android.util.Log
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers
@@ -68,6 +69,8 @@ class BrowserRobot {
                 isDescendantOfA(withId(R.id.mozac_browser_toolbar_origin_view)),
             ),
         ).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+
+        Log.i("Andi", "verifyUrl: Verified URL is: $expectedUrl")
     }
 
     fun verifyAboutBrowser() {

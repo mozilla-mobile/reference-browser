@@ -155,32 +155,6 @@ class TabTrayMenuTest {
     }
 
     // This test verifies the new tab is open and that its items are all in place
-    @Ignore("Failing, see: https://github.com/mozilla-mobile/reference-browser/issues/2222")
-    @Test
-    fun openNewTabTest() {
-        val genericURL = TestAssetHelper.getGenericAsset(mockWebServer, 1)
-
-        navigationToolbar {
-        }.openTabTrayMenu {
-        }.openNewTab {
-            verifyNewTabAddressView("about:blank")
-            checkNumberOfTabsTabCounter("1")
-        }.openTabTrayMenu {
-        }.openNewTab {
-        }.enterUrlAndEnterToBrowser(genericURL.url) {
-            verifyUrl(genericURL.url.toString())
-        }
-        navigationToolbar {
-            checkNumberOfTabsTabCounter("2")
-        }.openTabTrayMenu {
-            verifyExistingOpenTabs("about:blank")
-            verifyExistingOpenTabs(genericURL.title)
-        }.clickOpenTab("about:blank") {
-            verifyUrl("about:blank")
-        }
-    }
-
-    // This test verifies the new tab is open and that its items are all in place
     @Ignore("Failing, see: https://github.com/mozilla-mobile/reference-browser/issues/1923")
     @Test
     fun openNewPrivateTabTest() {

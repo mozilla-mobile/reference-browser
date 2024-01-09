@@ -155,4 +155,29 @@ class ContextMenusTest {
             verifyPastedToolbarText("Page content: 1")
         }
     }
+
+    // This test verifies the new tab is open and that its items are all in place
+    @Test
+    fun openNewTabTest() {
+        val genericURL = TestAssetHelper.getGenericAsset(mockWebServer, 1)
+
+        navigationToolbar {
+        }.openTabTrayMenu {
+        }.openNewTab {
+            verifyNewTabAddressView("about:blank")
+            checkNumberOfTabsTabCounter("1")
+        }.openTabTrayMenu {
+        }.openNewTab {
+        }.enterUrlAndEnterToBrowser(genericURL.url) {
+            verifyUrl(genericURL.url.toString())
+        }
+        navigationToolbar {
+            checkNumberOfTabsTabCounter("2")
+        }.openTabTrayMenu {
+            verifyExistingOpenTabs("about:blank")
+            verifyExistingOpenTabs(genericURL.title)
+        }.clickOpenTab("about:blank") {
+            verifyUrl("about:blank")
+        }
+    }
 }
