@@ -218,6 +218,7 @@ abstract class BaseBrowserFragment : Fragment(), UserInteractionHandler, Activit
                 store = requireComponents.core.store,
                 tabsUseCases = requireComponents.useCases.tabsUseCases,
                 customTabId = sessionId,
+                fileUploadsDirCleaner = requireComponents.core.fileUploadsDirCleaner,
                 fragmentManager = parentFragmentManager,
                 onNeedToRequestPermissions = { permissions ->
                     // The Fragment class wants us to use registerForActivityResult
