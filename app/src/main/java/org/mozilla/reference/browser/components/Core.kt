@@ -29,6 +29,7 @@ import mozilla.components.feature.customtabs.store.CustomTabsServiceStore
 import mozilla.components.feature.downloads.DownloadMiddleware
 import mozilla.components.feature.media.MediaSessionFeature
 import mozilla.components.feature.media.middleware.RecordingDevicesMiddleware
+import mozilla.components.feature.prompts.file.FileUploadsDirCleaner
 import mozilla.components.feature.pwa.ManifestStorage
 import mozilla.components.feature.pwa.WebAppShortcutManager
 import mozilla.components.feature.readerview.ReaderViewMiddleware
@@ -210,6 +211,10 @@ class Core(private val context: Context) {
             context,
             Frequency(12, TimeUnit.HOURS),
         )
+    }
+
+    val fileUploadsDirCleaner: FileUploadsDirCleaner by lazy {
+        FileUploadsDirCleaner { context.cacheDir }
     }
 
     private fun provideDefaultAddonProvider(): AMOAddonsProvider {

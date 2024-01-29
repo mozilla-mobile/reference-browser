@@ -100,6 +100,10 @@ open class BrowserApplication : Application() {
             // Initialize the push feature and service.
             it.initialize()
         }
+        @OptIn(DelicateCoroutinesApi::class)
+        GlobalScope.launch(Dispatchers.IO) {
+            components.core.fileUploadsDirCleaner.cleanUploadsDirectory()
+        }
     }
 
     override fun onTrimMemory(level: Int) {
