@@ -1,7 +1,7 @@
 [versions]
 
 # Android Components
-android-components = "124.0.20240131040308"
+android-components = "124.0.20240208040258"
 
 # AGP
 android-plugin = "8.2.2"
@@ -11,13 +11,13 @@ kotlinx-coroutines = "1.7.3"
 kotlin-compiler = "1.9.22"
 
 #Google
-compose-compiler = "1.5.8"
+compose-compiler = "1.5.9"
 material = "1.9.0"
 
 #AndroidX
 activity-compose = "1.7.2"
 appcompat = "1.6.1"
-compose = "1.6.0"
+compose = "1.6.1"
 constraintlayout = "2.1.4"
 core = "1.12.0"
 lifecycle = "2.7.0"
