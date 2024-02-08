@@ -26,15 +26,6 @@ updates:
       interval: "weekly"
       time: "03:00"
 
-  - package-ecosystem: "gradle"
-    commit-message:
-      prefix: "Gradle"
-    directory: "/buildSrc"
-    schedule:
-      day: "saturday"
-      interval: "weekly"
-      time: "03:00"
-
   - package-ecosystem: "maven"
     commit-message:
       prefix: "Maven"
@@ -48,15 +39,6 @@ updates:
     commit-message:
       prefix: "Maven"
     directory: "/app" 
-    schedule:
-      day: "saturday"
-      interval: "weekly"
-      time: "03:00"
-
-  - package-ecosystem: "maven"
-    commit-message:
-      prefix: "Maven"
-    directory: "/buildSrc"
     schedule:
       day: "saturday"
       interval: "weekly"
