@@ -28,6 +28,7 @@ import org.mozilla.reference.browser.helpers.TestAssetHelper.waitingTime
 import org.mozilla.reference.browser.helpers.TestAssetHelper.waitingTimeShort
 import org.mozilla.reference.browser.helpers.TestHelper.assertItemWithResIdAndTextExists
 import org.mozilla.reference.browser.helpers.TestHelper.assertItemWithResIdExists
+import org.mozilla.reference.browser.helpers.TestHelper.getStringResource
 import org.mozilla.reference.browser.helpers.TestHelper.itemWithResId
 import org.mozilla.reference.browser.helpers.TestHelper.itemWithResIdContainingText
 import org.mozilla.reference.browser.helpers.TestHelper.packageName
@@ -73,9 +74,8 @@ class AddonsManagerRobot {
         mDevice.waitForWindowUpdate(packageName, waitingTime)
         mDevice.findObject(UiSelector().text("$addonName has been added to Reference Browser"))
             .waitForExists(waitingTime)
-        mDevice.waitAndInteract(Until.findObject(By.text("Okay, Got it"))) {}
-        val gotItButton = mDevice.findObject(UiSelector().text("Okay, Got it"))
-        gotItButton.click()
+        mDevice.waitAndInteract(Until.findObject(By.text(getStringResource(R.string.mozac_feature_addons_installed_dialog_okay_button_2)))) {}
+        mDevice.findObject(UiSelector().textContains(getStringResource(R.string.mozac_feature_addons_installed_dialog_okay_button_2))).click()
     }
 
     fun clickRemoveAddonButton() {
@@ -93,7 +93,7 @@ class AddonsManagerRobot {
     private fun installAddonButton(addonName: String) =
         onView(
             allOf(
-                withContentDescription(R.string.mozac_feature_addons_install_addon_content_description),
+                withContentDescription("Install $addonName"),
                 isDescendantOfA(withId(R.id.add_on_item)),
                 hasSibling(hasDescendant(withText(addonName))),
             ),

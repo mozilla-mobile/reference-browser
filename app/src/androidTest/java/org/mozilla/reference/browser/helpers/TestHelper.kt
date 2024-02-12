@@ -104,4 +104,5 @@ object TestHelper {
             }
         }
     }
+    fun getStringResource(id: Int) = appContext.resources.getString(id, appName)
 }
