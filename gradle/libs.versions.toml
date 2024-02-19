@@ -17,7 +17,7 @@ material = "1.9.0"
 #AndroidX
 activity-compose = "1.7.2"
 appcompat = "1.6.1"
-compose = "1.6.1"
+composeBom = "2024.02.00"
 constraintlayout = "2.1.4"
 core = "1.12.0"
 lifecycle = "2.7.0"
@@ -57,18 +57,21 @@ kotlinx-coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-
 google-material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 
 # AndroidX
+androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activity-compose" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "core" }
 androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
 androidx-lifecycle-process = { group = "androidx.lifecycle", name = "lifecycle-process", version.ref = "lifecycle" }
 androidx-preference-ktx = { group = "androidx.preference", name = "preference-ktx", version.ref = "preference" }
 androidx-work-runtime-ktx = { group = "androidx.work", name = "work-runtime-ktx", version.ref = "work" }
-androidx-compose-ui-base = { group = "androidx.compose.ui", name = "ui", version.ref = "compose" }
-androidx-compose-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling", version.ref = "compose" }
-androidx-compose-foundation = { group = "androidx.compose.foundation", name = "foundation", version.ref = "compose" }
-androidx-compose-material = { group = "androidx.compose.material", name = "material", version.ref = "compose" }
-androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activity-compose" }
 androidx-swiperefreshlayout = { group = "androidx.swiperefreshlayout", name = "swiperefreshlayout", version.ref = "swiperefreshlayout" }
+
+# AndroidX Compose
+androidx-compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "composeBom" }
+androidx-compose-ui-base = { group = "androidx.compose.ui", name = "ui" }
+androidx-compose-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
+androidx-compose-foundation = { group = "androidx.compose.foundation", name = "foundation" }
+androidx-compose-material = { group = "androidx.compose.material", name = "material" }
 
 # AndroidX Testing
 espresso-contrib = { group = "androidx.test.espresso", name = "espresso-contrib", version.ref = "androidx-espresso" }
