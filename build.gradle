@@ -1,5 +1,7 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
+
+import io.gitlab.arturbosch.detekt.Detekt
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 buildscript {
@@ -153,18 +155,15 @@ detekt {
     source.setFrom(files("$projectDir/components", "$projectDir/buildSrc", "$projectDir/samples"))
     config.setFrom("$projectDir/config/detekt.yml")
     baseline = file("$projectDir/config/detekt-baseline.xml")
+}
 
+tasks.withType(Detekt).configureEach {
     reports {
-        html {
-            required = true
-            outputLocation.set(file("$projectDir/build/reports/detekt.html"))
-        }
-        xml {
-            required = false
-        }
-        txt {
-            required = false
-        }
+        html.required.set(true)
+        html.outputLocation.set(file("$projectDir/build/reports/detekt.html"))
+
+        xml.required.set(false)
+        txt.required.set(false)
     }
 }
 
