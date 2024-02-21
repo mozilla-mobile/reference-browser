@@ -31,7 +31,7 @@ androidx-espresso = "3.5.1"
 androidx-ext-junit = "1.1.5"
 androidx-orchestrator = "1.4.2"
 androidx-runner = "1.5.2"
-androidx-uiautomator = "2.2.0"
+androidx-uiautomator = "2.3.0"
 
 #Third Party
 sentry = "7.3.0"
