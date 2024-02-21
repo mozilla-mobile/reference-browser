@@ -11,7 +11,7 @@ kotlinx-coroutines = "1.8.0"
 kotlin-compiler = "1.9.22"
 
 #Google
-compose-compiler = "1.5.9"
+compose-compiler = "1.5.10"
 material = "1.9.0"
 
 #AndroidX
