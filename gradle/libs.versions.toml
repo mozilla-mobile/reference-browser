@@ -1,7 +1,7 @@
 [versions]
 
 # Android Components
-android-components = "124.0.20240219040317"
+android-components = "125.0.20240222040458"
 
 # AGP
 android-plugin = "8.2.2"
@@ -11,7 +11,7 @@ kotlinx-coroutines = "1.8.0"
 kotlin-compiler = "1.9.22"
 
 #Google
-compose-compiler = "1.5.9"
+compose-compiler = "1.5.10"
 material = "1.9.0"
 
 #AndroidX
@@ -31,10 +31,10 @@ androidx-espresso = "3.5.1"
 androidx-ext-junit = "1.1.5"
 androidx-orchestrator = "1.4.2"
 androidx-runner = "1.5.2"
-androidx-uiautomator = "2.2.0"
+androidx-uiautomator = "2.3.0"
 
 #Third Party
-sentry = "7.3.0"
+sentry = "7.4.0"
 
 # Third Party Linting & Static Code Analysis
 detekt = "1.23.5"
