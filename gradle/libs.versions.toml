@@ -1,7 +1,7 @@
 [versions]
 
 # Android Components
-android-components = "125.0.20240221040306"
+android-components = "125.0.20240222040458"
 
 # AGP
 android-plugin = "8.2.2"
@@ -34,7 +34,7 @@ androidx-runner = "1.5.2"
 androidx-uiautomator = "2.2.0"
 
 #Third Party
-sentry = "7.3.0"
+sentry = "7.4.0"
 
 # Third Party Linting & Static Code Analysis
 detekt = "1.23.5"
