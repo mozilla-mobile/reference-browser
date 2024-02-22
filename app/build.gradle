@@ -331,8 +331,7 @@ dependencies {
     implementation libs.androidx.swiperefreshlayout
     implementation libs.androidx.work.runtime.ktx
 
-    def composeBom = platform(libs.androidx.compose.bom)
-    implementation(composeBom)
+    implementation platform(libs.androidx.compose.bom)
     implementation libs.androidx.activity.compose
     implementation libs.androidx.compose.ui.base
     implementation libs.androidx.compose.ui.tooling
