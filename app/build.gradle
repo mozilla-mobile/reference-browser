@@ -79,11 +79,6 @@ android {
         disable 'GradleDependency', 'AndroidGradlePluginVersion'
     }
 
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_17
-        targetCompatibility JavaVersion.VERSION_17
-    }
-
     packagingOptions {
         exclude 'META-INF/atomicfu.kotlin_module'
     }
@@ -101,13 +96,16 @@ android {
     namespace 'org.mozilla.reference.browser'
 }
 
+kotlin {
+    jvmToolchain(Config.jvmTargetCompatibility)
+}
+
 tasks.withType(KotlinCompile).configureEach {
     kotlinOptions.allWarningsAsErrors = true
     kotlinOptions.freeCompilerArgs += [
             "-opt-in=kotlinx.coroutines.ExperimentalCoroutinesApi",
             "-Xjvm-default=all"
     ]
-    kotlinOptions.jvmTarget = "17"
 }
 
 def baseVersionCode = generatedVersionCode
