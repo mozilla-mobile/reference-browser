@@ -4,7 +4,7 @@
 android-components = "125.0.20240301040250"
 
 # AGP
-android-plugin = "8.2.2"
+android-plugin = "8.3.0"
 
 #Kotlin
 kotlinx-coroutines = "1.8.0"
