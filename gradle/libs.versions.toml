@@ -12,10 +12,10 @@ kotlin-compiler = "1.9.22"
 
 #Google
 compose-compiler = "1.5.10"
-material = "1.9.0"
+material = "1.11.0"
 
 #AndroidX
-activity-compose = "1.7.2"
+activity-compose = "1.8.1"
 appcompat = "1.6.1"
 composeBom = "2024.02.02"
 constraintlayout = "2.1.4"
