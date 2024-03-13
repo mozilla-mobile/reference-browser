@@ -28,6 +28,10 @@ import mozilla.components.service.sync.logins.SyncableLoginsStorage
 import org.mozilla.reference.browser.NotificationManager
 import org.mozilla.reference.browser.ext.components
 import org.mozilla.reference.browser.tabs.synced.SyncedTabsIntegration
+import java.util.concurrent.TimeUnit
+
+const val DEFAULT_ACTIVE_DAYS = 14L
+val maxActiveTime = TimeUnit.DAYS.toMillis(DEFAULT_ACTIVE_DAYS)
 
 /**
  * Component group for background services. These are components that need to be accessed from
@@ -95,6 +99,7 @@ class BackgroundServices(
             accountManager,
             context.components.core.store,
             remoteTabsStorage.value,
+            maxActiveTime,
         )
     }
 }
