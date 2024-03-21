@@ -18,4 +18,8 @@ jobs:
           type: decision-task
           treeherder-symbol: bump-ac
           target-tasks-method: bump_android_components
-      when: [{hour: 7, minute: 0}]
+      when:
+          - {hour: 4, minute: 0}
+          - {hour: 10, minute: 0}
+          - {hour: 16, minute: 0}
+          - {hour: 22, minute: 0}
