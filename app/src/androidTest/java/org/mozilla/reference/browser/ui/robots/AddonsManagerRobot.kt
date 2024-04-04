@@ -126,7 +126,7 @@ class AddonsManagerRobot {
 
         onView(
             allOf(
-                withId(R.id.permissions),
+                withId(R.id.optional_or_required_text),
                 withText(containsString("It requires your permission to:")),
             ),
         ).check(matches(isCompletelyDisplayed()))
