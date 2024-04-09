@@ -8,7 +8,15 @@ A web browser reference implementation using [Mozilla Android Components](https:
 
 It includes the Mozilla Web Platform via GeckoView, a new modern Firefox Accounts and Cloud Sync implementation and the new "Glean" telemetry library. All these components will be foundational for Mozilla's existing and upcoming Android products.
 
-The Reference Browser can also be a starting point for your own new browser-like applications. It depends heavily on the [Android Components](https://github.com/mozilla-mobile/android-components) project where most of the actual implementation lives. That project also includes many smaller sample applications.
+The Reference Browser can also be a starting point for your own new browser-like applications. It depends heavily on the [Android Components](https://hg.mozilla.org/mozilla-central/file/tip/mobile/android/android-components) project where most of the actual implementation lives. That project also includes many smaller sample applications.
+
+**Will Reference Browser move to mozilla-central?**
+
+Reference Browser is meant to be a reference implementation of the Android Components project. Having it live outside of the mozilla source-tree lets us:
+
+1. See how core browsing APIs work for browser-based projects outside of Firefox.
+2. Have a developer playground to try experimental APIs in a safe way that involves a full build, signing, and publishing process.
+3. Validates that our [maven](https://nightly.maven.mozilla.org) [repositories](https://maven.mozilla.org) and Google Play publishing infrastructure is still functioning - if we no longer receive maven artifacts or Google Play builds are not working, we would know that there is something systematically wrong with these processes.
 
 # Getting Involved
 
