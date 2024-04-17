@@ -6,11 +6,10 @@ android-components = "128.0.20240521213834"
 android-plugin = "8.4.0"
 
 # Kotlin
-kotlin-compiler = "1.9.24"
+kotlin = "2.0.0"
 kotlinx-coroutines = "1.8.1"
 
 # Google
-compose-compiler = "1.5.14"
 material = "1.9.0"
 
 # AndroidX
@@ -55,7 +54,6 @@ okio = "3.4.0"
 tools-android-plugin = { group = "com.android.tools.build", name = "gradle", version.ref = "android-plugin" }
 
 # Kotlin
-kotlin-gradle-plugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin-compiler" }
 kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "kotlinx-coroutines" }
 
 # Google
@@ -186,5 +184,7 @@ mozilla-ui-tabcounter = { group = "org.mozilla.components", name = "ui-tabcounte
 mozilla-ui-widgets = { group = "org.mozilla.components", name = "ui-widgets", version.ref = "android-components" }
 
 [plugins]
+compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 dependency-analysis = { id = "com.autonomousapps.dependency-analysis", version.ref = "dependency-analysis" }
 detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
+kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }

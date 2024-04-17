@@ -28,14 +28,15 @@ buildscript {
     }
 
     dependencies {
-        classpath libs.kotlin.gradle.plugin
         classpath libs.tools.android.plugin
     }
 }
 
 plugins {
+    alias libs.plugins.compose.compiler apply false
     alias libs.plugins.dependency.analysis
     alias libs.plugins.detekt
+    alias libs.plugins.kotlin.android apply false
 }
 
 allprojects {
