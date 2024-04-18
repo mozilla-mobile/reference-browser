@@ -1,7 +1,7 @@
 [versions]
 
 # Android Components
-android-components = "127.0.20240415203932"
+android-components = "127.0.20240417085810"
 
 # AGP
 android-plugin = "8.3.1"
@@ -11,7 +11,7 @@ kotlinx-coroutines = "1.8.0"
 kotlin-compiler = "1.9.23"
 
 #Google
-compose-compiler = "1.5.11"
+compose-compiler = "1.5.12"
 material = "1.9.0"
 
 #AndroidX
@@ -19,7 +19,7 @@ activity-compose = "1.7.2"
 appcompat = "1.6.1"
 composeBom = "2024.04.01"
 constraintlayout = "2.1.4"
-core = "1.12.0"
+core = "1.13.0"
 lifecycle = "2.7.0"
 preference = "1.2.1"
 swiperefreshlayout = "1.1.0"
