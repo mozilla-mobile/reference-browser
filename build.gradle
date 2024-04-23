@@ -152,7 +152,7 @@ tasks.register('clean', Delete) {
 }
 
 detekt {
-    source.setFrom(files("$projectDir/components", "$projectDir/buildSrc", "$projectDir/samples"))
+    source.setFrom(files("$projectDir/app", "$projectDir/buildSrc"))
     config.setFrom("$projectDir/config/detekt.yml")
     baseline = file("$projectDir/config/detekt-baseline.xml")
 }
