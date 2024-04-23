@@ -5,7 +5,6 @@
 package org.mozilla.reference.browser.tabs.synced
 
 import android.view.View
-import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import mozilla.components.browser.storage.sync.Tab
@@ -17,7 +16,8 @@ sealed class SyncedTabsViewHolder(itemView: View) : RecyclerView.ViewHolder(item
     abstract fun <T : AdapterItem> bind(item: T, interactor: (Tab) -> Unit)
 
     class TabViewHolder(itemView: View) : SyncedTabsViewHolder(itemView) {
-        private val image = itemView.findViewById<ImageView>(R.id.synced_tabs_item_image)
+        // See TODO below
+        // private val image = itemView.findViewById<ImageView>(R.id.synced_tabs_item_image)
         private val title = itemView.findViewById<TextView>(R.id.synced_tabs_item_title)
         private val url = itemView.findViewById<TextView>(R.id.synced_tabs_item_desc)
 
@@ -35,7 +35,7 @@ sealed class SyncedTabsViewHolder(itemView: View) : RecyclerView.ViewHolder(item
             url.text = active.url
 
             // TODO download and set icon image.
-            //  requires https://github.com/mozilla-mobile/android-components/issues/5179
+            // Requires https://bugzilla.mozilla.org/show_bug.cgi?id=1793192
         }
 
         companion object {
