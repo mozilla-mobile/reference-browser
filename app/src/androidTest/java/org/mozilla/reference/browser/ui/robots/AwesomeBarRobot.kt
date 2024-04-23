@@ -73,7 +73,10 @@ class AwesomeBarRobot {
             return NavigationToolbarRobot.Transition()
         }
 
-        fun clickSearchSuggestion(searchSuggestionTitle: String, interact: BrowserRobot.() -> Unit): BrowserRobot.Transition {
+        fun clickSearchSuggestion(
+            searchSuggestionTitle: String,
+            interact: BrowserRobot.() -> Unit,
+        ): BrowserRobot.Transition {
             val searchSuggestion = mDevice.findObject(UiSelector().textContains(searchSuggestionTitle))
             searchSuggestion.clickAndWaitForNewWindow()
 

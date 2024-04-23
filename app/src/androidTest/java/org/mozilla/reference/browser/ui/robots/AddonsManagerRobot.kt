@@ -74,8 +74,18 @@ class AddonsManagerRobot {
         mDevice.waitForWindowUpdate(packageName, waitingTime)
         mDevice.findObject(UiSelector().text("$addonName has been added to Reference Browser"))
             .waitForExists(waitingTime)
-        mDevice.waitAndInteract(Until.findObject(By.text(getStringResource(R.string.mozac_feature_addons_installed_dialog_okay_button_2)))) {}
-        mDevice.findObject(UiSelector().textContains(getStringResource(R.string.mozac_feature_addons_installed_dialog_okay_button_2))).click()
+        mDevice.waitAndInteract(
+            Until.findObject(
+                By.text(
+                    getStringResource(R.string.mozac_feature_addons_installed_dialog_okay_button_2),
+                ),
+            ),
+        ) {}
+        mDevice.findObject(
+            UiSelector().textContains(
+                getStringResource(R.string.mozac_feature_addons_installed_dialog_okay_button_2),
+            ),
+        ).click()
     }
 
     fun clickRemoveAddonButton() {
