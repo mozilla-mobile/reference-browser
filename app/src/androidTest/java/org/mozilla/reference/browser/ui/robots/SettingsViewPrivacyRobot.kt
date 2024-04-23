@@ -34,7 +34,6 @@ class SettingsViewPrivacyRobot {
     }
 }
 
-private fun privacyUpButton() = Espresso.onView(ViewMatchers.withContentDescription("Navigate up"))
 private fun privacySettingsView() = Espresso.onView(ViewMatchers.withText("Privacy Settings"))
 private fun trackingProtectionHeading() = Espresso.onView(ViewMatchers.withText("Tracking Protection"))
 private fun tpEnableInNormalBrowsing() = Espresso.onView(ViewMatchers.withText("Enable in Normal Browsing Mode"))
