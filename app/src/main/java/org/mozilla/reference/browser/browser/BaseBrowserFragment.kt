@@ -135,6 +135,7 @@ abstract class BaseBrowserFragment : Fragment(), UserInteractionHandler, Activit
     abstract val shouldUseComposeUI: Boolean
 
     @CallSuper
+    @Suppress("LongMethod")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val prefs = PreferenceManager.getDefaultSharedPreferences(requireContext())
 
