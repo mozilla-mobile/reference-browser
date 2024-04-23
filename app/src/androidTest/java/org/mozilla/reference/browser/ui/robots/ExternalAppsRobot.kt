@@ -46,7 +46,6 @@ private fun assertAutofillServices() {
     )
 }
 
-@Suppress("SwallowedException")
 private fun assertYouTubeApp() {
     try {
         // Check youtube's home buttons

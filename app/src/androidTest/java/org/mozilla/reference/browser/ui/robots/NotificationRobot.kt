@@ -12,7 +12,6 @@ import org.mozilla.reference.browser.helpers.TestAssetHelper.waitingTime
 
 class NotificationRobot {
 
-    @Suppress("SwallowedException")
     fun verifySystemMediaNotificationExists(notificationMessage: String) {
         assertTrue(systemMediaNotification.waitForExists(waitingTime))
         assertTrue(systemMediaNotificationTitle(notificationMessage).waitForExists(waitingTime))

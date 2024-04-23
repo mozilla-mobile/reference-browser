@@ -2,8 +2,6 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-@file:Suppress("TooManyFunctions")
-
 package org.mozilla.reference.browser.ui.robots
 
 import androidx.test.espresso.Espresso.onView
@@ -84,7 +82,6 @@ class ThreeDotMenuRobot {
             return ContentPanelRobot.Transition()
         }
 
-        @Suppress("SwallowedException")
         fun switchRequestDesktopSiteToggle(
             interact: NavigationToolbarRobot.() -> Unit,
         ): NavigationToolbarRobot.Transition {
