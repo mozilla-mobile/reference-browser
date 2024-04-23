@@ -2,26 +2,87 @@
 <SmellBaseline>
   <ManuallySuppressedIssues></ManuallySuppressedIssues>
   <CurrentIssues>
-    <ID>MaxLineLength:Dependencies.kt$Deps$const val androidx_constraintlayout = "androidx.constraintlayout:constraintlayout:${Versions.AndroidX.constraintlayout}"</ID>
-    <ID>MaxLineLength:Dependencies.kt$Deps$const val androidx_swiperefreshlayout = "androidx.swiperefreshlayout:swiperefreshlayout:${Versions.AndroidX.swiperefreshlayout}"</ID>
-    <ID>MaxLineLength:Dependencies.kt$Deps$const val espresso_idling_resources = "androidx.test.espresso:espresso-idling-resource:${Versions.Testing.androidx_espresso}"</ID>
-    <ID>MaxLineLength:Dependencies.kt$Deps$const val mozilla_browser_session_storage = "org.mozilla.components:browser-session-storage:${AndroidComponents.VERSION}"</ID>
-    <ID>MaxLineLength:Dependencies.kt$Deps$const val mozilla_feature_accounts_push = "org.mozilla.components:feature-accounts-push:${AndroidComponents.VERSION}"</ID>
-    <ID>MaxLineLength:Dependencies.kt$Deps$const val mozilla_feature_sitepermissions = "org.mozilla.components:feature-sitepermissions:${AndroidComponents.VERSION}"</ID>
-    <ID>MaxLineLength:Dependencies.kt$Deps$const val mozilla_feature_webnotifications = "org.mozilla.components:feature-webnotifications:${AndroidComponents.VERSION}"</ID>
-    <ID>MaxLineLength:Dependencies.kt$Deps$const val mozilla_service_firefox_accounts = "org.mozilla.components:service-firefox-accounts:${AndroidComponents.VERSION}"</ID>
-    <ID>MaxLineLength:Dependencies.kt$Deps$const val mozilla_support_webextensions = "org.mozilla.components:support-webextensions:${AndroidComponents.VERSION}"</ID>
-    <ID>UndocumentedPublicClass:AndroidComponents.kt$AndroidComponents</ID>
+    <ID>UndocumentedPublicClass:AboutFragment.kt$AboutFragment : Fragment</ID>
+    <ID>UndocumentedPublicClass:AccountSettingsFragment.kt$AccountSettingsFragment : PreferenceFragmentCompat</ID>
+    <ID>UndocumentedPublicClass:AppPermissionCodes.kt$AppPermissionCodes</ID>
+    <ID>UndocumentedPublicClass:AutofillConfirmActivity.kt$AutofillConfirmActivity : AbstractAutofillConfirmActivity</ID>
+    <ID>UndocumentedPublicClass:AutofillPreference.kt$AutofillPreference : Preference</ID>
+    <ID>UndocumentedPublicClass:AutofillSearchActivity.kt$AutofillSearchActivity : AbstractAutofillSearchActivity</ID>
+    <ID>UndocumentedPublicClass:AutofillService.kt$AutofillService : AbstractAutofillService</ID>
+    <ID>UndocumentedPublicClass:AutofillUnlockActivity.kt$AutofillUnlockActivity : AbstractAutofillUnlockActivity</ID>
+    <ID>UndocumentedPublicClass:BrowserApplication.kt$BrowserApplication : Application</ID>
     <ID>UndocumentedPublicClass:Config.kt$Config</ID>
-    <ID>UndocumentedPublicClass:Dependencies.kt$Deps</ID>
-    <ID>UndocumentedPublicClass:Dependencies.kt$Versions</ID>
-    <ID>UndocumentedPublicClass:Dependencies.kt$Versions$AndroidX</ID>
-    <ID>UndocumentedPublicClass:Dependencies.kt$Versions$Google</ID>
-    <ID>UndocumentedPublicClass:Dependencies.kt$Versions$Gradle</ID>
-    <ID>UndocumentedPublicClass:Dependencies.kt$Versions$Kotlin</ID>
-    <ID>UndocumentedPublicClass:Dependencies.kt$Versions$Testing</ID>
-    <ID>UndocumentedPublicClass:Dependencies.kt$Versions$ThirdParty</ID>
+    <ID>UndocumentedPublicClass:ContextMenuIntegration.kt$ContextMenuIntegration : LifecycleAwareFeature</ID>
+    <ID>UndocumentedPublicClass:CrashIntegration.kt$CrashIntegration : DefaultLifecycleObserver</ID>
+    <ID>UndocumentedPublicClass:CrashListActivity.kt$CrashListActivity : AbstractCrashListActivity</ID>
+    <ID>UndocumentedPublicClass:CustomTabsIntegration.kt$CustomTabsIntegration : LifecycleAwareFeatureUserInteractionHandler</ID>
+    <ID>UndocumentedPublicClass:CustomTabsService.kt$CustomTabsService : AbstractCustomTabsService</ID>
+    <ID>UndocumentedPublicClass:DownloadService.kt$DownloadService : AbstractFetchDownloadService</ID>
+    <ID>UndocumentedPublicClass:EngineProvider.kt$EngineProvider</ID>
+    <ID>UndocumentedPublicClass:FindInPageIntegration.kt$FindInPageIntegration : LifecycleAwareFeatureUserInteractionHandler</ID>
+    <ID>UndocumentedPublicClass:FirebasePush.kt$FirebasePush : AbstractFirebasePushService</ID>
+    <ID>UndocumentedPublicClass:IntentReceiverActivity.kt$IntentReceiverActivity : Activity</ID>
+    <ID>UndocumentedPublicClass:IntentRequestCodes.kt$IntentRequestCodes</ID>
+    <ID>UndocumentedPublicClass:PairSettingsFragment.kt$PairSettingsFragment : FragmentUserInteractionHandler</ID>
+    <ID>UndocumentedPublicClass:PictureInPictureIntegration.kt$PictureInPictureIntegration : LifecycleAwareFeature</ID>
+    <ID>UndocumentedPublicClass:PrivacySettingsFragment.kt$PrivacySettingsFragment : PreferenceFragmentCompat</ID>
+    <ID>UndocumentedPublicClass:PrivatePage.kt$PrivatePage</ID>
+    <ID>UndocumentedPublicClass:ReaderViewIntegration.kt$ReaderViewIntegration : LifecycleAwareFeatureUserInteractionHandler</ID>
+    <ID>UndocumentedPublicClass:Settings.kt$Settings</ID>
+    <ID>UndocumentedPublicClass:SettingsActivity.kt$SettingsActivity : AppCompatActivityActionBarUpdater</ID>
+    <ID>UndocumentedPublicClass:SettingsFragment.kt$SettingsFragment : PreferenceFragmentCompat</ID>
+    <ID>UndocumentedPublicClass:SettingsFragment.kt$SettingsFragment$ActionBarUpdater</ID>
+    <ID>UndocumentedPublicClass:SyncedTabsActivity.kt$SyncedTabsActivity : AppCompatActivity</ID>
+    <ID>UndocumentedPublicClass:SyncedTabsAdapter.kt$SyncedTabsAdapter : ListAdapter</ID>
+    <ID>UndocumentedPublicClass:SyncedTabsAdapter.kt$SyncedTabsAdapter$AdapterItem</ID>
+    <ID>UndocumentedPublicClass:SyncedTabsAdapter.kt$SyncedTabsAdapter.AdapterItem$Device : AdapterItem</ID>
+    <ID>UndocumentedPublicClass:SyncedTabsAdapter.kt$SyncedTabsAdapter.AdapterItem$Tab : AdapterItem</ID>
+    <ID>UndocumentedPublicClass:SyncedTabsFragment.kt$SyncedTabsFragment : Fragment</ID>
+    <ID>UndocumentedPublicClass:SyncedTabsIntegration.kt$SyncedTabsIntegration</ID>
+    <ID>UndocumentedPublicClass:SyncedTabsLayout.kt$SyncedTabsLayout : FrameLayoutSyncedTabsView</ID>
+    <ID>UndocumentedPublicClass:SyncedTabsViewHolder.kt$SyncedTabsViewHolder : ViewHolder</ID>
+    <ID>UndocumentedPublicClass:SyncedTabsViewHolder.kt$SyncedTabsViewHolder$DeviceViewHolder : SyncedTabsViewHolder</ID>
+    <ID>UndocumentedPublicClass:SyncedTabsViewHolder.kt$SyncedTabsViewHolder$TabViewHolder : SyncedTabsViewHolder</ID>
+    <ID>UndocumentedPublicClass:TabsPanel.kt$TabsPanel : TabLayoutOnTabSelectedListener</ID>
+    <ID>UndocumentedPublicClass:TabsToolbar.kt$TabsToolbar : Toolbar</ID>
+    <ID>UndocumentedPublicClass:TabsTouchHelper.kt$TabsTouchHelper : ItemTouchHelper</ID>
+    <ID>UndocumentedPublicClass:ToolbarIntegration.kt$ToolbarIntegration : LifecycleAwareFeatureUserInteractionHandler</ID>
+    <ID>UndocumentedPublicClass:WebPushEngineIntegration.kt$WebPushEngineIntegration : Observer</ID>
+    <ID>UndocumentedPublicFunction:AccountSettingsFragment.kt$AccountSettingsFragment$fun updateLastSyncedTimePref(context: Context, pref: Preference?, failed: Boolean = false)</ID>
+    <ID>UndocumentedPublicFunction:Analytics.kt$fun isSentryEnabled()</ID>
+    <ID>UndocumentedPublicFunction:AutofillPreference.kt$AutofillPreference$fun updateSwitch()</ID>
+    <ID>UndocumentedPublicFunction:AutofillPreference.kt$AutofillPreference.Companion$fun isSupported(context: Context): Boolean</ID>
+    <ID>UndocumentedPublicFunction:BrowserFragment.kt$BrowserFragment.Companion$fun create(sessionId: String? = null)</ID>
+    <ID>UndocumentedPublicFunction:BrowserToolbar.kt$@Composable fun BrowserDisplayToolbar( url: String, onUrlClicked: () -&gt; Unit = {}, )</ID>
+    <ID>UndocumentedPublicFunction:BrowserToolbar.kt$@Composable fun BrowserEditToolbar( url: String, onUrlCommitted: (String) -&gt; Unit = {}, )</ID>
+    <ID>UndocumentedPublicFunction:BrowserToolbar.kt$@Composable fun BrowserToolbar()</ID>
+    <ID>UndocumentedPublicFunction:ComposableComponents.kt$@Composable fun sessionUseCases(): SessionUseCases</ID>
     <ID>UndocumentedPublicFunction:Config.kt$Config$@JvmStatic fun generateDebugVersionName(): String</ID>
     <ID>UndocumentedPublicFunction:Config.kt$Config$@JvmStatic fun releaseVersionName(project: Project): String</ID>
+    <ID>UndocumentedPublicFunction:Context.kt$fun Context.getPreferenceKey(@StringRes resourceId: Int): String</ID>
+    <ID>UndocumentedPublicFunction:CrashIntegration.kt$CrashIntegration$@OptIn(DelicateCoroutinesApi::class) fun sendCrashReport(crash: Crash)</ID>
+    <ID>UndocumentedPublicFunction:EngineProvider.kt$EngineProvider$@Synchronized fun getOrCreateRuntime(context: Context): GeckoRuntime</ID>
+    <ID>UndocumentedPublicFunction:EngineProvider.kt$EngineProvider$fun createClient(context: Context): Client</ID>
+    <ID>UndocumentedPublicFunction:EngineProvider.kt$EngineProvider$fun createEngine(context: Context, defaultSettings: DefaultSettings): Engine</ID>
+    <ID>UndocumentedPublicFunction:ExternalAppBrowserFragment.kt$ExternalAppBrowserFragment.Companion$fun create( sessionId: String, manifest: WebAppManifest?, trustedScopes: List&lt;Uri&gt;, )</ID>
+    <ID>UndocumentedPublicFunction:Long.kt$@Suppress("MagicNumber") fun Long.timeSince(context: Context, time: Long): String</ID>
+    <ID>UndocumentedPublicFunction:NotificationManager.kt$NotificationManager$fun checkAndNotifyPolicy(context: Context)</ID>
+    <ID>UndocumentedPublicFunction:NotificationManager.kt$NotificationManager$fun showReceivedTabs(context: Context, device: Device?, tabs: List&lt;TabData&gt;)</ID>
+    <ID>UndocumentedPublicFunction:PictureInPictureIntegration.kt$PictureInPictureIntegration$fun onHomePressed()</ID>
+    <ID>UndocumentedPublicFunction:Settings.kt$Settings$fun getOverrideAmoCollection(context: Context): String</ID>
+    <ID>UndocumentedPublicFunction:Settings.kt$Settings$fun getOverrideAmoUser(context: Context): String</ID>
+    <ID>UndocumentedPublicFunction:Settings.kt$Settings$fun isAmoCollectionOverrideConfigured(context: Context): Boolean</ID>
+    <ID>UndocumentedPublicFunction:Settings.kt$Settings$fun isTelemetryEnabled(context: Context): Boolean</ID>
+    <ID>UndocumentedPublicFunction:Settings.kt$Settings$fun setOverrideAmoCollection(context: Context, value: String)</ID>
+    <ID>UndocumentedPublicFunction:Settings.kt$Settings$fun setOverrideAmoUser(context: Context, value: String)</ID>
+    <ID>UndocumentedPublicFunction:SettingsFragment.kt$SettingsFragment.ActionBarUpdater$fun updateTitle(titleResId: Int)</ID>
+    <ID>UndocumentedPublicFunction:SyncedTabsIntegration.kt$SyncedTabsIntegration$fun launch()</ID>
+    <ID>UndocumentedPublicFunction:SyncedTabsViewHolder.kt$SyncedTabsViewHolder$abstract fun &lt;T : AdapterItem&gt; bind(item: T, interactor: (Tab) -&gt; Unit)</ID>
+    <ID>UndocumentedPublicFunction:TabsPanel.kt$TabsPanel$fun initialize(tabsFeature: TabsFeature?, updateTabsToolbar: (isPrivate: Boolean) -&gt; Unit)</ID>
+    <ID>UndocumentedPublicFunction:TabsToolbar.kt$TabsToolbar$fun initialize(tabsFeature: TabsFeature?, closeTabsTray: () -&gt; Unit)</ID>
+    <ID>UndocumentedPublicFunction:TabsToolbar.kt$TabsToolbar$fun updateToolbar(isPrivate: Boolean)</ID>
+    <ID>UndocumentedPublicFunction:ToggleImageButton.kt$ToggleImageButton$fun setOnCheckedChangeListener(listener: (ToggleImageButton, Boolean) -&gt; Unit)</ID>
+    <ID>UndocumentedPublicFunction:WebPushEngineIntegration.kt$WebPushEngineIntegration$fun start()</ID>
+    <ID>UndocumentedPublicFunction:WebPushEngineIntegration.kt$WebPushEngineIntegration$fun stop()</ID>
   </CurrentIssues>
 </SmellBaseline>
