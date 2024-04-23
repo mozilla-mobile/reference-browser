@@ -72,8 +72,12 @@ class TabTrayMenuRobot {
             return NavigationToolbarRobot.Transition()
         }
 
-        fun openMoreOptionsMenu(context: Context, interact: TabTrayMoreOptionsMenuRobot.() -> Unit): TabTrayMoreOptionsMenuRobot.Transition {
-            // The 3dot "More options" button is actually an Android Options Menu (check tabstray_menu.xml) not a View that we treat as a menu
+        fun openMoreOptionsMenu(
+            context: Context,
+            interact: TabTrayMoreOptionsMenuRobot.() -> Unit,
+        ): TabTrayMoreOptionsMenuRobot.Transition {
+            // The 3dot "More options" button is actually an Android Options Menu (check tabstray_menu.xml),
+            // not a View that we treat as a menu
             openActionBarOverflowOrOptionsMenu(context)
 
             TabTrayMoreOptionsMenuRobot().interact()

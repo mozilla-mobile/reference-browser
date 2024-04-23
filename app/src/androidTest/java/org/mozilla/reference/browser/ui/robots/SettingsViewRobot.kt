@@ -73,7 +73,9 @@ class SettingsViewRobot {
     }
 
     class Transition {
-        fun openSettingsViewPrivacy(interact: SettingsViewPrivacyRobot.() -> Unit): SettingsViewPrivacyRobot.Transition {
+        fun openSettingsViewPrivacy(
+            interact: SettingsViewPrivacyRobot.() -> Unit,
+        ): SettingsViewPrivacyRobot.Transition {
             privacyButton().click()
             SettingsViewPrivacyRobot().interact()
             return SettingsViewPrivacyRobot.Transition()
@@ -138,13 +140,23 @@ private fun syncQrCodeButton() = Espresso.onView(withText(R.string.pair_sign_in)
 private fun syncQrSummary() = Espresso.onView(withText(R.string.preferences_pair_sign_in_summary))
 private fun privacyButton() = Espresso.onView(withText(R.string.privacy))
 private fun privacySummary() = Espresso.onView(withText(R.string.preferences_privacy_summary))
-private fun openLinksInAppsToggle() = Espresso.onView(allOf(withId(R.id.switchWidget), hasCousin(withText(R.string.open_links_in_apps))))
+private fun openLinksInAppsToggle() = Espresso.onView(
+    allOf(
+        withId(R.id.switchWidget),
+        hasCousin(withText(R.string.open_links_in_apps)),
+    ),
+)
 private fun makeDefaultBrowserButton() = Espresso.onView(withText(R.string.preferences_make_default_browser))
 private fun autofillAppsButton() = onView(withText("Autofill apps"))
 private fun jetpackComposeButton() = onView(withText("Use experimental Jetpack Compose UI"))
 private fun autofillAppsSummary() = onView(withText("Autofill logins and passwords in other apps"))
 private fun developerToolsHeading() = Espresso.onView(withText(R.string.developer_tools_category))
-private fun remoteDebuggingToggle() = Espresso.onView(allOf(withId(R.id.switchWidget), hasCousin(withText(R.string.preferences_remote_debugging))))
+private fun remoteDebuggingToggle() = Espresso.onView(
+    allOf(
+        withId(R.id.switchWidget),
+        hasCousin(withText(R.string.preferences_remote_debugging)),
+    ),
+)
 private fun customAddonCollectionButton() = onView(withText("Custom Add-on collection"))
 private fun mozillaHeading() = Espresso.onView(withText(R.string.mozilla_category))
 private fun aboutReferenceBrowserButton() = Espresso.onView(withText(R.string.preferences_about_page))

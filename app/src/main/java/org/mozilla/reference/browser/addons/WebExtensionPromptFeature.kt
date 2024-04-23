@@ -191,7 +191,9 @@ class WebExtensionPromptFeature(
         findPreviousDialogFragment()?.let { dialog ->
             dialog.onPositiveButtonClicked = { addon ->
                 store.state.webExtensionPromptRequest?.let { promptRequest ->
-                    if (promptRequest is WebExtensionPromptRequest.AfterInstallation.Permissions && addon.id == promptRequest.extension.id) {
+                    if (promptRequest is WebExtensionPromptRequest.AfterInstallation.Permissions &&
+                        addon.id == promptRequest.extension.id
+                    ) {
                         handleApprovedPermissions(promptRequest)
                     }
                 }
@@ -229,7 +231,8 @@ class WebExtensionPromptFeature(
     }
 
     private fun hasExistingAddonPostInstallationDialogFragment(): Boolean {
-        return fragmentManager.findFragmentByTag(POST_INSTALLATION_DIALOG_FRAGMENT_TAG) as? AddonInstallationDialogFragment != null
+        return fragmentManager.findFragmentByTag(POST_INSTALLATION_DIALOG_FRAGMENT_TAG)
+            as? AddonInstallationDialogFragment != null
     }
 
     private fun handlePostInstallationButtonClicked(
