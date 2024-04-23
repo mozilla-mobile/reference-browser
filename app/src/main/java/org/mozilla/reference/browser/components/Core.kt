@@ -205,7 +205,6 @@ class Core(private val context: Context) {
         }
     }
 
-    @Suppress("MagicNumber")
     val supportedAddonsChecker by lazy {
         DefaultSupportedAddonsChecker(
             context,

@@ -51,7 +51,6 @@ class CustomTabRobot {
         link.click()
     }
 
-    @Suppress("SwallowedException")
     fun switchRequestDesktopSiteToggle() {
         try {
             // Click the Request desktop site toggle

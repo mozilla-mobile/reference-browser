@@ -24,7 +24,6 @@ import org.mozilla.reference.browser.ext.components
 /**
  * An activity to show the details of a installed add-on.
  */
-@Suppress("TooManyFunctions")
 class InstalledAddonDetailsActivity : AppCompatActivity() {
     private val scope = CoroutineScope(Dispatchers.IO)
 

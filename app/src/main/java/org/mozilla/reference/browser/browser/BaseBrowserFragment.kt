@@ -63,7 +63,6 @@ import mozilla.components.ui.widgets.behavior.ViewPosition as MozacToolbarBehavi
  * This class only contains shared code focused on the main browsing content.
  * UI code specific to the app or to custom tabs can be found in the subclasses.
  */
-@Suppress("TooManyFunctions")
 abstract class BaseBrowserFragment : Fragment(), UserInteractionHandler, ActivityResultHandler {
     private val sessionFeature = ViewBoundFeatureWrapper<SessionFeature>()
     private val toolbarIntegration = ViewBoundFeatureWrapper<ToolbarIntegration>()

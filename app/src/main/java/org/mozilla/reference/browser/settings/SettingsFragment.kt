@@ -38,7 +38,6 @@ import kotlin.system.exitProcess
 
 private typealias RBSettings = org.mozilla.reference.browser.settings.Settings
 
-@Suppress("TooManyFunctions")
 class SettingsFragment : PreferenceFragmentCompat() {
 
     interface ActionBarUpdater {
@@ -63,7 +62,6 @@ class SettingsFragment : PreferenceFragmentCompat() {
         }
     }
 
-    @Suppress("LongMethod") // Yep, this should be refactored.
     private fun setupPreferences() {
         val signInKey = requireContext().getPreferenceKey(pref_key_sign_in)
         val signInPairKey = requireContext().getPreferenceKey(pref_key_pair_sign_in)
