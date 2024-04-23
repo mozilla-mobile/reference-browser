@@ -6,13 +6,14 @@ package org.mozilla.reference.browser.tabs
 
 import android.content.Context
 import android.content.res.Resources
-import android.graphics.PorterDuff
 import android.graphics.drawable.Drawable
 import android.util.AttributeSet
 import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
+import androidx.core.graphics.BlendModeColorFilterCompat.createBlendModeColorFilterCompat
+import androidx.core.graphics.BlendModeCompat.SRC_IN
 import com.google.android.material.tabs.TabLayout
 import mozilla.components.feature.tabs.tabstray.TabsFeature
 import org.mozilla.reference.browser.R
@@ -77,7 +78,6 @@ class TabsPanel @JvmOverloads constructor(
 
     private fun Drawable.colorTint(@ColorRes color: Int) = apply {
         mutate()
-        @Suppress("DEPRECATION") // Deprecated warning appeared when switching to Java 11.
-        setColorFilter(ContextCompat.getColor(context, color), PorterDuff.Mode.SRC_IN)
+        createBlendModeColorFilterCompat(ContextCompat.getColor(context, color), SRC_IN)
     }
 }
