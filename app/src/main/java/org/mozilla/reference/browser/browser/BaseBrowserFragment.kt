@@ -37,7 +37,6 @@ import mozilla.components.feature.sitepermissions.SitePermissionsFeature
 import mozilla.components.feature.tabs.WindowFeature
 import mozilla.components.feature.webauthn.WebAuthnFeature
 import mozilla.components.support.base.feature.ActivityResultHandler
-import mozilla.components.support.base.feature.PermissionsFeature
 import mozilla.components.support.base.feature.UserInteractionHandler
 import mozilla.components.support.base.feature.ViewBoundFeatureWrapper
 import mozilla.components.support.base.log.logger.Logger
@@ -45,9 +44,6 @@ import mozilla.components.support.ktx.android.view.enterImmersiveMode
 import mozilla.components.support.ktx.android.view.exitImmersiveMode
 import mozilla.components.ui.widgets.behavior.EngineViewClippingBehavior
 import mozilla.components.ui.widgets.behavior.EngineViewScrollingBehavior
-import org.mozilla.reference.browser.AppPermissionCodes.REQUEST_CODE_APP_PERMISSIONS
-import org.mozilla.reference.browser.AppPermissionCodes.REQUEST_CODE_DOWNLOAD_PERMISSIONS
-import org.mozilla.reference.browser.AppPermissionCodes.REQUEST_CODE_PROMPT_PERMISSIONS
 import org.mozilla.reference.browser.BuildConfig
 import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.addons.WebExtensionPromptFeature
@@ -93,6 +89,7 @@ abstract class BaseBrowserFragment : Fragment(), UserInteractionHandler, Activit
         fullScreenFeature,
         findInPageIntegration,
         toolbarIntegration,
+
         sessionFeature,
     )
 
@@ -106,11 +103,13 @@ abstract class BaseBrowserFragment : Fragment(), UserInteractionHandler, Activit
 
     protected var webAppToolbarShouldBeVisible = true
 
-    private lateinit var requestPermissionLauncher: ActivityResultLauncher<Array<String>>
+    private lateinit var requestDownloadPermissionsLauncher: ActivityResultLauncher<Array<String>>
+    private lateinit var requestSitePermissionsLauncher: ActivityResultLauncher<Array<String>>
+    private lateinit var requestPromptsPermissionsLauncher: ActivityResultLauncher<Array<String>>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        requestPermissionLauncher =
+        requestDownloadPermissionsLauncher =
             registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { results ->
                 val permissions = results.keys.toTypedArray()
                 val grantResults =
@@ -118,6 +117,30 @@ abstract class BaseBrowserFragment : Fragment(), UserInteractionHandler, Activit
                         if (it) PackageManager.PERMISSION_GRANTED else PackageManager.PERMISSION_DENIED
                     }.toIntArray()
                 downloadsFeature.withFeature {
+                    it.onPermissionsResult(permissions, grantResults)
+                }
+            }
+
+        requestSitePermissionsLauncher =
+            registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { results ->
+                val permissions = results.keys.toTypedArray()
+                val grantResults =
+                    results.values.map {
+                        if (it) PackageManager.PERMISSION_GRANTED else PackageManager.PERMISSION_DENIED
+                    }.toIntArray()
+                sitePermissionFeature.withFeature {
+                    it.onPermissionsResult(permissions, grantResults)
+                }
+            }
+
+        requestPromptsPermissionsLauncher =
+            registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { results ->
+                val permissions = results.keys.toTypedArray()
+                val grantResults =
+                    results.values.map {
+                        if (it) PackageManager.PERMISSION_GRANTED else PackageManager.PERMISSION_DENIED
+                    }.toIntArray()
+                promptsFeature.withFeature {
                     it.onPermissionsResult(permissions, grantResults)
                 }
             }
@@ -209,7 +232,7 @@ abstract class BaseBrowserFragment : Fragment(), UserInteractionHandler, Activit
                     notificationsDelegate = requireComponents.notificationsDelegate,
                 ),
                 onNeedToRequestPermissions = { permissions ->
-                    requestPermissionLauncher.launch(permissions)
+                    requestDownloadPermissionsLauncher.launch(permissions)
                 },
             ),
             owner = this,
@@ -239,9 +262,7 @@ abstract class BaseBrowserFragment : Fragment(), UserInteractionHandler, Activit
                 fileUploadsDirCleaner = requireComponents.core.fileUploadsDirCleaner,
                 fragmentManager = parentFragmentManager,
                 onNeedToRequestPermissions = { permissions ->
-                    // The Fragment class wants us to use registerForActivityResult
-                    @Suppress("DEPRECATION")
-                    requestPermissions(permissions, REQUEST_CODE_PROMPT_PERMISSIONS)
+                    requestPromptsPermissionsLauncher.launch(permissions)
                 },
             ),
             owner = this,
@@ -294,9 +315,7 @@ abstract class BaseBrowserFragment : Fragment(), UserInteractionHandler, Activit
                 sessionId = sessionId,
                 storage = requireComponents.core.geckoSitePermissionsStorage,
                 onNeedToRequestPermissions = { permissions ->
-                    // The Fragment class wants us to use registerForActivityResult
-                    @Suppress("DEPRECATION")
-                    requestPermissions(permissions, REQUEST_CODE_APP_PERMISSIONS)
+                    requestSitePermissionsLauncher.launch(permissions)
                 },
                 onShouldShowRequestPermissionRationale = { shouldShowRequestPermissionRationale(it) },
                 store = requireComponents.core.store,
@@ -392,20 +411,6 @@ abstract class BaseBrowserFragment : Fragment(), UserInteractionHandler, Activit
             onBackPressed()
             fullScreenChanged(false)
         }
-    }
-
-    final override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<String>,
-        grantResults: IntArray,
-    ) {
-        val feature: PermissionsFeature? = when (requestCode) {
-            REQUEST_CODE_DOWNLOAD_PERMISSIONS -> downloadsFeature.get()
-            REQUEST_CODE_PROMPT_PERMISSIONS -> promptsFeature.get()
-            REQUEST_CODE_APP_PERMISSIONS -> sitePermissionFeature.get()
-            else -> null
-        }
-        feature?.onPermissionsResult(permissions, grantResults)
     }
 
     companion object {
