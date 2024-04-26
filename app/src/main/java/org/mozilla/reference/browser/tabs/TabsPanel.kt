@@ -78,6 +78,6 @@ class TabsPanel @JvmOverloads constructor(
 
     private fun Drawable.colorTint(@ColorRes color: Int) = apply {
         mutate()
-        createBlendModeColorFilterCompat(ContextCompat.getColor(context, color), SRC_IN)
+        colorFilter = createBlendModeColorFilterCompat(ContextCompat.getColor(context, color), SRC_IN)
     }
 }
