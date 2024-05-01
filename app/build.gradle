@@ -337,7 +337,7 @@ dependencies {
 
     implementation libs.thirdparty.sentry
 
-    androidTestImplementation(libs.espresso.contrib) {
+    androidTestImplementation(libs.androidx.test.espresso.contrib) {
         exclude module: 'appcompat-v7'
         exclude module: 'support-v4'
         exclude module: 'support-annotations'
@@ -345,21 +345,21 @@ dependencies {
         exclude module: 'design'
         exclude module: 'espresso-core'
     }
-    androidTestImplementation libs.espresso.core, {
+    androidTestImplementation libs.androidx.test.espresso.core, {
         exclude group: 'com.android.support', module: 'support-annotations'
     }
-    androidTestImplementation libs.espresso.idling.resources
-    androidTestImplementation libs.espresso.web, {
+    androidTestImplementation libs.androidx.test.espresso.idling.resources
+    androidTestImplementation libs.androidx.test.espresso.web, {
         exclude group: 'com.android.support', module: 'support-annotations'
     }
+    androidTestImplementation libs.androidx.test.junit.ext
+    androidTestImplementation libs.androidx.test.rules
+    androidTestImplementation libs.androidx.test.runner
+    androidTestImplementation libs.androidx.test.uiautomator
 
-    androidTestImplementation libs.junit.ktx
     androidTestImplementation libs.mockwebserver
-    androidTestImplementation libs.tools.test.rules
-    androidTestImplementation libs.tools.test.runner
-    androidTestImplementation libs.uiautomator
 
-    androidTestUtil libs.orchestrator
+    androidTestUtil libs.androidx.test.orchestrator
 }
 
 // -------------------------------------------------------------------------------------------------
