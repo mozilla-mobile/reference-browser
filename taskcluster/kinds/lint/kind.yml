@@ -42,6 +42,18 @@ tasks:
         treeherder:
             symbol: compare-locale
             tier: 2
+    dependency-analysis:
+        description: 'Running dependency-analysis over all modules'
+        run:
+            using: gradlew
+            gradlew: [buildHealth]
+        treeherder:
+            symbol: deps
+        worker:
+            artifacts:
+               - name: public/build-health-report.txt
+                 path: /builds/worker/checkouts/vcs/build/reports/dependency-analysis/build-health-report.txt
+                 type: file
     detekt:
         description: 'Running detekt over all modules'
         run:
@@ -57,7 +69,7 @@ tasks:
         treeherder:
             symbol: ktlint
     lint:
-        description: 'Running tlint over all modules'
+        description: 'Running lint over all modules'
         run:
             using: gradlew
             gradlew: [lintDebug]
