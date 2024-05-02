@@ -8,7 +8,7 @@ kind-dependencies: []
 
 transforms:
     - rb_taskgraph.transforms.secrets:transforms
-    - taskgraph.transforms.job:transforms
+    - taskgraph.transforms.run:transforms
     - taskgraph.transforms.task:transforms
 
 task-defaults:

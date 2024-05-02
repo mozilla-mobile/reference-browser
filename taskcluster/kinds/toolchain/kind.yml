@@ -8,7 +8,7 @@ kind-dependencies:
     - fetch
 
 transforms:
-    - taskgraph.transforms.job:transforms
+    - taskgraph.transforms.run:transforms
     - taskgraph.transforms.cached_tasks:transforms
     - taskgraph.transforms.task:transforms
 

@@ -7,7 +7,7 @@ loader: taskgraph.loader.transform:loader
 transforms:
     - rb_taskgraph.transforms.variant:transforms
     - rb_taskgraph.transforms.build_aab:transforms
-    - taskgraph.transforms.job:transforms
+    - taskgraph.transforms.run:transforms
     - taskgraph.transforms.task:transforms
 
 kind-dependencies:
