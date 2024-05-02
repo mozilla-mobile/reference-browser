@@ -339,7 +339,8 @@ abstract class BaseBrowserFragment : Fragment(), UserInteractionHandler, Activit
                 feature = WebAuthnFeature(
                     requireComponents.core.engine,
                     requireActivity(),
-                ),
+                    requireComponents.useCases.sessionUseCases.exitFullscreen::invoke,
+                ) { requireComponents.core.store.state.selectedTabId },
                 owner = this,
                 view = view,
             )
