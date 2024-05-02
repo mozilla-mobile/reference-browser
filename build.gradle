@@ -34,6 +34,7 @@ buildscript {
 }
 
 plugins {
+    alias libs.plugins.dependency.analysis
     alias libs.plugins.detekt
 }
 
@@ -151,6 +152,27 @@ tasks.register('clean', Delete) {
     delete rootProject.buildDir
 }
 
+dependencyAnalysis {
+    structure {
+        // Ignore Android KTX dependencies. See https://developer.android.com/kotlin/ktx#modules
+        ignoreKtx(true)
+    }
+    issues {
+        all {
+            onAny {
+                // Fail the run if any issues are found (default = 'warn')
+                severity('fail')
+                // Ignore warnings about kotlin-stdlib since we don't directly control its usage
+                exclude('org.jetbrains.kotlin:kotlin-stdlib')
+            }
+            onUsedTransitiveDependencies {
+                // We explicitly want to pull in these dependencies transitively from AC
+                exclude('org.mozilla.appservices.nightly:fxaclient', 'org.mozilla.geckoview:geckoview-nightly-omni')
+            }
+        }
+    }
+}
+
 detekt {
     source.setFrom(files("$projectDir/app", "$projectDir/buildSrc"))
     config.setFrom("$projectDir/config/detekt.yml")
@@ -178,7 +200,6 @@ dependencies {
         }
     }
 }
-
 
 tasks.register('ktlint', JavaExec) {
     description = "Check Kotlin code style."
