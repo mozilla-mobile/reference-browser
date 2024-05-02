@@ -36,6 +36,7 @@ androidx-test-uiautomator = "2.3.0"
 sentry = "7.8.0"
 
 # Third Party Linting & Static Code Analysis
+dependency-analysis = "1.31.0"
 detekt = "1.23.6"
 ktlint = "0.50.0"
 
@@ -166,4 +167,5 @@ mozilla-ui-tabcounter = { group = "org.mozilla.components", name = "ui-tabcounte
 mozilla-ui-widgets = { group = "org.mozilla.components", name = "ui-widgets", version.ref = "android-components" }
 
 [plugins]
+dependency-analysis = { id = "com.autonomousapps.dependency-analysis", version.ref = "dependency-analysis" }
 detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
