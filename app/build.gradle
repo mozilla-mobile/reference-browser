@@ -243,29 +243,47 @@ project.configurations.configureEach {
 }
 
 dependencies {
-    implementation libs.mozilla.concept.awesomebar
-    implementation libs.mozilla.concept.engine
-    implementation libs.mozilla.concept.menu
-    implementation libs.mozilla.concept.tabstray
-    implementation libs.mozilla.concept.toolbar
-    implementation libs.mozilla.concept.storage
-    implementation libs.mozilla.concept.sync
-    implementation libs.mozilla.concept.push
+    implementation libs.androidx.appcompat
+    implementation libs.androidx.constraintlayout
+    implementation libs.androidx.core.ktx
+    implementation libs.androidx.lifecycle.process
+    implementation libs.androidx.preference.ktx
+    implementation libs.androidx.swiperefreshlayout
+    implementation libs.androidx.work.runtime.ktx
 
-    implementation libs.mozilla.compose.awesomebar
+    implementation platform(libs.androidx.compose.bom)
+    implementation libs.androidx.activity.compose
+    implementation libs.androidx.compose.foundation
+    implementation libs.androidx.compose.material
+    implementation libs.androidx.compose.ui.base
+    implementation libs.androidx.compose.ui.tooling
 
-    implementation libs.mozilla.browser.engine.gecko
+    implementation libs.google.material
+
+    implementation libs.kotlinx.coroutines.android
 
     implementation libs.mozilla.browser.domains
-    implementation libs.mozilla.browser.tabstray
-    implementation libs.mozilla.browser.toolbar
+    implementation libs.mozilla.browser.engine.gecko
+    implementation libs.mozilla.browser.icons
     implementation libs.mozilla.browser.menu
     implementation libs.mozilla.browser.menu2
     implementation libs.mozilla.browser.session.storage
     implementation libs.mozilla.browser.state
     implementation libs.mozilla.browser.storage.sync
-    implementation libs.mozilla.browser.icons
+    implementation libs.mozilla.browser.tabstray
     implementation libs.mozilla.browser.thumbnails
+    implementation libs.mozilla.browser.toolbar
+
+    implementation libs.mozilla.compose.awesomebar
+
+    implementation libs.mozilla.concept.awesomebar
+    implementation libs.mozilla.concept.engine
+    implementation libs.mozilla.concept.menu
+    implementation libs.mozilla.concept.push
+    implementation libs.mozilla.concept.storage
+    implementation libs.mozilla.concept.sync
+    implementation libs.mozilla.concept.tabstray
+    implementation libs.mozilla.concept.toolbar
 
     implementation libs.mozilla.feature.accounts.base
     implementation libs.mozilla.feature.accounts.push
@@ -275,24 +293,41 @@ dependencies {
     implementation libs.mozilla.feature.autofill
     implementation libs.mozilla.feature.contextmenu
     implementation libs.mozilla.feature.customtabs
-    implementation libs.mozilla.feature.findinpage
-    implementation libs.mozilla.feature.media
-    implementation libs.mozilla.feature.sitepermissions
-    implementation libs.mozilla.feature.intent
-    implementation libs.mozilla.feature.search
-    implementation libs.mozilla.feature.session
-    implementation libs.mozilla.feature.toolbar
-    implementation libs.mozilla.feature.tabs
     implementation libs.mozilla.feature.downloads
+    implementation libs.mozilla.feature.findinpage
+    implementation libs.mozilla.feature.intent
+    implementation libs.mozilla.feature.media
     implementation libs.mozilla.feature.prompts
     implementation libs.mozilla.feature.push
     implementation libs.mozilla.feature.pwa
     implementation libs.mozilla.feature.qr
     implementation libs.mozilla.feature.readerview
+    implementation libs.mozilla.feature.search
+    implementation libs.mozilla.feature.session
+    implementation libs.mozilla.feature.sitepermissions
     implementation libs.mozilla.feature.syncedtabs
+    implementation libs.mozilla.feature.tabs
+    implementation libs.mozilla.feature.toolbar
     implementation libs.mozilla.feature.webauthn
     implementation libs.mozilla.feature.webcompat
     implementation libs.mozilla.feature.webnotifications
+
+    implementation libs.mozilla.lib.crash.base
+    implementation libs.mozilla.lib.crash.sentry
+    implementation libs.mozilla.lib.dataprotect
+    implementation libs.mozilla.lib.publicsuffixlist
+    implementation libs.mozilla.lib.push.firebase
+
+    implementation libs.mozilla.service.firefox.accounts
+    implementation libs.mozilla.service.location
+    implementation libs.mozilla.service.sync.logins
+
+    implementation libs.mozilla.support.images
+    implementation libs.mozilla.support.ktx
+    implementation libs.mozilla.support.rusthttp
+    implementation libs.mozilla.support.rustlog
+    implementation libs.mozilla.support.utils
+    implementation libs.mozilla.support.webextensions
 
     implementation libs.mozilla.ui.autocomplete
     implementation libs.mozilla.ui.colors
@@ -300,52 +335,9 @@ dependencies {
     implementation libs.mozilla.ui.tabcounter
     implementation libs.mozilla.ui.widgets
 
-    implementation libs.mozilla.service.firefox.accounts
-    implementation libs.mozilla.service.location
-    implementation libs.mozilla.service.sync.logins
-
-    implementation libs.mozilla.support.images
-    implementation libs.mozilla.support.utils
-    implementation libs.mozilla.support.ktx
-    implementation libs.mozilla.support.rustlog
-    implementation libs.mozilla.support.rusthttp
-    implementation libs.mozilla.support.webextensions
-
-    implementation libs.mozilla.lib.crash.base
-    implementation libs.mozilla.lib.crash.sentry
-    implementation libs.mozilla.lib.push.firebase
-    implementation libs.mozilla.lib.publicsuffixlist
-    implementation libs.mozilla.lib.dataprotect
-
     implementation libs.thirdparty.sentry
 
-    implementation libs.kotlinx.coroutines.android
-
-    implementation libs.androidx.appcompat
-    implementation libs.androidx.core.ktx
-    implementation libs.androidx.constraintlayout
-    implementation libs.androidx.lifecycle.process
-    implementation libs.androidx.preference.ktx
-    implementation libs.androidx.swiperefreshlayout
-    implementation libs.androidx.work.runtime.ktx
-
-    implementation platform(libs.androidx.compose.bom)
-    implementation libs.androidx.activity.compose
-    implementation libs.androidx.compose.ui.base
-    implementation libs.androidx.compose.ui.tooling
-    implementation libs.androidx.compose.foundation
-    implementation libs.androidx.compose.material
-
-    implementation libs.google.material
-
-    androidTestImplementation libs.uiautomator
-    androidTestImplementation libs.junit.ktx
-
-    androidTestImplementation libs.espresso.core, {
-        exclude group: 'com.android.support', module: 'support-annotations'
-    }
-
-    androidTestImplementation(libs.espresso.contrib) {
+    androidTestImplementation(libs.androidx.test.espresso.contrib) {
         exclude module: 'appcompat-v7'
         exclude module: 'support-v4'
         exclude module: 'support-annotations'
@@ -353,19 +345,21 @@ dependencies {
         exclude module: 'design'
         exclude module: 'espresso-core'
     }
-
-    androidTestImplementation libs.espresso.idling.resources
-    androidTestImplementation libs.espresso.web, {
+    androidTestImplementation libs.androidx.test.espresso.core, {
         exclude group: 'com.android.support', module: 'support-annotations'
     }
+    androidTestImplementation libs.androidx.test.espresso.idling.resources
+    androidTestImplementation libs.androidx.test.espresso.web, {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    }
+    androidTestImplementation libs.androidx.test.junit.ext
+    androidTestImplementation libs.androidx.test.rules
+    androidTestImplementation libs.androidx.test.runner
+    androidTestImplementation libs.androidx.test.uiautomator
 
     androidTestImplementation libs.mockwebserver
-    androidTestImplementation libs.tools.test.runner
-    androidTestImplementation libs.tools.test.rules
-    androidTestUtil libs.orchestrator
-    androidTestImplementation libs.espresso.core, {
-        exclude group: 'com.android.support', module: 'support-annotations'
-    }
+
+    androidTestUtil libs.androidx.test.orchestrator
 }
 
 // -------------------------------------------------------------------------------------------------
