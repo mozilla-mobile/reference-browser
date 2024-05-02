@@ -252,15 +252,12 @@ dependencies {
     implementation libs.androidx.work.runtime.ktx
 
     implementation platform(libs.androidx.compose.bom)
-    implementation libs.androidx.activity.compose
     implementation libs.androidx.compose.foundation
     implementation libs.androidx.compose.material
     implementation libs.androidx.compose.ui.base
     implementation libs.androidx.compose.ui.tooling
 
     implementation libs.google.material
-
-    implementation libs.kotlinx.coroutines.android
 
     implementation libs.mozilla.browser.domains
     implementation libs.mozilla.browser.engine.gecko
@@ -282,7 +279,6 @@ dependencies {
     implementation libs.mozilla.concept.push
     implementation libs.mozilla.concept.storage
     implementation libs.mozilla.concept.sync
-    implementation libs.mozilla.concept.tabstray
     implementation libs.mozilla.concept.toolbar
 
     implementation libs.mozilla.feature.accounts.base
@@ -322,37 +318,19 @@ dependencies {
     implementation libs.mozilla.service.location
     implementation libs.mozilla.service.sync.logins
 
-    implementation libs.mozilla.support.images
     implementation libs.mozilla.support.ktx
     implementation libs.mozilla.support.rusthttp
     implementation libs.mozilla.support.rustlog
     implementation libs.mozilla.support.utils
     implementation libs.mozilla.support.webextensions
 
-    implementation libs.mozilla.ui.autocomplete
     implementation libs.mozilla.ui.colors
     implementation libs.mozilla.ui.icons
     implementation libs.mozilla.ui.tabcounter
     implementation libs.mozilla.ui.widgets
 
-    implementation libs.thirdparty.sentry
-
-    androidTestImplementation(libs.androidx.test.espresso.contrib) {
-        exclude module: 'appcompat-v7'
-        exclude module: 'support-v4'
-        exclude module: 'support-annotations'
-        exclude module: 'recyclerview-v7'
-        exclude module: 'design'
-        exclude module: 'espresso-core'
-    }
-    androidTestImplementation libs.androidx.test.espresso.core, {
-        exclude group: 'com.android.support', module: 'support-annotations'
-    }
+    androidTestImplementation libs.androidx.test.espresso.core
     androidTestImplementation libs.androidx.test.espresso.idling.resources
-    androidTestImplementation libs.androidx.test.espresso.web, {
-        exclude group: 'com.android.support', module: 'support-annotations'
-    }
-    androidTestImplementation libs.androidx.test.junit.ext
     androidTestImplementation libs.androidx.test.rules
     androidTestImplementation libs.androidx.test.runner
     androidTestImplementation libs.androidx.test.uiautomator
