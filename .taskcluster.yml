@@ -230,8 +230,7 @@ tasks:
                                 # Note: This task is built server side without the context or tooling that
                                 # exist in tree so we must hard code the hash
                                 image:
-                                    mozillareleases/taskgraph:decision-10068f116a3800a829ddba367136a95bef5634e06f77e051859586202c93b18a@sha256:a74ed430fd80ebb647bb4a5b019523cf5f69246ed2c2603386dbc8f7200c8140
-
+                                    mozillareleases/taskgraph:decision-v8.0.1@sha256:74c5a20e7d8c8bdbec6770c61274d3970991273ffe5c955d0868bb3cd7eb3160
 
                                 maxRunTime: 1800
 
@@ -249,10 +248,10 @@ tasks:
                                           then: >
                                               cd /builds/worker/checkouts/vcs &&
                                               ln -s /builds/worker/artifacts artifacts &&
-                                              ~/.local/bin/taskgraph action-callback
+                                              taskgraph action-callback
                                           else: >
                                               ln -s /builds/worker/artifacts artifacts &&
-                                              ~/.local/bin/taskgraph decision
+                                              taskgraph decision
                                               --pushlog-id='0'
                                               --pushdate='0'
                                               --project='${project}'

@@ -5,7 +5,7 @@
 import os
 
 from redo import retry
-from taskgraph.target_tasks import _target_task as target_task
+from taskgraph.target_tasks import register_target_task
 from taskgraph.util.taskcluster import find_task_id
 
 
@@ -20,7 +20,7 @@ def index_exists(index_path, reason=""):
         return False
 
 
-@target_task("nightly")
+@register_target_task("nightly")
 def target_tasks_nightly(full_task_graph, parameters, graph_config):
     """Select the set of tasks required for a nightly build."""
 
@@ -43,7 +43,7 @@ def target_tasks_nightly(full_task_graph, parameters, graph_config):
     return [l for l, t in full_task_graph.tasks.items() if filter(t, parameters)]
 
 
-@target_task("bump_android_components")
+@register_target_task("bump_android_components")
 def target_tasks_bump_android_components(full_task_graph, parameters, graph_config):
     """Select the set of tasks required to update android components."""
 
