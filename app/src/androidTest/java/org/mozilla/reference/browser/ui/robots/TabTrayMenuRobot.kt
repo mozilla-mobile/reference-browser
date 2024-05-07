@@ -5,6 +5,7 @@
 package org.mozilla.reference.browser.ui.robots
 
 import android.content.Context
+import android.util.Log
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.Espresso.openActionBarOverflowOrOptionsMenu
 import androidx.test.espresso.assertion.ViewAssertions.matches
@@ -66,6 +67,7 @@ class TabTrayMenuRobot {
 
         fun openNewTab(interact: NavigationToolbarRobot.() -> Unit): NavigationToolbarRobot.Transition {
             newTabButton().click()
+            Log.i("Andi", "openNewTab: Clicked new tab button")
             NavigationToolbarRobot().interact()
             return NavigationToolbarRobot.Transition()
         }
@@ -96,6 +98,7 @@ class TabTrayMenuRobot {
 
         fun clickOpenTab(title: String, interact: BrowserRobot.() -> Unit): BrowserRobot.Transition {
             openTab(title).clickAndWaitForNewWindow()
+            Log.i("Andi", "clickOpenTab: Clicked tab with title: $title")
 
             BrowserRobot().interact()
             return BrowserRobot.Transition()
@@ -137,6 +140,7 @@ private fun assertExistingOpenTabs(title: String) {
     Assert.assertTrue(
         mDevice.findObject(UiSelector().textContains(title)).waitForExists(waitingTime),
     )
+    Log.i("Andi", "assertExistingOpenTabs: Verified existing open tab is: $title")
 }
 
 private fun openTab(title: String) = mDevice.findObject(UiSelector().textContains(title))
