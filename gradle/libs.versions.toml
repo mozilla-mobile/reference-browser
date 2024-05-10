@@ -7,7 +7,7 @@ android-plugin = "8.4.0"
 
 # Kotlin
 kotlin-compiler = "1.9.23"
-kotlinx-coroutines = "1.8.0"
+kotlinx-coroutines = "1.8.1"
 
 # Google
 compose-compiler = "1.5.13"
