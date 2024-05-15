@@ -1,6 +1,6 @@
 [versions]
 # Android Components
-android-components = "128.0.20240513214335"
+android-components = "128.0.20240514215634"
 
 # AGP
 android-plugin = "8.4.0"
@@ -15,7 +15,7 @@ material = "1.9.0"
 
 # AndroidX
 androidx-activity = "1.7.2"
-androidx-annotation = "1.7.1"
+androidx-annotation = "1.8.0"
 androidx-appcompat = "1.6.1"
 androidx-browser = "1.8.0"
 androidx-cardview = "1.0.0"
