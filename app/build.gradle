@@ -254,7 +254,7 @@ dependencies {
     implementation libs.androidx.fragment
     implementation libs.androidx.lifecycle.common
     implementation libs.androidx.lifecycle.process
-    implementation libs.androidx.lifecycle.viewmodel.ktx
+    implementation libs.androidx.lifecycle.viewmodel
     implementation libs.androidx.preference.ktx
     implementation libs.androidx.recyclerview
     implementation libs.androidx.swiperefreshlayout
