@@ -103,6 +103,7 @@ class WebExtensionPromptFeature(
         showPermissionDialog(
             addon,
             onConfirm = promptRequest.onConfirm,
+            permissions = promptRequest.permissions,
         )
     }
 
@@ -124,6 +125,7 @@ class WebExtensionPromptFeature(
             // the optional permissions that are requested.
             addon = addon.copy(permissions = promptRequest.permissions),
             onConfirm = promptRequest.onConfirm,
+            permissions = promptRequest.permissions,
             forOptionalPermissions = true,
         )
     }
@@ -165,11 +167,13 @@ class WebExtensionPromptFeature(
     internal fun showPermissionDialog(
         addon: Addon,
         onConfirm: (Boolean) -> Unit,
+        permissions: List<String> = emptyList(),
         forOptionalPermissions: Boolean = false,
     ) {
         if (!isInstallationInProgress && !hasExistingPermissionDialogFragment()) {
             val dialog = PermissionsDialogFragment.newInstance(
                 addon = addon,
+                permissions = permissions,
                 forOptionalPermissions = forOptionalPermissions,
                 onPositiveButtonClicked = {
                     onConfirm(true)
