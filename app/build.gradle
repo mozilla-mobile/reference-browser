@@ -338,6 +338,12 @@ dependencies {
     implementation libs.mozilla.ui.tabcounter
     implementation libs.mozilla.ui.widgets
 
+    constraints {
+        implementation (libs.androidx.tracing) {
+            because 'AndroidX Test gets force-downgraded to 1.0.0 and breaks otherwise'
+        }
+    }
+
     androidTestImplementation libs.androidx.test.espresso.core
     androidTestImplementation libs.androidx.test.espresso.idling.resources
     androidTestImplementation libs.androidx.test.monitor
