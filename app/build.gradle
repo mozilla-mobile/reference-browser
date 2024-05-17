@@ -13,7 +13,6 @@ apply from: "$project.rootDir/automation/gradle/versionCode.gradle"
 import com.android.build.api.variant.FilterConfiguration
 import com.android.build.gradle.internal.tasks.AppPreBuildTask
 import groovy.json.JsonOutput
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 android {
     defaultConfig {
@@ -97,14 +96,6 @@ android {
 
 kotlin {
     jvmToolchain(Config.jvmTargetCompatibility)
-}
-
-tasks.withType(KotlinCompile).configureEach {
-    kotlinOptions.allWarningsAsErrors = true
-    kotlinOptions.freeCompilerArgs += [
-            "-opt-in=kotlinx.coroutines.ExperimentalCoroutinesApi",
-            "-Xjvm-default=all"
-    ]
 }
 
 def baseVersionCode = generatedVersionCode

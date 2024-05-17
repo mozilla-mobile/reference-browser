@@ -1,8 +1,6 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
-
 import io.gitlab.arturbosch.detekt.Detekt
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 buildscript {
     repositories {
@@ -81,12 +79,6 @@ allprojects {
             mavenCentral()
         }
     }
-
-    tasks.withType(KotlinCompile).configureEach {
-        kotlinOptions.freeCompilerArgs += [
-                "-opt-in=kotlin.RequiresOptIn"
-        ]
-    }
 }
 
 subprojects {
@@ -99,6 +91,10 @@ subprojects {
             }
 
             android {
+                kotlinOptions {
+                    kotlinOptions.allWarningsAsErrors = true
+                }
+
                 testOptions {
                     unitTests {
                         includeAndroidResources = true
