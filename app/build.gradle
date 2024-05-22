@@ -3,11 +3,11 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 plugins {
+    alias libs.plugins.android.application
     alias libs.plugins.compose.compiler
     alias libs.plugins.kotlin.android
 }
 
-apply plugin: 'com.android.application'
 apply from: "$project.rootDir/automation/gradle/versionCode.gradle"
 
 import com.android.build.api.variant.FilterConfiguration

@@ -24,13 +24,10 @@ buildscript {
             mavenCentral()
         }
     }
-
-    dependencies {
-        classpath libs.tools.android.plugin
-    }
 }
 
 plugins {
+    alias libs.plugins.android.application apply false
     alias libs.plugins.compose.compiler apply false
     alias libs.plugins.dependency.analysis
     alias libs.plugins.detekt
