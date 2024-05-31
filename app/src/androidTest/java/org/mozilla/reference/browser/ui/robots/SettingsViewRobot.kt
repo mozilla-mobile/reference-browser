@@ -128,8 +128,8 @@ private fun waitForSettingsRecyclerViewToExist() {
 
 private fun assertSettingsView() {
     // verify that we are in the correct settings view
-    Espresso.onView(withText(R.string.settings))
-    Espresso.onView(withText(R.string.preferences_about_page))
+    Espresso.onView(withText(R.string.settings)).check(matches(isDisplayed()))
+    Espresso.onView(withText(R.string.preferences_about_page)).check(matches(isDisplayed()))
 }
 
 private fun syncSigninButton() = Espresso.onView(withText(R.string.sign_in))

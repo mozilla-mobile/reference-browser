@@ -5,6 +5,8 @@
 package org.mozilla.reference.browser.ui.robots
 
 import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.uiautomator.UiSelector
 import org.hamcrest.CoreMatchers.allOf
@@ -41,6 +43,6 @@ class SyncedTabsRobot {
                 withText(R.string.synced_tabs),
                 withText(R.string.synced_tabs_connect_to_sync_account),
             ),
-        )
+        ).check(matches(isDisplayed()))
     }
 }
