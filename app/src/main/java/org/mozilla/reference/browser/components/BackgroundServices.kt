@@ -13,10 +13,13 @@ import mozilla.appservices.fxaclient.FxaServer
 import mozilla.components.browser.storage.sync.PlacesHistoryStorage
 import mozilla.components.browser.storage.sync.RemoteTabsStorage
 import mozilla.components.concept.sync.DeviceCapability
+import mozilla.components.concept.sync.DeviceCommandQueue
 import mozilla.components.concept.sync.DeviceConfig
 import mozilla.components.concept.sync.DeviceType
 import mozilla.components.feature.accounts.push.FxaPushSupportFeature
 import mozilla.components.feature.accounts.push.SendTabFeature
+import mozilla.components.feature.syncedtabs.commands.SyncedTabsCommands
+import mozilla.components.feature.syncedtabs.commands.SyncedTabsCommandsFlushScheduler
 import mozilla.components.feature.syncedtabs.storage.SyncedTabsStorage
 import mozilla.components.service.fxa.PeriodicSyncConfig
 import mozilla.components.service.fxa.ServerConfig
@@ -101,5 +104,23 @@ class BackgroundServices(
             remoteTabsStorage.value,
             maxActiveTime,
         )
+    }
+
+    val syncedTabsCommands by lazy {
+        SyncedTabsCommands(accountManager, remoteTabsStorage.value).apply {
+            register(
+                object : DeviceCommandQueue.Observer {
+                    override fun onAdded() {
+                        SyncedTabsCommandsFlushScheduler(context).requestFlush()
+                    }
+
+                    // We don't cancel any scheduled flushes in `onRemoved`, because we should
+                    // still flush if N commands were added, but N - 1 commands were removed.
+                    // If the queue is empty when the worker runs, that's OK; the worker
+                    // won't do anything, and won't run again until the next call to `onAdded`.
+                    override fun onRemoved() = Unit
+                },
+            )
+        }
     }
 }
