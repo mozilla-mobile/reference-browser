@@ -14,7 +14,7 @@ RUN apt-get install -y jq \
 USER worker:worker
 
 ENV GOOGLE_SDK_DOWNLOAD ./gcloud.tar.gz
-ENV GOOGLE_SDK_VERSION 407
+ENV GOOGLE_SDK_VERSION 478
 
 ENV TEST_TOOLS /builds/worker/test-tools
 ENV PATH ${PATH}:${TEST_TOOLS}:${TEST_TOOLS}/google-cloud-sdk/bin
@@ -28,10 +28,10 @@ RUN curl https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud
     && ${TEST_TOOLS}/google-cloud-sdk/install.sh --quiet \
     && ${TEST_TOOLS}/google-cloud-sdk/bin/gcloud --quiet components update
 
-# Flank v21.08.1
-RUN URL_FLANK_BIN="$($CURL --silent 'https://api.github.com/repos/Flank/flank/releases/48276753' | jq -r '.assets[] | select(.browser_download_url | test("flank.jar")) .browser_download_url')" \
-    && $CURL --output "${TEST_TOOLS}/flank.jar" "${URL_FLANK_BIN}" \
-    && chmod +x "${TEST_TOOLS}/flank.jar"
+ENV FLANK_DOWNLOAD ${TEST_TOOLS}/flank.jar
+ENV FLANK_VERSION 23.10.1
+RUN curl -L https://github.com/Flank/flank/releases/download/v${FLANK_VERSION}/flank.jar --output ${FLANK_DOWNLOAD} \
+    && chmod +x ${FLANK_DOWNLOAD}
 
 # run-task expects to run as root
 USER root
