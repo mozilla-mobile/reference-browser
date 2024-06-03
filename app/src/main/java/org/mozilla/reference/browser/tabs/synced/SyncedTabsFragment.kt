@@ -37,6 +37,7 @@ class SyncedTabsFragment : Fragment() {
             feature = SyncedTabsFeature(
                 context = requireContext(),
                 storage = backgroundServices.syncedTabsStorage,
+                commands = backgroundServices.syncedTabsCommands,
                 accountManager = backgroundServices.accountManager,
                 view = view.findViewById<SyncedTabsLayout>(R.id.synced_tabs_layout),
                 lifecycleOwner = this,
