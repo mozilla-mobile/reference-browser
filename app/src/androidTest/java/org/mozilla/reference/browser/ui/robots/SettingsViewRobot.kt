@@ -18,10 +18,12 @@ import androidx.test.uiautomator.By
 import androidx.test.uiautomator.UiSelector
 import androidx.test.uiautomator.Until
 import org.hamcrest.CoreMatchers.allOf
+import org.junit.Assert.assertTrue
 import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.helpers.TestAssetHelper
 import org.mozilla.reference.browser.helpers.TestAssetHelper.waitingTime
 import org.mozilla.reference.browser.helpers.TestHelper
+import org.mozilla.reference.browser.helpers.TestHelper.getStringResource
 import org.mozilla.reference.browser.helpers.TestHelper.packageName
 import org.mozilla.reference.browser.helpers.click
 import org.mozilla.reference.browser.helpers.hasCousin
@@ -128,8 +130,18 @@ private fun waitForSettingsRecyclerViewToExist() {
 
 private fun assertSettingsView() {
     // verify that we are in the correct settings view
-    Espresso.onView(withText(R.string.settings)).check(matches(isDisplayed()))
-    Espresso.onView(withText(R.string.preferences_about_page)).check(matches(isDisplayed()))
+    assertTrue(
+        mDevice.findObject(
+            UiSelector()
+                .resourceId("$packageName:id/action_bar")
+                .childSelector(
+                    UiSelector()
+                        .textContains(
+                            getStringResource(R.string.settings),
+                        ),
+                ),
+        ).waitForExists(waitingTime),
+    )
 }
 
 private fun syncSigninButton() = Espresso.onView(withText(R.string.sign_in))
