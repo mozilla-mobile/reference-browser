@@ -18,7 +18,7 @@
         android:layout_marginEnd="8dp"
         app:drawableStartCompat="@drawable/mozac_ic_extensions_black"
         android:drawablePadding="8dp"
-        android:text="@string/mozac_add_on_install_progress_caption"/>
+        android:text="@string/mozac_extension_install_progress_caption"/>
 
 </androidx.cardview.widget.CardView>
 
