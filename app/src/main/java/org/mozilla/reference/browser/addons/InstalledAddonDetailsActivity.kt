@@ -56,7 +56,7 @@ class InstalledAddonDetailsActivity : AppCompatActivity() {
                 scope.launch(Dispatchers.Main) {
                     Toast.makeText(
                         baseContext,
-                        R.string.mozac_feature_addons_failed_to_query_add_ons,
+                        R.string.mozac_feature_addons_failed_to_query_extensions,
                         Toast.LENGTH_SHORT,
                     ).show()
                 }
