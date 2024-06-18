@@ -321,6 +321,10 @@ class WebExtensionPromptFeature(
                     version,
                 )
             }
+
+            is WebExtensionInstallException.AdminInstallOnly -> {
+                context.getString(R.string.mozac_feature_addons_admin_install_only, addonName)
+            }
         }
 
         showDialog(
