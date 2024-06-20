@@ -22,6 +22,9 @@ import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.helpers.TestAssetHelper
 import org.mozilla.reference.browser.helpers.TestAssetHelper.waitingTime
 import org.mozilla.reference.browser.helpers.TestHelper
+import org.mozilla.reference.browser.helpers.TestHelper.assertUIObjectExists
+import org.mozilla.reference.browser.helpers.TestHelper.getStringResource
+import org.mozilla.reference.browser.helpers.TestHelper.itemWithText
 import org.mozilla.reference.browser.helpers.TestHelper.packageName
 import org.mozilla.reference.browser.helpers.click
 import org.mozilla.reference.browser.helpers.hasCousin
@@ -80,7 +83,7 @@ class SettingsViewRobot {
         }
 
         fun openFXASignin(interact: BrowserRobot.() -> Unit): BrowserRobot.Transition {
-            syncSigninButton().click()
+            syncSignInButton().click()
             BrowserRobot().interact()
             return BrowserRobot.Transition()
         }
@@ -132,7 +135,7 @@ private fun assertSettingsView() {
     Espresso.onView(withText(R.string.preferences_about_page))
 }
 
-private fun syncSigninButton() = Espresso.onView(withText(R.string.sign_in))
+private fun syncSignInButton() = itemWithText(getStringResource(R.string.sign_in))
 private fun syncHistorySummary() = Espresso.onView(withText(R.string.preferences_sign_in_summary))
 private fun syncQrCodeButton() = Espresso.onView(withText(R.string.pair_sign_in))
 private fun syncQrSummary() = Espresso.onView(withText(R.string.preferences_pair_sign_in_summary))
@@ -162,8 +165,7 @@ private fun aboutReferenceBrowserButton() = Espresso.onView(withText(R.string.pr
 private fun assertNavigateUpButton() {
     mDevice.wait(Until.findObject(By.text("Navigate up")), TestAssetHelper.waitingTimeShort)
 }
-private fun assertSyncSigninButton() = syncSigninButton()
-    .check(matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+private fun assertSyncSigninButton() = assertUIObjectExists(syncSignInButton())
 private fun assertSyncHistorySummary() = syncHistorySummary()
     .check(matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
 private fun assertSyncQrCodeButton() = syncQrCodeButton()
