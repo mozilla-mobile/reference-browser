@@ -26,8 +26,7 @@ import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.ext.waitAndInteract
 import org.mozilla.reference.browser.helpers.TestAssetHelper.waitingTime
 import org.mozilla.reference.browser.helpers.TestAssetHelper.waitingTimeShort
-import org.mozilla.reference.browser.helpers.TestHelper.assertItemWithResIdAndTextExists
-import org.mozilla.reference.browser.helpers.TestHelper.assertItemWithResIdExists
+import org.mozilla.reference.browser.helpers.TestHelper.assertUIObjectExists
 import org.mozilla.reference.browser.helpers.TestHelper.getStringResource
 import org.mozilla.reference.browser.helpers.TestHelper.itemWithResId
 import org.mozilla.reference.browser.helpers.TestHelper.itemWithResIdContainingText
@@ -42,14 +41,14 @@ class AddonsManagerRobot {
     fun verifyAddonsRecommendedView() {
         assertTrue(mDevice.findObject(UiSelector().text("Recommended")).waitForExists(waitingTime))
         // Check uBlock is displayed in the "Recommended" section
-        assertItemWithResIdAndTextExists(
+        assertUIObjectExists(
             itemWithResIdContainingText("$packageName:id/add_on_name", "uBlock Origin"),
             itemWithResIdContainingText(
                 "$packageName:id/add_on_description",
                 "Finally, an efficient wide-spectrum content blocker. Easy on CPU and memory.",
             ),
         )
-        assertItemWithResIdExists(
+        assertUIObjectExists(
             itemWithResId("$packageName:id/rating"),
             itemWithResId("$packageName:id/review_count"),
             itemWithResId("$packageName:id/add_button"),

@@ -81,10 +81,13 @@ object TestHelper {
     fun itemWithResId(resourceId: String) =
         mDevice.findObject(UiSelector().resourceId(resourceId))
 
+    fun itemWithText(itemText: String) =
+        mDevice.findObject(UiSelector().text(itemText))
+
     fun itemWithResIdContainingText(resourceId: String, text: String) =
         mDevice.findObject(UiSelector().resourceId(resourceId).textContains(text))
 
-    fun assertItemWithResIdExists(vararg appItems: UiObject, exists: Boolean = true) {
+    fun assertUIObjectExists(vararg appItems: UiObject, exists: Boolean = true) {
         if (exists) {
             for (appItem in appItems) {
                 assertTrue(appItem.waitForExists(waitingTime))
@@ -95,14 +98,6 @@ object TestHelper {
             }
         }
     }
-    fun assertItemWithResIdAndTextExists(vararg appItems: UiObject, exists: Boolean = true) {
-        for (appItem in appItems) {
-            if (exists) {
-                assertTrue(appItem.waitForExists(waitingTime))
-            } else {
-                assertFalse(appItem.waitForExists(waitingTimeShort))
-            }
-        }
-    }
+
     fun getStringResource(id: Int) = appContext.resources.getString(id, appName)
 }
