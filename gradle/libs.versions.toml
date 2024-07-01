@@ -1,6 +1,6 @@
 [versions]
 # Android Components
-android-components = "129.0.20240627214131"
+android-components = "129.0.20240630091518"
 
 # AGP
 android-gradle-plugin = "8.4.2"
@@ -45,7 +45,7 @@ ktlint = "0.50.0"
 
 # Third Party Testing
 hamcrest = "1.3"
-jacoco = "0.8.11"
+jacoco = "0.8.12"
 junit = "4.13.2"
 okhttp = "4.12.0"
 okio = "3.4.0"
