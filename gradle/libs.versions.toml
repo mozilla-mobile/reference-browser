@@ -1,6 +1,6 @@
 [versions]
 # Android Components
-android-components = "129.0.20240627214131"
+android-components = "129.0.20240630091518"
 
 # AGP
 android-gradle-plugin = "8.5.0"
@@ -27,14 +27,15 @@ androidx-lifecycle = "2.8.2"
 androidx-preference = "1.2.1"
 androidx-recyclerview = "1.3.2"
 androidx-swiperefreshlayout = "1.1.0"
+androidx-tracing = "1.2.0"
 androidx-work = "2.9.0"
 
 # AndroidX Testing
-androidx-test-core = "1.5.0"
-androidx-test-espresso = "3.5.1"
-androidx-test-monitor = "1.6.1"
-androidx-test-orchestrator = "1.4.2"
-androidx-test-runner = "1.5.2"
+androidx-test-core = "1.6.1"
+androidx-test-espresso = "3.6.1"
+androidx-test-monitor = "1.7.1"
+androidx-test-orchestrator = "1.5.0"
+androidx-test-runner = "1.6.1"
 androidx-test-uiautomator = "2.3.0"
 
 # Third Party Linting & Static Code Analysis
@@ -44,7 +45,7 @@ ktlint = "0.50.0"
 
 # Third Party Testing
 hamcrest = "1.3"
-jacoco = "0.8.11"
+jacoco = "0.8.12"
 junit = "4.13.2"
 okhttp = "4.12.0"
 okio = "3.4.0"
@@ -72,6 +73,7 @@ androidx-lifecycle-viewmodel = { group = "androidx.lifecycle", name = "lifecycle
 androidx-preference-ktx = { group = "androidx.preference", name = "preference-ktx", version.ref = "androidx-preference" }
 androidx-recyclerview = { group = "androidx.recyclerview", name = "recyclerview", version.ref = "androidx-recyclerview" }
 androidx-swiperefreshlayout = { group = "androidx.swiperefreshlayout", name = "swiperefreshlayout", version.ref = "androidx-swiperefreshlayout" }
+androidx-tracing = { group = "androidx.tracing", name = "tracing", version.ref = "androidx-tracing" }
 androidx-work-runtime-ktx = { group = "androidx.work", name = "work-runtime-ktx", version.ref = "androidx-work" }
 
 # AndroidX Compose
