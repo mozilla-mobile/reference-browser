@@ -4,13 +4,11 @@
 
 package org.mozilla.reference.browser.ui.robots
 
-import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.uiautomator.UiSelector
-import org.hamcrest.CoreMatchers.allOf
 import org.junit.Assert.assertTrue
 import org.mozilla.reference.browser.R
-import org.mozilla.reference.browser.helpers.TestAssetHelper
+import org.mozilla.reference.browser.helpers.TestAssetHelper.waitingTime
+import org.mozilla.reference.browser.helpers.TestHelper.getStringResource
 import org.mozilla.reference.browser.helpers.TestHelper.packageName
 
 /**
@@ -31,16 +29,10 @@ class SyncedTabsRobot {
         assertTrue(
             mDevice.findObject(
                 UiSelector()
-                    .resourceId("$packageName:id/synced_tabs_status"),
+                    .resourceId("$packageName:id/synced_tabs_status")
+                    .textContains(getStringResource(R.string.synced_tabs_connect_to_sync_account)),
             )
-                .waitForExists(TestAssetHelper.waitingTime),
-        )
-
-        onView(
-            allOf(
-                withText(R.string.synced_tabs),
-                withText(R.string.synced_tabs_connect_to_sync_account),
-            ),
+                .waitForExists(waitingTime),
         )
     }
 }
