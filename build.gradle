@@ -88,9 +88,9 @@ subprojects {
             }
 
             android {
-                //kotlinOptions {
-                //    kotlinOptions.allWarningsAsErrors = true
-                //}
+                kotlinOptions {
+                    kotlinOptions.allWarningsAsErrors = true
+                }
 
                 testOptions {
                     unitTests {
