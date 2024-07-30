@@ -100,7 +100,7 @@ tasks:
               $if: >
                 tasks_for in ["action", "cron"]
                 || (isPullRequest && pullRequestAction in ["opened", "reopened", "synchronize"])
-                || (tasks_for == "github-push" && head_branch[:10] != "refs/tags/" && head_branch != "staging.tmp" && head_branch != "trying.tmp")
+                || (tasks_for == "github-push" && head_branch == "refs/heads/master")
                 || (tasks_for == "github-release" && releaseAction == "published")
               then:
                   $let:
