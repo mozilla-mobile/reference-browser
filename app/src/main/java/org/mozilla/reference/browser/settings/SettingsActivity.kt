@@ -35,7 +35,7 @@ class SettingsActivity : AppCompatActivity(), SettingsFragment.ActionBarUpdater 
         setTitle(titleResId)
     }
 
-    @Suppress("OVERRIDE_DEPRECATION")
+    @Suppress("MissingSuperCall", "OVERRIDE_DEPRECATION")
     override fun onBackPressed() {
         supportFragmentManager.fragments.forEach {
             if (it is UserInteractionHandler && it.onBackPressed()) {
