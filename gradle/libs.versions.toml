@@ -1,6 +1,6 @@
 [versions]
 # Android Components
-android-components = "132.0.20240904095513"
+android-components = "132.0.20240905215453"
 
 # AGP
 android-gradle-plugin = "8.6.0"
@@ -18,7 +18,7 @@ androidx-annotation = "1.8.2"
 androidx-appcompat = "1.7.0"
 androidx-browser = "1.8.0"
 androidx-cardview = "1.0.0"
-androidx-composeBom = "2024.06.00"
+androidx-composeBom = "2024.09.00"
 androidx-constraintlayout = "2.1.4"
 androidx-coordinatorlayout = "1.2.0"
 androidx-core = "1.13.1"
