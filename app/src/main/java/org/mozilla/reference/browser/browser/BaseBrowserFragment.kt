@@ -29,6 +29,7 @@ import mozilla.components.feature.downloads.manager.FetchDownloadManager
 import mozilla.components.feature.downloads.temporary.ShareDownloadFeature
 import mozilla.components.feature.findinpage.view.FindInPageBar
 import mozilla.components.feature.findinpage.view.FindInPageView
+import mozilla.components.feature.media.fullscreen.MediaSessionFullscreenFeature
 import mozilla.components.feature.prompts.PromptFeature
 import mozilla.components.feature.session.FullScreenFeature
 import mozilla.components.feature.session.SessionFeature
@@ -76,6 +77,7 @@ abstract class BaseBrowserFragment : Fragment(), UserInteractionHandler, Activit
     private val swipeRefreshFeature = ViewBoundFeatureWrapper<SwipeRefreshFeature>()
     private val windowFeature = ViewBoundFeatureWrapper<WindowFeature>()
     private val webAuthnFeature = ViewBoundFeatureWrapper<WebAuthnFeature>()
+    private val fullScreenMediaSessionFeature = ViewBoundFeatureWrapper<MediaSessionFullscreenFeature>()
     private val lastTabFeature = ViewBoundFeatureWrapper<LastTabFeature>()
 
     private val engineView: EngineView
@@ -332,6 +334,16 @@ abstract class BaseBrowserFragment : Fragment(), UserInteractionHandler, Activit
             feature = PictureInPictureIntegration(
                 requireComponents.core.store,
                 requireActivity(),
+                sessionId,
+            ),
+            owner = this,
+            view = view,
+        )
+
+        fullScreenMediaSessionFeature.set(
+            feature = MediaSessionFullscreenFeature(
+                requireActivity(),
+                requireComponents.core.store,
                 sessionId,
             ),
             owner = this,
