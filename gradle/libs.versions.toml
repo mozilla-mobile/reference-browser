@@ -46,7 +46,7 @@ ktlint = "0.50.0"
 # Third Party Testing
 hamcrest = "1.3"
 jacoco = "0.8.12"
-junit = "4.13.2"
+junit = "5.11.0"
 okhttp = "4.12.0"
 okio = "3.4.0"
 
@@ -102,7 +102,7 @@ ktlint = { module = "com.pinterest:ktlint", version.ref = "ktlint" }
 # Third Party Testing
 hamcrest-core = { group = "org.hamcrest", name = "hamcrest-core", version.ref = "hamcrest" }
 hamcrest-library = { group = "org.hamcrest", name = "hamcrest-library", version.ref = "hamcrest" }
-junit = { group = "junit", name = "junit", version.ref = "junit" }
+junit = { group = "org.junit.vintage", name = "junit-vintage-engine", version.ref = "junit" }
 mockwebserver = { group = "com.squareup.okhttp3", name = "mockwebserver", version.ref = "okhttp" }
 okhttp = { group = "com.squareup.okhttp3", name = "okhttp", version.ref = "okhttp" }
 okio = { group = "com.squareup.okio", name = "okio", version.ref = "okio" }
