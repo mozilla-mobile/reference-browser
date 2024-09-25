@@ -4,22 +4,30 @@
   <CurrentIssues>
     <ID>UndocumentedPublicClass:AboutFragment.kt$AboutFragment : Fragment</ID>
     <ID>UndocumentedPublicClass:AccountSettingsFragment.kt$AccountSettingsFragment : PreferenceFragmentCompat</ID>
-    <ID>UndocumentedPublicClass:AppPermissionCodes.kt$AppPermissionCodes</ID>
+    <ID>UndocumentedPublicClass:AddonSettingsActivity.kt$AddonSettingsActivity.AddonSettingsFragment$Companion</ID>
     <ID>UndocumentedPublicClass:AutofillConfirmActivity.kt$AutofillConfirmActivity : AbstractAutofillConfirmActivity</ID>
     <ID>UndocumentedPublicClass:AutofillPreference.kt$AutofillPreference : Preference</ID>
+    <ID>UndocumentedPublicClass:AutofillPreference.kt$AutofillPreference$Companion</ID>
     <ID>UndocumentedPublicClass:AutofillSearchActivity.kt$AutofillSearchActivity : AbstractAutofillSearchActivity</ID>
     <ID>UndocumentedPublicClass:AutofillService.kt$AutofillService : AbstractAutofillService</ID>
     <ID>UndocumentedPublicClass:AutofillUnlockActivity.kt$AutofillUnlockActivity : AbstractAutofillUnlockActivity</ID>
+    <ID>UndocumentedPublicClass:BackgroundServices.kt$BackgroundServices$Companion</ID>
+    <ID>UndocumentedPublicClass:BaseBrowserFragment.kt$BaseBrowserFragment$Companion</ID>
     <ID>UndocumentedPublicClass:BrowserApplication.kt$BrowserApplication : Application</ID>
+    <ID>UndocumentedPublicClass:BrowserApplication.kt$BrowserApplication$Companion</ID>
+    <ID>UndocumentedPublicClass:BrowserFragment.kt$BrowserFragment$Companion</ID>
     <ID>UndocumentedPublicClass:Config.kt$Config</ID>
     <ID>UndocumentedPublicClass:ContextMenuIntegration.kt$ContextMenuIntegration : LifecycleAwareFeature</ID>
+    <ID>UndocumentedPublicClass:Core.kt$Core$Companion</ID>
     <ID>UndocumentedPublicClass:CrashIntegration.kt$CrashIntegration : DefaultLifecycleObserver</ID>
     <ID>UndocumentedPublicClass:CrashListActivity.kt$CrashListActivity : AbstractCrashListActivity</ID>
     <ID>UndocumentedPublicClass:CustomTabsIntegration.kt$CustomTabsIntegration : LifecycleAwareFeatureUserInteractionHandler</ID>
     <ID>UndocumentedPublicClass:CustomTabsService.kt$CustomTabsService : AbstractCustomTabsService</ID>
     <ID>UndocumentedPublicClass:DownloadService.kt$DownloadService : AbstractFetchDownloadService</ID>
     <ID>UndocumentedPublicClass:EngineProvider.kt$EngineProvider</ID>
+    <ID>UndocumentedPublicClass:ExternalAppBrowserFragment.kt$ExternalAppBrowserFragment$Companion</ID>
     <ID>UndocumentedPublicClass:FindInPageIntegration.kt$FindInPageIntegration : LifecycleAwareFeatureUserInteractionHandler</ID>
+    <ID>UndocumentedPublicClass:FindInPageIntegration.kt$FindInPageIntegration$Companion</ID>
     <ID>UndocumentedPublicClass:FirebasePush.kt$FirebasePush : AbstractFirebasePushService</ID>
     <ID>UndocumentedPublicClass:IntentReceiverActivity.kt$IntentReceiverActivity : Activity</ID>
     <ID>UndocumentedPublicClass:IntentRequestCodes.kt$IntentRequestCodes</ID>
@@ -32,6 +40,7 @@
     <ID>UndocumentedPublicClass:SettingsActivity.kt$SettingsActivity : AppCompatActivityActionBarUpdater</ID>
     <ID>UndocumentedPublicClass:SettingsFragment.kt$SettingsFragment : PreferenceFragmentCompat</ID>
     <ID>UndocumentedPublicClass:SettingsFragment.kt$SettingsFragment$ActionBarUpdater</ID>
+    <ID>UndocumentedPublicClass:SettingsFragment.kt$SettingsFragment$Companion</ID>
     <ID>UndocumentedPublicClass:SyncedTabsActivity.kt$SyncedTabsActivity : AppCompatActivity</ID>
     <ID>UndocumentedPublicClass:SyncedTabsAdapter.kt$SyncedTabsAdapter : ListAdapter</ID>
     <ID>UndocumentedPublicClass:SyncedTabsAdapter.kt$SyncedTabsAdapter$AdapterItem</ID>
@@ -43,10 +52,15 @@
     <ID>UndocumentedPublicClass:SyncedTabsViewHolder.kt$SyncedTabsViewHolder : ViewHolder</ID>
     <ID>UndocumentedPublicClass:SyncedTabsViewHolder.kt$SyncedTabsViewHolder$DeviceViewHolder : SyncedTabsViewHolder</ID>
     <ID>UndocumentedPublicClass:SyncedTabsViewHolder.kt$SyncedTabsViewHolder$TabViewHolder : SyncedTabsViewHolder</ID>
+    <ID>UndocumentedPublicClass:SyncedTabsViewHolder.kt$SyncedTabsViewHolder.DeviceViewHolder$Companion</ID>
+    <ID>UndocumentedPublicClass:SyncedTabsViewHolder.kt$SyncedTabsViewHolder.TabViewHolder$Companion</ID>
     <ID>UndocumentedPublicClass:TabsPanel.kt$TabsPanel : TabLayoutOnTabSelectedListener</ID>
     <ID>UndocumentedPublicClass:TabsToolbar.kt$TabsToolbar : Toolbar</ID>
     <ID>UndocumentedPublicClass:TabsTouchHelper.kt$TabsTouchHelper : ItemTouchHelper</ID>
+    <ID>UndocumentedPublicClass:ToggleImageButton.kt$ToggleImageButton$Companion</ID>
     <ID>UndocumentedPublicClass:ToolbarIntegration.kt$ToolbarIntegration : LifecycleAwareFeatureUserInteractionHandler</ID>
+    <ID>UndocumentedPublicClass:WebExtensionActionPopupActivity.kt$WebExtensionActionPopupActivity.WebExtensionActionPopupFragment$Companion</ID>
+    <ID>UndocumentedPublicClass:WebExtensionPromptFeature.kt$WebExtensionPromptFeature$Companion</ID>
     <ID>UndocumentedPublicClass:WebPushEngineIntegration.kt$WebPushEngineIntegration : Observer</ID>
     <ID>UndocumentedPublicFunction:AccountSettingsFragment.kt$AccountSettingsFragment$fun updateLastSyncedTimePref(context: Context, pref: Preference?, failed: Boolean = false)</ID>
     <ID>UndocumentedPublicFunction:Analytics.kt$fun isSentryEnabled()</ID>
