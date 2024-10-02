@@ -7,7 +7,7 @@ android-gradle-plugin = "8.6.1"
 
 # Kotlin
 kotlin = "2.0.20"
-kotlinx-coroutines = "1.8.1"
+kotlinx-coroutines = "1.9.0"
 
 # Google
 material = "1.12.0"
