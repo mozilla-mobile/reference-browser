@@ -53,11 +53,6 @@ class AddonsFragment : Fragment(), AddonsManagerAdapterDelegate {
                 store = requireContext().components.core.store,
                 context = requireContext(),
                 fragmentManager = parentFragmentManager,
-                onAddonChanged = {
-                    runIfFragmentIsAttached {
-                        adapter?.updateAddon(it)
-                    }
-                },
             ),
             owner = this,
             view = rootView,
