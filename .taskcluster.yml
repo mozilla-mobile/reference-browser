@@ -215,6 +215,7 @@ tasks:
                                           MOBILE_PIP_REQUIREMENTS: taskcluster/requirements.txt
                                           MOBILE_REPOSITORY_TYPE: git
                                           REPOSITORIES: {$json: {mobile: "Reference Browser"}}
+                                          MOZ_AUTOMATION: '1'
                                         - $if: 'isPullRequest'
                                           then:
                                               MOBILE_PULL_REQUEST_NUMBER: '${event.pull_request.number}'
