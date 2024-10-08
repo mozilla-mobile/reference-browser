@@ -2,6 +2,7 @@ queue_rules:
   - name: default
     conditions:
       - status-success=pr-complete
+    merge_method: rebase
 pull_request_rules:
   - name: MickeyMoz - Auto Merge
     conditions:
@@ -13,7 +14,6 @@ pull_request_rules:
         type: APPROVE
         message: MickeyMoz 💪
       queue:
-        method: rebase
         name: default
   - name: Needs landing - Merge
     conditions:
@@ -22,5 +22,4 @@ pull_request_rules:
       - "#approved-reviews-by>=1"
     actions:
       queue:
-        method: rebase
         name: default
