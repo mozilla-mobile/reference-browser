@@ -22,7 +22,7 @@ def build_signing_task(config, tasks):
             "taskId": {"task-reference": "<build-bundle>"},
             "taskType": "build",
             "paths": [dep.attributes["aab"]],
-            "formats": ["autograph_stage_aab"],
+            "formats": ["autograph_aab"],
         }]
         del task["primary-dependency"]
         yield task
