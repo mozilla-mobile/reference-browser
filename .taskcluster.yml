@@ -231,7 +231,9 @@ tasks:
                                 # Note: This task is built server side without the context or tooling that
                                 # exist in tree so we must hard code the hash
                                 image:
-                                    mozillareleases/taskgraph:decision-v11.2.2@sha256:5ebd35f59105a4a35457e8c53450161b27123f076c09fc572dfd28c04e7cd86f
+                                    type: task-image
+                                    taskId: ZwhqIKqnS8uK3XExjQVnsA
+                                    path: public/image.tar.zst
 
                                 maxRunTime: 1800
 
