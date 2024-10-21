@@ -1,6 +1,6 @@
 [versions]
 # Android Components
-android-components = "133.0.20241016214437"
+android-components = "133.0.20241020211110"
 
 # AGP
 android-gradle-plugin = "8.7.1"
@@ -13,12 +13,12 @@ kotlinx-coroutines = "1.9.0"
 material = "1.12.0"
 
 # AndroidX
-androidx-activity = "1.9.2"
-androidx-annotation = "1.8.2"
+androidx-activity = "1.9.3"
+androidx-annotation = "1.9.0"
 androidx-appcompat = "1.7.0"
 androidx-browser = "1.8.0"
 androidx-cardview = "1.0.0"
-androidx-composeBom = "2024.09.03"
+androidx-composeBom = "2024.10.00"
 androidx-constraintlayout = "2.1.4"
 androidx-coordinatorlayout = "1.2.0"
 androidx-core = "1.13.1"
@@ -34,7 +34,7 @@ androidx-work = "2.9.1"
 androidx-test-core = "1.6.1"
 androidx-test-espresso = "3.6.1"
 androidx-test-monitor = "1.7.2"
-androidx-test-orchestrator = "1.5.0"
+androidx-test-orchestrator = "1.5.1"
 androidx-test-runner = "1.6.2"
 androidx-test-uiautomator = "2.3.0"
 
