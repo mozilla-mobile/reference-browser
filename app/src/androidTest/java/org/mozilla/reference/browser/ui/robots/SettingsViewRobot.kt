@@ -22,7 +22,6 @@ import org.junit.Assert.assertTrue
 import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.helpers.TestAssetHelper
 import org.mozilla.reference.browser.helpers.TestAssetHelper.waitingTime
-import org.mozilla.reference.browser.helpers.TestHelper
 import org.mozilla.reference.browser.helpers.TestHelper.assertUIObjectExists
 import org.mozilla.reference.browser.helpers.TestHelper.getStringResource
 import org.mozilla.reference.browser.helpers.TestHelper.itemWithText
@@ -203,10 +202,8 @@ private fun assertRemoteDebugging() = remoteDebuggingToggle()
     .check(matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
 private fun assertCustomAddonCollectionButton() = customAddonCollectionButton()
     .check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
-private fun assertMozillaHeading() {
-    TestHelper.scrollToElementByText("About Reference Browser")
+private fun assertMozillaHeading() =
     mozillaHeading().check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
-}
 private fun assertAboutReferenceBrowserButton() = aboutReferenceBrowserButton()
     .check(matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
 private fun assertCustomAddonCollectionPanel() {
