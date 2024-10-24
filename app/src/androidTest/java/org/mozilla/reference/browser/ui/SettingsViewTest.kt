@@ -11,7 +11,6 @@ import org.junit.Rule
 import org.junit.Test
 import org.mozilla.reference.browser.helpers.BrowserActivityTestRule
 import org.mozilla.reference.browser.helpers.RetryTestRule
-import org.mozilla.reference.browser.helpers.TestHelper.scrollToElementByText
 import org.mozilla.reference.browser.ui.robots.mDevice
 import org.mozilla.reference.browser.ui.robots.navigationToolbar
 
@@ -137,7 +136,6 @@ class SettingsViewTest {
         navigationToolbar {
         }.openThreeDotMenu {
         }.openSettings {
-            scrollToElementByText("About Reference Browser")
         }.openAboutReferenceBrowser {
             verifyAboutBrowser()
         }
@@ -153,7 +151,6 @@ class SettingsViewTest {
         navigationToolbar {
         }.openThreeDotMenu {
         }.openSettings {
-            scrollToElementByText("About Reference Browser")
             verifyCustomAddonCollectionButton()
             clickCustomAddonCollectionButton()
             verifyCustomAddonCollectionPanelExist()

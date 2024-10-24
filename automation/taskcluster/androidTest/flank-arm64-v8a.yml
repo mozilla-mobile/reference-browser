@@ -23,7 +23,7 @@ gcloud:
     - package org.mozilla.reference.browser.ui
 
   device:
-    - model: Pixel2.arm
+    - model: MediumPhone.arm
       version: 30
       locale: en_US
 
