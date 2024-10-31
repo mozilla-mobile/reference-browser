@@ -20,6 +20,8 @@ import androidx.preference.Preference.OnPreferenceChangeListener
 import androidx.preference.Preference.OnPreferenceClickListener
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreferenceCompat
+import mozilla.components.service.fxa.manager.SCOPE_PROFILE
+import mozilla.components.service.fxa.manager.SCOPE_SYNC
 import mozilla.components.support.ktx.android.view.showKeyboard
 import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.R.string.pref_key_about_page
@@ -130,6 +132,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
             requireComponents.services.accountsAuthFeature.beginAuthentication(
                 requireContext(),
                 BrowserFxAEntryPoint.HomeMenu,
+                setOf(SCOPE_PROFILE, SCOPE_SYNC),
             )
             activity?.finish()
             true
