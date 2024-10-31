@@ -13,6 +13,9 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import mozilla.components.feature.qr.QrFeature
+import mozilla.components.service.fxa.manager.SCOPE_PROFILE
+import mozilla.components.service.fxa.manager.SCOPE_SESSION
+import mozilla.components.service.fxa.manager.SCOPE_SYNC
 import mozilla.components.support.base.feature.UserInteractionHandler
 import mozilla.components.support.base.feature.ViewBoundFeatureWrapper
 import org.mozilla.reference.browser.R
@@ -49,6 +52,7 @@ class PairSettingsFragment : Fragment(), UserInteractionHandler {
                         requireContext(),
                         pairingUrl,
                         BrowserFxAEntryPoint.HomeMenu,
+                        setOf(SCOPE_SYNC, SCOPE_PROFILE, SCOPE_SESSION),
                     )
                     activity?.finish()
                 },
