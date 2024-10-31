@@ -57,7 +57,6 @@
     <ID>UndocumentedPublicClass:TabsPanel.kt$TabsPanel : TabLayoutOnTabSelectedListener</ID>
     <ID>UndocumentedPublicClass:TabsToolbar.kt$TabsToolbar : Toolbar</ID>
     <ID>UndocumentedPublicClass:TabsTouchHelper.kt$TabsTouchHelper : ItemTouchHelper</ID>
-    <ID>UndocumentedPublicClass:ToggleImageButton.kt$ToggleImageButton$Companion</ID>
     <ID>UndocumentedPublicClass:ToolbarIntegration.kt$ToolbarIntegration : LifecycleAwareFeatureUserInteractionHandler</ID>
     <ID>UndocumentedPublicClass:WebExtensionActionPopupActivity.kt$WebExtensionActionPopupActivity.WebExtensionActionPopupFragment$Companion</ID>
     <ID>UndocumentedPublicClass:WebExtensionPromptFeature.kt$WebExtensionPromptFeature$Companion</ID>
@@ -95,7 +94,6 @@
     <ID>UndocumentedPublicFunction:TabsPanel.kt$TabsPanel$fun initialize(tabsFeature: TabsFeature?, updateTabsToolbar: (isPrivate: Boolean) -&gt; Unit)</ID>
     <ID>UndocumentedPublicFunction:TabsToolbar.kt$TabsToolbar$fun initialize(tabsFeature: TabsFeature?, closeTabsTray: () -&gt; Unit)</ID>
     <ID>UndocumentedPublicFunction:TabsToolbar.kt$TabsToolbar$fun updateToolbar(isPrivate: Boolean)</ID>
-    <ID>UndocumentedPublicFunction:ToggleImageButton.kt$ToggleImageButton$fun setOnCheckedChangeListener(listener: (ToggleImageButton, Boolean) -&gt; Unit)</ID>
     <ID>UndocumentedPublicFunction:WebPushEngineIntegration.kt$WebPushEngineIntegration$fun start()</ID>
     <ID>UndocumentedPublicFunction:WebPushEngineIntegration.kt$WebPushEngineIntegration$fun stop()</ID>
   </CurrentIssues>
