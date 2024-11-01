@@ -32,6 +32,7 @@ import mozilla.components.feature.findinpage.view.FindInPageView
 import mozilla.components.feature.media.fullscreen.MediaSessionFullscreenFeature
 import mozilla.components.feature.prompts.PromptFeature
 import mozilla.components.feature.session.FullScreenFeature
+import mozilla.components.feature.session.ScreenOrientationFeature
 import mozilla.components.feature.session.SessionFeature
 import mozilla.components.feature.session.SwipeRefreshFeature
 import mozilla.components.feature.sitepermissions.SitePermissionsFeature
@@ -79,6 +80,7 @@ abstract class BaseBrowserFragment : Fragment(), UserInteractionHandler, Activit
     private val webAuthnFeature = ViewBoundFeatureWrapper<WebAuthnFeature>()
     private val fullScreenMediaSessionFeature = ViewBoundFeatureWrapper<MediaSessionFullscreenFeature>()
     private val lastTabFeature = ViewBoundFeatureWrapper<LastTabFeature>()
+    private val screenOrientationFeature = ViewBoundFeatureWrapper<ScreenOrientationFeature>()
 
     private val engineView: EngineView
         get() = requireView().findViewById<View>(R.id.engineView) as EngineView
@@ -374,6 +376,15 @@ abstract class BaseBrowserFragment : Fragment(), UserInteractionHandler, Activit
                 requireComponents.core.store,
                 sessionId,
                 requireComponents.useCases.tabsUseCases.removeTab,
+                requireActivity(),
+            ),
+            owner = this,
+            view = view,
+        )
+
+        screenOrientationFeature.set(
+            feature = ScreenOrientationFeature(
+                requireComponents.core.engine,
                 requireActivity(),
             ),
             owner = this,
