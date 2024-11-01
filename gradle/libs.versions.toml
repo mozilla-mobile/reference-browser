@@ -1,6 +1,6 @@
 [versions]
 # Android Components
-android-components = "134.0.20241030093012"
+android-components = "134.0.20241031093845"
 
 # AGP
 android-gradle-plugin = "8.7.1"
@@ -14,21 +14,21 @@ material = "1.12.0"
 
 # AndroidX
 androidx-activity = "1.9.3"
-androidx-annotation = "1.9.0"
+androidx-annotation = "1.9.1"
 androidx-appcompat = "1.7.0"
 androidx-browser = "1.8.0"
 androidx-cardview = "1.0.0"
-androidx-composeBom = "2024.10.00"
-androidx-constraintlayout = "2.1.4"
+androidx-composeBom = "2024.10.01"
+androidx-constraintlayout = "2.2.0"
 androidx-coordinatorlayout = "1.2.0"
-androidx-core = "1.13.1"
-androidx-fragment = "1.8.4"
-androidx-lifecycle = "2.8.6"
+androidx-core = "1.15.0"
+androidx-fragment = "1.8.5"
+androidx-lifecycle = "2.8.7"
 androidx-preference = "1.2.1"
 androidx-recyclerview = "1.3.2"
 androidx-swiperefreshlayout = "1.1.0"
 androidx-tracing = "1.2.0"
-androidx-work = "2.9.1"
+androidx-work = "2.10.0"
 
 # AndroidX Testing
 androidx-test-core = "1.6.1"
