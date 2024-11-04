@@ -38,6 +38,7 @@ import mozilla.components.feature.search.region.RegionMiddleware
 import mozilla.components.feature.session.HistoryDelegate
 import mozilla.components.feature.sitepermissions.OnDiskSitePermissionsStorage
 import mozilla.components.feature.webnotifications.WebNotificationFeature
+import mozilla.components.lib.crash.CrashReporter
 import mozilla.components.lib.dataprotect.SecureAbove22Preferences
 import mozilla.components.service.location.LocationService
 import mozilla.components.service.sync.logins.SyncableLoginsStorage
@@ -61,7 +62,7 @@ private const val DAY_IN_MINUTES = 24 * 60L
 /**
  * Component group for all core browser functionality.
  */
-class Core(private val context: Context) {
+class Core(private val context: Context, crashReporter: CrashReporter) {
     /**
      * The browser engine component initialized based on the build
      * configuration (see build variants).
@@ -159,7 +160,7 @@ class Core(private val context: Context) {
     /**
      * The storage component to sync and persist tabs in a Firefox Sync account.
      */
-    val lazyRemoteTabsStorage = lazy { RemoteTabsStorage(context) }
+    val lazyRemoteTabsStorage = lazy { RemoteTabsStorage(context, crashReporter) }
 
     /**
      * A storage component for persisting thumbnail images of tabs.
