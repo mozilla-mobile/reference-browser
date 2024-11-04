@@ -24,7 +24,7 @@ import org.mozilla.reference.browser.components.Utilities
  * Provides access to all components.
  */
 class Components(private val context: Context) {
-    val core by lazy { Core(context) }
+    val core by lazy { Core(context, analytics.crashReporter) }
     val useCases by lazy {
         UseCases(
             context,
