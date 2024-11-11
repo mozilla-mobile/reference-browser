@@ -405,7 +405,7 @@ abstract class BaseBrowserFragment : Fragment(), UserInteractionHandler, Activit
 
         val composeView = view.findViewById<ComposeView>(R.id.compose_view)
         if (shouldUseComposeUI) {
-            composeView.visibility = View.VISIBLE
+            composeView.visibility = View.GONE
             composeView.setContent { BrowserToolbar() }
 
             val params = swipeRefresh.layoutParams as CoordinatorLayout.LayoutParams
