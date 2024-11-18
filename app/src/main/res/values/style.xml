@@ -24,4 +24,8 @@
         <item name="android:navigationBarColor">@color/evenDarker</item>
         <item name="android:windowBackground">@color/dark</item>
     </style>
+
+    <style name="AddonsActivityTheme" parent="Theme.AppCompat.Light">
+        <item name="mozac_primary_text_color">@color/photonDarkGrey90</item>
+    </style>
 </resources>
