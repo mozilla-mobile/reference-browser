@@ -4,7 +4,6 @@
 
 package org.mozilla.reference.browser
 
-import android.annotation.TargetApi
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.PendingIntent
@@ -14,6 +13,7 @@ import android.content.SharedPreferences
 import android.net.Uri
 import android.os.Build
 import android.os.Build.VERSION.SDK_INT
+import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.preference.PreferenceManager
@@ -178,7 +178,7 @@ object NotificationManager {
         return channelId
     }
 
-    @TargetApi(Build.VERSION_CODES.O)
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun createNotificationChannelIfNeeded(
         context: Context,
         channelId: String,
