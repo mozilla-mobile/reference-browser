@@ -2,7 +2,7 @@
    - License, v. 2.0. If a copy of the MPL was not distributed with this
    - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
 
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <style name="AppThemeNotActionBar" parent="Theme.AppCompat.NoActionBar">
         <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
 
@@ -12,6 +12,7 @@
 
         <item name="android:navigationBarColor">@color/evenDarker</item>
         <item name="android:windowBackground">@color/dark</item>
+        <item name="android:windowOptOutEdgeToEdgeEnforcement" tools:targetApi="35">true</item>
     </style>
 
     <style name="AppTheme" parent="Theme.AppCompat">
@@ -27,5 +28,6 @@
 
     <style name="AddonsActivityTheme" parent="Theme.AppCompat.Light">
         <item name="mozac_primary_text_color">@color/photonDarkGrey90</item>
+        <item name="android:windowOptOutEdgeToEdgeEnforcement" tools:targetApi="35">true</item>
     </style>
 </resources>
