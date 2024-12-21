@@ -10,7 +10,19 @@ import mozilla.components.feature.autofill.AutofillConfiguration
 import mozilla.components.feature.autofill.ui.AbstractAutofillConfirmActivity
 import org.mozilla.reference.browser.ext.components
 
+/**
+ * [AutofillConfirmActivity] is an activity that confirms autofill actions, part of
+ * the Android Autofill framework. It extends [AbstractAutofillConfirmActivity] and provides
+ * a configuration to the autofill system.
+ *
+ * This activity is only available for devices running Android O (API level 26) or above.
+ */
 @RequiresApi(Build.VERSION_CODES.O)
 class AutofillConfirmActivity : AbstractAutofillConfirmActivity() {
+    /**
+     * The [AutofillConfiguration] for this activity, retrieved lazily from the
+     * application's components. This configuration defines how autofill should behave
+     * and what data it should use.
+     */
     override val configuration: AutofillConfiguration by lazy { components.autofillConfiguration }
 }
