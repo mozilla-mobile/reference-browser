@@ -25,6 +25,7 @@ import mozilla.components.support.webextensions.WebExtensionPopupObserver
 import org.mozilla.reference.browser.addons.WebExtensionActionPopupActivity
 import org.mozilla.reference.browser.browser.BrowserFragment
 import org.mozilla.reference.browser.browser.CrashIntegration
+import org.mozilla.reference.browser.browser.MainContainerFragment
 import org.mozilla.reference.browser.ext.components
 import org.mozilla.reference.browser.ext.isCrashReportActive
 
@@ -32,6 +33,8 @@ import org.mozilla.reference.browser.ext.isCrashReportActive
  * Activity that holds the [BrowserFragment].
  */
 open class BrowserActivity : AppCompatActivity() {
+
+    private val logger = Logger("BrowserActivity")
 
     private lateinit var crashIntegration: CrashIntegration
 
@@ -46,7 +49,7 @@ open class BrowserActivity : AppCompatActivity() {
      * Returns a new instance of [BrowserFragment] to display.
      */
     open fun createBrowserFragment(sessionId: String?): Fragment =
-        BrowserFragment.create(sessionId)
+        MainContainerFragment.create(sessionId)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -75,7 +78,9 @@ open class BrowserActivity : AppCompatActivity() {
     @Suppress("MissingSuperCall", "OVERRIDE_DEPRECATION")
     override fun onBackPressed() {
         supportFragmentManager.fragments.forEach {
+            logger.debug("onBackPressed fragment: $it")
             if (it is UserInteractionHandler && it.onBackPressed()) {
+                logger.debug("onBackPressed UserInteractionHandler: $it")
                 return
             }
         }

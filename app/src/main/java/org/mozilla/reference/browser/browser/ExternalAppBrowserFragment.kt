@@ -6,7 +6,10 @@ package org.mozilla.reference.browser.browser
 
 import android.net.Uri
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
+import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.view.isVisible
 import mozilla.components.browser.toolbar.BrowserToolbar
 import mozilla.components.concept.engine.EngineView
@@ -21,6 +24,8 @@ import mozilla.components.support.base.feature.UserInteractionHandler
 import mozilla.components.support.base.feature.ViewBoundFeatureWrapper
 import mozilla.components.support.ktx.android.arch.lifecycle.addObservers
 import mozilla.components.support.utils.ext.getParcelableArrayListCompat
+import mozilla.components.ui.widgets.behavior.EngineViewScrollingBehavior
+import mozilla.components.ui.widgets.behavior.ViewPosition
 import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.ext.requireComponents
 
@@ -31,8 +36,7 @@ class ExternalAppBrowserFragment : BaseBrowserFragment(), UserInteractionHandler
     private val customTabsIntegration = ViewBoundFeatureWrapper<CustomTabsIntegration>()
     private val windowFeature = ViewBoundFeatureWrapper<CustomTabWindowFeature>()
     private val hideToolbarFeature = ViewBoundFeatureWrapper<WebAppHideToolbarFeature>()
-
-    override val shouldUseComposeUI: Boolean = false
+    private val toolbarIntegration = ViewBoundFeatureWrapper<ToolbarIntegration>()
 
     private val toolbar: BrowserToolbar
         get() = requireView().findViewById(R.id.toolbar)
@@ -44,11 +48,39 @@ class ExternalAppBrowserFragment : BaseBrowserFragment(), UserInteractionHandler
     private val trustedScopes: List<Uri>
         get() = arguments?.getParcelableArrayListCompat(ARG_TRUSTED_SCOPES, Uri::class.java).orEmpty()
 
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?,
+    ): View = inflater.inflate(R.layout.fragment_external_browser, container, false)
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         val manifest = this.manifest
         val sessionId = this.sessionId
+
+        (toolbar.layoutParams as? CoordinatorLayout.LayoutParams)?.apply {
+            behavior = EngineViewScrollingBehavior(
+                view.context,
+                null,
+                ViewPosition.BOTTOM,
+            )
+        }
+        toolbarIntegration.set(
+            feature = ToolbarIntegration(
+                requireContext(),
+                toolbar,
+                requireComponents.core.historyStorage,
+                requireComponents.core.store,
+                requireComponents.useCases.sessionUseCases,
+                requireComponents.useCases.tabsUseCases,
+                requireComponents.useCases.webAppUseCases,
+                sessionId,
+            ),
+            owner = this,
+            view = view,
+        )
 
         customTabsIntegration.set(
             feature = CustomTabsIntegration(

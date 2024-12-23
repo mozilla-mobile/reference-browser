@@ -22,8 +22,8 @@ import mozilla.components.browser.tabstray.ViewHolderProvider
 import mozilla.components.browser.thumbnails.loader.ThumbnailLoader
 import mozilla.components.feature.tabs.tabstray.TabsFeature
 import mozilla.components.support.base.feature.UserInteractionHandler
+import org.mozilla.reference.browser.browser.MainContainerFragment
 import org.mozilla.reference.browser.R
-import org.mozilla.reference.browser.browser.BrowserFragment
 import org.mozilla.reference.browser.ext.components
 import org.mozilla.reference.browser.ext.requireComponents
 
@@ -73,7 +73,7 @@ class TabsTrayFragment : Fragment(), UserInteractionHandler {
 
     private fun closeTabsTray() {
         activity?.supportFragmentManager?.beginTransaction()?.apply {
-            replace(R.id.container, BrowserFragment.create())
+            replace(R.id.container, MainContainerFragment.create())
             commit()
         }
     }

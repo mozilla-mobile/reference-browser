@@ -2,14 +2,14 @@
 <!-- This Source Code Form is subject to the terms of the Mozilla Public
    - License, v. 2.0. If a copy of the MPL was not distributed with this
    - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
-<FrameLayout
+<androidx.coordinatorlayout.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:mozac="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".BrowserActivity">
+    tools:context=".ExternalAppBrowserActivity">
 
     <mozilla.components.ui.widgets.VerticalSwipeRefreshLayout
         android:id="@+id/swipeRefresh"
@@ -34,4 +34,14 @@
         android:visibility="gone"
         app:layout_behavior="org.mozilla.reference.browser.browser.FindInPageBarBehavior" />
 
-</FrameLayout>
+    <mozilla.components.browser.toolbar.BrowserToolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/browser_toolbar_height"
+        android:layout_gravity="bottom"
+        android:background="@color/toolbarBackgroundColor"
+        mozac:browserToolbarTrackingProtectionAndSecurityIndicatorSeparatorColor="@color/photonWhite"
+        mozac:browserToolbarSuggestionForegroundColor="@color/toolbarSuggestionForeground"
+        mozac:browserToolbarSuggestionBackgroundColor="@color/toolbarSuggestionBackground" />
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
