@@ -4,7 +4,7 @@
 
 package org.mozilla.reference.browser
 
-import android.net.Uri
+import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
 import mozilla.components.concept.engine.manifest.WebAppManifest
 import mozilla.components.feature.pwa.ext.getWebAppManifest
@@ -21,7 +21,7 @@ class ExternalAppBrowserActivity : BrowserActivity() {
             val scope = when (manifest?.display) {
                 WebAppManifest.DisplayMode.FULLSCREEN,
                 WebAppManifest.DisplayMode.STANDALONE,
-                -> Uri.parse(manifest.scope ?: manifest.startUrl)
+                -> (manifest.scope ?: manifest.startUrl).toUri()
 
                 WebAppManifest.DisplayMode.MINIMAL_UI,
                 WebAppManifest.DisplayMode.BROWSER,
