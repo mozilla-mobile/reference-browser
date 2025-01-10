@@ -15,6 +15,7 @@ import android.os.Build.VERSION.SDK_INT
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import androidx.core.content.edit
 import androidx.core.net.toUri
 import androidx.preference.PreferenceManager
 import mozilla.components.concept.sync.Device
@@ -151,10 +152,10 @@ object NotificationManager {
         NotificationManagerCompat.from(context)
             .notify(DATA_REPORTING_TAG, DATA_REPORTING_NOTIFICATION_ID, notificationBuilder.build())
 
-        preferences.edit()
-            .putLong(PREFS_POLICY_NOTIFIED_TIME, System.currentTimeMillis())
-            .putInt(PREFS_POLICY_VERSION, DATA_REPORTING_VERSION)
-            .apply()
+        preferences.edit {
+            putLong(PREFS_POLICY_NOTIFIED_TIME, System.currentTimeMillis())
+            putInt(PREFS_POLICY_VERSION, DATA_REPORTING_VERSION)
+        }
     }
 
     private fun getNotificationChannelId(

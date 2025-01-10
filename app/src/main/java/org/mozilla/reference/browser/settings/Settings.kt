@@ -5,6 +5,7 @@
 package org.mozilla.reference.browser.settings
 
 import android.content.Context
+import androidx.core.content.edit
 import androidx.preference.PreferenceManager
 import org.mozilla.reference.browser.R
 
@@ -29,18 +30,16 @@ object Settings {
 
     fun setOverrideAmoUser(context: Context, value: String) {
         val key = context.getString(R.string.pref_key_override_amo_user)
-        PreferenceManager.getDefaultSharedPreferences(context)
-            .edit()
-            .putString(key, value)
-            .apply()
+        PreferenceManager.getDefaultSharedPreferences(context).edit {
+            putString(key, value)
+        }
     }
 
     fun setOverrideAmoCollection(context: Context, value: String) {
         val key = context.getString(R.string.pref_key_override_amo_collection)
-        PreferenceManager.getDefaultSharedPreferences(context)
-            .edit()
-            .putString(key, value)
-            .apply()
+        PreferenceManager.getDefaultSharedPreferences(context).edit {
+            putString(key, value)
+        }
     }
 
     fun isAmoCollectionOverrideConfigured(context: Context): Boolean {
