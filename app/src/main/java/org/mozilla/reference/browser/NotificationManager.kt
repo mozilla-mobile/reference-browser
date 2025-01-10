@@ -10,12 +10,12 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
-import android.net.Uri
 import android.os.Build
 import android.os.Build.VERSION.SDK_INT
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import androidx.core.net.toUri
 import androidx.preference.PreferenceManager
 import mozilla.components.concept.sync.Device
 import mozilla.components.concept.sync.TabData
@@ -53,7 +53,7 @@ object NotificationManager {
         logger.debug("Showing ${tabs.size} tab(s) received from deviceID=${device?.id}")
 
         tabs.forEach { tab ->
-            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(tab.url)).apply {
+            val intent = Intent(Intent.ACTION_VIEW, tab.url.toUri()).apply {
                 flags = Intent.FLAG_ACTIVITY_NEW_TASK
             }
             val flags = if (SDK_INT >= Build.VERSION_CODES.S) {
@@ -123,7 +123,7 @@ object NotificationManager {
         val notificationSummary = resources.getString(R.string.datareporting_notification_summary)
 
         val intent = Intent(Intent.ACTION_VIEW).apply {
-            data = Uri.parse(PRIVACY_NOTICE_URL)
+            data = PRIVACY_NOTICE_URL.toUri()
             setPackage(context.packageName)
         }
 

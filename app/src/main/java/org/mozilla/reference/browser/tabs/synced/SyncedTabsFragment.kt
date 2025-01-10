@@ -5,11 +5,11 @@
 package org.mozilla.reference.browser.tabs.synced
 
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
 import mozilla.components.browser.storage.sync.Tab
 import mozilla.components.feature.syncedtabs.SyncedTabsFeature
@@ -49,7 +49,7 @@ class SyncedTabsFragment : Fragment() {
     }
 
     private fun handleTabClicked(tab: Tab) {
-        val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(tab.active().url))
+        val browserIntent = Intent(Intent.ACTION_VIEW, tab.active().url.toUri())
         requireContext().startActivity(browserIntent)
     }
 }

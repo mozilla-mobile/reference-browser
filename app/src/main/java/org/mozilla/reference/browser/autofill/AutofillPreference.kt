@@ -6,13 +6,13 @@ package org.mozilla.reference.browser.autofill
 
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
 import android.os.Build
 import android.provider.Settings
 import android.util.AttributeSet
 import android.view.autofill.AutofillManager
 import androidx.annotation.RequiresApi
 import androidx.appcompat.widget.SwitchCompat
+import androidx.core.net.toUri
 import androidx.preference.Preference
 import androidx.preference.PreferenceViewHolder
 import org.mozilla.reference.browser.R
@@ -45,8 +45,9 @@ class AutofillPreference @JvmOverloads constructor(
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onClick() {
-        val intent = Intent(Settings.ACTION_REQUEST_SET_AUTOFILL_SERVICE)
-        intent.data = Uri.parse("package:${context.packageName}")
+        val intent = Intent(Settings.ACTION_REQUEST_SET_AUTOFILL_SERVICE).apply {
+            data = "package:${context.packageName}".toUri()
+        }
         context.startActivity(intent)
     }
 

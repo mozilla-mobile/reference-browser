@@ -5,13 +5,13 @@
 package org.mozilla.reference.browser.addons
 
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.text.method.LinkMovementMethod
 import android.view.View
 import android.widget.RatingBar
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.net.toUri
 import androidx.core.text.HtmlCompat
 import mozilla.components.feature.addons.Addon
 import mozilla.components.feature.addons.ui.translateDescription
@@ -66,8 +66,7 @@ class AddonDetailsActivity : AppCompatActivity() {
 
     private fun bindWebsite(addon: Addon) {
         findViewById<View>(R.id.home_page_text).setOnClickListener {
-            val intent =
-                Intent(Intent.ACTION_VIEW).setData(Uri.parse(addon.homepageUrl))
+            val intent = Intent(Intent.ACTION_VIEW, addon.homepageUrl.toUri())
             startActivity(intent)
         }
     }
