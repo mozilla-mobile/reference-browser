@@ -1,6 +1,6 @@
 [versions]
 # Android Components
-android-components = "136.0.20250115042832"
+android-components = "136.0.20250115215720"
 
 # AGP
 android-gradle-plugin = "8.8.0"
@@ -25,7 +25,7 @@ androidx-core = "1.15.0"
 androidx-fragment = "1.8.5"
 androidx-lifecycle = "2.8.7"
 androidx-preference = "1.2.1"
-androidx-recyclerview = "1.3.2"
+androidx-recyclerview = "1.4.0"
 androidx-swiperefreshlayout = "1.1.0"
 androidx-work = "2.10.0"
 
