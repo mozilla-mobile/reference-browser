@@ -70,7 +70,6 @@ class Analytics(private val context: Context) {
             nonFatalCrashIntent = PendingIntent
                 .getBroadcast(context, 0, Intent(BrowserApplication.NON_FATAL_CRASH_BROADCAST), flags),
             enabled = true,
-            notificationsDelegate = context.components.notificationsDelegate,
         )
     }
 }

@@ -1,6 +1,6 @@
 [versions]
 # Android Components
-android-components = "136.0.20250128161837"
+android-components = "136.0.20250203095240"
 
 # AGP
 android-gradle-plugin = "8.8.0"
@@ -18,7 +18,7 @@ androidx-annotation = "1.9.1"
 androidx-appcompat = "1.7.0"
 androidx-browser = "1.8.0"
 androidx-cardview = "1.0.0"
-androidx-composeBom = "2024.12.01"
+androidx-composeBom = "2025.01.01"
 androidx-constraintlayout = "2.2.0"
 androidx-coordinatorlayout = "1.2.0"
 androidx-core = "1.15.0"
@@ -38,7 +38,7 @@ androidx-test-runner = "1.6.2"
 androidx-test-uiautomator = "2.3.0"
 
 # Third Party Linting & Static Code Analysis
-dependency-analysis = "2.6.0"
+dependency-analysis = "2.7.0"
 detekt = "1.23.7"
 ktlint = "0.50.0"
 
