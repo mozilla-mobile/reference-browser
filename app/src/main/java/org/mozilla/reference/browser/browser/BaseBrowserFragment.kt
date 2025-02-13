@@ -14,14 +14,11 @@ import android.view.ViewGroup
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.CallSuper
-import androidx.compose.ui.platform.ComposeView
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.fragment.app.Fragment
 import androidx.preference.PreferenceManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import mozilla.components.browser.state.selector.selectedTab
-import mozilla.components.browser.toolbar.BrowserToolbar
-import mozilla.components.compose.browser.toolbar.BrowserToolbar
 import mozilla.components.concept.engine.EngineView
 import mozilla.components.feature.app.links.AppLinksFeature
 import mozilla.components.feature.downloads.DownloadsFeature
@@ -45,7 +42,6 @@ import mozilla.components.support.base.log.logger.Logger
 import mozilla.components.support.ktx.android.view.enterImmersiveMode
 import mozilla.components.support.ktx.android.view.exitImmersiveMode
 import mozilla.components.ui.widgets.behavior.EngineViewClippingBehavior
-import mozilla.components.ui.widgets.behavior.EngineViewScrollingBehavior
 import org.mozilla.reference.browser.BuildConfig
 import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.addons.WebExtensionPromptFeature
@@ -55,7 +51,6 @@ import org.mozilla.reference.browser.ext.requireComponents
 import org.mozilla.reference.browser.pip.PictureInPictureIntegration
 import org.mozilla.reference.browser.tabs.LastTabFeature
 import mozilla.components.ui.widgets.behavior.ToolbarPosition as MozacEngineBehaviorToolbarPosition
-import mozilla.components.ui.widgets.behavior.ViewPosition as MozacToolbarBehaviorToolbarPosition
 
 /**
  * Base fragment extended by [BrowserFragment] and [ExternalAppBrowserFragment].
@@ -64,7 +59,6 @@ import mozilla.components.ui.widgets.behavior.ViewPosition as MozacToolbarBehavi
  */
 abstract class BaseBrowserFragment : Fragment(), UserInteractionHandler, ActivityResultHandler {
     private val sessionFeature = ViewBoundFeatureWrapper<SessionFeature>()
-    private val toolbarIntegration = ViewBoundFeatureWrapper<ToolbarIntegration>()
     private val contextMenuIntegration = ViewBoundFeatureWrapper<ContextMenuIntegration>()
     private val downloadsFeature = ViewBoundFeatureWrapper<DownloadsFeature>()
     private val shareDownloadsFeature = ViewBoundFeatureWrapper<ShareDownloadFeature>()
@@ -84,9 +78,7 @@ abstract class BaseBrowserFragment : Fragment(), UserInteractionHandler, Activit
 
     private val engineView: EngineView
         get() = requireView().findViewById<View>(R.id.engineView) as EngineView
-    private val toolbar: BrowserToolbar
-        get() = requireView().findViewById(R.id.toolbar)
-    private val findInPageBar: FindInPageBar
+    protected val findInPageBar: FindInPageBar
         get() = requireView().findViewById(R.id.findInPageBar)
     private val swipeRefresh: SwipeRefreshLayout
         get() = requireView().findViewById(R.id.swipeRefresh)
@@ -94,8 +86,7 @@ abstract class BaseBrowserFragment : Fragment(), UserInteractionHandler, Activit
     private val backButtonHandler: List<ViewBoundFeatureWrapper<*>> = listOf(
         fullScreenFeature,
         findInPageIntegration,
-        toolbarIntegration,
-
+//        toolbarIntegration,
         sessionFeature,
         lastTabFeature,
     )
@@ -113,6 +104,8 @@ abstract class BaseBrowserFragment : Fragment(), UserInteractionHandler, Activit
     private lateinit var requestDownloadPermissionsLauncher: ActivityResultLauncher<Array<String>>
     private lateinit var requestSitePermissionsLauncher: ActivityResultLauncher<Array<String>>
     private lateinit var requestPromptsPermissionsLauncher: ActivityResultLauncher<Array<String>>
+
+    private val logger = Logger("BaseBrowserFragment")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -153,16 +146,6 @@ abstract class BaseBrowserFragment : Fragment(), UserInteractionHandler, Activit
             }
     }
 
-    final override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?,
-    ): View {
-        return inflater.inflate(R.layout.fragment_browser, container, false)
-    }
-
-    abstract val shouldUseComposeUI: Boolean
-
     @CallSuper
     @Suppress("LongMethod")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -174,28 +157,6 @@ abstract class BaseBrowserFragment : Fragment(), UserInteractionHandler, Activit
                 requireComponents.useCases.sessionUseCases.goBack,
                 requireComponents.useCases.sessionUseCases.goForward,
                 engineView,
-                sessionId,
-            ),
-            owner = this,
-            view = view,
-        )
-
-        (toolbar.layoutParams as? CoordinatorLayout.LayoutParams)?.apply {
-            behavior = EngineViewScrollingBehavior(
-                view.context,
-                null,
-                MozacToolbarBehaviorToolbarPosition.BOTTOM,
-            )
-        }
-        toolbarIntegration.set(
-            feature = ToolbarIntegration(
-                requireContext(),
-                toolbar,
-                requireComponents.core.historyStorage,
-                requireComponents.core.store,
-                requireComponents.useCases.sessionUseCases,
-                requireComponents.useCases.tabsUseCases,
-                requireComponents.useCases.webAppUseCases,
                 sessionId,
             ),
             owner = this,
@@ -357,7 +318,7 @@ abstract class BaseBrowserFragment : Fragment(), UserInteractionHandler, Activit
                 context,
                 null,
                 swipeRefresh,
-                toolbar.height,
+                resources.getDimensionPixelSize(R.dimen.browser_toolbar_height),
                 MozacEngineBehaviorToolbarPosition.BOTTOM,
             )
         }
@@ -402,28 +363,21 @@ abstract class BaseBrowserFragment : Fragment(), UserInteractionHandler, Activit
                 view = view,
             )
         }
-
-        val composeView = view.findViewById<ComposeView>(R.id.compose_view)
-        if (shouldUseComposeUI) {
-            composeView.visibility = View.VISIBLE
-            composeView.setContent { BrowserToolbar() }
-
-            val params = swipeRefresh.layoutParams as CoordinatorLayout.LayoutParams
-            params.topMargin = resources.getDimensionPixelSize(R.dimen.browser_toolbar_height)
-            swipeRefresh.layoutParams = params
-        }
     }
 
     private fun fullScreenChanged(enabled: Boolean) {
         if (enabled) {
             activity?.enterImmersiveMode()
-            toolbar.visibility = View.GONE
             engineView.setDynamicToolbarMaxHeight(0)
         } else {
             activity?.exitImmersiveMode()
-            toolbar.visibility = View.VISIBLE
             engineView.setDynamicToolbarMaxHeight(resources.getDimensionPixelSize(R.dimen.browser_toolbar_height))
         }
+        parentFragment?.parentFragmentManager
+            ?.setFragmentResult(
+                BROWSER_TO_MAIN_FRAGMENT_RESULT_KEY,
+                Bundle().apply { putBoolean(FULL_SCREEN_MODE_CHANGED, enabled) }
+            )
     }
 
     private fun viewportFitChanged(viewportFit: Int) {
@@ -434,7 +388,10 @@ abstract class BaseBrowserFragment : Fragment(), UserInteractionHandler, Activit
 
     @CallSuper
     override fun onBackPressed(): Boolean {
-        return backButtonHandler.any { it.onBackPressed() }
+        logger.info("onBackPressed")
+        return backButtonHandler.any { it.onBackPressed() }.also {
+            logger.info("Was it handled by back button handlers? $it")
+        }
     }
 
     final override fun onHomePressed(): Boolean {
@@ -452,8 +409,6 @@ abstract class BaseBrowserFragment : Fragment(), UserInteractionHandler, Activit
     }
 
     companion object {
-        private const val SESSION_ID = "session_id"
-
         @JvmStatic
         protected fun Bundle.putSessionId(sessionId: String?) {
             putString(SESSION_ID, sessionId)
@@ -461,7 +416,7 @@ abstract class BaseBrowserFragment : Fragment(), UserInteractionHandler, Activit
     }
 
     override fun onActivityResult(requestCode: Int, data: Intent?, resultCode: Int): Boolean {
-        Logger.info(
+        logger.info(
             "Fragment onActivityResult received with " +
                 "requestCode: $requestCode, resultCode: $resultCode, data: $data",
         )
