@@ -102,6 +102,7 @@ class WebExtensionPromptFeature(
             addon = addon,
             promptRequest = promptRequest,
             permissions = promptRequest.permissions,
+            origins = promptRequest.origins,
         )
     }
 
@@ -155,12 +156,14 @@ class WebExtensionPromptFeature(
         addon: Addon,
         promptRequest: WebExtensionPromptRequest.AfterInstallation.Permissions,
         permissions: List<String> = emptyList(),
+        origins: List<String> = emptyList(),
         forOptionalPermissions: Boolean = false,
     ) {
         if (!isInstallationInProgress && !hasExistingPermissionDialogFragment()) {
             val dialog = PermissionsDialogFragment.newInstance(
                 addon = addon,
                 permissions = permissions,
+                origins = origins,
                 forOptionalPermissions = forOptionalPermissions,
                 onPositiveButtonClicked = { _, privateBrowsingAllowed ->
                     handlePermissions(
