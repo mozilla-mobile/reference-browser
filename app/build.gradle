@@ -7,6 +7,7 @@ plugins {
     alias libs.plugins.compose.compiler
     alias libs.plugins.dependency.analysis
     alias libs.plugins.kotlin.android
+    alias libs.plugins.androidx.navigation.safeargs
 }
 
 apply from: "$project.rootDir/automation/gradle/versionCode.gradle"
@@ -251,6 +252,8 @@ dependencies {
     implementation libs.androidx.recyclerview
     implementation libs.androidx.swiperefreshlayout
     implementation libs.androidx.work.runtime.ktx
+    implementation libs.androidx.navigation.fragment
+    implementation libs.androidx.navigation.ui
 
     implementation platform(libs.androidx.compose.bom)
     implementation libs.androidx.compose.foundation
