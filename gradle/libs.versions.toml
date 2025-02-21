@@ -39,7 +39,7 @@ androidx-test-uiautomator = "2.3.0"
 
 # Third Party Linting & Static Code Analysis
 dependency-analysis = "2.8.0"
-detekt = "1.23.7"
+detekt = "1.23.8"
 ktlint = "0.50.0"
 
 # Third Party Testing
