@@ -19,7 +19,7 @@ android {
     defaultConfig {
         applicationId "org.mozilla.reference.browser"
         minSdkVersion Config.minSdkVersion
-        compileSdk Config.compileSdkVersion
+        compileSdk = Config.compileSdkVersion
         targetSdkVersion Config.targetSdkVersion
         versionCode 1
         versionName Config.generateDebugVersionName()
@@ -43,8 +43,8 @@ android {
     }
 
     buildFeatures {
-        buildConfig true
-        compose true
+        buildConfig = true
+        compose = true
     }
 
     buildTypes {
@@ -68,12 +68,12 @@ android {
     }
 
     testOptions {
-        execution 'ANDROIDX_TEST_ORCHESTRATOR'
+        execution = 'ANDROIDX_TEST_ORCHESTRATOR'
         animationsDisabled = true
     }
 
     lintOptions {
-        lintConfig file("lint.xml")
+        lintConfig = file("lint.xml")
         baseline file("lint-baseline.xml")
         disable 'GradleDependency', 'AndroidGradlePluginVersion'
     }
@@ -84,7 +84,7 @@ android {
 
     splits {
         abi {
-            enable true
+            enable = true
 
             reset()
 
@@ -92,7 +92,7 @@ android {
         }
     }
 
-    namespace 'org.mozilla.reference.browser'
+    namespace = 'org.mozilla.reference.browser'
 }
 
 kotlin {

@@ -47,8 +47,8 @@ allprojects {
         }
 
         maven {
-            name "Mozilla Nightly"
-            url "https://nightly.maven.mozilla.org/maven2"
+            name = "Mozilla Nightly"
+            url = "https://nightly.maven.mozilla.org/maven2"
 
             content {
                 // Always fetch components from the snapshots repository
@@ -57,8 +57,8 @@ allprojects {
         }
 
         maven {
-            name "Mozilla"
-            url "https://maven.mozilla.org/maven2"
+            name = "Mozilla"
+            url = "https://maven.mozilla.org/maven2"
 
             content {
                 // Never fetch components from here. We always want to use snapshots.
@@ -99,8 +99,8 @@ subprojects {
                 }
 
                 lintOptions {
-                    warningsAsErrors true
-                    abortOnError true
+                    warningsAsErrors = true
+                    abortOnError = true
                 }
             }
 
