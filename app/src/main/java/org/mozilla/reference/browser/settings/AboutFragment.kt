@@ -24,6 +24,13 @@ import org.mozilla.geckoview.BuildConfig.MOZ_APP_BUILDID
 import org.mozilla.geckoview.BuildConfig.MOZ_APP_VERSION
 import org.mozilla.reference.browser.R
 
+/**
+ * [AboutFragment] is a Fragment that displays the About page of the application.
+ *
+ * This fragment inflates a layout containing details about the application, including
+ * the app name, version information, and additional metadata. The user can view and copy
+ * version information to the clipboard.
+ */
 class AboutFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_about, container, false)
