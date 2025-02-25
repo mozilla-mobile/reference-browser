@@ -80,7 +80,6 @@
     <ID>UndocumentedPublicFunction:ExternalAppBrowserFragment.kt$ExternalAppBrowserFragment.Companion$fun create( sessionId: String, manifest: WebAppManifest?, trustedScopes: List&lt;Uri&gt;, )</ID>
     <ID>UndocumentedPublicFunction:Long.kt$@Suppress("MagicNumber") fun Long.timeSince(context: Context, time: Long): String</ID>
     <ID>UndocumentedPublicFunction:NotificationManager.kt$NotificationManager$fun checkAndNotifyPolicy(context: Context)</ID>
-    <ID>UndocumentedPublicFunction:NotificationManager.kt$NotificationManager$fun showReceivedTabs(context: Context, device: Device?, tabs: List&lt;TabData&gt;)</ID>
     <ID>UndocumentedPublicFunction:PictureInPictureIntegration.kt$PictureInPictureIntegration$fun onHomePressed()</ID>
     <ID>UndocumentedPublicFunction:Settings.kt$Settings$fun getOverrideAmoCollection(context: Context): String</ID>
     <ID>UndocumentedPublicFunction:Settings.kt$Settings$fun getOverrideAmoUser(context: Context): String</ID>
