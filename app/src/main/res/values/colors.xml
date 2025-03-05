@@ -11,8 +11,6 @@
 
     <color name="toolbarBackgroundColor">@color/evenDarker</color>
     <color name="toolbarUrlBoxColor">#333333</color>
-    <color name="toolbarSuggestionForeground">@color/dark</color>
-    <color name="toolbarSuggestionBackground">@color/accent</color>
 
     <color name="icons">#ffffffff</color>
 
