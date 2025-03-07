@@ -121,7 +121,7 @@ fun customTabScreen(interact: CustomTabRobot.() -> Unit): CustomTabRobot.Transit
 
 private fun closeButton() = onView(withId(R.id.mozac_browser_toolbar_navigation_actions))
 private fun trackingProtectionIcon() = onView(withId(R.id.mozac_browser_toolbar_tracking_protection_indicator))
-private fun securityIndicator() = onView(withId(R.id.mozac_browser_toolbar_security_indicator))
+private fun securityIndicator() = onView(withId(R.id.mozac_browser_toolbar_site_info_indicator))
 private fun menuButton() = onView(withId(R.id.mozac_browser_toolbar_menu))
 private fun actionButton() = onView(withContentDescription("Share link"))
 private fun forwardButton() = onView(withContentDescription("Forward"))
