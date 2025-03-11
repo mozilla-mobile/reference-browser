@@ -78,10 +78,6 @@ android {
         disable 'GradleDependency', 'AndroidGradlePluginVersion'
     }
 
-    packagingOptions {
-        exclude 'META-INF/atomicfu.kotlin_module'
-    }
-
     splits {
         abi {
             enable = true
