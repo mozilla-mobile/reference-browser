@@ -1,13 +1,13 @@
 [versions]
 # Android Components
-android-components = "139.0.20250331215235"
+android-components = "139.0.20250408095024"
 
 # AGP
 android-gradle-plugin = "8.9.1"
 
 # Kotlin
 kotlin = "2.1.20"
-kotlinx-coroutines = "1.10.0"
+kotlinx-coroutines = "1.10.2"
 
 # Google
 material = "1.12.0"

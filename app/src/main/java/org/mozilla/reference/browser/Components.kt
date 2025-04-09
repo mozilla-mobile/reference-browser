@@ -8,6 +8,8 @@ import android.annotation.SuppressLint
 import android.content.Context
 import androidx.core.app.NotificationManagerCompat
 import mozilla.components.feature.autofill.AutofillConfiguration
+import mozilla.components.feature.downloads.DefaultFileSizeFormatter
+import mozilla.components.feature.downloads.FileSizeFormatter
 import mozilla.components.support.base.android.NotificationsDelegate
 import org.mozilla.reference.browser.autofill.AutofillConfirmActivity
 import org.mozilla.reference.browser.autofill.AutofillSearchActivity
@@ -78,4 +80,6 @@ class Components(private val context: Context) {
             notificationManagerCompat,
         )
     }
+
+    val fileSizeFormatter: FileSizeFormatter by lazy { DefaultFileSizeFormatter(context.applicationContext) }
 }
