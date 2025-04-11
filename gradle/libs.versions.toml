@@ -21,7 +21,7 @@ androidx-cardview = "1.0.0"
 androidx-composeBom = "2025.02.00"
 androidx-constraintlayout = "2.2.1"
 androidx-coordinatorlayout = "1.3.0"
-androidx-core = "1.15.0"
+androidx-core = "1.16.0"
 androidx-fragment = "1.8.6"
 androidx-lifecycle = "2.8.7"
 androidx-preference = "1.2.1"
@@ -40,6 +40,7 @@ androidx-test-uiautomator = "2.3.0"
 # Third Party Linting & Static Code Analysis
 dependency-analysis = "2.15.0"
 detekt = "1.23.8"
+jspecify = "1.0.0"
 ktlint = "0.50.0"
 
 # Third Party Testing
@@ -95,6 +96,7 @@ androidx-test-runner = { group = "androidx.test", name = "runner", version.ref =
 androidx-test-uiautomator = { group = "androidx.test.uiautomator", name = "uiautomator", version.ref = "androidx-test-uiautomator" }
 
 # Third Party Linting & Static Code Analysis
+jspecify = { group = "org.jspecify", name = "jspecify", version.ref = "jspecify" }
 ktlint = { module = "com.pinterest:ktlint", version.ref = "ktlint" }
 
 # Third Party Testing
