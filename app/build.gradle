@@ -258,7 +258,7 @@ dependencies {
     implementation libs.androidx.compose.ui.tooling
 
     implementation libs.google.material
-
+    implementation libs.jspecify
     implementation libs.kotlinx.coroutines.core
 
     implementation libs.mozilla.browser.domains
