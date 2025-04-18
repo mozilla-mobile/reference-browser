@@ -36,8 +36,20 @@ import org.mozilla.reference.browser.ext.getPreferenceKey
 import org.mozilla.reference.browser.ext.requireComponents
 import org.mozilla.reference.browser.sync.BrowserFxAEntryPoint
 
+/**
+ * [AccountSettingsFragment] is a fragment that displays and manages the account settings for
+ * the user's Firefox Account (FxA). It handles preferences related to syncing, sign-out, and account management.
+ *
+ * The fragment provides options to manually trigger a sync, manage sync engines (like History, Passwords, Tabs),
+ * and shows the last time the account was synced. It also allows the user to manage their Firefox Account using a
+ * custom tab.
+ */
 class AccountSettingsFragment : PreferenceFragmentCompat() {
     private val syncStatusObserver = object : SyncStatusObserver {
+        /**
+         * Called when the sync operation starts. Disables the "Sync Now" preference and updates its title
+         * to indicate that a sync is in progress.
+         */
         override fun onStarted() {
             CoroutineScope(Dispatchers.Main).launch {
                 val pref = findPreference<Preference>(requireContext().getPreferenceKey(pref_key_sync_now))
@@ -47,7 +59,10 @@ class AccountSettingsFragment : PreferenceFragmentCompat() {
             }
         }
 
-        // Sync stopped successfully.
+        /**
+         * Called when the sync operation successfully completes. Re-enables the "Sync Now" preference and
+         * updates its title and summary to reflect the last sync time.
+         */
         override fun onIdle() {
             CoroutineScope(Dispatchers.Main).launch {
                 val pref = findPreference<Preference>(requireContext().getPreferenceKey(pref_key_sync_now))
@@ -58,7 +73,10 @@ class AccountSettingsFragment : PreferenceFragmentCompat() {
             }
         }
 
-        // Sync stopped after encountering a problem.
+        /**
+         * Called when the sync operation encounters an error. Re-enables the "Sync Now" preference and updates
+         * its summary to reflect the sync failure.
+         */
         override fun onError(error: Exception?) {
             CoroutineScope(Dispatchers.Main).launch {
                 val pref = findPreference<Preference>(requireContext().getPreferenceKey(pref_key_sync_now))
@@ -69,6 +87,12 @@ class AccountSettingsFragment : PreferenceFragmentCompat() {
         }
     }
 
+    /**
+     * Initializes the preferences from the XML resource and sets up listeners for the sync-related preferences.
+     *
+     * @param savedInstanceState The saved instance state of the fragment.
+     * @param rootKey If non-null, this preference fragment should be rooted at the preference with this key.
+     */
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.account_preferences, rootKey)
 
@@ -111,6 +135,13 @@ class AccountSettingsFragment : PreferenceFragmentCompat() {
         )
     }
 
+    /**
+     * Updates the "Last Synced" preference to show the most recent sync time or failure message.
+     *
+     * @param context The context to access resources and settings.
+     * @param pref The preference to update the summary for, representing the sync status.
+     * @param failed A boolean indicating whether the last sync attempt failed.
+     */
     fun updateLastSyncedTimePref(context: Context, pref: Preference?, failed: Boolean = false) {
         val lastSyncTime = getLastSynced(context)
 
