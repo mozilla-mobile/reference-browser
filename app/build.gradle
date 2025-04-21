@@ -88,6 +88,10 @@ android {
         }
     }
 
+    compileOptions {
+        coreLibraryDesugaringEnabled = true
+    }
+
     namespace = 'org.mozilla.reference.browser'
 }
 
@@ -230,6 +234,8 @@ project.configurations.configureEach {
 }
 
 dependencies {
+    coreLibraryDesugaring libs.desugar.jdk.libs
+
     implementation libs.androidx.activity
     implementation libs.androidx.annotation
     implementation libs.androidx.appcompat
