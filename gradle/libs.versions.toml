@@ -1,6 +1,6 @@
 [versions]
 # Android Components
-android-components = "139.0.20250418091223"
+android-components = "139.0.20250421213526"
 
 # AGP
 android-gradle-plugin = "8.9.2"
@@ -10,6 +10,7 @@ kotlin = "2.1.20"
 kotlinx-coroutines = "1.10.2"
 
 # Google
+desugar-jdk-libs = "2.1.5"
 material = "1.12.0"
 
 # AndroidX
@@ -55,6 +56,7 @@ okio = "3.4.0"
 kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "kotlinx-coroutines" }
 
 # Google
+desugar-jdk-libs = { group = "com.android.tools", name = "desugar_jdk_libs", version.ref = "desugar-jdk-libs" }
 google-material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 
 # AndroidX
