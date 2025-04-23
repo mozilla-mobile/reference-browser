@@ -84,7 +84,7 @@ class ExternalAppBrowserFragment : BaseBrowserFragment(), UserInteractionHandler
             ) { toolbarVisible ->
                 toolbar.isVisible = toolbarVisible
                 webAppToolbarShouldBeVisible = toolbarVisible
-                if (!toolbarVisible) { engineView.setDynamicToolbarMaxHeight(0) }
+                if (!toolbarVisible) engineView.setDynamicToolbarMaxHeight(0)
             },
             owner = this,
             view = toolbar,

@@ -16,7 +16,9 @@ import org.mozilla.reference.browser.R
  * This preference is used to define custom  colors for both title and summary texts.
  * Color code #777777 (placeholder_grey) is used as the fallback color for both title and summary.
  */
-class CustomColorPreference @JvmOverloads constructor(
+class CustomColorPreference
+    @JvmOverloads
+    constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyle: Int = 0,

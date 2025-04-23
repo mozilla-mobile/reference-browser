@@ -27,7 +27,7 @@ class CustomTabsTest {
     @get:Rule
     val activityTestRule = BrowserActivityTestRule()
 
-    @get: Rule
+    @get:Rule
     val intentReceiverActivityTestRule = ActivityTestRule(
         IntentReceiverActivity::class.java,
         true,

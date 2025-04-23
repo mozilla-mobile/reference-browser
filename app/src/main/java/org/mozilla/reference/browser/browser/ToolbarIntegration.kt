@@ -105,12 +105,10 @@ class ToolbarIntegration(
     private fun sessionMenuItems(sessionState: SessionState): List<MenuCandidate> {
         return listOfNotNull(
             menuToolbar(sessionState),
-
             TextMenuCandidate("Share") {
                 val url = sessionState.content.url
                 context.share(url)
             },
-
             CompoundMenuCandidate(
                 text = "Request desktop site",
                 isChecked = sessionState.content.desktopMode,
@@ -118,7 +116,6 @@ class ToolbarIntegration(
             ) { checked ->
                 sessionUseCases.requestDesktopSite.invoke(checked)
             },
-
             if (webAppUseCases.isPinningSupported()) {
                 TextMenuCandidate(
                     text = "Add to homescreen",
@@ -131,7 +128,6 @@ class ToolbarIntegration(
             } else {
                 null
             },
-
             TextMenuCandidate(
                 text = "Find in Page",
             ) {
@@ -153,19 +149,16 @@ class ToolbarIntegration(
                 intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
                 context.startActivity(intent)
             },
-
             TextMenuCandidate(text = "Synced Tabs") {
                 val intent = Intent(context, SyncedTabsActivity::class.java)
                 intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
                 context.startActivity(intent)
             },
-
             TextMenuCandidate(text = "Report issue") {
                 tabsUseCases.addTab(
                     url = "https://github.com/mozilla-mobile/reference-browser/issues/new",
                 )
             },
-
             TextMenuCandidate(text = "Settings") {
                 val intent = Intent(context, SettingsActivity::class.java)
                 intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
