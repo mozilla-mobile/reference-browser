@@ -30,7 +30,9 @@ val Context.application: BrowserApplication
 val Context.components: Components
     get() = application.components
 
-fun Context.getPreferenceKey(@StringRes resourceId: Int): String =
+fun Context.getPreferenceKey(
+    @StringRes resourceId: Int,
+): String =
     resources.getString(resourceId)
 
 /**

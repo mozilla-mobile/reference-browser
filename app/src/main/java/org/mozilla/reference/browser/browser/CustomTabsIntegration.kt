@@ -102,12 +102,10 @@ class CustomTabsIntegration(
     private fun menuItems(sessionState: SessionState?): List<MenuCandidate> {
         return listOf(
             menuToolbar(session),
-
             TextMenuCandidate("Share") {
                 val url = sessionState?.content?.url.orEmpty()
                 context.share(url)
             },
-
             CompoundMenuCandidate(
                 text = "Request desktop site",
                 isChecked = sessionState?.content?.desktopMode == true,
@@ -115,11 +113,9 @@ class CustomTabsIntegration(
             ) { checked ->
                 sessionUseCases.requestDesktopSite.invoke(checked, sessionState?.id)
             },
-
             TextMenuCandidate("Find in Page") {
                 FindInPageIntegration.launch?.invoke()
             },
-
             TextMenuCandidate("Open in Browser") {
                 // Release the session from this view so that it can immediately be rendered by a different view
                 engineView.release()

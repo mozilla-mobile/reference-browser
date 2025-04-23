@@ -21,7 +21,9 @@ import mozilla.components.feature.syncedtabs.view.SyncedTabsView.ErrorType.SYNC_
 import mozilla.components.feature.syncedtabs.view.SyncedTabsView.ErrorType.SYNC_UNAVAILABLE
 import org.mozilla.reference.browser.R
 
-class SyncedTabsLayout @JvmOverloads constructor(
+class SyncedTabsLayout
+    @JvmOverloads
+    constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0,
@@ -29,7 +31,7 @@ class SyncedTabsLayout @JvmOverloads constructor(
 
     override var listener: SyncedTabsView.Listener? = null
 
-    private val adapter = SyncedTabsAdapter() { listener?.onTabClicked(it) }
+    private val adapter = SyncedTabsAdapter { listener?.onTabClicked(it) }
 
     private val syncedTabsList: RecyclerView
         get() = findViewById(R.id.synced_tabs_list)

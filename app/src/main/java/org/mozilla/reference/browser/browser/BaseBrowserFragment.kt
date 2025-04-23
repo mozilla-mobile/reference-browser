@@ -95,7 +95,6 @@ abstract class BaseBrowserFragment : Fragment(), UserInteractionHandler, Activit
         fullScreenFeature,
         findInPageIntegration,
         toolbarIntegration,
-
         sessionFeature,
         lastTabFeature,
     )

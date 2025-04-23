@@ -22,7 +22,9 @@ import org.mozilla.reference.browser.ext.components
  * implementation to be integrated as a `View` until more parts of the app have been refactored to
  * use Jetpack Compose.
  */
-class AwesomeBarWrapper @JvmOverloads constructor(
+class AwesomeBarWrapper
+    @JvmOverloads
+    constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0,
