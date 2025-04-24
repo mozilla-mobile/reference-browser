@@ -10,7 +10,9 @@ import mozilla.components.feature.tabs.tabstray.TabsFeature
 import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.ext.components
 
-class TabsToolbar @JvmOverloads constructor(
+class TabsToolbar
+    @JvmOverloads
+    constructor(
     context: Context,
     attrs: AttributeSet? = null,
 ) : androidx.appcompat.widget.Toolbar(context, attrs) {
