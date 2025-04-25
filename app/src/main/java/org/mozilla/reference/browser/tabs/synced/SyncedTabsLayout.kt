@@ -27,7 +27,8 @@ class SyncedTabsLayout
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0,
-) : FrameLayout(context, attrs, defStyleAttr), SyncedTabsView {
+) : FrameLayout(context, attrs, defStyleAttr),
+    SyncedTabsView {
 
     override var listener: SyncedTabsView.Listener? = null
 

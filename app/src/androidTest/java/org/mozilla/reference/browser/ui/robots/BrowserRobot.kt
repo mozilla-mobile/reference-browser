@@ -93,7 +93,10 @@ class BrowserRobot {
         link.click(LONG_CLICK_DURATION)
     }
 
-    fun longClickAndCopyText(expectedText: String, selectAll: Boolean = false) {
+    fun longClickAndCopyText(
+        expectedText: String,
+        selectAll: Boolean = false,
+    ) {
         try {
             // Long click desired text
             mDevice.waitForWindowUpdate(packageName, waitingTime)

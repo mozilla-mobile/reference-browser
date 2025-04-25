@@ -23,7 +23,8 @@ class TabsPanel
     constructor(
     context: Context,
     attrs: AttributeSet? = null,
-) : TabLayout(context, attrs), TabLayout.OnTabSelectedListener {
+) : TabLayout(context, attrs),
+    TabLayout.OnTabSelectedListener {
     private var normalTab: Tab
     private var privateTab: Tab
     private var tabsFeature: TabsFeature? = null
@@ -46,7 +47,10 @@ class TabsPanel
         addTab(privateTab)
     }
 
-    fun initialize(tabsFeature: TabsFeature?, updateTabsToolbar: (isPrivate: Boolean) -> Unit) {
+    fun initialize(
+        tabsFeature: TabsFeature?,
+        updateTabsToolbar: (isPrivate: Boolean) -> Unit,
+    ) {
         this.tabsFeature = tabsFeature
         this.updateTabsToolbar = updateTabsToolbar
     }
@@ -77,8 +81,7 @@ class TabsPanel
 
     private fun Resources.getThemedDrawable(
         @DrawableRes resId: Int,
-    ) =
-        ResourcesCompat.getDrawable(resources, resId, context.theme)
+    ) = ResourcesCompat.getDrawable(resources, resId, context.theme)
 
     private fun Drawable.colorTint(
         @ColorRes color: Int,

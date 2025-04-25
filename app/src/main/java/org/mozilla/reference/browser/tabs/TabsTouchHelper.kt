@@ -9,9 +9,13 @@ import mozilla.components.browser.state.state.TabSessionState
 import mozilla.components.browser.tabstray.TabTouchCallback
 import kotlin.math.abs
 
-class TabsTouchHelper(observable: (TabSessionState) -> Unit) :
-    ItemTouchHelper(object : TabTouchCallback(observable) {
-        override fun alphaForItemSwipe(dX: Float, distanceToAlphaMin: Int): Float {
+class TabsTouchHelper(
+    observable: (TabSessionState) -> Unit,
+) : ItemTouchHelper(object : TabTouchCallback(observable) {
+        override fun alphaForItemSwipe(
+            dX: Float,
+            distanceToAlphaMin: Int,
+        ): Float {
             return 1f - 2f * abs(dX) / distanceToAlphaMin
         }
     })

@@ -23,7 +23,10 @@ class AddToHomeScreenRobot {
     }
 
     class Transition {
-        fun openHomeScreenShortcut(title: String, interact: BrowserRobot.() -> Unit): BrowserRobot.Transition {
+        fun openHomeScreenShortcut(
+            title: String,
+            interact: BrowserRobot.() -> Unit,
+        ): BrowserRobot.Transition {
             mDevice.findObject(UiSelector().textContains(title)).waitForExists(waitingTime)
             mDevice.findObject((UiSelector().textContains(title))).clickAndWaitForNewWindow(waitingTime)
 

@@ -42,7 +42,12 @@ class AddonSettingsActivity : AppCompatActivity() {
             .commit()
     }
 
-    override fun onCreateView(parent: View?, name: String, context: Context, attrs: AttributeSet): View? =
+    override fun onCreateView(
+        parent: View?,
+        name: String,
+        context: Context,
+        attrs: AttributeSet,
+    ): View? =
         when (name) {
             EngineView::class.java.name ->
                 components.core.engine
@@ -58,7 +63,11 @@ class AddonSettingsActivity : AppCompatActivity() {
         private lateinit var optionsPageUrl: String
         private lateinit var engineSession: EngineSession
 
-        override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        override fun onCreateView(
+            inflater: LayoutInflater,
+            container: ViewGroup?,
+            savedInstanceState: Bundle?,
+        ): View? {
             optionsPageUrl = requireNotNull(
                 arguments
                     ?.getParcelableCompat(
@@ -75,7 +84,10 @@ class AddonSettingsActivity : AppCompatActivity() {
             return inflater.inflate(R.layout.fragment_add_on_settings, container, false)
         }
 
-        override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        override fun onViewCreated(
+            view: View,
+            savedInstanceState: Bundle?,
+        ) {
             super.onViewCreated(view, savedInstanceState)
 
             val addonSettingsEngineView = view.findViewById<View>(R.id.addonSettingsEngineView) as EngineView
@@ -92,7 +104,8 @@ class AddonSettingsActivity : AppCompatActivity() {
             /**
              * Create an [AddonSettingsFragment] with add_on as a required parameter.
              */
-            fun create(addon: Addon) = AddonSettingsFragment().apply {
+            fun create(addon: Addon) =
+                AddonSettingsFragment().apply {
                 arguments = Bundle().apply {
                     putParcelable("add_on", addon)
                 }

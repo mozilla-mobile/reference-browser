@@ -28,7 +28,8 @@ class ReaderViewIntegration(
     toolbar: BrowserToolbar,
     view: ReaderViewControlsView,
     readerViewAppearanceButton: FloatingActionButton,
-) : LifecycleAwareFeature, UserInteractionHandler {
+) : LifecycleAwareFeature,
+    UserInteractionHandler {
 
     private var readerViewButtonVisible = false
 
@@ -89,7 +90,11 @@ class ReaderViewAppearanceButtonBehavior(
     context: Context,
     attrs: AttributeSet,
 ) : CoordinatorLayout.Behavior<FloatingActionButton>(context, attrs) {
-    override fun layoutDependsOn(parent: CoordinatorLayout, child: FloatingActionButton, dependency: View): Boolean {
+    override fun layoutDependsOn(
+        parent: CoordinatorLayout,
+        child: FloatingActionButton,
+        dependency: View,
+    ): Boolean {
         if (dependency is FindInPageBar || dependency is BrowserToolbar) {
             return true
         }
@@ -110,7 +115,10 @@ class ReaderViewAppearanceButtonBehavior(
         }
     }
 
-    private fun repositionReaderViewAppearanceButton(button: FloatingActionButton, toolbar: View) {
+    private fun repositionReaderViewAppearanceButton(
+        button: FloatingActionButton,
+        toolbar: View,
+    ) {
         button.translationY = (toolbar.translationY + toolbar.height * -1.0).toFloat()
     }
 }

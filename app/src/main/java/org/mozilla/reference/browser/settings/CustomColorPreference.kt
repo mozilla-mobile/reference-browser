@@ -30,7 +30,10 @@ class CustomColorPreference
         init(context, attrs)
     }
 
-    private fun init(context: Context, attrs: AttributeSet?) {
+    private fun init(
+        context: Context,
+        attrs: AttributeSet?,
+    ) {
         context.obtainStyledAttributes(attrs, R.styleable.CustomColorPreference).apply {
             titleColor = getColor(
                 R.styleable.CustomColorPreference_titleColor,

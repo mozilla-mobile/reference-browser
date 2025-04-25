@@ -38,7 +38,8 @@ class PictureInPictureIntegration(
         scope?.cancel()
     }
 
-    fun onHomePressed() = if (whiteListed) {
+    fun onHomePressed() =
+        if (whiteListed) {
         pictureFeature.enterPipModeCompat()
     } else {
         pictureFeature.onHomePressed()

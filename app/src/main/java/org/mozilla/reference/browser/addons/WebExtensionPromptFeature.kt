@@ -89,9 +89,7 @@ class WebExtensionPromptFeature(
         }
     }
 
-    private fun handlePostInstallationRequest(
-        addon: Addon,
-    ) {
+    private fun handlePostInstallationRequest(addon: Addon) {
         showPostInstallationDialog(addon)
     }
 
@@ -279,9 +277,7 @@ class WebExtensionPromptFeature(
     }
 
     @VisibleForTesting
-    internal fun handleInstallationFailedRequest(
-        exception: WebExtensionInstallException,
-    ) {
+    internal fun handleInstallationFailedRequest(exception: WebExtensionInstallException) {
         val addonName = exception.extensionName ?: ""
         var title = context.getString(R.string.mozac_feature_addons_cant_install_extension, "")
         val message = when (exception) {

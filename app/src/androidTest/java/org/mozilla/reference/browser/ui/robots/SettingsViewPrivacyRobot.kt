@@ -58,23 +58,30 @@ private fun assertPrivacyUpButton() {
     mDevice.wait(Until.findObject(By.text("Navigate up")), TestAssetHelper.waitingTimeShort)
 }
 
-private fun assertPrivacySettingsView() = privacySettingsView()
+private fun assertPrivacySettingsView() =
+    privacySettingsView()
     .check(ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
 
-private fun assertTrackingProtectionHeading() = trackingProtectionHeading()
+private fun assertTrackingProtectionHeading() =
+    trackingProtectionHeading()
     .check(ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
 
-private fun assertTpEnableInNormalBrowsing() = tpEnableInNormalBrowsing()
+private fun assertTpEnableInNormalBrowsing() =
+    tpEnableInNormalBrowsing()
     .check(ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
 
-private fun assertTpEnableInPrivateBrowsing() = tpEnableInPrivateBrowsing()
+private fun assertTpEnableInPrivateBrowsing() =
+    tpEnableInPrivateBrowsing()
     .check(ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
 
-private fun assertDataChoicesHeading() = dataChoicesHeading()
+private fun assertDataChoicesHeading() =
+    dataChoicesHeading()
     .check(ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
 
-private fun assertUseTelemetryToggle() = useTelemetryToggle()
+private fun assertUseTelemetryToggle() =
+    useTelemetryToggle()
     .check(ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
 
-private fun assertTelemetrySummary() = telemetrySummary()
+private fun assertTelemetrySummary() =
+    telemetrySummary()
     .check(ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))

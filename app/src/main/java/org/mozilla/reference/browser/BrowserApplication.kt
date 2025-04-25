@@ -115,7 +115,8 @@ open class BrowserApplication : Application() {
     }
 
     @OptIn(DelicateCoroutinesApi::class)
-    private fun restoreBrowserState() = GlobalScope.launch(Dispatchers.Main) {
+    private fun restoreBrowserState() =
+        GlobalScope.launch(Dispatchers.Main) {
         val store = components.core.store
         val sessionStorage = components.core.sessionStorage
 

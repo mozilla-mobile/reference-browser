@@ -74,21 +74,27 @@ object TestHelper {
         return bitmap
     }
 
-    fun UiDevice.waitForObjects(obj: UiObject, waitingTime: Long = TestAssetHelper.waitingTime) {
+    fun UiDevice.waitForObjects(
+        obj: UiObject,
+        waitingTime: Long = TestAssetHelper.waitingTime,
+    ) {
         this.waitForIdle()
         Assert.assertNotNull(obj.waitForExists(waitingTime))
     }
 
-    fun itemWithResId(resourceId: String) =
-        mDevice.findObject(UiSelector().resourceId(resourceId))
+    fun itemWithResId(resourceId: String) = mDevice.findObject(UiSelector().resourceId(resourceId))
 
-    fun itemWithText(itemText: String) =
-        mDevice.findObject(UiSelector().text(itemText))
+    fun itemWithText(itemText: String) = mDevice.findObject(UiSelector().text(itemText))
 
-    fun itemWithResIdContainingText(resourceId: String, text: String) =
-        mDevice.findObject(UiSelector().resourceId(resourceId).textContains(text))
+    fun itemWithResIdContainingText(
+        resourceId: String,
+        text: String,
+    ) = mDevice.findObject(UiSelector().resourceId(resourceId).textContains(text))
 
-    fun assertUIObjectExists(vararg appItems: UiObject, exists: Boolean = true) {
+    fun assertUIObjectExists(
+        vararg appItems: UiObject,
+        exists: Boolean = true,
+    ) {
         if (exists) {
             for (appItem in appItems) {
                 assertTrue(appItem.waitForExists(waitingTime))

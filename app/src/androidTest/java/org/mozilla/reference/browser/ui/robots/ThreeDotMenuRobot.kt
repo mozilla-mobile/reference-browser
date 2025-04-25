@@ -231,40 +231,52 @@ private fun assertRefreshButtonDoesntExist() = refreshButton().check(ViewAsserti
 
 private fun assertStopButtonDoesntExist() = stopButton().check(ViewAssertions.doesNotExist())
 
-private fun assertAddToHomescreenButtonDoesntExist() = addToHomescreenButton()
+private fun assertAddToHomescreenButtonDoesntExist() =
+    addToHomescreenButton()
     .check(ViewAssertions.doesNotExist())
 
-private fun assertForwardButton() = forwardButton()
+private fun assertForwardButton() =
+    forwardButton()
     .check(ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
 
-private fun assertRefreshButton() = refreshButton()
+private fun assertRefreshButton() =
+    refreshButton()
     .check(ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
 
-private fun assertStopButton() = stopButton()
+private fun assertStopButton() =
+    stopButton()
     .check(ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
 
-private fun assertShareButton() = shareButton()
+private fun assertShareButton() =
+    shareButton()
     .check(ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
 
-private fun assertRequestDesktopSiteToggle() = requestDesktopSiteToggle()
+private fun assertRequestDesktopSiteToggle() =
+    requestDesktopSiteToggle()
     .check(ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
 
-private fun assertAddToHomescreenButton() = addToHomescreenButton()
+private fun assertAddToHomescreenButton() =
+    addToHomescreenButton()
     .check(matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
 
-private fun assertFindInPageButton() = findInPageButton()
+private fun assertFindInPageButton() =
+    findInPageButton()
     .check(ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
 
-private fun assertAddOnsButton() = addOnsButton()
+private fun assertAddOnsButton() =
+    addOnsButton()
     .check(matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
 
-private fun assertSyncedTabsButton() = syncedTabsButton()
+private fun assertSyncedTabsButton() =
+    syncedTabsButton()
     .check(matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
 
-private fun assertReportIssueButton() = reportIssueButton()
+private fun assertReportIssueButton() =
+    reportIssueButton()
     .check(ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
 
-private fun assertSettingsButton() = settingsButton()
+private fun assertSettingsButton() =
+    settingsButton()
     .check(ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
 
 private fun assertRequestDesktopSiteIsTurnedOff() {

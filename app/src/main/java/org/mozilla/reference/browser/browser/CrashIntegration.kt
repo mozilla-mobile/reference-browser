@@ -27,7 +27,10 @@ class CrashIntegration(
 ) : DefaultLifecycleObserver {
 
     private val receiver = object : BroadcastReceiver() {
-        override fun onReceive(context: Context, intent: Intent) {
+        override fun onReceive(
+            context: Context,
+            intent: Intent,
+        ) {
             if (!Crash.isCrashIntent(intent)) {
                 return
             }

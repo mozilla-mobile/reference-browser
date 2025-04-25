@@ -40,7 +40,10 @@ class NavigationToolbarRobot {
 
         val mDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
 
-        fun enterUrlAndEnterToBrowser(url: Uri, interact: BrowserRobot.() -> Unit): BrowserRobot.Transition {
+        fun enterUrlAndEnterToBrowser(
+            url: Uri,
+            interact: BrowserRobot.() -> Unit,
+        ): BrowserRobot.Transition {
             urlBar().click()
             awesomeBar().setText(url.toString())
             mDevice.pressEnter()
@@ -101,8 +104,7 @@ private fun openTabTray() = onView(withId(R.id.counter_box))
 
 private var numberOfOpenTabsTabCounter = onView(withId(R.id.counter_text))
 
-private fun urlBar() =
-    mDevice.findObject(UiSelector().resourceId("$packageName:id/mozac_browser_toolbar_url_view"))
+private fun urlBar() = mDevice.findObject(UiSelector().resourceId("$packageName:id/mozac_browser_toolbar_url_view"))
 
 private fun awesomeBar() =
     mDevice.findObject(UiSelector().resourceId("$packageName:id/mozac_browser_toolbar_edit_url_view"))

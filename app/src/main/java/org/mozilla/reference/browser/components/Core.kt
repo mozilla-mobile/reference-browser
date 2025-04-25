@@ -62,7 +62,10 @@ private const val DAY_IN_MINUTES = 24 * 60L
 /**
  * Component group for all core browser functionality.
  */
-class Core(private val context: Context, crashReporter: CrashReporter) {
+class Core(
+    private val context: Context,
+    crashReporter: CrashReporter,
+) {
     /**
      * The browser engine component initialized based on the build
      * configuration (see build variants).

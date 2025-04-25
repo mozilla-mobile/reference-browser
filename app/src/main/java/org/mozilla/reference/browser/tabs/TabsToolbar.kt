@@ -48,7 +48,10 @@ class TabsToolbar
         }
     }
 
-    fun initialize(tabsFeature: TabsFeature?, closeTabsTray: () -> Unit) {
+    fun initialize(
+        tabsFeature: TabsFeature?,
+        closeTabsTray: () -> Unit,
+    ) {
         this.tabsFeature = tabsFeature
         this.closeTabsTray = closeTabsTray
     }

@@ -32,8 +32,7 @@ val Context.components: Components
 
 fun Context.getPreferenceKey(
     @StringRes resourceId: Int,
-): String =
-    resources.getString(resourceId)
+): String = resources.getString(resourceId)
 
 /**
  *  Shares content via [ACTION_SEND] intent.
@@ -42,7 +41,10 @@ fun Context.getPreferenceKey(
  * @param subject of the intent [EXTRA_TEXT]
  * @return true it is able to share false otherwise.
  */
-fun Context.share(text: String, subject: String = ""): Boolean {
+fun Context.share(
+    text: String,
+    subject: String = "",
+): Boolean {
     return try {
         val intent = Intent(ACTION_SEND).apply {
             type = "text/plain"

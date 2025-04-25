@@ -62,7 +62,10 @@ import mozilla.components.ui.widgets.behavior.ViewPosition as MozacToolbarBehavi
  * This class only contains shared code focused on the main browsing content.
  * UI code specific to the app or to custom tabs can be found in the subclasses.
  */
-abstract class BaseBrowserFragment : Fragment(), UserInteractionHandler, ActivityResultHandler {
+abstract class BaseBrowserFragment :
+    Fragment(),
+    UserInteractionHandler,
+    ActivityResultHandler {
     private val sessionFeature = ViewBoundFeatureWrapper<SessionFeature>()
     private val toolbarIntegration = ViewBoundFeatureWrapper<ToolbarIntegration>()
     private val contextMenuIntegration = ViewBoundFeatureWrapper<ContextMenuIntegration>()
@@ -167,7 +170,10 @@ abstract class BaseBrowserFragment : Fragment(), UserInteractionHandler, Activit
 
     @CallSuper
     @Suppress("LongMethod")
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun onViewCreated(
+        view: View,
+        savedInstanceState: Bundle?,
+    ) {
         val prefs = PreferenceManager.getDefaultSharedPreferences(requireContext())
 
         sessionFeature.set(
@@ -462,7 +468,11 @@ abstract class BaseBrowserFragment : Fragment(), UserInteractionHandler, Activit
         }
     }
 
-    override fun onActivityResult(requestCode: Int, data: Intent?, resultCode: Int): Boolean {
+    override fun onActivityResult(
+        requestCode: Int,
+        data: Intent?,
+        resultCode: Int,
+    ): Boolean {
         Logger.info(
             "Fragment onActivityResult received with " +
                 "requestCode: $requestCode, resultCode: $resultCode, data: $data",
