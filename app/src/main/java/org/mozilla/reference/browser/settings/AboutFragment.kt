@@ -29,9 +29,7 @@ class AboutFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?,
-    ): View? {
-        return inflater.inflate(R.layout.fragment_about, container, false)
-    }
+    ): View? = inflater.inflate(R.layout.fragment_about, container, false)
 
     override fun onViewCreated(
         view: View,

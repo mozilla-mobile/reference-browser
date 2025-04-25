@@ -33,8 +33,8 @@ class AppRequestInterceptor(
         isRedirect: Boolean,
         isDirectNavigation: Boolean,
         isSubframeRequest: Boolean,
-    ): RequestInterceptor.InterceptionResponse? {
-        return when (uri) {
+    ): RequestInterceptor.InterceptionResponse? =
+        when (uri) {
             "about:privatebrowsing" -> {
                 val page = PrivatePage.createPrivateBrowsingPage(context, uri)
                 RequestInterceptor.InterceptionResponse.Content(page, encoding = "base64")
@@ -70,7 +70,6 @@ class AppRequestInterceptor(
                 )
             }
         }
-    }
 
     override fun onErrorRequest(
         session: EngineSession,

@@ -8,9 +8,8 @@ import androidx.fragment.app.Fragment
 import java.text.NumberFormat
 import java.util.Locale
 
-internal fun getFormattedAmount(amount: Int): String {
-    return NumberFormat.getNumberInstance(Locale.getDefault()).format(amount)
-}
+internal fun getFormattedAmount(amount: Int): String =
+    NumberFormat.getNumberInstance(Locale.getDefault()).format(amount)
 
 /**
  * Run the [block] only if the [Fragment] is attached.

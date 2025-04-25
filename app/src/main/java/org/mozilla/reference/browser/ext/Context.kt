@@ -44,8 +44,8 @@ fun Context.getPreferenceKey(
 fun Context.share(
     text: String,
     subject: String = "",
-): Boolean {
-    return try {
+): Boolean =
+    try {
         val intent = Intent(ACTION_SEND).apply {
             type = "text/plain"
             putExtra(EXTRA_SUBJECT, subject)
@@ -63,4 +63,3 @@ fun Context.share(
         Log.log(WARN, message = "No activity to share to found", throwable = e, tag = "Reference-Browser")
         false
     }
-}

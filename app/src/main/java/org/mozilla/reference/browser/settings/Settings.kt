@@ -48,7 +48,6 @@ object Settings {
         }
     }
 
-    fun isAmoCollectionOverrideConfigured(context: Context): Boolean {
-        return getOverrideAmoUser(context).isNotEmpty() && getOverrideAmoCollection(context).isNotEmpty()
-    }
+    fun isAmoCollectionOverrideConfigured(context: Context): Boolean =
+        getOverrideAmoUser(context).isNotEmpty() && getOverrideAmoCollection(context).isNotEmpty()
 }

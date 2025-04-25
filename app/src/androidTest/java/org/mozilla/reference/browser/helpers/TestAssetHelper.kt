@@ -30,15 +30,14 @@ object TestAssetHelper {
      * Content for these pages all follow the same pattern. See [generic1.html] for
      * content implementation details.
      */
-    fun getGenericAssets(server: MockWebServer): List<TestAsset> {
-        return (1..4).map {
+    fun getGenericAssets(server: MockWebServer): List<TestAsset> =
+        (1..4).map {
             TestAsset(
                 server.url("pages/generic$it.html").toString().toUri()!!,
                 "Page content: $it",
                 "",
             )
         }
-    }
 
     fun getGenericAsset(
         server: MockWebServer,

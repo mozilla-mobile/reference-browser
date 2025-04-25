@@ -39,9 +39,7 @@ class FindInPageIntegration(
         FindInPageIntegration.launch = null
     }
 
-    override fun onBackPressed(): Boolean {
-        return feature.onBackPressed()
-    }
+    override fun onBackPressed(): Boolean = feature.onBackPressed()
 
     private fun onClose() {
         view.asView().visibility = View.GONE
@@ -89,14 +87,13 @@ class FindInPageBarBehavior(
         parent: CoordinatorLayout,
         child: FindInPageBar,
         dependency: View,
-    ): Boolean {
-        return if (dependency is BrowserToolbar) {
+    ): Boolean =
+        if (dependency is BrowserToolbar) {
             repositionFindInPageBar(child, dependency)
             true
         } else {
             false
         }
-    }
 
     private fun repositionFindInPageBar(
         findInPageView: FindInPageBar,

@@ -220,23 +220,21 @@ class Core(
         FileUploadsDirCleaner { context.cacheDir }
     }
 
-    private fun provideDefaultAddonProvider(): AMOAddonsProvider {
-        return AMOAddonsProvider(
+    private fun provideDefaultAddonProvider(): AMOAddonsProvider =
+        AMOAddonsProvider(
             context = context,
             client = client,
             collectionName = "7dfae8669acc4312a65e8ba5553036",
             maxCacheAgeInMinutes = DAY_IN_MINUTES,
         )
-    }
 
-    private fun provideCustomAddonProvider(): AMOAddonsProvider {
-        return AMOAddonsProvider(
+    private fun provideCustomAddonProvider(): AMOAddonsProvider =
+        AMOAddonsProvider(
             context,
             client,
             collectionUser = Settings.getOverrideAmoUser(context),
             collectionName = Settings.getOverrideAmoCollection(context),
         )
-    }
 
     /**
      * Constructs a [TrackingProtectionPolicy] based on current preferences.

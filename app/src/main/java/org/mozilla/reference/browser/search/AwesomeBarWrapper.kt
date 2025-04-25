@@ -70,9 +70,8 @@ class AwesomeBarWrapper
         this.providers.value = newProviders
     }
 
-    override fun containsProvider(provider: AwesomeBar.SuggestionProvider): Boolean {
-        return providers.value.any { current -> current.id == provider.id }
-    }
+    override fun containsProvider(provider: AwesomeBar.SuggestionProvider): Boolean =
+        providers.value.any { current -> current.id == provider.id }
 
     override fun onInputChanged(text: String) {
         this.text.value = text

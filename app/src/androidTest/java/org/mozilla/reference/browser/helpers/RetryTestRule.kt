@@ -18,8 +18,8 @@ class RetryTestRule(
     override fun apply(
         base: Statement,
         description: Description,
-    ): Statement {
-        return statement {
+    ): Statement =
+        statement {
             for (i in 1..retryCount) {
                 try {
                     base.evaluate()
@@ -39,11 +39,9 @@ class RetryTestRule(
                 }
             }
         }
-    }
 
-    private inline fun statement(crossinline eval: () -> Unit): Statement {
-        return object : Statement() {
+    private inline fun statement(crossinline eval: () -> Unit): Statement =
+        object : Statement() {
             override fun evaluate() = eval()
         }
-    }
 }
