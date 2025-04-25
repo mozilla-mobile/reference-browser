@@ -29,10 +29,12 @@ class SyncedTabsIntegration(
 
 internal class SyncedTabsAccountObserver(private val context: Context) : AccountObserver {
     override fun onAuthenticated(account: OAuthAccount, authType: AuthType) {
-        context.components.backgroundServices.syncedTabsStorage.start()
+        context.components.backgroundServices.syncedTabsStorage
+            .start()
     }
 
     override fun onLoggedOut() {
-        context.components.backgroundServices.syncedTabsStorage.stop()
+        context.components.backgroundServices.syncedTabsStorage
+            .stop()
     }
 }

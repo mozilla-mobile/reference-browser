@@ -150,7 +150,8 @@ class CustomTabsIntegration(
         toolbar.display.menuController = menuController
 
         store.flowScoped { flow ->
-            flow.map { state -> state.findCustomTab(sessionId) }
+            flow
+                .map { state -> state.findCustomTab(sessionId) }
                 .distinctUntilChanged()
                 .collect { tab ->
                     val items = menuItems(tab)

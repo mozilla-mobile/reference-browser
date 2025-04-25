@@ -78,7 +78,8 @@ class AddonsManagerRobot {
 
     fun dismissAddonDownloadCompletedPrompt(addonName: String) {
         mDevice.waitForWindowUpdate(packageName, waitingTime)
-        mDevice.findObject(UiSelector().text("$addonName has been added to Reference Browser"))
+        mDevice
+            .findObject(UiSelector().text("$addonName has been added to Reference Browser"))
             .waitForExists(waitingTime)
         mDevice.waitAndInteract(
             Until.findObject(
@@ -87,7 +88,8 @@ class AddonsManagerRobot {
                 ),
             ),
         ) {}
-        mDevice.findObject(
+        mDevice
+            .findObject(
             UiSelector().textContains(
                 getStringResource(R.string.mozac_feature_addons_installed_dialog_okay_button_2),
             ),
@@ -119,7 +121,8 @@ class AddonsManagerRobot {
 
     private fun selectInstallAddonButton(addonName: String) {
         mDevice.waitForIdle()
-        mDevice.findObject(UiSelector().textContains(addonName))
+        mDevice
+            .findObject(UiSelector().textContains(addonName))
             .waitForExists(waitingTime)
 
         installAddonButton(addonName)
@@ -129,14 +132,15 @@ class AddonsManagerRobot {
 
     private fun assertAddonPrompt(addonName: String) {
         mDevice.waitForIdle()
-        mDevice.findObject(
+        mDevice
+            .findObject(
             UiSelector()
                 .resourceId("$packageName:id/title"),
-        )
-            .waitForExists(waitingTime)
+        ).waitForExists(waitingTime)
 
         assertTrue(
-            mDevice.findObject(UiSelector().textContains("Add $addonName?"))
+            mDevice
+                .findObject(UiSelector().textContains("Add $addonName?"))
                 .waitForExists(waitingTime),
         )
 
@@ -152,16 +156,14 @@ class AddonsManagerRobot {
                 withId(R.id.allow_button),
                 withText(R.string.mozac_feature_addons_permissions_dialog_add),
             ),
-        )
-            .check(matches(isCompletelyDisplayed()))
+        ).check(matches(isCompletelyDisplayed()))
 
         onView(
             allOf(
                 withId(R.id.deny_button),
                 withText(R.string.mozac_feature_addons_permissions_dialog_cancel),
             ),
-        )
-            .check(matches(isCompletelyDisplayed()))
+        ).check(matches(isCompletelyDisplayed()))
     }
 
     private fun cancelInstallButton() {
@@ -170,8 +172,7 @@ class AddonsManagerRobot {
                 withId(R.id.deny_button),
                 withText(R.string.mozac_feature_addons_permissions_dialog_cancel),
             ),
-        )
-            .check(matches(isCompletelyDisplayed()))
+        ).check(matches(isCompletelyDisplayed()))
             .perform(click())
     }
 
@@ -183,25 +184,25 @@ class AddonsManagerRobot {
                 withId(R.id.allow_button),
                 withText(R.string.mozac_feature_addons_permissions_dialog_add),
             ),
-        )
-            .check(matches(isCompletelyDisplayed()))
+        ).check(matches(isCompletelyDisplayed()))
             .perform(click())
     }
 
     private fun assertAddonDownloadCompletedPrompt(addonName: String) {
         mDevice.waitForIdle()
         assertTrue(
-            mDevice.findObject(
+            mDevice
+                .findObject(
                 UiSelector()
                     .textContains("$addonName has been added to Reference Browser"),
-            )
-                .waitForExists(waitingTime),
+            ).waitForExists(waitingTime),
         )
     }
 
     private fun waitForDownloadProgressUntilGone() {
         mDevice.waitForIdle()
-        mDevice.findObject(UiSelector().resourceId("$packageName:id/addonProgressOverlay"))
+        mDevice
+            .findObject(UiSelector().resourceId("$packageName:id/addonProgressOverlay"))
             .waitUntilGone(waitingTime)
     }
 

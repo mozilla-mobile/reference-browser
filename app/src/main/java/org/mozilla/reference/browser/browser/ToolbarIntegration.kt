@@ -191,7 +191,8 @@ class ToolbarIntegration(
         )
 
         scope.launch {
-            store.flow()
+            store
+                .flow()
                 .map { state -> state.selectedTab }
                 .distinctUntilChanged()
                 .collect { tab ->

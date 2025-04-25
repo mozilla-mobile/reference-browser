@@ -67,7 +67,8 @@ class SyncedTabsLayout
         syncedTabsList.visibility = View.VISIBLE
         syncedTabsStatus.visibility = View.GONE
 
-        val allDeviceTabs = syncedTabs.filter {
+        val allDeviceTabs = syncedTabs
+            .filter {
             it.tabs.isEmpty()
         }.flatMap { (device, tabs) ->
             val deviceTabs = tabs.map { SyncedTabsAdapter.AdapterItem.Tab(it) }

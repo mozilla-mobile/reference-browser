@@ -4,9 +4,9 @@ ij_kotlin_allow_trailing_comma=true
 
 [*]
 insert_final_newline = true
+max_line_length = 120 # same as detekt.yml
 
 # rules we should look into enabling
-ktlint_standard_chain-method-continuation = disabled
 ktlint_standard_class-signature = disabled
 ktlint_standard_function-expression-body = disabled
 ktlint_standard_function-naming = disabled

@@ -94,7 +94,8 @@ object NotificationManager {
                 importance,
             )
 
-            val builder = NotificationCompat.Builder(context, channelId)
+            val builder = NotificationCompat
+                .Builder(context, channelId)
                 .setSmallIcon(R.drawable.ic_notification)
                 .setSendTabTitle(context, device, tab)
                 .setWhen(System.currentTimeMillis())
@@ -147,7 +148,8 @@ object NotificationManager {
         val pendingIntent =
             PendingIntent.getActivity(context, REQUEST_CODE_DATA_REPORTING, intent, flags)
 
-        val notificationBuilder = NotificationCompat.Builder(
+        val notificationBuilder = NotificationCompat
+            .Builder(
             context,
             getNotificationChannelId(context),
         ).apply {
@@ -159,7 +161,8 @@ object NotificationManager {
             setStyle(NotificationCompat.BigTextStyle().bigText(notificationSummary))
         }
 
-        NotificationManagerCompat.from(context)
+        NotificationManagerCompat
+            .from(context)
             .notify(DATA_REPORTING_TAG, DATA_REPORTING_NOTIFICATION_ID, notificationBuilder.build())
 
         preferences.edit {

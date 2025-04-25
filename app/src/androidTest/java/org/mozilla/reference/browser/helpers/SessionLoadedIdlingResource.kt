@@ -27,7 +27,10 @@ class SessionLoadedIdlingResource : IdlingResource {
 
         val store = context.components.core.store
 
-        return if (store.state.selectedTab?.content?.loading == true) {
+        return if (store.state.selectedTab
+            ?.content
+            ?.loading == true
+        ) {
             false
         } else {
             invokeCallback()

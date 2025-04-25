@@ -116,12 +116,16 @@ open class BrowserActivity : AppCompatActivity() {
 
     override fun onCreateView(parent: View?, name: String, context: Context, attrs: AttributeSet): View? =
         when (name) {
-            EngineView::class.java.name -> components.core.engine.createView(context, attrs).asView()
+            EngineView::class.java.name ->
+                components.core.engine
+                .createView(context, attrs)
+                .asView()
             else -> super.onCreateView(parent, name, context, attrs)
         }
 
     private fun onNonFatalCrash(crash: Crash) {
-        Snackbar.make(findViewById(android.R.id.content), R.string.crash_report_non_fatal_message, LENGTH_LONG)
+        Snackbar
+            .make(findViewById(android.R.id.content), R.string.crash_report_non_fatal_message, LENGTH_LONG)
             .setAction(R.string.crash_report_non_fatal_action) {
                 crashIntegration.sendCrashReport(crash)
             }.show()

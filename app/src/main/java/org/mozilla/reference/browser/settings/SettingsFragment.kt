@@ -141,7 +141,8 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
     private fun getClickListenerForPairingSignIn(): OnPreferenceClickListener {
         return OnPreferenceClickListener {
-            parentFragmentManager.beginTransaction()
+            parentFragmentManager
+                .beginTransaction()
                 .replace(android.R.id.content, PairSettingsFragment())
                 .addToBackStack(null)
                 .commit()
@@ -154,7 +155,8 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
     private fun getClickListenerForFirefoxAccount(): OnPreferenceClickListener {
         return OnPreferenceClickListener {
-            parentFragmentManager.beginTransaction()
+            parentFragmentManager
+                .beginTransaction()
                 .replace(android.R.id.content, AccountSettingsFragment())
                 .addToBackStack(null)
                 .commit()
@@ -167,7 +169,8 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
     private fun getClickListenerForPrivacy(): OnPreferenceClickListener {
         return OnPreferenceClickListener {
-            parentFragmentManager.beginTransaction()
+            parentFragmentManager
+                .beginTransaction()
                 .replace(android.R.id.content, PrivacySettingsFragment())
                 .addToBackStack(null)
                 .commit()
@@ -187,7 +190,8 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
     private fun getAboutPageListener(): OnPreferenceClickListener {
         return OnPreferenceClickListener {
-            parentFragmentManager.beginTransaction()
+            parentFragmentManager
+                .beginTransaction()
                 .replace(android.R.id.content, AboutFragment())
                 .addToBackStack(null)
                 .commit()
@@ -204,7 +208,9 @@ class SettingsFragment : PreferenceFragmentCompat() {
             val userView = dialogView.findViewById<EditText>(R.id.custom_amo_user)
             val collectionView = dialogView.findViewById<EditText>(R.id.custom_amo_collection)
 
-            AlertDialog.Builder(context).apply {
+            AlertDialog
+                .Builder(context)
+                .apply {
                 setTitle(context.getString(R.string.preferences_customize_amo_collection))
                 setView(dialogView)
                 setNegativeButton(R.string.customize_addon_collection_cancel) { dialog: DialogInterface, _ ->
@@ -215,7 +221,8 @@ class SettingsFragment : PreferenceFragmentCompat() {
                     RBSettings.setOverrideAmoUser(context, userView.text.toString())
                     RBSettings.setOverrideAmoCollection(context, collectionView.text.toString())
 
-                    Toast.makeText(
+                    Toast
+                        .makeText(
                         context,
                         getString(R.string.toast_customize_addon_collection_done),
                         Toast.LENGTH_LONG,

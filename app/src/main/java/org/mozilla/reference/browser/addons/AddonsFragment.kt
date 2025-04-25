@@ -74,7 +74,9 @@ class AddonsFragment : Fragment(), AddonsManagerAdapterDelegate {
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
         scope.launch {
             try {
-                addons = requireContext().components.core.addonManager.getAddons()
+                addons = requireContext()
+                    .components.core.addonManager
+                    .getAddons()
 
                 scope.launch(Dispatchers.Main) {
                     adapter = AddonsManagerAdapter(
@@ -86,7 +88,8 @@ class AddonsFragment : Fragment(), AddonsManagerAdapterDelegate {
                 }
             } catch (e: AddonManagerException) {
                 scope.launch(Dispatchers.Main) {
-                    Toast.makeText(
+                    Toast
+                        .makeText(
                         activity,
                         R.string.mozac_feature_addons_failed_to_query_extensions,
                         Toast.LENGTH_SHORT,

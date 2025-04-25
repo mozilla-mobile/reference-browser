@@ -44,7 +44,8 @@ private fun assertDefaultAppsLayout() {
 private fun assertAutofillServices() {
     mDevice.waitForWindowUpdate(packageName, waitingTime)
     assertTrue(
-        mDevice.findObject(UiSelector().textContains("Autofill service"))
+        mDevice
+            .findObject(UiSelector().textContains("Autofill service"))
             .waitForExists(waitingTime),
     )
 }
@@ -54,18 +55,21 @@ private fun assertYouTubeApp() {
         // Check youtube's home buttons
         mDevice.waitForIdle()
         assertTrue(
-            mDevice.findObject(UiSelector().text("Home"))
+            mDevice
+                .findObject(UiSelector().text("Home"))
                 .waitForExists(waitingTime),
         )
         assertTrue(
-            mDevice.findObject(UiSelector().text("Subscriptions"))
+            mDevice
+                .findObject(UiSelector().text("Subscriptions"))
                 .waitForExists(waitingTime),
         )
     } catch (e: AssertionError) {
         println("The native youtube app opens but needs to be updated")
         // In case the app isn't up to date on the emulator an update message will be displayed
         assertTrue(
-            mDevice.findObject(UiSelector().text("Update for a faster, better YouTube"))
+            mDevice
+                .findObject(UiSelector().text("Update for a faster, better YouTube"))
                 .waitForExists(waitingTime),
         )
     }

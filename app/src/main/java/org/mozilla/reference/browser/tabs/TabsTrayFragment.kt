@@ -88,7 +88,8 @@ class TabsTrayFragment : Fragment(), UserInteractionHandler {
         val thumbnailLoader = ThumbnailLoader(context.components.core.thumbnailStorage)
         val trayStyling = TabsTrayStyling(itemBackgroundColor = Color.TRANSPARENT, itemTextColor = Color.WHITE)
         val viewHolderProvider: ViewHolderProvider = { viewGroup ->
-            val view = LayoutInflater.from(context)
+            val view = LayoutInflater
+                .from(context)
                 .inflate(R.layout.browser_tabstray_item, viewGroup, false)
 
             DefaultTabViewHolder(view, thumbnailLoader)

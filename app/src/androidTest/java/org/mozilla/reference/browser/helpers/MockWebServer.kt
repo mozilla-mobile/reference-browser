@@ -48,7 +48,9 @@ class AndroidAssetDispatcher : Dispatcher() {
     private val mainThreadHandler = Handler(Looper.getMainLooper())
 
     override fun dispatch(request: RecordedRequest): MockResponse {
-        val assetManager = androidx.test.platform.app.InstrumentationRegistry.getInstrumentation().context.assets
+        val assetManager = androidx.test.platform.app.InstrumentationRegistry
+            .getInstrumentation()
+            .context.assets
         try {
             val pathWithoutQueryParams = Uri.parse(request.path!!.drop(1)).path
             assetManager.open(pathWithoutQueryParams!!).use { inputStream ->

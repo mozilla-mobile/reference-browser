@@ -39,7 +39,9 @@ class ReaderViewIntegration(
         },
         contentDescription = "Enable Reader View",
         contentDescriptionSelected = "Disable Reader View",
-        selected = store.state.selectedTab?.readerState?.active ?: false,
+        selected = store.state.selectedTab
+            ?.readerState
+            ?.active ?: false,
         visible = { readerViewButtonVisible },
     ) { enabled ->
         if (enabled) {

@@ -39,7 +39,8 @@ class FindInPagePanelRobot {
     }
 
     fun verifyFindInPageResult(ratioCounter: String) {
-        mDevice.findObject(UiSelector().resourceId("$packageName:id/find_in_page_result_text"))
+        mDevice
+            .findObject(UiSelector().resourceId("$packageName:id/find_in_page_result_text"))
             .waitForExists(waitingTime)
         assertTrue(mDevice.findObject(UiSelector().textContains(ratioCounter)).waitForExists(waitingTime))
     }

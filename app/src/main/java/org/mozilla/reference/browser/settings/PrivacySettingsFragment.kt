@@ -39,7 +39,8 @@ class PrivacySettingsFragment : PreferenceFragmentCompat() {
 
         globalPrivacyControl?.onPreferenceChangeListener = getChangeListenerForGPC { enabled ->
             requireComponents.core.engine.settings.globalPrivacyControlEnabled = enabled
-            requireComponents.useCases.sessionUseCases.reload.invoke()
+            requireComponents.useCases.sessionUseCases.reload
+                .invoke()
         }
     }
 
@@ -54,7 +55,8 @@ class PrivacySettingsFragment : PreferenceFragmentCompat() {
     ): OnPreferenceChangeListener {
         return OnPreferenceChangeListener { _, value ->
             val policy = createTrackingProtectionPolicy(value as Boolean)
-            requireComponents.useCases.settingsUseCases.updateTrackingProtection.invoke(policy)
+            requireComponents.useCases.settingsUseCases.updateTrackingProtection
+                .invoke(policy)
             true
         }
     }

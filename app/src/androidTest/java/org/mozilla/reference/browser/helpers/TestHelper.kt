@@ -49,19 +49,20 @@ object TestHelper {
         pageUrl: String,
         customActionButtonDescription: String = "",
     ): Intent {
-        val appContext = InstrumentationRegistry.getInstrumentation()
+        val appContext = InstrumentationRegistry
+            .getInstrumentation()
             .targetContext
             .applicationContext
         val pendingIntent = PendingIntent.getActivity(appContext, 0, Intent(), 0)
-        val customTabsIntent = CustomTabsIntent.Builder()
+        val customTabsIntent = CustomTabsIntent
+            .Builder()
             .setShareState(CustomTabsIntent.SHARE_STATE_ON)
             .setActionButton(
                 createTestBitmap(),
                 customActionButtonDescription,
                 pendingIntent,
                 true,
-            )
-            .build()
+            ).build()
         customTabsIntent.intent.data = Uri.parse(pageUrl)
         return customTabsIntent.intent
     }

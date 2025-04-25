@@ -47,9 +47,11 @@ class WebExtensionPromptFeature(
      */
     override fun start() {
         scope = store.flowScoped { flow ->
-            flow.mapNotNull { state ->
+            flow
+                .mapNotNull { state ->
                 state.webExtensionPromptRequest
-            }.distinctUntilChanged().collect { promptRequest ->
+            }.distinctUntilChanged()
+                .collect { promptRequest ->
                 when (promptRequest) {
                     is WebExtensionPromptRequest.AfterInstallation -> {
                         handleAfterInstallationRequest(promptRequest)
@@ -352,10 +354,15 @@ class WebExtensionPromptFeature(
         message: String,
     ) {
         context.let {
-            AlertDialog.Builder(it).setTitle(title)
-                .setPositiveButton(android.R.string.ok) { _, _ -> }.setCancelable(false).setMessage(
+            AlertDialog
+                .Builder(it)
+                .setTitle(title)
+                .setPositiveButton(android.R.string.ok) { _, _ -> }
+                .setCancelable(false)
+                .setMessage(
                     message,
-                ).show().withCenterAlignedButtons()
+                ).show()
+                .withCenterAlignedButtons()
         }
     }
 

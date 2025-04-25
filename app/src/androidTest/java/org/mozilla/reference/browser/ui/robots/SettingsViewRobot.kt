@@ -141,7 +141,8 @@ class SettingsViewRobot {
 }
 
 private fun waitForSettingsRecyclerViewToExist() {
-    mDevice.findObject(UiSelector().resourceId("$packageName:id/recycler_view"))
+    mDevice
+        .findObject(UiSelector().resourceId("$packageName:id/recycler_view"))
         .waitForExists(
             waitingTime,
         )
@@ -150,7 +151,8 @@ private fun waitForSettingsRecyclerViewToExist() {
 private fun assertSettingsView() {
     // verify that we are in the correct settings view
     assertTrue(
-        mDevice.findObject(
+        mDevice
+            .findObject(
             UiSelector()
                 .resourceId("$packageName:id/action_bar")
                 .childSelector(
@@ -258,7 +260,8 @@ private fun assertAboutReferenceBrowserButton() = aboutReferenceBrowserButton()
 
 private fun assertCustomAddonCollectionPanel() {
     mDevice.waitForIdle()
-    mDevice.findObject(UiSelector().resourceId("$packageName:id/parentPanel"))
+    mDevice
+        .findObject(UiSelector().resourceId("$packageName:id/parentPanel"))
         .waitForExists(waitingTime)
     onView(
         allOf(

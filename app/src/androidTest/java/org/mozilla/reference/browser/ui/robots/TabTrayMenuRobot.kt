@@ -151,7 +151,8 @@ private fun assertThereAreNoPrivateTabsOpen() {
 
 private fun assertExistingOpenTabs(title: String) {
     mDevice.waitForIdle()
-    mDevice.findObject(UiSelector().resourceId("${TestHelper.packageName}:id/tabsTray"))
+    mDevice
+        .findObject(UiSelector().resourceId("${TestHelper.packageName}:id/tabsTray"))
         .waitForExists(waitingTime)
     Assert.assertTrue(
         mDevice.findObject(UiSelector().textContains(title)).waitForExists(waitingTime),
