@@ -29,8 +29,11 @@ import org.mozilla.reference.browser.helpers.click
 class NavigationToolbarRobot {
 
     fun verifyNoTabAddressView() = assertNoTabAddressText()
+
     fun verifyNewTabAddressView(url: String) = assertNewTabAddressText(url)
+
     fun verifyReaderViewButton() = assertReaderViewButton()
+
     fun checkNumberOfTabsTabCounter(numTabs: String) = numberOfOpenTabsTabCounter.check(matches(withText(numTabs)))
 
     class Transition {
@@ -93,12 +96,17 @@ fun navigationToolbar(interact: NavigationToolbarRobot.() -> Unit): NavigationTo
 }
 
 private fun openTabTray() = onView(withId(R.id.counter_box))
+
 private var numberOfOpenTabsTabCounter = onView(withId(R.id.counter_text))
+
 private fun urlBar() =
     mDevice.findObject(UiSelector().resourceId("$packageName:id/mozac_browser_toolbar_url_view"))
+
 private fun awesomeBar() =
     mDevice.findObject(UiSelector().resourceId("$packageName:id/mozac_browser_toolbar_edit_url_view"))
+
 private fun threeDotMenuButton() = onView(withId(R.id.mozac_browser_toolbar_menu))
+
 private fun readerViewButton() = onView(withId(R.id.mozac_browser_toolbar_page_actions))
 
 private fun assertNoTabAddressText() {

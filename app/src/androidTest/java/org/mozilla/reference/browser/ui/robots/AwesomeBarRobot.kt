@@ -28,7 +28,9 @@ import org.mozilla.reference.browser.helpers.click
 class AwesomeBarRobot {
 
     fun verifySearchSuggestion(searchSuggestionTitle: String) = assertSearchSuggestion(searchSuggestionTitle)
+
     fun verifyLinkFromClipboard(clipboardLink: String) = assertLinkFromClipboard(clipboardLink)
+
     fun verifyPastedToolbarText(expectedText: String) = assertPastedToolbarText(expectedText)
 
     fun typeText(searchTerm: String) {

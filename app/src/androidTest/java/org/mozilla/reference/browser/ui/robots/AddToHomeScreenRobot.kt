@@ -16,6 +16,7 @@ class AddToHomeScreenRobot {
         cancelAddToHomeScreenButton().waitForExists(waitingTime)
         cancelAddToHomeScreenButton().click()
     }
+
     fun clickAddAutomaticallyToHomeScreenButton() {
         addAutomaticallyToHomeScreenButton().waitForExists(waitingTime)
         addAutomaticallyToHomeScreenButton().click()
@@ -32,6 +33,7 @@ class AddToHomeScreenRobot {
     }
 
     private fun cancelAddToHomeScreenButton() = mDevice.findObject(UiSelector().textContains("CANCEL"))
+
     private fun addAutomaticallyToHomeScreenButton() =
         mDevice.findObject(UiSelector().textContains("ADD AUTOMATICALLY"))
 }

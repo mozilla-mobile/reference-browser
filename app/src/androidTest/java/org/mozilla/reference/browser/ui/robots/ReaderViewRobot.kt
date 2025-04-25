@@ -29,19 +29,33 @@ import org.mozilla.reference.browser.ui.robots.mDevice
 class ReaderViewRobot {
 
     fun verifyAppearanceButtonExists() = assertAppearanceButtonExists()
+
     fun verifyAppearanceButtonDoesntExists() = assertAppearanceButtonDoesntExists()
+
     fun verifyAppearanceMenuExists() = assertAppearanceMenu()
+
     fun verifyFontGroupButtons() = assertFontGroupButtons()
+
     fun verifyIncreaseFontSizeButton() = assertIncreaseFontSizeButton()
+
     fun verifyDecreaseFontSizeButton() = assertDecreaseFontSizeButton()
+
     fun verifyColorSchemeGroupButtons() = assertColorSchemeGroupButtons()
+
     fun clickAppearanceButton() = appearanceButton().click()
+
     fun clickSansSerifButton() = sansSerifButton().click()
+
     fun clickSerifButton() = serifButton().click()
+
     fun clickIncreaseFontSizeButton() = increaseFontSizeButton().click()
+
     fun clickDecreaseFontSizeButton() = decreaseFontSizeButton().click()
+
     fun clickLightColorButton() = lightColorButton().click()
+
     fun clickSepiaColorButton() = sepiaColorButton().click()
+
     fun clickDarkColorButton() = darkColorButton().click()
 
     fun verifyActiveAppearanceFont(fontType: String) {

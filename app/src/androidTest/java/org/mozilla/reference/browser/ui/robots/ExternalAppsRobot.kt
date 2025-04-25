@@ -23,8 +23,11 @@ import org.mozilla.reference.browser.helpers.TestHelper.packageName
  */
 class ExternalAppsRobot {
     fun verifyAndroidDefaultApps() = assertDefaultAppsLayout()
+
     fun verifyAndroidAutofillServices() = assertAutofillServices()
+
     fun verifyFxAQrCode() = assertFXAQrCode()
+
     fun verifyYouTubeApp() = assertYouTubeApp()
 
     class Transition {

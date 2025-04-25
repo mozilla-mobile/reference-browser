@@ -25,6 +25,7 @@ import org.mozilla.reference.browser.sync.BrowserFxAEntryPoint
 class PairSettingsFragment : Fragment(), UserInteractionHandler {
     private val qrFeature = ViewBoundFeatureWrapper<QrFeature>()
     private lateinit var requestPermissionLauncher: ActivityResultLauncher<String>
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         requestPermissionLauncher =
@@ -34,6 +35,7 @@ class PairSettingsFragment : Fragment(), UserInteractionHandler {
                 }
             }
     }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_pairing, container, false)
     }
