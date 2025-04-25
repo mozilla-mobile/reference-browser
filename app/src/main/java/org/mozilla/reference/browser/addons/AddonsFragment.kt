@@ -27,7 +27,9 @@ import org.mozilla.reference.browser.ext.components
 /**
  * Fragment use for managing add-ons.
  */
-class AddonsFragment : Fragment(), AddonsManagerAdapterDelegate {
+class AddonsFragment :
+    Fragment(),
+    AddonsManagerAdapterDelegate {
     private val webExtensionPromptFeature = ViewBoundFeatureWrapper<WebExtensionPromptFeature>()
     private lateinit var recyclerView: RecyclerView
     private val scope = CoroutineScope(Dispatchers.IO)
@@ -45,7 +47,10 @@ class AddonsFragment : Fragment(), AddonsManagerAdapterDelegate {
         return inflater.inflate(R.layout.fragment_add_ons, container, false)
     }
 
-    override fun onViewCreated(rootView: View, savedInstanceState: Bundle?) {
+    override fun onViewCreated(
+        rootView: View,
+        savedInstanceState: Bundle?,
+    ) {
         super.onViewCreated(rootView, savedInstanceState)
         bindRecyclerView(rootView)
         webExtensionPromptFeature.set(

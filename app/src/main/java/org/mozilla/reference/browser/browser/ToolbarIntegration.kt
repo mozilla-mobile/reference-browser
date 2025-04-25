@@ -53,7 +53,8 @@ class ToolbarIntegration(
     private val tabsUseCases: TabsUseCases,
     private val webAppUseCases: WebAppUseCases,
     sessionId: String? = null,
-) : LifecycleAwareFeature, UserInteractionHandler {
+) : LifecycleAwareFeature,
+    UserInteractionHandler {
     private val shippedDomainsProvider = ShippedDomainsProvider().also {
         it.initialize(context)
     }

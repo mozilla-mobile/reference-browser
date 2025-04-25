@@ -23,7 +23,8 @@ class FindInPageIntegration(
     private val sessionId: String? = null,
     private val view: FindInPageView,
     engineView: EngineView,
-) : LifecycleAwareFeature, UserInteractionHandler {
+) : LifecycleAwareFeature,
+    UserInteractionHandler {
     private val feature = FindInPageFeature(store, view, engineView, ::onClose)
 
     override fun start() {
@@ -72,7 +73,11 @@ class FindInPageBarBehavior(
     context: Context,
     attrs: AttributeSet,
 ) : CoordinatorLayout.Behavior<FindInPageBar>(context, attrs) {
-    override fun layoutDependsOn(parent: CoordinatorLayout, child: FindInPageBar, dependency: View): Boolean {
+    override fun layoutDependsOn(
+        parent: CoordinatorLayout,
+        child: FindInPageBar,
+        dependency: View,
+    ): Boolean {
         if (dependency is BrowserToolbar) {
             return true
         }
@@ -80,7 +85,11 @@ class FindInPageBarBehavior(
         return super.layoutDependsOn(parent, child, dependency)
     }
 
-    override fun onDependentViewChanged(parent: CoordinatorLayout, child: FindInPageBar, dependency: View): Boolean {
+    override fun onDependentViewChanged(
+        parent: CoordinatorLayout,
+        child: FindInPageBar,
+        dependency: View,
+    ): Boolean {
         return if (dependency is BrowserToolbar) {
             repositionFindInPageBar(child, dependency)
             true
@@ -89,7 +98,10 @@ class FindInPageBarBehavior(
         }
     }
 
-    private fun repositionFindInPageBar(findInPageView: FindInPageBar, toolbar: BrowserToolbar) {
+    private fun repositionFindInPageBar(
+        findInPageView: FindInPageBar,
+        toolbar: BrowserToolbar,
+    ) {
         findInPageView.translationY = (toolbar.translationY + toolbar.height * -1.0).toFloat()
     }
 }

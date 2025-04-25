@@ -57,7 +57,11 @@ object NotificationManager {
      * @param tabs A list of tabs to be displayed.
      */
     @SuppressLint("MissingPermission", "NotifyUsage")
-    fun showReceivedTabs(context: Context, device: Device?, tabs: List<TabData>) {
+    fun showReceivedTabs(
+        context: Context,
+        device: Device?,
+        tabs: List<TabData>,
+    ) {
         // In the future, experiment with displaying multiple tabs from the same device as as Notification Groups.
         // For now, a single notification per tab received will suffice.
         logger.debug("Showing ${tabs.size} tab(s) received from deviceID=${device?.id}")
@@ -128,7 +132,10 @@ object NotificationManager {
      * Launch a notification of the data policy, and record notification time and version.
      */
     @SuppressLint("MissingPermission", "NotifyUsage")
-    private fun notifyDataPolicy(context: Context, preferences: SharedPreferences) {
+    private fun notifyDataPolicy(
+        context: Context,
+        preferences: SharedPreferences,
+    ) {
         val resources = context.resources
 
         val notificationTitle = resources.getString(R.string.datareporting_notification_title)

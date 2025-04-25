@@ -9,7 +9,9 @@ import mozilla.components.concept.sync.FxAEntryPoint
 /**
  * Reference Browser implementation of [FxAEntryPoint].
  */
-enum class BrowserFxAEntryPoint(override val entryName: String) : FxAEntryPoint {
+enum class BrowserFxAEntryPoint(
+    override val entryName: String,
+) : FxAEntryPoint {
     /**
      * Authenticating from the home menu (the hamburger menu)
      */

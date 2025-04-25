@@ -28,14 +28,20 @@ object Settings {
             "",
         ) ?: ""
 
-    fun setOverrideAmoUser(context: Context, value: String) {
+    fun setOverrideAmoUser(
+        context: Context,
+        value: String,
+    ) {
         val key = context.getString(R.string.pref_key_override_amo_user)
         PreferenceManager.getDefaultSharedPreferences(context).edit {
             putString(key, value)
         }
     }
 
-    fun setOverrideAmoCollection(context: Context, value: String) {
+    fun setOverrideAmoCollection(
+        context: Context,
+        value: String,
+    ) {
         val key = context.getString(R.string.pref_key_override_amo_collection)
         PreferenceManager.getDefaultSharedPreferences(context).edit {
             putString(key, value)

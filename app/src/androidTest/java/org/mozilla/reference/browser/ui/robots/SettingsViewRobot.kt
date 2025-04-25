@@ -79,13 +79,15 @@ class SettingsViewRobot {
 
     // toggleRemoteDebugging does not yet verify that the debug service is started
     // server runs on port 6000
-    fun toggleRemoteDebuggingOn() = {
+    fun toggleRemoteDebuggingOn() =
+        {
         Espresso.onView(withText("OFF")).check(matches(isDisplayed()))
         remoteDebuggingToggle().click()
         Espresso.onView(withText("ON")).check(matches(isDisplayed()))
     }
 
-    fun toggleRemoteDebuggingOff() = {
+    fun toggleRemoteDebuggingOff() =
+        {
         Espresso.onView(withText("ON")).check(matches(isDisplayed()))
         remoteDebuggingToggle().click()
         Espresso.onView(withText("OFF")).check(matches(isDisplayed()))
@@ -177,7 +179,8 @@ private fun privacyButton() = Espresso.onView(withText(R.string.privacy))
 
 private fun privacySummary() = Espresso.onView(withText(R.string.preferences_privacy_summary))
 
-private fun openLinksInAppsToggle() = Espresso.onView(
+private fun openLinksInAppsToggle() =
+    Espresso.onView(
     allOf(
         withId(R.id.switchWidget),
         hasCousin(withText(R.string.open_links_in_apps)),
@@ -194,7 +197,8 @@ private fun autofillAppsSummary() = onView(withText("Autofill logins and passwor
 
 private fun developerToolsHeading() = Espresso.onView(withText(R.string.developer_tools_category))
 
-private fun remoteDebuggingToggle() = Espresso.onView(
+private fun remoteDebuggingToggle() =
+    Espresso.onView(
     allOf(
         withId(R.id.switchWidget),
         hasCousin(withText(R.string.preferences_remote_debugging)),
@@ -213,49 +217,63 @@ private fun assertNavigateUpButton() {
 
 private fun assertSyncSigninButton() = assertUIObjectExists(syncSignInButton())
 
-private fun assertSyncHistorySummary() = syncHistorySummary()
+private fun assertSyncHistorySummary() =
+    syncHistorySummary()
     .check(matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
 
-private fun assertSyncQrCodeButton() = syncQrCodeButton()
+private fun assertSyncQrCodeButton() =
+    syncQrCodeButton()
     .check(matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
 
-private fun assertSyncQrSummary() = syncQrSummary()
+private fun assertSyncQrSummary() =
+    syncQrSummary()
     .check(matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
 
-private fun assertPrivacyButton() = privacyButton()
+private fun assertPrivacyButton() =
+    privacyButton()
     .check(matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
 
-private fun assertPrivacySummary() = privacySummary()
+private fun assertPrivacySummary() =
+    privacySummary()
     .check(matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
 
-private fun assertOpenLinksInApps() = openLinksInAppsToggle()
+private fun assertOpenLinksInApps() =
+    openLinksInAppsToggle()
     .check(matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
 
-private fun assertMakeDefaultBrowserButton() = makeDefaultBrowserButton()
+private fun assertMakeDefaultBrowserButton() =
+    makeDefaultBrowserButton()
     .check(matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
 
-private fun assertAutofillAppsButton() = autofillAppsButton()
+private fun assertAutofillAppsButton() =
+    autofillAppsButton()
     .check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
 
-private fun assertAutofillAppsSummary() = autofillAppsSummary()
+private fun assertAutofillAppsSummary() =
+    autofillAppsSummary()
     .check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
 
-private fun assertJetpackComposeButton() = jetpackComposeButton()
+private fun assertJetpackComposeButton() =
+    jetpackComposeButton()
     .check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
 
-private fun assertDeveloperToolsHeading() = developerToolsHeading()
+private fun assertDeveloperToolsHeading() =
+    developerToolsHeading()
     .check(matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
 
-private fun assertRemoteDebugging() = remoteDebuggingToggle()
+private fun assertRemoteDebugging() =
+    remoteDebuggingToggle()
     .check(matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
 
-private fun assertCustomAddonCollectionButton() = customAddonCollectionButton()
+private fun assertCustomAddonCollectionButton() =
+    customAddonCollectionButton()
     .check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
 
 private fun assertMozillaHeading() =
     mozillaHeading().check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
 
-private fun assertAboutReferenceBrowserButton() = aboutReferenceBrowserButton()
+private fun assertAboutReferenceBrowserButton() =
+    aboutReferenceBrowserButton()
     .check(matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
 
 private fun assertCustomAddonCollectionPanel() {

@@ -36,7 +36,8 @@ fun isSelected(isSelected: Boolean): Matcher<View> = maybeInvertMatcher(espresso
  *
  * @param matcher The matcher that our view cousins will be checked against to
  */
-fun hasCousin(matcher: Matcher<View>): Matcher<View> = object : BaseMatcher<View>() {
+fun hasCousin(matcher: Matcher<View>): Matcher<View> =
+    object : BaseMatcher<View>() {
     override fun describeTo(description: Description?) {
         description?.apply {
             appendText("has cousin that matches: ")
@@ -54,7 +55,8 @@ fun hasCousin(matcher: Matcher<View>): Matcher<View> = object : BaseMatcher<View
             ?.count() == 1
     }
 
-    private fun matchChildren(matcher: Matcher<View>): (View?) -> Boolean = {
+    private fun matchChildren(matcher: Matcher<View>): (View?) -> Boolean =
+        {
         (it as? ViewGroup)
             ?.children
             ?.filter { v -> matcher.matches(v) }
@@ -62,7 +64,11 @@ fun hasCousin(matcher: Matcher<View>): Matcher<View> = object : BaseMatcher<View
     }
 }
 
-private fun maybeInvertMatcher(matcher: Matcher<View>, useUnmodifiedMatcher: Boolean): Matcher<View> = when {
+private fun maybeInvertMatcher(
+    matcher: Matcher<View>,
+    useUnmodifiedMatcher: Boolean,
+): Matcher<View> =
+    when {
     useUnmodifiedMatcher -> matcher
     else -> not(matcher)
 }

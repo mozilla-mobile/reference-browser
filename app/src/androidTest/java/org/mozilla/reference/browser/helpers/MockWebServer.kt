@@ -66,7 +66,10 @@ class AndroidAssetDispatcher : Dispatcher() {
 }
 
 @Throws(IOException::class)
-private fun fileToResponse(path: String, file: InputStream): MockResponse {
+private fun fileToResponse(
+    path: String,
+    file: InputStream,
+): MockResponse {
     return MockResponse()
         .setResponseCode(HTTP_OK)
         .setBody(fileToBytes(file)!!)

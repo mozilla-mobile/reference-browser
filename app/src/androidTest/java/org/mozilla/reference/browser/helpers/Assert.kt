@@ -13,7 +13,11 @@ import org.junit.Assert.assertEquals
  * pixel data are the same (within the provided delta): this is the same metrics that
  * [Bitmap.sameAs] uses.
  */
-fun assertEqualsWithDelta(expectedB: Bitmap, actualB: Bitmap, delta: Float) {
+fun assertEqualsWithDelta(
+    expectedB: Bitmap,
+    actualB: Bitmap,
+    delta: Float,
+) {
     assertEquals("widths should be equal", expectedB.width, actualB.width)
     assertEquals("heights should be equal", expectedB.height, actualB.height)
     assertEquals("config should be equal", expectedB.config, actualB.config)

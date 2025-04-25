@@ -26,7 +26,10 @@ class NotificationRobot {
         assertTrue(systemMediaNotificationControlButton(action).waitForExists(waitingTime))
     }
 
-    fun verifyDownloadNotificationExist(notificationMessage: String, fileName: String) {
+    fun verifyDownloadNotificationExist(
+        notificationMessage: String,
+        fileName: String,
+    ) {
         val notification = UiSelector().text(notificationMessage)
         var notificationFound = mDevice.findObject(notification).waitForExists(waitingTime)
         val downloadFilename = mDevice.findObject(UiSelector().text(fileName))
@@ -39,7 +42,10 @@ class NotificationRobot {
         assertTrue(downloadFilename.exists())
     }
 
-    fun verifyDownloadNotificationDoesNotExist(notificationMessage: String, fileName: String) {
+    fun verifyDownloadNotificationDoesNotExist(
+        notificationMessage: String,
+        fileName: String,
+    ) {
         val notification = UiSelector().text(notificationMessage)
         val notificationFound = mDevice.findObject(notification).waitForExists(waitingTime)
         val downloadFilename = mDevice.findObject(UiSelector().text(fileName))

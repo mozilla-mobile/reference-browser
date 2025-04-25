@@ -30,13 +30,21 @@ import org.mozilla.reference.browser.ext.requireComponents
 /**
  * A fragment for displaying the tabs tray.
  */
-class TabsTrayFragment : Fragment(), UserInteractionHandler {
+class TabsTrayFragment :
+    Fragment(),
+    UserInteractionHandler {
     private var tabsFeature: TabsFeature? = null
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
-        inflater.inflate(R.layout.fragment_tabstray, container, false)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?,
+    ): View = inflater.inflate(R.layout.fragment_tabstray, container, false)
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun onViewCreated(
+        view: View,
+        savedInstanceState: Bundle?,
+    ) {
         super.onViewCreated(view, savedInstanceState)
 
         val trayAdapter = createAndSetupTabsTray(requireContext())
@@ -99,12 +107,18 @@ class TabsTrayFragment : Fragment(), UserInteractionHandler {
             viewHolderProvider = viewHolderProvider,
             styling = trayStyling,
             delegate = object : TabsTray.Delegate {
-                override fun onTabSelected(tab: TabSessionState, source: String?) {
+                override fun onTabSelected(
+                    tab: TabSessionState,
+                    source: String?,
+                ) {
                     requireComponents.useCases.tabsUseCases.selectTab(tab.id)
                     closeTabsTray()
                 }
 
-                override fun onTabClosed(tab: TabSessionState, source: String?) {
+                override fun onTabClosed(
+                    tab: TabSessionState,
+                    source: String?,
+                ) {
                     requireComponents.useCases.tabsUseCases.removeTab(tab.id)
                 }
             },

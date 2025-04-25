@@ -28,7 +28,8 @@ class AwesomeBarWrapper
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0,
-) : AbstractComposeView(context, attrs, defStyleAttr), AwesomeBar {
+) : AbstractComposeView(context, attrs, defStyleAttr),
+    AwesomeBar {
     private val providers = mutableStateOf(emptyList<AwesomeBar.SuggestionProvider>())
     private val text = mutableStateOf("")
     private var onEditSuggestionListener: ((String) -> Unit)? = null

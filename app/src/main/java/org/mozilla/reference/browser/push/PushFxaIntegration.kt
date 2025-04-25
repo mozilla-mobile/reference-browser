@@ -81,7 +81,10 @@ internal class OneTimePushMessageObserver(
     private val lazyAccountManager: Lazy<FxaAccountManager>,
     private val pushFeature: AutoPushFeature,
 ) : AutoPushFeature.Observer {
-    override fun onMessageReceived(scope: PushScope, message: ByteArray?) {
+    override fun onMessageReceived(
+        scope: PushScope,
+        message: ByteArray?,
+    ) {
         // Ignore empty push messages.
         val rawBytes = message ?: return
 

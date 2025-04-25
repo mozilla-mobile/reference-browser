@@ -45,11 +45,9 @@ class TabTrayMenuRobot {
 
     fun verifyNewTabButton() = assertNewTabButton()
 
-    fun verifyRegularBrowsingTab(isSelected: Boolean) =
-        regularTabs().assertIsSelected(isSelected)
+    fun verifyRegularBrowsingTab(isSelected: Boolean) = regularTabs().assertIsSelected(isSelected)
 
-    fun verifyPrivateBrowsingTab(isSelected: Boolean) =
-        privateTabs().assertIsSelected(isSelected)
+    fun verifyPrivateBrowsingTab(isSelected: Boolean) = privateTabs().assertIsSelected(isSelected)
 
     fun verifyThereAreNotPrivateTabsOpen() = assertThereAreNoPrivateTabsOpen()
 
@@ -103,7 +101,10 @@ class TabTrayMenuRobot {
             return NavigationToolbarRobot.Transition()
         }
 
-        fun clickOpenTab(title: String, interact: BrowserRobot.() -> Unit): BrowserRobot.Transition {
+        fun clickOpenTab(
+            title: String,
+            interact: BrowserRobot.() -> Unit,
+        ): BrowserRobot.Transition {
             openTab(title).clickAndWaitForNewWindow()
 
             BrowserRobot().interact()
@@ -124,16 +125,20 @@ private fun closeTabButtonTabTray() = onView(withId(R.id.mozac_browser_tabstray_
 
 private fun tab() = onView(TabMatcher.withText("about:blank"))
 
-private fun assertRegularBrowsingTabs() = regularTabs()
+private fun assertRegularBrowsingTabs() =
+    regularTabs()
     .check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
 
-private fun assertPrivateBrowsingTabs() = privateTabs()
+private fun assertPrivateBrowsingTabs() =
+    privateTabs()
     .check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
 
-private fun assertGoBackButton() = goBackButton()
+private fun assertGoBackButton() =
+    goBackButton()
     .check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
 
-private fun assertNewTabButton() = newTabButton()
+private fun assertNewTabButton() =
+    newTabButton()
     .check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
 
 private fun assertPrivateTabs() {

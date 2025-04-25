@@ -21,7 +21,9 @@ import org.mozilla.reference.browser.tabs.PrivatePage
  * component; this creates a circular dependency, since firefoxAccountsFeature relies on tabsUseCases
  * which in turn needs 'core' itself.
  */
-class AppRequestInterceptor(private val context: Context) : RequestInterceptor {
+class AppRequestInterceptor(
+    private val context: Context,
+) : RequestInterceptor {
     override fun onLoadRequest(
         engineSession: EngineSession,
         uri: String,

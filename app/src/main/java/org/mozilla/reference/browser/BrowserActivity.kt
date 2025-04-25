@@ -45,8 +45,7 @@ open class BrowserActivity : AppCompatActivity() {
     /**
      * Returns a new instance of [BrowserFragment] to display.
      */
-    open fun createBrowserFragment(sessionId: String?): Fragment =
-        BrowserFragment.create(sessionId)
+    open fun createBrowserFragment(sessionId: String?): Fragment = BrowserFragment.create(sessionId)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -114,7 +113,12 @@ open class BrowserActivity : AppCompatActivity() {
         super.onUserLeaveHint()
     }
 
-    override fun onCreateView(parent: View?, name: String, context: Context, attrs: AttributeSet): View? =
+    override fun onCreateView(
+        parent: View?,
+        name: String,
+        context: Context,
+        attrs: AttributeSet,
+    ): View? =
         when (name) {
             EngineView::class.java.name ->
                 components.core.engine

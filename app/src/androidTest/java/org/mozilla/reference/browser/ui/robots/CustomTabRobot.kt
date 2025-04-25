@@ -164,8 +164,7 @@ private fun findInPage() = onView(withText("Find in Page"))
 
 private fun openInBrowserButton() = onView(withText("Open in Browser"))
 
-private fun assertCloseButton() =
-    closeButton().check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+private fun assertCloseButton() = closeButton().check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
 
 private fun assertTrackingProtectionIcon() =
     trackingProtectionIcon().check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
@@ -173,8 +172,7 @@ private fun assertTrackingProtectionIcon() =
 private fun assertSecurityIndicator() =
     securityIndicator().check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
 
-private fun assertMenuButton() =
-    menuButton().check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+private fun assertMenuButton() = menuButton().check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
 
 private fun assertActionButton() =
     actionButton().check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
@@ -199,11 +197,9 @@ private fun assertForwardButton() =
 private fun assertRefreshButton() =
     refreshButton().check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
 
-private fun assertStopButton() =
-    stopButton().check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+private fun assertStopButton() = stopButton().check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
 
-private fun assertShareButton() =
-    assertTrue(shareButton().waitForExists(waitingTime))
+private fun assertShareButton() = assertTrue(shareButton().waitForExists(waitingTime))
 
 private fun assertRequestDesktopButton() =
     requestDesktopButton().check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))

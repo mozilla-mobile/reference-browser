@@ -8,7 +8,8 @@ import android.net.Uri
 
 // Extension functions for the String class
 
-fun String?.toUri(): Uri? = if (this == null) {
+fun String?.toUri(): Uri? =
+    if (this == null) {
     null
 } else {
     Uri.parse(this)

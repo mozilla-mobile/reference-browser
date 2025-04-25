@@ -15,7 +15,10 @@ import org.mozilla.reference.browser.ext.requireComponents
 
 class PrivacySettingsFragment : PreferenceFragmentCompat() {
 
-    override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
+    override fun onCreatePreferences(
+        savedInstanceState: Bundle?,
+        rootKey: String?,
+    ) {
         setPreferencesFromResource(R.xml.privacy_preferences, rootKey)
 
         val context = requireContext()
