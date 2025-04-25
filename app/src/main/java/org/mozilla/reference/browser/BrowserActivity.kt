@@ -32,7 +32,6 @@ import org.mozilla.reference.browser.ext.isCrashReportActive
  * Activity that holds the [BrowserFragment].
  */
 open class BrowserActivity : AppCompatActivity() {
-
     private lateinit var crashIntegration: CrashIntegration
 
     private val sessionId: String?

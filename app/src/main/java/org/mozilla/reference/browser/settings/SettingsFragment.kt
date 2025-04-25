@@ -41,7 +41,6 @@ import kotlin.system.exitProcess
 private typealias RBSettings = org.mozilla.reference.browser.settings.Settings
 
 class SettingsFragment : PreferenceFragmentCompat() {
-
     interface ActionBarUpdater {
         fun updateTitle(titleResId: Int)
     }

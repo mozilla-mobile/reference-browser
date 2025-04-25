@@ -23,8 +23,7 @@ class LastTabFeature(
     private val activity: Activity,
 ) : LifecycleAwareFeature,
     UserInteractionHandler {
-
-    override fun start() = Unit
+        override fun start() = Unit
 
     override fun stop() = Unit
 

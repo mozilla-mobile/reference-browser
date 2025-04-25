@@ -33,7 +33,6 @@ import org.mozilla.reference.browser.ui.robots.navigationToolbar
  */
 
 class TabTrayMenuTest {
-
     private lateinit var mockWebServer: MockWebServer
 
     @get:Rule val activityTestRule = BrowserActivityTestRule()

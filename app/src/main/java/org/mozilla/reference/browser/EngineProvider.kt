@@ -17,7 +17,6 @@ import org.mozilla.geckoview.GeckoRuntimeSettings
 import org.mozilla.reference.browser.ext.isCrashReportActive
 
 object EngineProvider {
-
     private var runtime: GeckoRuntime? = null
 
     @Synchronized

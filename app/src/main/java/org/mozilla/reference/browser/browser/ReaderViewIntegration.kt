@@ -30,8 +30,7 @@ class ReaderViewIntegration(
     readerViewAppearanceButton: FloatingActionButton,
 ) : LifecycleAwareFeature,
     UserInteractionHandler {
-
-    private var readerViewButtonVisible = false
+        private var readerViewButtonVisible = false
 
     private val readerViewButton: BrowserToolbar.ToggleButton = BrowserToolbar.ToggleButton(
         image = ContextCompat.getDrawable(context, R.drawable.mozac_ic_reader_view_24)!!,

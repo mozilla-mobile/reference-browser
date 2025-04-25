@@ -70,7 +70,6 @@ class TabTrayMenuRobot {
     }
 
     class Transition {
-
         fun openNewTab(interact: NavigationToolbarRobot.() -> Unit): NavigationToolbarRobot.Transition {
             newTabButton().click()
             NavigationToolbarRobot().interact()

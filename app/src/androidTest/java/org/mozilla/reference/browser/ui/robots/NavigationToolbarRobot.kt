@@ -27,7 +27,6 @@ import org.mozilla.reference.browser.helpers.click
  * Implementation of Robot Pattern for the navigation toolbar menu.
  */
 class NavigationToolbarRobot {
-
     fun verifyNoTabAddressView() = assertNoTabAddressText()
 
     fun verifyNewTabAddressView(url: String) = assertNewTabAddressText(url)
@@ -37,7 +36,6 @@ class NavigationToolbarRobot {
     fun checkNumberOfTabsTabCounter(numTabs: String) = numberOfOpenTabsTabCounter.check(matches(withText(numTabs)))
 
     class Transition {
-
         val mDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
 
         fun enterUrlAndEnterToBrowser(

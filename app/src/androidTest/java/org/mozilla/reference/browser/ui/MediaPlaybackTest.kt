@@ -17,7 +17,6 @@ import org.mozilla.reference.browser.ui.robots.navigationToolbar
 import org.mozilla.reference.browser.ui.robots.notificationShade
 
 class MediaPlaybackTest {
-
     private lateinit var mockWebServer: MockWebServer
 
     @get:Rule

@@ -48,8 +48,7 @@ class CustomTabsIntegration(
     private val activity: Activity?,
 ) : LifecycleAwareFeature,
     UserInteractionHandler {
-
-    private val session = store.state.findCustomTab(sessionId)
+        private val session = store.state.findCustomTab(sessionId)
     private val logger = Logger("CustomTabsIntegration")
 
     init {

@@ -24,7 +24,6 @@ import org.mozilla.reference.browser.helpers.click
  *  Implementation of the robot pattern for Custom tabs
  */
 class CustomTabRobot {
-
     fun verifyCloseButton() = assertCloseButton()
 
     fun verifyTrackingProtectionIcon() = assertTrackingProtectionIcon()

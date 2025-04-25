@@ -20,7 +20,6 @@ class BrowserActivityTestRule(
     initialTouchMode: Boolean = false,
     launchActivity: Boolean = true,
 ) : ActivityTestRule<BrowserActivity>(BrowserActivity::class.java, initialTouchMode, launchActivity) {
-
     /**
      * Ensures the test doesn't advance until session page load is completed.
      *

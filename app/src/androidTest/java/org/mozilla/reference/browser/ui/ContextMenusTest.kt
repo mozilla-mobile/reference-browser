@@ -17,7 +17,6 @@ import org.mozilla.reference.browser.ui.robots.browser
 import org.mozilla.reference.browser.ui.robots.navigationToolbar
 
 class ContextMenusTest {
-
     private lateinit var mockWebServer: MockWebServer
 
     @get:Rule

@@ -13,8 +13,7 @@ import mozilla.components.support.base.feature.UserInteractionHandler
 class SettingsActivity :
     AppCompatActivity(),
     SettingsFragment.ActionBarUpdater {
-
-    override fun onCreate(savedInstanceState: Bundle?) {
+        override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         if (savedInstanceState == null) {

@@ -26,7 +26,6 @@ import org.mozilla.reference.browser.helpers.click
  * Implementation of Robot Pattern for awesomebar.
  */
 class AwesomeBarRobot {
-
     fun verifySearchSuggestion(searchSuggestionTitle: String) = assertSearchSuggestion(searchSuggestionTitle)
 
     fun verifyLinkFromClipboard(clipboardLink: String) = assertLinkFromClipboard(clipboardLink)
@@ -71,7 +70,6 @@ class AwesomeBarRobot {
     }
 
     class Transition {
-
         fun openWebPage(interact: NavigationToolbarRobot.() -> Unit): NavigationToolbarRobot.Transition {
             NavigationToolbarRobot().interact()
             return NavigationToolbarRobot.Transition()

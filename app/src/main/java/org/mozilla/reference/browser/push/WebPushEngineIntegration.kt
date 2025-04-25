@@ -21,7 +21,6 @@ class WebPushEngineIntegration(
     private val engine: Engine,
     private val pushFeature: AutoPushFeature,
 ) : AutoPushFeature.Observer {
-
     private var handler: WebPushHandler? = null
     private val delegate = WebPushEngineDelegate(pushFeature)
 

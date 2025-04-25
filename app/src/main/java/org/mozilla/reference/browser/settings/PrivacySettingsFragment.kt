@@ -14,7 +14,6 @@ import org.mozilla.reference.browser.ext.getPreferenceKey
 import org.mozilla.reference.browser.ext.requireComponents
 
 class PrivacySettingsFragment : PreferenceFragmentCompat() {
-
     override fun onCreatePreferences(
         savedInstanceState: Bundle?,
         rootKey: String?,

@@ -25,7 +25,6 @@ import org.mozilla.reference.browser.ext.components
  * An activity to show the settings of an add-on.
  */
 class AddonSettingsActivity : AppCompatActivity() {
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_on_settings)

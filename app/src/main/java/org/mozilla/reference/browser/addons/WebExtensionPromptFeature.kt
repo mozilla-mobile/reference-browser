@@ -34,7 +34,6 @@ class WebExtensionPromptFeature(
     private val context: Context,
     private val fragmentManager: FragmentManager,
 ) : LifecycleAwareFeature {
-
     /**
      * Whether or not an add-on installation is in progress.
      */

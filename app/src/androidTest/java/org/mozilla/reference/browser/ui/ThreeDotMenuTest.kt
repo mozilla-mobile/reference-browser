@@ -39,7 +39,6 @@ import org.mozilla.reference.browser.ui.robots.navigationToolbar
  */
 
 class ThreeDotMenuTest {
-
     private val mDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
     private lateinit var mockWebServer: MockWebServer
 
