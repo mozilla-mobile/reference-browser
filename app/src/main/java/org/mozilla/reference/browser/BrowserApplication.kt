@@ -123,7 +123,8 @@ open class BrowserApplication : Application() {
 
         // Now that we have restored our previous state (if there's one) let's setup auto saving the state while
         // the app is used.
-        sessionStorage.autoSave(store)
+        sessionStorage
+            .autoSave(store)
             .periodicallyInForeground(interval = 30, unit = TimeUnit.SECONDS)
             .whenGoingToBackground()
             .whenSessionsChange()
@@ -145,6 +146,7 @@ private fun setupCrashReporting(application: BrowserApplication) {
         application
             .components
             .analytics
-            .crashReporter.install(application)
+            .crashReporter
+            .install(application)
     }
 }

@@ -60,7 +60,8 @@ class CustomTabRobot {
     fun clickForwardButton() = forwardButton().click()
 
     fun clickGenericLink(expectedText: String) {
-        mDevice.findObject(UiSelector().resourceId("$packageName:id/engineView"))
+        mDevice
+            .findObject(UiSelector().resourceId("$packageName:id/engineView"))
             .waitForExists(waitingTime)
         mDevice.findObject(UiSelector().textContains(expectedText)).waitForExists(waitingTime)
         val link = mDevice.findObject(By.textContains(expectedText))
@@ -70,12 +71,14 @@ class CustomTabRobot {
     fun switchRequestDesktopSiteToggle() {
         try {
             // Click the Request desktop site toggle
-            mDevice.findObject(UiSelector().textContains("Request desktop site"))
+            mDevice
+                .findObject(UiSelector().textContains("Request desktop site"))
                 .waitForExists(waitingTime)
             requestDesktopButton().click()
             mDevice.waitForIdle()
             assertTrue(
-                mDevice.findObject(
+                mDevice
+                    .findObject(
                     UiSelector()
                         .resourceId("$packageName:id/mozac_browser_menu_recyclerView"),
                 ).waitUntilGone(waitingTime),
@@ -88,7 +91,8 @@ class CustomTabRobot {
             }.openMainMenu {
             }
             // Click again the Request desktop site toggle
-            mDevice.findObject(UiSelector().textContains("Request desktop site"))
+            mDevice
+                .findObject(UiSelector().textContains("Request desktop site"))
                 .waitForExists(waitingTime)
             requestDesktopButton().click()
             mDevice.waitForIdle()
@@ -97,7 +101,8 @@ class CustomTabRobot {
 
     class Transition {
         fun openMainMenu(interact: CustomTabRobot.() -> Unit): Transition {
-            mDevice.findObject(UiSelector().resourceId("$packageName:id/mozac_browser_toolbar_menu"))
+            mDevice
+                .findObject(UiSelector().resourceId("$packageName:id/mozac_browser_toolbar_menu"))
                 .waitForExists(waitingTime)
 
             menuButton().click()
@@ -175,13 +180,15 @@ private fun assertActionButton() =
     actionButton().check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
 
 private fun assertCustomTabTitle(title: String) {
-    mDevice.findObject(UiSelector().resourceId("$packageName:id/mozac_browser_toolbar_title_view"))
+    mDevice
+        .findObject(UiSelector().resourceId("$packageName:id/mozac_browser_toolbar_title_view"))
         .waitForExists(waitingTime)
     assertTrue(mDevice.findObject(UiSelector().textContains(title)).waitForExists(waitingTime))
 }
 
 private fun assertCustomTabUrl(url: String) {
-    mDevice.findObject(UiSelector().resourceId("$packageName:id/mozac_browser_toolbar_url_view"))
+    mDevice
+        .findObject(UiSelector().resourceId("$packageName:id/mozac_browser_toolbar_url_view"))
         .waitForExists(waitingTime)
     assertTrue(mDevice.findObject(UiSelector().textContains(url)).waitForExists(waitingTime))
 }

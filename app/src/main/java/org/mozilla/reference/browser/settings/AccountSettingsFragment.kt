@@ -151,8 +151,10 @@ class AccountSettingsFragment : PreferenceFragmentCompat() {
                 // Trigger a sync & update devices.
                 requireComponents.backgroundServices.accountManager.syncNow(SyncReason.User)
                 // Poll for device events.
-                requireComponents.backgroundServices.accountManager.authenticatedAccount()
-                    ?.deviceConstellation()?.run {
+                requireComponents.backgroundServices.accountManager
+                    .authenticatedAccount()
+                    ?.deviceConstellation()
+                    ?.run {
                         refreshDevices()
                         pollForCommands()
                     }
@@ -178,7 +180,8 @@ class AccountSettingsFragment : PreferenceFragmentCompat() {
         }
     }
 
-    private fun createCustomTabIntent(context: Context, url: String): Intent = CustomTabsIntent.Builder()
+    private fun createCustomTabIntent(context: Context, url: String): Intent = CustomTabsIntent
+        .Builder()
         .setInstantAppsEnabled(false)
         .build()
         .intent

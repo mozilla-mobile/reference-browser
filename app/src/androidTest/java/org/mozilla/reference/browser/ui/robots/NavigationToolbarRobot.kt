@@ -45,7 +45,8 @@ class NavigationToolbarRobot {
             awesomeBar().setText(url.toString())
             mDevice.pressEnter()
 
-            mDevice.findObject(
+            mDevice
+                .findObject(
                 UiSelector()
                     .resourceId("$packageName:id/mozac_browser_toolbar_progress"),
             ).waitUntilGone(waitingTime)
@@ -55,11 +56,11 @@ class NavigationToolbarRobot {
         }
 
         fun openThreeDotMenu(interact: ThreeDotMenuRobot.() -> Unit): ThreeDotMenuRobot.Transition {
-            mDevice.findObject(
+            mDevice
+                .findObject(
                 UiSelector()
                     .resourceId("$packageName:id/mozac_browser_toolbar_menu"),
-            )
-                .waitForExists(waitingTime)
+            ).waitForExists(waitingTime)
             threeDotMenuButton().click()
 
             ThreeDotMenuRobot().interact()
@@ -75,7 +76,8 @@ class NavigationToolbarRobot {
         fun clickToolbar(interact: AwesomeBarRobot.() -> Unit): AwesomeBarRobot.Transition {
             urlBar().click()
             mDevice.waitForIdle()
-            mDevice.findObject(UiSelector().textContains("Search or enter address"))
+            mDevice
+                .findObject(UiSelector().textContains("Search or enter address"))
                 .waitForExists(waitingTime)
             AwesomeBarRobot().interact()
             return AwesomeBarRobot.Transition()
@@ -119,7 +121,8 @@ private fun assertNewTabAddressText(url: String) {
 
 private fun assertReaderViewButton() {
     mDevice.waitForWindowUpdate(packageName, waitingTime)
-    mDevice.findObject(
+    mDevice
+        .findObject(
         UiSelector().resourceId("$packageName:id/mozac_browser_toolbar_page_actions"),
     ).waitForExists(waitingTime)
 

@@ -119,7 +119,8 @@ abstract class BaseBrowserFragment : Fragment(), UserInteractionHandler, Activit
             registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { results ->
                 val permissions = results.keys.toTypedArray()
                 val grantResults =
-                    results.values.map {
+                    results.values
+                        .map {
                         if (it) PackageManager.PERMISSION_GRANTED else PackageManager.PERMISSION_DENIED
                     }.toIntArray()
                 downloadsFeature.withFeature {
@@ -131,7 +132,8 @@ abstract class BaseBrowserFragment : Fragment(), UserInteractionHandler, Activit
             registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { results ->
                 val permissions = results.keys.toTypedArray()
                 val grantResults =
-                    results.values.map {
+                    results.values
+                        .map {
                         if (it) PackageManager.PERMISSION_GRANTED else PackageManager.PERMISSION_DENIED
                     }.toIntArray()
                 sitePermissionFeature.withFeature {
@@ -143,7 +145,8 @@ abstract class BaseBrowserFragment : Fragment(), UserInteractionHandler, Activit
             registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { results ->
                 val permissions = results.keys.toTypedArray()
                 val grantResults =
-                    results.values.map {
+                    results.values
+                        .map {
                         if (it) PackageManager.PERMISSION_GRANTED else PackageManager.PERMISSION_DENIED
                     }.toIntArray()
                 promptsFeature.withFeature {

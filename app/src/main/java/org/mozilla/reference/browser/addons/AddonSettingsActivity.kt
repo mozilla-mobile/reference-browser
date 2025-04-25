@@ -44,7 +44,10 @@ class AddonSettingsActivity : AppCompatActivity() {
 
     override fun onCreateView(parent: View?, name: String, context: Context, attrs: AttributeSet): View? =
         when (name) {
-            EngineView::class.java.name -> components.core.engine.createView(context, attrs).asView()
+            EngineView::class.java.name ->
+                components.core.engine
+                .createView(context, attrs)
+                .asView()
             else -> super.onCreateView(parent, name, context, attrs)
         }
 
@@ -57,13 +60,17 @@ class AddonSettingsActivity : AppCompatActivity() {
 
         override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
             optionsPageUrl = requireNotNull(
-                arguments?.getParcelableCompat(
+                arguments
+                    ?.getParcelableCompat(
                     "add_on",
                     Addon::class.java,
-                )?.installedState?.optionsPageUrl,
+                )?.installedState
+                    ?.optionsPageUrl,
             )
 
-            engineSession = requireContext().components.core.engine.createSession()
+            engineSession = requireContext()
+                .components.core.engine
+                .createSession()
 
             return inflater.inflate(R.layout.fragment_add_on_settings, container, false)
         }

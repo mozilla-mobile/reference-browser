@@ -22,7 +22,8 @@ object PrivatePage {
             it.readText()
         }
 
-        return context.resources.openRawResource(htmlRes)
+        return context.resources
+            .openRawResource(htmlRes)
             .bufferedReader()
             .use { it.readText() }
             .replace("%pageTitle%", context.getString(R.string.private_browsing_title))

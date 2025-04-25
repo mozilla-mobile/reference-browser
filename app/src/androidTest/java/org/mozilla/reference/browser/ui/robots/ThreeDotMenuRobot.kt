@@ -70,7 +70,8 @@ class ThreeDotMenuRobot {
 
         fun goForward(interact: BrowserRobot.() -> Unit): BrowserRobot.Transition {
             forwardButton().click()
-            mDevice.findObject(
+            mDevice
+                .findObject(
                 UiSelector()
                     .resourceId("$packageName:id/mozac_browser_toolbar_progress"),
             ).waitUntilGone(waitingTime)
@@ -103,12 +104,14 @@ class ThreeDotMenuRobot {
             interact: NavigationToolbarRobot.() -> Unit,
         ): NavigationToolbarRobot.Transition {
             try {
-                mDevice.findObject(UiSelector().textContains("Request desktop site"))
+                mDevice
+                    .findObject(UiSelector().textContains("Request desktop site"))
                     .waitForExists(waitingTime)
                 requestDesktopSiteToggle().click()
                 mDevice.waitForIdle()
                 assertTrue(
-                    mDevice.findObject(
+                    mDevice
+                        .findObject(
                         UiSelector()
                             .resourceId("$packageName:id/mozac_browser_menu_recyclerView"),
                     ).waitUntilGone(waitingTime),
@@ -118,13 +121,15 @@ class ThreeDotMenuRobot {
                 // If the click didn't succeed the main menu remains displayed and should be dismissed
                 mDevice.pressBack()
                 threeDotMenuButton().click()
-                mDevice.findObject(UiSelector().textContains("Request desktop site"))
+                mDevice
+                    .findObject(UiSelector().textContains("Request desktop site"))
                     .waitForExists(waitingTime)
                 // Click again the Request desktop site toggle
                 requestDesktopSiteToggle().click()
                 mDevice.waitForIdle()
                 assertTrue(
-                    mDevice.findObject(
+                    mDevice
+                        .findObject(
                         UiSelector()
                             .resourceId("$packageName:id/mozac_browser_menu_recyclerView"),
                     ).waitUntilGone(waitingTime),

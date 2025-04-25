@@ -27,7 +27,8 @@ class PictureInPictureIntegration(
 
     override fun start() {
         scope = store.flowScoped { flow ->
-            flow.mapNotNull { state -> state.findTabOrCustomTabOrSelectedTab(customTabId) }
+            flow
+                .mapNotNull { state -> state.findTabOrCustomTabOrSelectedTab(customTabId) }
                 .distinctUntilChangedBy { it.content.url }
                 .collect { whiteListed = isWhitelisted(it.content.url) }
         }

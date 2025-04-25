@@ -66,17 +66,14 @@ class BrowserFragment : BaseBrowserFragment(), UserInteractionHandler {
                 engine = requireComponents.core.engine,
                 limit = 5,
                 filterExactMatch = true,
-            )
-            .addSessionProvider(
+            ).addSessionProvider(
                 resources,
                 requireComponents.core.store,
                 requireComponents.useCases.tabsUseCases.selectTab,
-            )
-            .addHistoryProvider(
+            ).addHistoryProvider(
                 requireComponents.core.historyStorage,
                 requireComponents.useCases.sessionUseCases.loadUrl,
-            )
-            .addClipboardProvider(requireContext(), requireComponents.useCases.sessionUseCases.loadUrl)
+            ).addClipboardProvider(requireContext(), requireComponents.useCases.sessionUseCases.loadUrl)
 
         // We cannot really add a `addSyncedTabsProvider` to `AwesomeBarFeature` coz that would create
         // a dependency on feature-syncedtabs (which depends on Sync).

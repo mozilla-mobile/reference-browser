@@ -46,9 +46,11 @@ class AwesomeBarRobot {
 
     fun longClickToolbar() {
         mDevice.waitForWindowUpdate(packageName, waitingTime)
-        mDevice.findObject(UiSelector().resourceId("$packageName:id/awesomeBar"))
+        mDevice
+            .findObject(UiSelector().resourceId("$packageName:id/awesomeBar"))
             .waitForExists(waitingTime)
-        mDevice.findObject(UiSelector().resourceId("$packageName:id/toolbar"))
+        mDevice
+            .findObject(UiSelector().resourceId("$packageName:id/toolbar"))
             .waitForExists(waitingTime)
         val toolbar = mDevice.findObject(By.res("$packageName:id/toolbar"))
         toolbar.click(LONG_CLICK_DURATION)
@@ -107,27 +109,33 @@ private fun clearToolbarButton() =
 private fun assertSearchSuggestion(searchSuggestionTitle: String) {
     mDevice.waitForIdle()
     assertTrue(
-        mDevice.findObject(UiSelector().textContains(searchSuggestionTitle))
+        mDevice
+            .findObject(UiSelector().textContains(searchSuggestionTitle))
             .waitForExists(waitingTime),
     )
 }
 
 private fun assertLinkFromClipboard(clipboardLink: String) {
     mDevice.waitForIdle()
-    mDevice.findObject(UiSelector().resourceId("$packageName:id/awesomeBar"))
+    mDevice
+        .findObject(UiSelector().resourceId("$packageName:id/awesomeBar"))
         .waitForExists(waitingTime)
-    mDevice.findObject(UiSelector().resourceId("$packageName:id/mozac_browser_awesomebar_title"))
+    mDevice
+        .findObject(UiSelector().resourceId("$packageName:id/mozac_browser_awesomebar_title"))
         .waitForExists(waitingTime)
     assertTrue(
-        mDevice.findObject(UiSelector().textContains(clipboardLink))
+        mDevice
+            .findObject(UiSelector().textContains(clipboardLink))
             .waitForExists(waitingTime),
     )
 }
 
 private fun assertPastedToolbarText(expectedText: String) {
-    mDevice.findObject(UiSelector().resourceId("$packageName:id/toolbar"))
+    mDevice
+        .findObject(UiSelector().resourceId("$packageName:id/toolbar"))
         .waitForExists(waitingTime)
-    mDevice.findObject(UiSelector().resourceId("$packageName:id/mozac_browser_toolbar_url_view"))
+    mDevice
+        .findObject(UiSelector().resourceId("$packageName:id/mozac_browser_toolbar_url_view"))
         .waitForExists(waitingTime)
     onView(
         allOf(
