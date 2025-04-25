@@ -17,9 +17,7 @@ import org.mozilla.reference.browser.BrowserApplication
 class SessionLoadedIdlingResource : IdlingResource {
     private var resourceCallback: IdlingResource.ResourceCallback? = null
 
-    override fun getName(): String {
-        return SessionLoadedIdlingResource::class.java.simpleName
-    }
+    override fun getName(): String = SessionLoadedIdlingResource::class.java.simpleName
 
     override fun isIdleNow(): Boolean {
         val context = InstrumentationRegistry.getInstrumentation().targetContext.applicationContext

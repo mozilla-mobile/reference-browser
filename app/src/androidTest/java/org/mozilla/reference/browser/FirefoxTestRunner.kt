@@ -14,7 +14,5 @@ class FirefoxTestRunner : AndroidJUnitRunner() {
         cl: ClassLoader?,
         className: String?,
         context: Context?,
-    ): Application {
-        return super.newApplication(cl, FirefoxTestApplication::class.java.name, context)
-    }
+    ): Application = super.newApplication(cl, FirefoxTestApplication::class.java.name, context)
 }

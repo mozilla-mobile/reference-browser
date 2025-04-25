@@ -34,12 +34,11 @@ class TabMatcher<T : View>(
     }
 
     companion object {
-        fun withText(text: String): Matcher<View> {
-            return TabMatcher<View>(
+        fun withText(text: String): Matcher<View> =
+            TabMatcher<View>(
                 R.id.mozac_browser_tabstray_title,
             ) {
                 (it as TextView).text == text
             }
-        }
     }
 }

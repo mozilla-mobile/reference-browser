@@ -15,7 +15,5 @@ class TabsTouchHelper(
         override fun alphaForItemSwipe(
             dX: Float,
             distanceToAlphaMin: Int,
-        ): Float {
-            return 1f - 2f * abs(dX) / distanceToAlphaMin
-        }
+        ): Float = 1f - 2f * abs(dX) / distanceToAlphaMin
     })

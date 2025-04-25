@@ -142,18 +142,17 @@ class AccountSettingsFragment : PreferenceFragmentCompat() {
         }
     }
 
-    private fun getClickListenerForSignOut(): OnPreferenceClickListener {
-        return OnPreferenceClickListener {
+    private fun getClickListenerForSignOut(): OnPreferenceClickListener =
+        OnPreferenceClickListener {
             CoroutineScope(Dispatchers.Main).launch {
                 requireComponents.backgroundServices.accountManager.logout()
                 activity?.onBackPressedDispatcher?.onBackPressed()
             }
             true
         }
-    }
 
-    private fun getClickListenerForSyncNow(): OnPreferenceClickListener {
-        return OnPreferenceClickListener {
+    private fun getClickListenerForSyncNow(): OnPreferenceClickListener =
+        OnPreferenceClickListener {
             CoroutineScope(Dispatchers.Main).launch {
                 // Trigger a sync & update devices.
                 requireComponents.backgroundServices.accountManager.syncNow(SyncReason.User)
@@ -168,10 +167,9 @@ class AccountSettingsFragment : PreferenceFragmentCompat() {
             }
             true
         }
-    }
 
-    private fun getClickListenerForManageAccount(): OnPreferenceClickListener {
-        return OnPreferenceClickListener {
+    private fun getClickListenerForManageAccount(): OnPreferenceClickListener =
+        OnPreferenceClickListener {
             viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Main) {
                 context?.let {
                     val account =
@@ -185,7 +183,6 @@ class AccountSettingsFragment : PreferenceFragmentCompat() {
             }
             true
         }
-    }
 
     private fun createCustomTabIntent(
         context: Context,

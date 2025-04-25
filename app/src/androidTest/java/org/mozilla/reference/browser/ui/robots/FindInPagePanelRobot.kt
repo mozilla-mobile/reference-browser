@@ -46,9 +46,7 @@ class FindInPagePanelRobot {
     }
 
     class Transition {
-        fun findInPage(): FindInPagePanelRobot.Transition {
-            return FindInPagePanelRobot.Transition()
-        }
+        fun findInPage(): FindInPagePanelRobot.Transition = FindInPagePanelRobot.Transition()
     }
 }
 

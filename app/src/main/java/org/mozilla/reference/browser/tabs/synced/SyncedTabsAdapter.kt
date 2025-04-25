@@ -43,12 +43,11 @@ class SyncedTabsAdapter(
         holder.bind(item, listener)
     }
 
-    override fun getItemViewType(position: Int): Int {
-        return when (getItem(position)) {
+    override fun getItemViewType(position: Int): Int =
+        when (getItem(position)) {
             is AdapterItem.Device -> DeviceViewHolder.LAYOUT_ID
             is AdapterItem.Tab -> TabViewHolder.LAYOUT_ID
         }
-    }
 
     private object DiffCallback : DiffUtil.ItemCallback<AdapterItem>() {
         override fun areItemsTheSame(

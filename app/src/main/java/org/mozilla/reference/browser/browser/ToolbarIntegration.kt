@@ -103,8 +103,8 @@ class ToolbarIntegration(
         return RowMenuCandidate(listOf(forward, refresh, stop))
     }
 
-    private fun sessionMenuItems(sessionState: SessionState): List<MenuCandidate> {
-        return listOfNotNull(
+    private fun sessionMenuItems(sessionState: SessionState): List<MenuCandidate> =
+        listOfNotNull(
             menuToolbar(sessionState),
             TextMenuCandidate("Share") {
                 val url = sessionState.content.url
@@ -135,7 +135,6 @@ class ToolbarIntegration(
                 FindInPageIntegration.launch?.invoke()
             },
         )
-    }
 
     private fun menuItems(sessionState: SessionState?): List<MenuCandidate> {
         val sessionMenuItems = if (sessionState != null) {
@@ -224,7 +223,5 @@ class ToolbarIntegration(
         toolbarFeature.stop()
     }
 
-    override fun onBackPressed(): Boolean {
-        return toolbarFeature.onBackPressed()
-    }
+    override fun onBackPressed(): Boolean = toolbarFeature.onBackPressed()
 }

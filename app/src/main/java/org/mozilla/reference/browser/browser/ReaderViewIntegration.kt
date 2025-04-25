@@ -76,9 +76,7 @@ class ReaderViewIntegration(
         feature.stop()
     }
 
-    override fun onBackPressed(): Boolean {
-        return feature.onBackPressed()
-    }
+    override fun onBackPressed(): Boolean = feature.onBackPressed()
 }
 
 /**
@@ -106,14 +104,13 @@ class ReaderViewAppearanceButtonBehavior(
         parent: CoordinatorLayout,
         child: FloatingActionButton,
         dependency: View,
-    ): Boolean {
-        return if (dependency is FindInPageBar || dependency is BrowserToolbar) {
+    ): Boolean =
+        if (dependency is FindInPageBar || dependency is BrowserToolbar) {
             repositionReaderViewAppearanceButton(child, dependency)
             true
         } else {
             false
         }
-    }
 
     private fun repositionReaderViewAppearanceButton(
         button: FloatingActionButton,

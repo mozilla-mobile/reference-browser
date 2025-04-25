@@ -38,12 +38,11 @@ object TestHelper {
         return appView
     }
 
-    fun getPermissionAllowID(): String {
-        return when (Build.VERSION.SDK_INT > Build.VERSION_CODES.P) {
+    fun getPermissionAllowID(): String =
+        when (Build.VERSION.SDK_INT > Build.VERSION_CODES.P) {
             true -> "com.android.permissioncontroller"
             false -> "com.android.packageinstaller"
         }
-    }
 
     fun createCustomTabIntent(
         pageUrl: String,

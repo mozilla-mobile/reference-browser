@@ -31,9 +31,7 @@ class ExternalAppsRobot {
     fun verifyYouTubeApp() = assertYouTubeApp()
 
     class Transition {
-        fun externalApps(): ExternalAppsRobot.Transition {
-            return ExternalAppsRobot.Transition()
-        }
+        fun externalApps(): ExternalAppsRobot.Transition = ExternalAppsRobot.Transition()
     }
 }
 

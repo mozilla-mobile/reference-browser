@@ -162,9 +162,7 @@ abstract class BaseBrowserFragment :
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?,
-    ): View {
-        return inflater.inflate(R.layout.fragment_browser, container, false)
-    }
+    ): View = inflater.inflate(R.layout.fragment_browser, container, false)
 
     abstract val shouldUseComposeUI: Boolean
 
@@ -441,13 +439,9 @@ abstract class BaseBrowserFragment :
     }
 
     @CallSuper
-    override fun onBackPressed(): Boolean {
-        return backButtonHandler.any { it.onBackPressed() }
-    }
+    override fun onBackPressed(): Boolean = backButtonHandler.any { it.onBackPressed() }
 
-    final override fun onHomePressed(): Boolean {
-        return pictureInPictureIntegration.get()?.onHomePressed() ?: false
-    }
+    final override fun onHomePressed(): Boolean = pictureInPictureIntegration.get()?.onHomePressed() ?: false
 
     final override fun onPictureInPictureModeChanged(enabled: Boolean) {
         val session = requireComponents.core.store.state.selectedTab

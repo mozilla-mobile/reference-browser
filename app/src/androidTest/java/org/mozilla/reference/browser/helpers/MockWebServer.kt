@@ -69,12 +69,11 @@ class AndroidAssetDispatcher : Dispatcher() {
 private fun fileToResponse(
     path: String,
     file: InputStream,
-): MockResponse {
-    return MockResponse()
+): MockResponse =
+    MockResponse()
         .setResponseCode(HTTP_OK)
         .setBody(fileToBytes(file)!!)
         .addHeader("content-type: " + contentType(path))
-}
 
 @Throws(IOException::class)
 private fun fileToBytes(file: InputStream): Buffer? {
@@ -83,8 +82,8 @@ private fun fileToBytes(file: InputStream): Buffer? {
     return result
 }
 
-private fun contentType(path: String): String? {
-    return when {
+private fun contentType(path: String): String? =
+    when {
         path.endsWith(".png") -> "image/png"
         path.endsWith(".jpg") -> "image/jpeg"
         path.endsWith(".jpeg") -> "image/jpeg"
@@ -94,4 +93,3 @@ private fun contentType(path: String): String? {
         path.endsWith(".txt") -> "text/plain; charset=utf-8"
         else -> "application/octet-stream"
     }
-}

@@ -100,8 +100,8 @@ class CustomTabsIntegration(
         return RowMenuCandidate(listOf(forward, refresh, stop))
     }
 
-    private fun menuItems(sessionState: SessionState?): List<MenuCandidate> {
-        return listOf(
+    private fun menuItems(sessionState: SessionState?): List<MenuCandidate> =
+        listOf(
             menuToolbar(session),
             TextMenuCandidate("Share") {
                 val url = sessionState?.content?.url.orEmpty()
@@ -134,7 +134,6 @@ class CustomTabsIntegration(
                 context.startActivity(intent)
             },
         )
-    }
 
     private val menuController: MenuController = BrowserMenuController()
 
@@ -170,7 +169,5 @@ class CustomTabsIntegration(
         feature.stop()
     }
 
-    override fun onBackPressed(): Boolean {
-        return feature.onBackPressed()
-    }
+    override fun onBackPressed(): Boolean = feature.onBackPressed()
 }

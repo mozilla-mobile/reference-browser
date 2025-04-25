@@ -10,14 +10,9 @@ import androidx.test.espresso.assertion.ViewAssertions.matches
 
 fun ViewInteraction.click(): ViewInteraction = this.perform(ViewActions.click())!!
 
-fun ViewInteraction.assertIsEnabled(isEnabled: Boolean): ViewInteraction {
-    return this.check(matches(isEnabled(isEnabled)))!!
-}
+fun ViewInteraction.assertIsEnabled(isEnabled: Boolean): ViewInteraction = this.check(matches(isEnabled(isEnabled)))!!
 
-fun ViewInteraction.assertIsChecked(isChecked: Boolean): ViewInteraction {
-    return this.check(matches(isChecked(isChecked)))!!
-}
+fun ViewInteraction.assertIsChecked(isChecked: Boolean): ViewInteraction = this.check(matches(isChecked(isChecked)))!!
 
-fun ViewInteraction.assertIsSelected(isSelected: Boolean): ViewInteraction {
-    return this.check(matches(isSelected(isSelected)))!!
-}
+fun ViewInteraction.assertIsSelected(isSelected: Boolean): ViewInteraction =
+    this.check(matches(isSelected(isSelected)))!!

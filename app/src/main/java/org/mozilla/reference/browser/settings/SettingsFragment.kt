@@ -116,8 +116,8 @@ class SettingsFragment : PreferenceFragmentCompat() {
         preferenceCustomAddons?.onPreferenceClickListener = getClickListenerForCustomAddons()
     }
 
-    private fun getClickListenerForMakeDefaultBrowser(): OnPreferenceClickListener {
-        return if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+    private fun getClickListenerForMakeDefaultBrowser(): OnPreferenceClickListener =
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
             OnPreferenceClickListener {
                 val intent = Intent(
                     Settings.ACTION_MANAGE_DEFAULT_APPS_SETTINGS,
@@ -128,10 +128,9 @@ class SettingsFragment : PreferenceFragmentCompat() {
         } else {
             defaultClickListener
         }
-    }
 
-    private fun getClickListenerForSignIn(): OnPreferenceClickListener {
-        return OnPreferenceClickListener {
+    private fun getClickListenerForSignIn(): OnPreferenceClickListener =
+        OnPreferenceClickListener {
             requireComponents.services.accountsAuthFeature.beginAuthentication(
                 requireContext(),
                 BrowserFxAEntryPoint.HomeMenu,
@@ -140,10 +139,9 @@ class SettingsFragment : PreferenceFragmentCompat() {
             activity?.finish()
             true
         }
-    }
 
-    private fun getClickListenerForPairingSignIn(): OnPreferenceClickListener {
-        return OnPreferenceClickListener {
+    private fun getClickListenerForPairingSignIn(): OnPreferenceClickListener =
+        OnPreferenceClickListener {
             parentFragmentManager
                 .beginTransaction()
                 .replace(android.R.id.content, PairSettingsFragment())
@@ -154,10 +152,9 @@ class SettingsFragment : PreferenceFragmentCompat() {
             }
             true
         }
-    }
 
-    private fun getClickListenerForFirefoxAccount(): OnPreferenceClickListener {
-        return OnPreferenceClickListener {
+    private fun getClickListenerForFirefoxAccount(): OnPreferenceClickListener =
+        OnPreferenceClickListener {
             parentFragmentManager
                 .beginTransaction()
                 .replace(android.R.id.content, AccountSettingsFragment())
@@ -168,10 +165,9 @@ class SettingsFragment : PreferenceFragmentCompat() {
             }
             true
         }
-    }
 
-    private fun getClickListenerForPrivacy(): OnPreferenceClickListener {
-        return OnPreferenceClickListener {
+    private fun getClickListenerForPrivacy(): OnPreferenceClickListener =
+        OnPreferenceClickListener {
             parentFragmentManager
                 .beginTransaction()
                 .replace(android.R.id.content, PrivacySettingsFragment())
@@ -182,17 +178,15 @@ class SettingsFragment : PreferenceFragmentCompat() {
             }
             true
         }
-    }
 
-    private fun getChangeListenerForRemoteDebugging(): OnPreferenceChangeListener {
-        return OnPreferenceChangeListener { _, newValue ->
+    private fun getChangeListenerForRemoteDebugging(): OnPreferenceChangeListener =
+        OnPreferenceChangeListener { _, newValue ->
             requireComponents.core.engine.settings.remoteDebuggingEnabled = newValue as Boolean
             true
         }
-    }
 
-    private fun getAboutPageListener(): OnPreferenceClickListener {
-        return OnPreferenceClickListener {
+    private fun getAboutPageListener(): OnPreferenceClickListener =
+        OnPreferenceClickListener {
             parentFragmentManager
                 .beginTransaction()
                 .replace(android.R.id.content, AboutFragment())
@@ -200,12 +194,11 @@ class SettingsFragment : PreferenceFragmentCompat() {
                 .commit()
             true
         }
-    }
 
     private fun getActionBarUpdater() = activity as ActionBarUpdater
 
-    private fun getClickListenerForCustomAddons(): OnPreferenceClickListener {
-        return OnPreferenceClickListener {
+    private fun getClickListenerForCustomAddons(): OnPreferenceClickListener =
+        OnPreferenceClickListener {
             val context = requireContext()
             val dialogView = View.inflate(context, R.layout.amo_collection_override_dialog, null)
             val userView = dialogView.findViewById<EditText>(R.id.custom_amo_user)
@@ -247,7 +240,6 @@ class SettingsFragment : PreferenceFragmentCompat() {
             }.show()
             true
         }
-    }
 
     companion object {
         private const val AMO_COLLECTION_OVERRIDE_EXIT_DELAY = 3000L

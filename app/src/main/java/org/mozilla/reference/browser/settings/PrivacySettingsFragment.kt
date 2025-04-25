@@ -47,27 +47,24 @@ class PrivacySettingsFragment : PreferenceFragmentCompat() {
         }
     }
 
-    private fun getChangeListenerForTelemetry(): OnPreferenceChangeListener {
-        return OnPreferenceChangeListener { _, _ ->
+    private fun getChangeListenerForTelemetry(): OnPreferenceChangeListener =
+        OnPreferenceChangeListener { _, _ ->
             true
         }
-    }
 
     private fun getChangeListenerForTrackingProtection(
         createTrackingProtectionPolicy: (Boolean) -> TrackingProtectionPolicy,
-    ): OnPreferenceChangeListener {
-        return OnPreferenceChangeListener { _, value ->
+    ): OnPreferenceChangeListener =
+        OnPreferenceChangeListener { _, value ->
             val policy = createTrackingProtectionPolicy(value as Boolean)
             requireComponents.useCases.settingsUseCases.updateTrackingProtection
                 .invoke(policy)
             true
         }
-    }
 
-    private fun getChangeListenerForGPC(action: (Boolean) -> Unit): OnPreferenceChangeListener {
-        return OnPreferenceChangeListener { _, enabled ->
+    private fun getChangeListenerForGPC(action: (Boolean) -> Unit): OnPreferenceChangeListener =
+        OnPreferenceChangeListener { _, enabled ->
             action.invoke(enabled as Boolean)
             true
         }
-    }
 }

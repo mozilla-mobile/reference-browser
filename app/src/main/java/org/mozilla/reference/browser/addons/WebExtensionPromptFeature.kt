@@ -252,18 +252,14 @@ class WebExtensionPromptFeature(
         store.dispatch(WebExtensionAction.ConsumePromptRequestWebExtensionAction)
     }
 
-    private fun hasExistingPermissionDialogFragment(): Boolean {
-        return findPreviousDialogFragment() != null
-    }
+    private fun hasExistingPermissionDialogFragment(): Boolean = findPreviousDialogFragment() != null
 
-    private fun findPreviousDialogFragment(): PermissionsDialogFragment? {
-        return fragmentManager.findFragmentByTag(PERMISSIONS_DIALOG_FRAGMENT_TAG) as? PermissionsDialogFragment
-    }
+    private fun findPreviousDialogFragment(): PermissionsDialogFragment? =
+        fragmentManager.findFragmentByTag(PERMISSIONS_DIALOG_FRAGMENT_TAG) as? PermissionsDialogFragment
 
-    private fun hasExistingAddonPostInstallationDialogFragment(): Boolean {
-        return fragmentManager.findFragmentByTag(POST_INSTALLATION_DIALOG_FRAGMENT_TAG)
+    private fun hasExistingAddonPostInstallationDialogFragment(): Boolean =
+        fragmentManager.findFragmentByTag(POST_INSTALLATION_DIALOG_FRAGMENT_TAG)
             as? AddonInstallationDialogFragment != null
-    }
 
     private fun handleBeforeInstallationRequest(promptRequest: WebExtensionPromptRequest.BeforeInstallation) {
         when (promptRequest) {
