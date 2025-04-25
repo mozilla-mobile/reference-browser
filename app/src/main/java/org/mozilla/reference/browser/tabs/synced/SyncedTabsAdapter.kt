@@ -54,6 +54,7 @@ class SyncedTabsAdapter(
 
     sealed class AdapterItem {
         data class Device(val device: SyncDevice) : AdapterItem()
+
         data class Tab(val tab: SyncTab) : AdapterItem()
     }
 }

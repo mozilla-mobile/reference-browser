@@ -24,6 +24,7 @@ class LastTabFeature(
 ) : LifecycleAwareFeature, UserInteractionHandler {
 
     override fun start() = Unit
+
     override fun stop() = Unit
 
     /**

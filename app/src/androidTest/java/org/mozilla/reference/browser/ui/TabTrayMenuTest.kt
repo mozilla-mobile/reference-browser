@@ -53,7 +53,9 @@ class TabTrayMenuTest {
         }
 
         fun optionsButton() = onView(ViewMatchers.withContentDescription("More options"))
+
         fun closeAllTabsButton() = onView(ViewMatchers.withText("Close All Tabs"))
+
         fun goBackButton() = onView(ViewMatchers.withContentDescription("back"))
         val tabCounterButton = onView(withId(R.id.counter_text))
 

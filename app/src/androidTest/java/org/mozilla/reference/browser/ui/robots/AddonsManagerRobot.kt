@@ -56,12 +56,19 @@ class AddonsManagerRobot {
     }
 
     fun verifyInstallAddonPrompt(addonName: String) = assertAddonPrompt(addonName)
+
     fun verifyAddonDownloadCompletedPrompt(addonName: String) = assertAddonDownloadCompletedPrompt(addonName)
+
     fun verifyAddonElementsView(addonName: String) = assertAddonElementsView(addonName)
+
     fun clickInstallAddonButton(addonName: String) = selectInstallAddonButton(addonName)
+
     fun clickCancelInstallButton() = cancelInstallButton()
+
     fun clickAllowInstallAddonButton() = allowInstallAddonButton()
+
     fun waitForAddonDownloadComplete() = waitForDownloadProgressUntilGone()
+
     fun openAddon(addonName: String) =
         itemWithResIdContainingText("$packageName:id/add_on_name", addonName)
             .also {

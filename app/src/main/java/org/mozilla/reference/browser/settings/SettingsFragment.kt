@@ -238,6 +238,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
             true
         }
     }
+
     companion object {
         private const val AMO_COLLECTION_OVERRIDE_EXIT_DELAY = 3000L
     }
