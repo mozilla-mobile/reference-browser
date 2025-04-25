@@ -19,7 +19,6 @@ import org.mozilla.reference.browser.ui.robots.navigationToolbar
 import org.mozilla.reference.browser.ui.robots.notificationShade
 
 class DownloadTest {
-
     private lateinit var mockWebServer: MockWebServer
 
     @get:Rule

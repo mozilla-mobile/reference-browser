@@ -28,7 +28,6 @@ import org.mozilla.reference.browser.ext.components
 class Analytics(
     private val context: Context,
 ) {
-
     /**
      * A generic crash reporter component configured to use both Sentry and Socorro.
      */

@@ -29,8 +29,7 @@ class SyncedTabsLayout
     defStyleAttr: Int = 0,
 ) : FrameLayout(context, attrs, defStyleAttr),
     SyncedTabsView {
-
-    override var listener: SyncedTabsView.Listener? = null
+        override var listener: SyncedTabsView.Listener? = null
 
     private val adapter = SyncedTabsAdapter { listener?.onTabClicked(it) }
 

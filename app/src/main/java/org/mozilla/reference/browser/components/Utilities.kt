@@ -27,7 +27,6 @@ class Utilities(
     private val tabsUseCases: TabsUseCases,
     private val customTabsUseCases: CustomTabsUseCases,
 ) {
-
     /**
      * Provides intent processing functionality for Progressive Web App and Custom Tab intents.
      */

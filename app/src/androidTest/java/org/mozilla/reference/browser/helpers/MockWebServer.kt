@@ -18,7 +18,6 @@ import java.io.IOException
 import java.io.InputStream
 
 object MockWebServerHelper {
-
     fun initMockWebServerAndReturnEndpoints(vararg messages: String): List<Uri> {
         val mockServer = MockWebServer()
         var uniquePath = 0

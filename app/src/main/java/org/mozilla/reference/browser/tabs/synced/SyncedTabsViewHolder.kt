@@ -14,7 +14,6 @@ import org.mozilla.reference.browser.tabs.synced.SyncedTabsAdapter.AdapterItem
 sealed class SyncedTabsViewHolder(
     itemView: View,
 ) : RecyclerView.ViewHolder(itemView) {
-
     abstract fun <T : AdapterItem> bind(
         item: T,
         interactor: (Tab) -> Unit,

@@ -20,7 +20,6 @@ import org.mozilla.reference.browser.helpers.click
  */
 
 class TabTrayMoreOptionsMenuRobot {
-
     fun verifyCloseAllTabsButton() = assertCloseAllTabsButton()
 
     fun verifyCloseAllPrivateTabsButton() = assertCloseAllPrivateTabsButton()

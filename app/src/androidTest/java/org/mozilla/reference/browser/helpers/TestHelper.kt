@@ -27,7 +27,6 @@ import org.mozilla.reference.browser.helpers.TestAssetHelper.waitingTimeShort
 import org.mozilla.reference.browser.ui.robots.mDevice
 
 object TestHelper {
-
     val packageName = InstrumentationRegistry.getInstrumentation().targetContext.packageName
     val appContext: Context = InstrumentationRegistry.getInstrumentation().targetContext
     val appName = appContext.appName

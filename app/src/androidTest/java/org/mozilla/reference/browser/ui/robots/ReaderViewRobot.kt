@@ -27,7 +27,6 @@ import org.mozilla.reference.browser.ui.robots.mDevice
  * Implementation of Robot Pattern for Reader View UI.
  */
 class ReaderViewRobot {
-
     fun verifyAppearanceButtonExists() = assertAppearanceButtonExists()
 
     fun verifyAppearanceButtonDoesntExists() = assertAppearanceButtonDoesntExists()

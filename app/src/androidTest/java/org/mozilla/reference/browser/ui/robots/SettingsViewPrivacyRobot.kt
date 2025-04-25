@@ -15,7 +15,6 @@ import org.mozilla.reference.browser.helpers.TestAssetHelper
  * Implementation of Robot Pattern for the settings privacy menu.
  */
 class SettingsViewPrivacyRobot {
-
     fun verifyPrivacyUpButton() = assertPrivacyUpButton()
 
     fun verifyPrivacySettings() = assertPrivacySettingsView()

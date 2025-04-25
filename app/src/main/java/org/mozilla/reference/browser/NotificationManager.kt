@@ -30,7 +30,6 @@ import android.app.NotificationManager as AndroidNotificationManager
  * Manages notification channels and allows displaying different supported types of notifications.
  */
 object NotificationManager {
-
     // Send Tab
     private const val RECEIVE_TABS_TAG = "org.mozilla.reference.browser.receivedTabs"
     private const val RECEIVE_TABS_CHANNEL_ID = "org.mozilla.reference.browser.ReceivedTabsChannel"

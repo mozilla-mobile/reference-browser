@@ -16,7 +16,6 @@ import org.mozilla.reference.browser.helpers.TestAssetHelper
 import org.mozilla.reference.browser.ui.robots.navigationToolbar
 
 class SearchTest {
-
     private lateinit var mockWebServer: MockWebServer
 
     @get:Rule

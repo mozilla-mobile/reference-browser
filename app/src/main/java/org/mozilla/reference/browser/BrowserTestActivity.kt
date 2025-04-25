@@ -14,7 +14,6 @@ import org.mozilla.reference.browser.ext.components
  * https://wiki.mozilla.org/Performance_sheriffing/Raptor
  */
 class BrowserTestActivity : Activity() {
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 

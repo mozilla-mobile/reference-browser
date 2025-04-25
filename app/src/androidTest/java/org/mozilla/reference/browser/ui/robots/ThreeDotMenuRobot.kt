@@ -23,7 +23,6 @@ import org.mozilla.reference.browser.helpers.click
  * Implementation of Robot Pattern for three dot menu.
  */
 class ThreeDotMenuRobot {
-
     fun verifyThreeDotMenuExists() = threeDotMenuRecyclerViewExists()
 
     fun verifyForwardButtonExists() = assertForwardButton()
@@ -67,7 +66,6 @@ class ThreeDotMenuRobot {
     fun verifyRequestDesktopSiteIsTurnedOn() = assertRequestDesktopSiteIsTurnedOn()
 
     class Transition {
-
         fun goForward(interact: BrowserRobot.() -> Unit): BrowserRobot.Transition {
             forwardButton().click()
             mDevice

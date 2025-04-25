@@ -14,7 +14,6 @@ import java.lang.AssertionError
 class RetryTestRule(
     private val retryCount: Int = 5,
 ) : TestRule {
-
     override fun apply(
         base: Statement,
         description: Description,

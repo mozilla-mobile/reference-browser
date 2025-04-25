@@ -12,7 +12,6 @@ import kotlinx.coroutines.launch
 import org.mozilla.reference.browser.ext.components
 
 class IntentReceiverActivity : Activity() {
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val intent = intent?.let { Intent(it) } ?: Intent()

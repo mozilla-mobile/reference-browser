@@ -15,7 +15,6 @@ import org.mozilla.reference.browser.helpers.TestHelper.packageName
  * Implementation of Robot Pattern for Synced Tabs sub menu.
  */
 class SyncedTabsRobot {
-
     fun verifyNotSignedInSyncTabsView() = assertNotSignedInSyncTabsView()
 
     class Transition {

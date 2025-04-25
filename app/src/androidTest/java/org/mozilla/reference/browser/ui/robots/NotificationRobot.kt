@@ -11,7 +11,6 @@ import org.junit.Assert.assertTrue
 import org.mozilla.reference.browser.helpers.TestAssetHelper.waitingTime
 
 class NotificationRobot {
-
     fun verifySystemMediaNotificationExists(notificationMessage: String) {
         assertTrue(systemMediaNotification.waitForExists(waitingTime))
         assertTrue(systemMediaNotificationTitle(notificationMessage).waitForExists(waitingTime))
@@ -57,7 +56,6 @@ class NotificationRobot {
     }
 
     class Transition {
-
         fun closeNotification(interact: BrowserRobot.() -> Unit): BrowserRobot.Transition {
             mDevice.pressBack()
 

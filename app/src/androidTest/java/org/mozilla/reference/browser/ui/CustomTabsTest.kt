@@ -21,7 +21,6 @@ import org.mozilla.reference.browser.helpers.TestHelper.createCustomTabIntent
 import org.mozilla.reference.browser.ui.robots.customTabScreen
 
 class CustomTabsTest {
-
     private lateinit var mockWebServer: MockWebServer
 
     @get:Rule

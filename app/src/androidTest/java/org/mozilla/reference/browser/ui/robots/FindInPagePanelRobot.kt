@@ -22,7 +22,6 @@ import org.mozilla.reference.browser.helpers.click
  * Implementation of Robot Pattern for the FindInPage Panel.
  */
 class FindInPagePanelRobot {
-
     fun verifyFindInPageBar() = assertFindInPageBarExists()
 
     fun verifyFindInPageBarIsDismissed() = assertFindInPageBarIsDismissed()

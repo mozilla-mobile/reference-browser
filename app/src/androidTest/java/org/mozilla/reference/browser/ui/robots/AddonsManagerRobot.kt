@@ -37,7 +37,6 @@ import org.mozilla.reference.browser.helpers.click
  * Implementation of Robot Pattern for the addons manager.
  */
 class AddonsManagerRobot {
-
     fun verifyAddonsRecommendedView() {
         assertTrue(mDevice.findObject(UiSelector().text("Recommended")).waitForExists(waitingTime))
         // Check uBlock is displayed in the "Recommended" section
