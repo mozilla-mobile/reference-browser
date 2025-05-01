@@ -22,7 +22,9 @@ import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.ext.components
 
 /**
- * An activity to show the settings of an add-on.
+ * [AddonSettingsActivity] is an activity that displays the settings of a specific add-on.
+ * It creates and hosts a [AddonSettingsFragment], passing the add-on details to the fragment
+ * for rendering the settings page of the add-on.
  */
 class AddonSettingsActivity : AppCompatActivity() {
 
@@ -49,7 +51,8 @@ class AddonSettingsActivity : AppCompatActivity() {
         }
 
     /**
-     * A fragment to show the settings of an add-on with [EngineView].
+     * [AddonSettingsFragment] is a fragment responsible for displaying the settings of an add-on.
+     * It uses [EngineView] to load and render the add-on's settings page, specified by its `optionsPageUrl`.
      */
     class AddonSettingsFragment : Fragment() {
         private lateinit var optionsPageUrl: String
@@ -81,9 +84,18 @@ class AddonSettingsActivity : AppCompatActivity() {
             super.onDestroyView()
         }
 
+        /**
+         * Companion object for [AddonSettingsFragment].
+         *
+         * Provides a method to create a new instance of [AddonSettingsFragment] with the required
+         * add-on details passed as arguments.
+         */
         companion object {
             /**
-             * Create an [AddonSettingsFragment] with add_on as a required parameter.
+             * Creates a new instance of [AddonSettingsFragment] with the provided [Addon] passed as an argument.
+             *
+             * @param addon The [Addon] for which settings are being displayed.
+             * @return A new instance of [AddonSettingsFragment] with the add-on data passed in.
              */
             fun create(addon: Addon) = AddonSettingsFragment().apply {
                 arguments = Bundle().apply {
