@@ -8,6 +8,8 @@ import android.annotation.SuppressLint
 import android.content.Context
 import androidx.core.app.NotificationManagerCompat
 import mozilla.components.feature.autofill.AutofillConfiguration
+import mozilla.components.feature.downloads.DateTimeProvider
+import mozilla.components.feature.downloads.DefaultDateTimeProvider
 import mozilla.components.feature.downloads.DefaultFileSizeFormatter
 import mozilla.components.feature.downloads.FileSizeFormatter
 import mozilla.components.support.base.android.NotificationsDelegate
@@ -84,4 +86,6 @@ class Components(
     }
 
     val fileSizeFormatter: FileSizeFormatter by lazy { DefaultFileSizeFormatter(context.applicationContext) }
+
+    val dateTimeProvider: DateTimeProvider by lazy { DefaultDateTimeProvider() }
 }
