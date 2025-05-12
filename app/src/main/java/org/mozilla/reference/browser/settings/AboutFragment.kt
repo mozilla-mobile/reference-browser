@@ -56,9 +56,9 @@ class AboutFragment : Fragment() {
         val versionInfo = String.format(
             "%s \uD83D\uDCE6: %s, %s\n\uD83D\uDEA2: %s",
             aboutText,
-            Build.version,
-            Build.gitHash,
-            Build.applicationServicesVersion,
+            Build.VERSION,
+            Build.GIT_HASH,
+            Build.APPLICATION_SERVICES_VERSION,
         )
         val content = HtmlCompat.fromHtml(
             resources.getString(R.string.about_content, appName),
