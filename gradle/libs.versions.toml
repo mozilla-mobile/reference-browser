@@ -42,7 +42,7 @@ androidx-test-uiautomator = "2.3.0"
 dependency-analysis = "2.15.0"
 detekt = "1.23.8"
 jspecify = "1.0.0"
-ktlint = "1.5.0"
+ktlint = "1.6.0"
 
 # Third Party Testing
 hamcrest = "1.3"
