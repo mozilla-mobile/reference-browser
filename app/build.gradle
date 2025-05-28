@@ -330,10 +330,9 @@ dependencies {
     implementation libs.mozilla.service.location
     implementation libs.mozilla.service.sync.logins
 
+    implementation libs.mozilla.support.appservices
     implementation libs.mozilla.support.base
     implementation libs.mozilla.support.ktx
-    implementation libs.mozilla.support.rusthttp
-    implementation libs.mozilla.support.rustlog
     implementation libs.mozilla.support.utils
     implementation libs.mozilla.support.webextensions
 

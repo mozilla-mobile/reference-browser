@@ -173,10 +173,9 @@ mozilla-service-firefox-accounts = { group = "org.mozilla.components", name = "s
 mozilla-service-location = { group = "org.mozilla.components", name = "service-location", version.ref = "android-components" }
 mozilla-service-sync-logins = { group = "org.mozilla.components", name = "service-sync-logins", version.ref = "android-components" }
 
+mozilla-support-appservices = { group = "org.mozilla.components", name = "support-appservices", version.ref = "android-components" }
 mozilla-support-base = { group = "org.mozilla.components", name = "support-base", version.ref = "android-components" }
 mozilla-support-ktx = { group = "org.mozilla.components", name = "support-ktx", version.ref = "android-components" }
-mozilla-support-rusthttp = { group = "org.mozilla.components", name = "support-rusthttp", version.ref = "android-components" }
-mozilla-support-rustlog = { group = "org.mozilla.components", name = "support-rustlog", version.ref = "android-components" }
 mozilla-support-utils = { group = "org.mozilla.components", name = "support-utils", version.ref = "android-components" }
 mozilla-support-webextensions = { group = "org.mozilla.components", name = "support-webextensions", version.ref = "android-components" }
 

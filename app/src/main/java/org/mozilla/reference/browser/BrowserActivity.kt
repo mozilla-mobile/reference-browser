@@ -26,7 +26,6 @@ import org.mozilla.reference.browser.addons.WebExtensionActionPopupActivity
 import org.mozilla.reference.browser.browser.BrowserFragment
 import org.mozilla.reference.browser.browser.CrashIntegration
 import org.mozilla.reference.browser.ext.components
-import org.mozilla.reference.browser.ext.isCrashReportActive
 
 /**
  * Activity that holds the [BrowserFragment].
@@ -59,12 +58,10 @@ open class BrowserActivity : AppCompatActivity() {
             }
         }
 
-        if (isCrashReportActive) {
-            crashIntegration = CrashIntegration(this, components.analytics.crashReporter) { crash ->
-                onNonFatalCrash(crash)
-            }
-            lifecycle.addObserver(crashIntegration)
+        crashIntegration = CrashIntegration(this, components.analytics.crashReporter) { crash ->
+            onNonFatalCrash(crash)
         }
+        lifecycle.addObserver(crashIntegration)
 
         NotificationManager.checkAndNotifyPolicy(this)
         lifecycle.addObserver(webExtensionPopupObserver)
