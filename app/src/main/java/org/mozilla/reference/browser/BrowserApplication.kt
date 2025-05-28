@@ -13,15 +13,14 @@ import mozilla.components.browser.state.action.SystemAction
 import mozilla.components.concept.engine.webextension.isUnsupported
 import mozilla.components.concept.push.PushProcessor
 import mozilla.components.feature.addons.update.GlobalAddonDependencyProvider
+import mozilla.components.support.AppServicesInitializer
 import mozilla.components.support.base.log.Log
 import mozilla.components.support.base.log.logger.Logger
 import mozilla.components.support.base.log.sink.AndroidLogSink
 import mozilla.components.support.ktx.android.content.isMainProcess
 import mozilla.components.support.ktx.android.content.runOnlyInMainProcess
 import mozilla.components.support.rusthttp.RustHttpConfig
-import mozilla.components.support.rustlog.RustLog
 import mozilla.components.support.webextensions.WebExtensionSupport
-import org.mozilla.reference.browser.ext.isCrashReportActive
 import org.mozilla.reference.browser.push.PushFxaIntegration
 import org.mozilla.reference.browser.push.WebPushEngineIntegration
 import java.util.concurrent.TimeUnit
@@ -34,8 +33,10 @@ open class BrowserApplication : Application() {
 
         setupCrashReporting(this)
 
+        AppServicesInitializer.init(components.analytics.crashReporter)
         RustHttpConfig.setClient(lazy { components.core.client })
-        setupLogging()
+
+        Log.addSink(AndroidLogSink())
 
         if (!isMainProcess()) {
             // If this is not the main process then do not continue with the initialization here. Everything that
@@ -136,18 +137,10 @@ open class BrowserApplication : Application() {
     }
 }
 
-private fun setupLogging() {
-    // We want the log messages of all builds to go to Android logcat
-    Log.addSink(AndroidLogSink())
-    RustLog.enable()
-}
-
 private fun setupCrashReporting(application: BrowserApplication) {
-    if (isCrashReportActive) {
-        application
-            .components
-            .analytics
-            .crashReporter
-            .install(application)
-    }
+    application
+        .components
+        .analytics
+        .crashReporter
+        .install(application)
 }

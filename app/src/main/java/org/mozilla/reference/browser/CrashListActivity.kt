@@ -5,20 +5,40 @@
 package org.mozilla.reference.browser
 
 import android.content.Intent
+import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.net.toUri
 import mozilla.components.lib.crash.CrashReporter
-import mozilla.components.lib.crash.ui.AbstractCrashListActivity
-import org.mozilla.reference.browser.ext.components
+import mozilla.components.lib.crash.ui.AbstractCrashListFragment
+import org.mozilla.reference.browser.ext.requireComponents
 
-class CrashListActivity : AbstractCrashListActivity() {
-    override val crashReporter: CrashReporter by lazy { components.analytics.crashReporter }
+/**
+ * A simple activity whose only purpose is to load the [CrashListFragment].
+ */
+class CrashListActivity : AppCompatActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        packageName
+        supportFragmentManager
+            .beginTransaction()
+            .add(android.R.id.content, CrashListFragment())
+            .commit()
+    }
+}
+
+/**
+ * An [AbstractCrashListFragment] implementor that uses the application [CrashReporter].
+ */
+class CrashListFragment : AbstractCrashListFragment() {
+    override val reporter: CrashReporter by lazy { requireComponents.analytics.crashReporter }
 
     override fun onCrashServiceSelected(url: String) {
         val intent = Intent(Intent.ACTION_VIEW).apply {
             data = url.toUri()
-            `package` = packageName
+            `package` = context?.packageName
         }
         startActivity(intent)
-        finish()
+        activity?.finish()
     }
 }
