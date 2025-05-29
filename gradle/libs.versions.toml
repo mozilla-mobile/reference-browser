@@ -3,7 +3,7 @@
 android-components = "143.0.20250805095812"
 
 # AGP
-android-gradle-plugin = "8.11.1"
+android-gradle-plugin = "8.12.0"
 
 # Kotlin
 kotlin = "2.2.0"
