@@ -80,7 +80,7 @@ class AccountSettingsFragment : PreferenceFragmentCompat() {
         val manageAccountKey = requireContext().getPreferenceKey(pref_key_sync_manage_account)
 
         // Sign Out
-        val preferenceSignOut = findPreference<CustomColorPreference>(signOutKey)
+        val preferenceSignOut = findPreference<Preference>(signOutKey)
         preferenceSignOut?.onPreferenceClickListener = getClickListenerForSignOut()
 
         // Sync Now
