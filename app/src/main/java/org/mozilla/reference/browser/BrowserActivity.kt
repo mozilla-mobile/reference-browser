@@ -26,13 +26,11 @@ import org.mozilla.reference.browser.addons.WebExtensionActionPopupActivity
 import org.mozilla.reference.browser.browser.BrowserFragment
 import org.mozilla.reference.browser.browser.CrashIntegration
 import org.mozilla.reference.browser.ext.components
-import org.mozilla.reference.browser.ext.isCrashReportActive
 
 /**
  * Activity that holds the [BrowserFragment].
  */
 open class BrowserActivity : AppCompatActivity() {
-
     private lateinit var crashIntegration: CrashIntegration
 
     private val sessionId: String?
@@ -45,8 +43,7 @@ open class BrowserActivity : AppCompatActivity() {
     /**
      * Returns a new instance of [BrowserFragment] to display.
      */
-    open fun createBrowserFragment(sessionId: String?): Fragment =
-        BrowserFragment.create(sessionId)
+    open fun createBrowserFragment(sessionId: String?): Fragment = BrowserFragment.create(sessionId)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -61,12 +58,10 @@ open class BrowserActivity : AppCompatActivity() {
             }
         }
 
-        if (isCrashReportActive) {
-            crashIntegration = CrashIntegration(this, components.analytics.crashReporter) { crash ->
-                onNonFatalCrash(crash)
-            }
-            lifecycle.addObserver(crashIntegration)
+        crashIntegration = CrashIntegration(this, components.analytics.crashReporter) { crash ->
+            onNonFatalCrash(crash)
         }
+        lifecycle.addObserver(crashIntegration)
 
         NotificationManager.checkAndNotifyPolicy(this)
         lifecycle.addObserver(webExtensionPopupObserver)
@@ -114,14 +109,23 @@ open class BrowserActivity : AppCompatActivity() {
         super.onUserLeaveHint()
     }
 
-    override fun onCreateView(parent: View?, name: String, context: Context, attrs: AttributeSet): View? =
+    override fun onCreateView(
+        parent: View?,
+        name: String,
+        context: Context,
+        attrs: AttributeSet,
+    ): View? =
         when (name) {
-            EngineView::class.java.name -> components.core.engine.createView(context, attrs).asView()
+            EngineView::class.java.name ->
+                components.core.engine
+                .createView(context, attrs)
+                .asView()
             else -> super.onCreateView(parent, name, context, attrs)
         }
 
     private fun onNonFatalCrash(crash: Crash) {
-        Snackbar.make(findViewById(android.R.id.content), R.string.crash_report_non_fatal_message, LENGTH_LONG)
+        Snackbar
+            .make(findViewById(android.R.id.content), R.string.crash_report_non_fatal_message, LENGTH_LONG)
             .setAction(R.string.crash_report_non_fatal_action) {
                 crashIntegration.sendCrashReport(crash)
             }.show()

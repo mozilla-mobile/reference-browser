@@ -11,17 +11,26 @@ import mozilla.components.browser.storage.sync.Tab
 import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.tabs.synced.SyncedTabsAdapter.AdapterItem
 
-sealed class SyncedTabsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+sealed class SyncedTabsViewHolder(
+    itemView: View,
+) : RecyclerView.ViewHolder(itemView) {
+    abstract fun <T : AdapterItem> bind(
+        item: T,
+        interactor: (Tab) -> Unit,
+    )
 
-    abstract fun <T : AdapterItem> bind(item: T, interactor: (Tab) -> Unit)
-
-    class TabViewHolder(itemView: View) : SyncedTabsViewHolder(itemView) {
+    class TabViewHolder(
+        itemView: View,
+    ) : SyncedTabsViewHolder(itemView) {
         // See TODO below
         // private val image = itemView.findViewById<ImageView>(R.id.synced_tabs_item_image)
         private val title = itemView.findViewById<TextView>(R.id.synced_tabs_item_title)
         private val url = itemView.findViewById<TextView>(R.id.synced_tabs_item_desc)
 
-        override fun <T : AdapterItem> bind(item: T, interactor: (Tab) -> Unit) {
+        override fun <T : AdapterItem> bind(
+            item: T,
+            interactor: (Tab) -> Unit,
+        ) {
             bindTab(item as AdapterItem.Tab)
 
             itemView.setOnClickListener {
@@ -43,10 +52,15 @@ sealed class SyncedTabsViewHolder(itemView: View) : RecyclerView.ViewHolder(item
         }
     }
 
-    class DeviceViewHolder(itemView: View) : SyncedTabsViewHolder(itemView) {
+    class DeviceViewHolder(
+        itemView: View,
+    ) : SyncedTabsViewHolder(itemView) {
         private val title = itemView.findViewById<TextView>(R.id.synced_tabs_group_name)
 
-        override fun <T : AdapterItem> bind(item: T, interactor: (Tab) -> Unit) {
+        override fun <T : AdapterItem> bind(
+            item: T,
+            interactor: (Tab) -> Unit,
+        ) {
             bindHeader(item as AdapterItem.Device)
         }
 

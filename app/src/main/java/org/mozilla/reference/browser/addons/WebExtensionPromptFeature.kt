@@ -34,7 +34,6 @@ class WebExtensionPromptFeature(
     private val context: Context,
     private val fragmentManager: FragmentManager,
 ) : LifecycleAwareFeature {
-
     /**
      * Whether or not an add-on installation is in progress.
      */
@@ -47,9 +46,11 @@ class WebExtensionPromptFeature(
      */
     override fun start() {
         scope = store.flowScoped { flow ->
-            flow.mapNotNull { state ->
+            flow
+                .mapNotNull { state ->
                 state.webExtensionPromptRequest
-            }.distinctUntilChanged().collect { promptRequest ->
+            }.distinctUntilChanged()
+                .collect { promptRequest ->
                 when (promptRequest) {
                     is WebExtensionPromptRequest.AfterInstallation -> {
                         handleAfterInstallationRequest(promptRequest)
@@ -87,9 +88,7 @@ class WebExtensionPromptFeature(
         }
     }
 
-    private fun handlePostInstallationRequest(
-        addon: Addon,
-    ) {
+    private fun handlePostInstallationRequest(addon: Addon) {
         showPostInstallationDialog(addon)
     }
 
@@ -252,18 +251,14 @@ class WebExtensionPromptFeature(
         store.dispatch(WebExtensionAction.ConsumePromptRequestWebExtensionAction)
     }
 
-    private fun hasExistingPermissionDialogFragment(): Boolean {
-        return findPreviousDialogFragment() != null
-    }
+    private fun hasExistingPermissionDialogFragment(): Boolean = findPreviousDialogFragment() != null
 
-    private fun findPreviousDialogFragment(): PermissionsDialogFragment? {
-        return fragmentManager.findFragmentByTag(PERMISSIONS_DIALOG_FRAGMENT_TAG) as? PermissionsDialogFragment
-    }
+    private fun findPreviousDialogFragment(): PermissionsDialogFragment? =
+        fragmentManager.findFragmentByTag(PERMISSIONS_DIALOG_FRAGMENT_TAG) as? PermissionsDialogFragment
 
-    private fun hasExistingAddonPostInstallationDialogFragment(): Boolean {
-        return fragmentManager.findFragmentByTag(POST_INSTALLATION_DIALOG_FRAGMENT_TAG)
+    private fun hasExistingAddonPostInstallationDialogFragment(): Boolean =
+        fragmentManager.findFragmentByTag(POST_INSTALLATION_DIALOG_FRAGMENT_TAG)
             as? AddonInstallationDialogFragment != null
-    }
 
     private fun handleBeforeInstallationRequest(promptRequest: WebExtensionPromptRequest.BeforeInstallation) {
         when (promptRequest) {
@@ -277,9 +272,7 @@ class WebExtensionPromptFeature(
     }
 
     @VisibleForTesting
-    internal fun handleInstallationFailedRequest(
-        exception: WebExtensionInstallException,
-    ) {
+    internal fun handleInstallationFailedRequest(exception: WebExtensionInstallException) {
         val addonName = exception.extensionName ?: ""
         var title = context.getString(R.string.mozac_feature_addons_cant_install_extension, "")
         val message = when (exception) {
@@ -352,10 +345,15 @@ class WebExtensionPromptFeature(
         message: String,
     ) {
         context.let {
-            AlertDialog.Builder(it).setTitle(title)
-                .setPositiveButton(android.R.string.ok) { _, _ -> }.setCancelable(false).setMessage(
+            AlertDialog
+                .Builder(it)
+                .setTitle(title)
+                .setPositiveButton(android.R.string.ok) { _, _ -> }
+                .setCancelable(false)
+                .setMessage(
                     message,
-                ).show().withCenterAlignedButtons()
+                ).show()
+                .withCenterAlignedButtons()
         }
     }
 

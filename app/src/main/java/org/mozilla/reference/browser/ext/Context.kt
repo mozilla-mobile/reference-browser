@@ -30,8 +30,9 @@ val Context.application: BrowserApplication
 val Context.components: Components
     get() = application.components
 
-fun Context.getPreferenceKey(@StringRes resourceId: Int): String =
-    resources.getString(resourceId)
+fun Context.getPreferenceKey(
+    @StringRes resourceId: Int,
+): String = resources.getString(resourceId)
 
 /**
  *  Shares content via [ACTION_SEND] intent.
@@ -40,8 +41,11 @@ fun Context.getPreferenceKey(@StringRes resourceId: Int): String =
  * @param subject of the intent [EXTRA_TEXT]
  * @return true it is able to share false otherwise.
  */
-fun Context.share(text: String, subject: String = ""): Boolean {
-    return try {
+fun Context.share(
+    text: String,
+    subject: String = "",
+): Boolean =
+    try {
         val intent = Intent(ACTION_SEND).apply {
             type = "text/plain"
             putExtra(EXTRA_SUBJECT, subject)
@@ -59,4 +63,3 @@ fun Context.share(text: String, subject: String = ""): Boolean {
         Log.log(WARN, message = "No activity to share to found", throwable = e, tag = "Reference-Browser")
         false
     }
-}

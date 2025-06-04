@@ -21,7 +21,9 @@ import org.mozilla.reference.browser.tabs.PrivatePage
  * component; this creates a circular dependency, since firefoxAccountsFeature relies on tabsUseCases
  * which in turn needs 'core' itself.
  */
-class AppRequestInterceptor(private val context: Context) : RequestInterceptor {
+class AppRequestInterceptor(
+    private val context: Context,
+) : RequestInterceptor {
     override fun onLoadRequest(
         engineSession: EngineSession,
         uri: String,
@@ -31,8 +33,8 @@ class AppRequestInterceptor(private val context: Context) : RequestInterceptor {
         isRedirect: Boolean,
         isDirectNavigation: Boolean,
         isSubframeRequest: Boolean,
-    ): RequestInterceptor.InterceptionResponse? {
-        return when (uri) {
+    ): RequestInterceptor.InterceptionResponse? =
+        when (uri) {
             "about:privatebrowsing" -> {
                 val page = PrivatePage.createPrivateBrowsingPage(context, uri)
                 RequestInterceptor.InterceptionResponse.Content(page, encoding = "base64")
@@ -68,7 +70,6 @@ class AppRequestInterceptor(private val context: Context) : RequestInterceptor {
                 )
             }
         }
-    }
 
     override fun onErrorRequest(
         session: EngineSession,

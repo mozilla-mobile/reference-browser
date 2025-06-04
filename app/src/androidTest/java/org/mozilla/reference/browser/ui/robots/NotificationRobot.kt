@@ -11,7 +11,6 @@ import org.junit.Assert.assertTrue
 import org.mozilla.reference.browser.helpers.TestAssetHelper.waitingTime
 
 class NotificationRobot {
-
     fun verifySystemMediaNotificationExists(notificationMessage: String) {
         assertTrue(systemMediaNotification.waitForExists(waitingTime))
         assertTrue(systemMediaNotificationTitle(notificationMessage).waitForExists(waitingTime))
@@ -26,7 +25,10 @@ class NotificationRobot {
         assertTrue(systemMediaNotificationControlButton(action).waitForExists(waitingTime))
     }
 
-    fun verifyDownloadNotificationExist(notificationMessage: String, fileName: String) {
+    fun verifyDownloadNotificationExist(
+        notificationMessage: String,
+        fileName: String,
+    ) {
         val notification = UiSelector().text(notificationMessage)
         var notificationFound = mDevice.findObject(notification).waitForExists(waitingTime)
         val downloadFilename = mDevice.findObject(UiSelector().text(fileName))
@@ -39,7 +41,10 @@ class NotificationRobot {
         assertTrue(downloadFilename.exists())
     }
 
-    fun verifyDownloadNotificationDoesNotExist(notificationMessage: String, fileName: String) {
+    fun verifyDownloadNotificationDoesNotExist(
+        notificationMessage: String,
+        fileName: String,
+    ) {
         val notification = UiSelector().text(notificationMessage)
         val notificationFound = mDevice.findObject(notification).waitForExists(waitingTime)
         val downloadFilename = mDevice.findObject(UiSelector().text(fileName))
@@ -51,7 +56,6 @@ class NotificationRobot {
     }
 
     class Transition {
-
         fun closeNotification(interact: BrowserRobot.() -> Unit): BrowserRobot.Transition {
             mDevice.pressBack()
 

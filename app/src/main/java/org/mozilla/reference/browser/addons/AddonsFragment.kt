@@ -27,7 +27,9 @@ import org.mozilla.reference.browser.ext.components
 /**
  * Fragment use for managing add-ons.
  */
-class AddonsFragment : Fragment(), AddonsManagerAdapterDelegate {
+class AddonsFragment :
+    Fragment(),
+    AddonsManagerAdapterDelegate {
     private val webExtensionPromptFeature = ViewBoundFeatureWrapper<WebExtensionPromptFeature>()
     private lateinit var recyclerView: RecyclerView
     private val scope = CoroutineScope(Dispatchers.IO)
@@ -41,11 +43,12 @@ class AddonsFragment : Fragment(), AddonsManagerAdapterDelegate {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?,
-    ): View {
-        return inflater.inflate(R.layout.fragment_add_ons, container, false)
-    }
+    ): View = inflater.inflate(R.layout.fragment_add_ons, container, false)
 
-    override fun onViewCreated(rootView: View, savedInstanceState: Bundle?) {
+    override fun onViewCreated(
+        rootView: View,
+        savedInstanceState: Bundle?,
+    ) {
         super.onViewCreated(rootView, savedInstanceState)
         bindRecyclerView(rootView)
         webExtensionPromptFeature.set(
@@ -74,7 +77,9 @@ class AddonsFragment : Fragment(), AddonsManagerAdapterDelegate {
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
         scope.launch {
             try {
-                addons = requireContext().components.core.addonManager.getAddons()
+                addons = requireContext()
+                    .components.core.addonManager
+                    .getAddons()
 
                 scope.launch(Dispatchers.Main) {
                     adapter = AddonsManagerAdapter(
@@ -86,7 +91,8 @@ class AddonsFragment : Fragment(), AddonsManagerAdapterDelegate {
                 }
             } catch (e: AddonManagerException) {
                 scope.launch(Dispatchers.Main) {
-                    Toast.makeText(
+                    Toast
+                        .makeText(
                         activity,
                         R.string.mozac_feature_addons_failed_to_query_extensions,
                         Toast.LENGTH_SHORT,

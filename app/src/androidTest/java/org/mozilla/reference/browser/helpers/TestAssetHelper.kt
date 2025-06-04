@@ -15,7 +15,12 @@ import java.util.concurrent.TimeUnit
 object TestAssetHelper {
     val waitingTime: Long = TimeUnit.SECONDS.toMillis(15)
     val waitingTimeShort: Long = TimeUnit.SECONDS.toMillis(1)
-    data class TestAsset(val url: Uri, val content: String, val title: String)
+
+    data class TestAsset(
+        val url: Uri,
+        val content: String,
+        val title: String,
+    )
 
     /**
      * Hosts 3 simple websites, found at androidTest/assets/pages/generic[1|2|3].html
@@ -25,17 +30,19 @@ object TestAssetHelper {
      * Content for these pages all follow the same pattern. See [generic1.html] for
      * content implementation details.
      */
-    fun getGenericAssets(server: MockWebServer): List<TestAsset> {
-        return (1..4).map {
+    fun getGenericAssets(server: MockWebServer): List<TestAsset> =
+        (1..4).map {
             TestAsset(
                 server.url("pages/generic$it.html").toString().toUri()!!,
                 "Page content: $it",
                 "",
             )
         }
-    }
 
-    fun getGenericAsset(server: MockWebServer, pageNum: Int): TestAsset {
+    fun getGenericAsset(
+        server: MockWebServer,
+        pageNum: Int,
+    ): TestAsset {
         val url = server.url("pages/generic$pageNum.html").toString().toUri()!!
         val content = "Page content: $pageNum"
         val title = "Test_Page_$pageNum"

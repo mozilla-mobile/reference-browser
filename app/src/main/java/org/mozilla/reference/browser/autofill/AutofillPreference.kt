@@ -17,7 +17,9 @@ import androidx.preference.Preference
 import androidx.preference.PreferenceViewHolder
 import org.mozilla.reference.browser.R
 
-class AutofillPreference @JvmOverloads constructor(
+class AutofillPreference
+    @JvmOverloads
+    constructor(
     context: Context,
     attrs: AttributeSet? = null,
 ) : Preference(context, attrs) {

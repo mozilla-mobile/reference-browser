@@ -11,10 +11,14 @@ import org.junit.runner.Description
 import org.junit.runners.model.Statement
 import java.lang.AssertionError
 
-class RetryTestRule(private val retryCount: Int = 5) : TestRule {
-
-    override fun apply(base: Statement, description: Description): Statement {
-        return statement {
+class RetryTestRule(
+    private val retryCount: Int = 5,
+) : TestRule {
+    override fun apply(
+        base: Statement,
+        description: Description,
+    ): Statement =
+        statement {
             for (i in 1..retryCount) {
                 try {
                     base.evaluate()
@@ -34,11 +38,9 @@ class RetryTestRule(private val retryCount: Int = 5) : TestRule {
                 }
             }
         }
-    }
 
-    private inline fun statement(crossinline eval: () -> Unit): Statement {
-        return object : Statement() {
+    private inline fun statement(crossinline eval: () -> Unit): Statement =
+        object : Statement() {
             override fun evaluate() = eval()
         }
-    }
 }

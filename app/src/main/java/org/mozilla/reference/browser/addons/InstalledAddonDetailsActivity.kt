@@ -42,7 +42,8 @@ class InstalledAddonDetailsActivity : AppCompatActivity() {
     private fun bindAddon(addon: Addon) {
         scope.launch {
             try {
-                val addons = baseContext.components.core.addonManager.getAddons()
+                val addons = baseContext.components.core.addonManager
+                    .getAddons()
                 scope.launch(Dispatchers.Main) {
                     addons.find { addon.id == it.id }.let {
                         if (it == null) {
@@ -54,7 +55,8 @@ class InstalledAddonDetailsActivity : AppCompatActivity() {
                 }
             } catch (e: AddonManagerException) {
                 scope.launch(Dispatchers.Main) {
-                    Toast.makeText(
+                    Toast
+                        .makeText(
                         baseContext,
                         R.string.mozac_feature_addons_failed_to_query_extensions,
                         Toast.LENGTH_SHORT,
@@ -89,14 +91,16 @@ class InstalledAddonDetailsActivity : AppCompatActivity() {
                     addon,
                     onSuccess = {
                         switch.setState(true)
-                        Toast.makeText(
+                        Toast
+                            .makeText(
                             this,
                             getString(R.string.mozac_feature_addons_successfully_enabled, addon.translateName(this)),
                             Toast.LENGTH_SHORT,
                         ).show()
                     },
                     onError = {
-                        Toast.makeText(
+                        Toast
+                            .makeText(
                             this,
                             getString(R.string.mozac_feature_addons_failed_to_enable, addon.translateName(this)),
                             Toast.LENGTH_SHORT,
@@ -108,14 +112,16 @@ class InstalledAddonDetailsActivity : AppCompatActivity() {
                     addon,
                     onSuccess = {
                         switch.setState(false)
-                        Toast.makeText(
+                        Toast
+                            .makeText(
                             this,
                             getString(R.string.mozac_feature_addons_successfully_disabled, addon.translateName(this)),
                             Toast.LENGTH_SHORT,
                         ).show()
                     },
                     onError = {
-                        Toast.makeText(
+                        Toast
+                            .makeText(
                             this,
                             getString(R.string.mozac_feature_addons_failed_to_disable, addon.translateName(this)),
                             Toast.LENGTH_SHORT,
@@ -172,7 +178,8 @@ class InstalledAddonDetailsActivity : AppCompatActivity() {
             this.components.core.addonManager.uninstallAddon(
                 addon,
                 onSuccess = {
-                    Toast.makeText(
+                    Toast
+                        .makeText(
                         this,
                         getString(R.string.mozac_feature_addons_successfully_uninstalled, addon.translateName(this)),
                         Toast.LENGTH_SHORT,
@@ -180,7 +187,8 @@ class InstalledAddonDetailsActivity : AppCompatActivity() {
                     finish()
                 },
                 onError = { _, _ ->
-                    Toast.makeText(
+                    Toast
+                        .makeText(
                         this,
                         getString(R.string.mozac_feature_addons_failed_to_uninstall, addon.translateName(this)),
                         Toast.LENGTH_SHORT,

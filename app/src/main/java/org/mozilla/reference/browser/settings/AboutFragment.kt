@@ -25,11 +25,16 @@ import org.mozilla.geckoview.BuildConfig.MOZ_APP_VERSION
 import org.mozilla.reference.browser.R
 
 class AboutFragment : Fragment() {
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_about, container, false)
-    }
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?,
+    ): View? = inflater.inflate(R.layout.fragment_about, container, false)
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun onViewCreated(
+        view: View,
+        savedInstanceState: Bundle?,
+    ) {
         super.onViewCreated(view, savedInstanceState)
 
         val appName = requireContext().resources.getString(R.string.app_name)
@@ -51,9 +56,9 @@ class AboutFragment : Fragment() {
         val versionInfo = String.format(
             "%s \uD83D\uDCE6: %s, %s\n\uD83D\uDEA2: %s",
             aboutText,
-            Build.version,
-            Build.gitHash,
-            Build.applicationServicesVersion,
+            Build.VERSION,
+            Build.GIT_HASH,
+            Build.APPLICATION_SERVICES_VERSION,
         )
         val content = HtmlCompat.fromHtml(
             resources.getString(R.string.about_content, appName),

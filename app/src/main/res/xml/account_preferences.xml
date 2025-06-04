@@ -15,6 +15,10 @@
             android:key="@string/pref_key_sync_now"
             android:title="@string/sync_now" />
 
+    <androidx.preference.Preference
+        android:key="@string/pref_key_sign_out"
+        android:title="@string/sign_out" />
+
     <PreferenceCategory
         android:title="@string/sync_category">
 
@@ -36,10 +40,4 @@
             android:enabled="false"
             android:title="@string/preferences_sync_passwords" />
     </PreferenceCategory>
-
-    <org.mozilla.reference.browser.settings.CustomColorPreference
-            android:key="@string/pref_key_sign_out"
-            android:title="@string/sign_out"
-            app:titleColor="@color/photonRed50" />
-
 </androidx.preference.PreferenceScreen>

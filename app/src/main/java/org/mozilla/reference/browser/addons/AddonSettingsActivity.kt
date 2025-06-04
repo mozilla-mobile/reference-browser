@@ -25,7 +25,6 @@ import org.mozilla.reference.browser.ext.components
  * An activity to show the settings of an add-on.
  */
 class AddonSettingsActivity : AppCompatActivity() {
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_on_settings)
@@ -42,9 +41,17 @@ class AddonSettingsActivity : AppCompatActivity() {
             .commit()
     }
 
-    override fun onCreateView(parent: View?, name: String, context: Context, attrs: AttributeSet): View? =
+    override fun onCreateView(
+        parent: View?,
+        name: String,
+        context: Context,
+        attrs: AttributeSet,
+    ): View? =
         when (name) {
-            EngineView::class.java.name -> components.core.engine.createView(context, attrs).asView()
+            EngineView::class.java.name ->
+                components.core.engine
+                .createView(context, attrs)
+                .asView()
             else -> super.onCreateView(parent, name, context, attrs)
         }
 
@@ -55,20 +62,31 @@ class AddonSettingsActivity : AppCompatActivity() {
         private lateinit var optionsPageUrl: String
         private lateinit var engineSession: EngineSession
 
-        override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        override fun onCreateView(
+            inflater: LayoutInflater,
+            container: ViewGroup?,
+            savedInstanceState: Bundle?,
+        ): View? {
             optionsPageUrl = requireNotNull(
-                arguments?.getParcelableCompat(
+                arguments
+                    ?.getParcelableCompat(
                     "add_on",
                     Addon::class.java,
-                )?.installedState?.optionsPageUrl,
+                )?.installedState
+                    ?.optionsPageUrl,
             )
 
-            engineSession = requireContext().components.core.engine.createSession()
+            engineSession = requireContext()
+                .components.core.engine
+                .createSession()
 
             return inflater.inflate(R.layout.fragment_add_on_settings, container, false)
         }
 
-        override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        override fun onViewCreated(
+            view: View,
+            savedInstanceState: Bundle?,
+        ) {
             super.onViewCreated(view, savedInstanceState)
 
             val addonSettingsEngineView = view.findViewById<View>(R.id.addonSettingsEngineView) as EngineView
@@ -85,7 +103,8 @@ class AddonSettingsActivity : AppCompatActivity() {
             /**
              * Create an [AddonSettingsFragment] with add_on as a required parameter.
              */
-            fun create(addon: Addon) = AddonSettingsFragment().apply {
+            fun create(addon: Addon) =
+                AddonSettingsFragment().apply {
                 arguments = Bundle().apply {
                     putParcelable("add_on", addon)
                 }

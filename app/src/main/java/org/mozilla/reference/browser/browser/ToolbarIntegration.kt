@@ -53,7 +53,8 @@ class ToolbarIntegration(
     private val tabsUseCases: TabsUseCases,
     private val webAppUseCases: WebAppUseCases,
     sessionId: String? = null,
-) : LifecycleAwareFeature, UserInteractionHandler {
+) : LifecycleAwareFeature,
+    UserInteractionHandler {
     private val shippedDomainsProvider = ShippedDomainsProvider().also {
         it.initialize(context)
     }
@@ -102,15 +103,13 @@ class ToolbarIntegration(
         return RowMenuCandidate(listOf(forward, refresh, stop))
     }
 
-    private fun sessionMenuItems(sessionState: SessionState): List<MenuCandidate> {
-        return listOfNotNull(
+    private fun sessionMenuItems(sessionState: SessionState): List<MenuCandidate> =
+        listOfNotNull(
             menuToolbar(sessionState),
-
             TextMenuCandidate("Share") {
                 val url = sessionState.content.url
                 context.share(url)
             },
-
             CompoundMenuCandidate(
                 text = "Request desktop site",
                 isChecked = sessionState.content.desktopMode,
@@ -118,7 +117,6 @@ class ToolbarIntegration(
             ) { checked ->
                 sessionUseCases.requestDesktopSite.invoke(checked)
             },
-
             if (webAppUseCases.isPinningSupported()) {
                 TextMenuCandidate(
                     text = "Add to homescreen",
@@ -131,14 +129,12 @@ class ToolbarIntegration(
             } else {
                 null
             },
-
             TextMenuCandidate(
                 text = "Find in Page",
             ) {
                 FindInPageIntegration.launch?.invoke()
             },
         )
-    }
 
     private fun menuItems(sessionState: SessionState?): List<MenuCandidate> {
         val sessionMenuItems = if (sessionState != null) {
@@ -153,19 +149,16 @@ class ToolbarIntegration(
                 intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
                 context.startActivity(intent)
             },
-
             TextMenuCandidate(text = "Synced Tabs") {
                 val intent = Intent(context, SyncedTabsActivity::class.java)
                 intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
                 context.startActivity(intent)
             },
-
             TextMenuCandidate(text = "Report issue") {
                 tabsUseCases.addTab(
                     url = "https://github.com/mozilla-mobile/reference-browser/issues/new",
                 )
             },
-
             TextMenuCandidate(text = "Settings") {
                 val intent = Intent(context, SettingsActivity::class.java)
                 intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
@@ -198,7 +191,8 @@ class ToolbarIntegration(
         )
 
         scope.launch {
-            store.flow()
+            store
+                .flow()
                 .map { state -> state.selectedTab }
                 .distinctUntilChanged()
                 .collect { tab ->
@@ -229,7 +223,5 @@ class ToolbarIntegration(
         toolbarFeature.stop()
     }
 
-    override fun onBackPressed(): Boolean {
-        return toolbarFeature.onBackPressed()
-    }
+    override fun onBackPressed(): Boolean = toolbarFeature.onBackPressed()
 }

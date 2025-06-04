@@ -28,9 +28,9 @@ class ReaderViewIntegration(
     toolbar: BrowserToolbar,
     view: ReaderViewControlsView,
     readerViewAppearanceButton: FloatingActionButton,
-) : LifecycleAwareFeature, UserInteractionHandler {
-
-    private var readerViewButtonVisible = false
+) : LifecycleAwareFeature,
+    UserInteractionHandler {
+        private var readerViewButtonVisible = false
 
     private val readerViewButton: BrowserToolbar.ToggleButton = BrowserToolbar.ToggleButton(
         image = ContextCompat.getDrawable(context, R.drawable.mozac_ic_reader_view_24)!!,
@@ -39,7 +39,9 @@ class ReaderViewIntegration(
         },
         contentDescription = "Enable Reader View",
         contentDescriptionSelected = "Disable Reader View",
-        selected = store.state.selectedTab?.readerState?.active ?: false,
+        selected = store.state.selectedTab
+            ?.readerState
+            ?.active ?: false,
         visible = { readerViewButtonVisible },
     ) { enabled ->
         if (enabled) {
@@ -73,9 +75,7 @@ class ReaderViewIntegration(
         feature.stop()
     }
 
-    override fun onBackPressed(): Boolean {
-        return feature.onBackPressed()
-    }
+    override fun onBackPressed(): Boolean = feature.onBackPressed()
 }
 
 /**
@@ -87,7 +87,11 @@ class ReaderViewAppearanceButtonBehavior(
     context: Context,
     attrs: AttributeSet,
 ) : CoordinatorLayout.Behavior<FloatingActionButton>(context, attrs) {
-    override fun layoutDependsOn(parent: CoordinatorLayout, child: FloatingActionButton, dependency: View): Boolean {
+    override fun layoutDependsOn(
+        parent: CoordinatorLayout,
+        child: FloatingActionButton,
+        dependency: View,
+    ): Boolean {
         if (dependency is FindInPageBar || dependency is BrowserToolbar) {
             return true
         }
@@ -99,16 +103,18 @@ class ReaderViewAppearanceButtonBehavior(
         parent: CoordinatorLayout,
         child: FloatingActionButton,
         dependency: View,
-    ): Boolean {
-        return if (dependency is FindInPageBar || dependency is BrowserToolbar) {
+    ): Boolean =
+        if (dependency is FindInPageBar || dependency is BrowserToolbar) {
             repositionReaderViewAppearanceButton(child, dependency)
             true
         } else {
             false
         }
-    }
 
-    private fun repositionReaderViewAppearanceButton(button: FloatingActionButton, toolbar: View) {
+    private fun repositionReaderViewAppearanceButton(
+        button: FloatingActionButton,
+        toolbar: View,
+    ) {
         button.translationY = (toolbar.translationY + toolbar.height * -1.0).toFloat()
     }
 }

@@ -38,16 +38,23 @@ class TabTrayMenuRobot {
     val mDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
 
     fun verifyRegularBrowsingTab() = assertRegularBrowsingTabs()
+
     fun verifyPrivateBrowsingTab() = assertPrivateBrowsingTabs()
+
     fun verifyGoBackButton() = assertGoBackButton()
+
     fun verifyNewTabButton() = assertNewTabButton()
-    fun verifyRegularBrowsingTab(isSelected: Boolean) =
-        regularTabs().assertIsSelected(isSelected)
-    fun verifyPrivateBrowsingTab(isSelected: Boolean) =
-        privateTabs().assertIsSelected(isSelected)
+
+    fun verifyRegularBrowsingTab(isSelected: Boolean) = regularTabs().assertIsSelected(isSelected)
+
+    fun verifyPrivateBrowsingTab(isSelected: Boolean) = privateTabs().assertIsSelected(isSelected)
+
     fun verifyThereAreNotPrivateTabsOpen() = assertThereAreNoPrivateTabsOpen()
+
     fun verifyThereIsOnePrivateTabOpen() = assertPrivateTabs()
+
     fun verifyThereIsOneTabOpen() = tab().check(matches(isDisplayed()))
+
     fun verifyExistingOpenTabs(title: String) = assertExistingOpenTabs(title)
 
     fun goBackFromTabTrayTest() = goBackButton().click()
@@ -63,7 +70,6 @@ class TabTrayMenuRobot {
     }
 
     class Transition {
-
         fun openNewTab(interact: NavigationToolbarRobot.() -> Unit): NavigationToolbarRobot.Transition {
             newTabButton().click()
             NavigationToolbarRobot().interact()
@@ -94,7 +100,10 @@ class TabTrayMenuRobot {
             return NavigationToolbarRobot.Transition()
         }
 
-        fun clickOpenTab(title: String, interact: BrowserRobot.() -> Unit): BrowserRobot.Transition {
+        fun clickOpenTab(
+            title: String,
+            interact: BrowserRobot.() -> Unit,
+        ): BrowserRobot.Transition {
             openTab(title).clickAndWaitForNewWindow()
 
             BrowserRobot().interact()
@@ -104,23 +113,37 @@ class TabTrayMenuRobot {
 }
 
 private fun regularTabs() = onView(ViewMatchers.withContentDescription("Tabs"))
+
 private fun privateTabs() = onView(ViewMatchers.withContentDescription("Private tabs"))
+
 private fun goBackButton() = onView(ViewMatchers.withContentDescription("back"))
+
 private fun newTabButton() = onView(ViewMatchers.withContentDescription("Add New Tab"))
+
 private fun closeTabButtonTabTray() = onView(withId(R.id.mozac_browser_tabstray_close))
+
 private fun tab() = onView(TabMatcher.withText("about:blank"))
 
-private fun assertRegularBrowsingTabs() = regularTabs()
+private fun assertRegularBrowsingTabs() =
+    regularTabs()
     .check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
-private fun assertPrivateBrowsingTabs() = privateTabs()
+
+private fun assertPrivateBrowsingTabs() =
+    privateTabs()
     .check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
-private fun assertGoBackButton() = goBackButton()
+
+private fun assertGoBackButton() =
+    goBackButton()
     .check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
-private fun assertNewTabButton() = newTabButton()
+
+private fun assertNewTabButton() =
+    newTabButton()
     .check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+
 private fun assertPrivateTabs() {
     mDevice.wait(Until.findObject(By.text("Private Browsing")), waitingTime)
 }
+
 private fun assertThereAreNoPrivateTabsOpen() {
     val obj = mDevice.wait(Until.findObject(By.text("Private Browsing")), waitingTimeShort)
     try {
@@ -132,7 +155,8 @@ private fun assertThereAreNoPrivateTabsOpen() {
 
 private fun assertExistingOpenTabs(title: String) {
     mDevice.waitForIdle()
-    mDevice.findObject(UiSelector().resourceId("${TestHelper.packageName}:id/tabsTray"))
+    mDevice
+        .findObject(UiSelector().resourceId("${TestHelper.packageName}:id/tabsTray"))
         .waitForExists(waitingTime)
     Assert.assertTrue(
         mDevice.findObject(UiSelector().textContains(title)).waitForExists(waitingTime),

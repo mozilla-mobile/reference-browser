@@ -15,7 +15,10 @@ import org.mozilla.reference.browser.helpers.TestAssetHelper.waitingTime
  *
  * @throws AssertionError if no [UiObject2] matches the condition
  */
-fun UiDevice.waitAndInteract(condition: SearchCondition<UiObject2>, interaction: UiObject2.() -> Unit) {
+fun UiDevice.waitAndInteract(
+    condition: SearchCondition<UiObject2>,
+    interaction: UiObject2.() -> Unit,
+) {
     val obj = this.wait(condition, waitingTime)
     assertNotNull(obj)
     interaction.invoke(obj)

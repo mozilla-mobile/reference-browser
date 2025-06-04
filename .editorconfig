@@ -1,0 +1,13 @@
+[*.{kt,kts}]
+ij_kotlin_allow_trailing_comma_on_call_site=true
+ij_kotlin_allow_trailing_comma=true
+
+[*]
+insert_final_newline = true
+max_line_length = 120 # same as detekt.yml
+
+# rules we should look into enabling
+ktlint_standard_function-naming = disabled
+ktlint_standard_indent = disabled
+ktlint_standard_multiline-expression-wrapping = disabled
+ktlint_standard_string-template-indent = disabled

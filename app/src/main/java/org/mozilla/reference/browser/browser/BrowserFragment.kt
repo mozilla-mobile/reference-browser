@@ -29,7 +29,9 @@ import org.mozilla.reference.browser.tabs.TabsTrayFragment
 /**
  * Fragment used for browsing the web within the main app.
  */
-class BrowserFragment : BaseBrowserFragment(), UserInteractionHandler {
+class BrowserFragment :
+    BaseBrowserFragment(),
+    UserInteractionHandler {
     private val thumbnailsFeature = ViewBoundFeatureWrapper<BrowserThumbnails>()
     private val readerViewFeature = ViewBoundFeatureWrapper<ReaderViewIntegration>()
     private val webExtToolbarFeature = ViewBoundFeatureWrapper<WebExtensionToolbarFeature>()
@@ -53,7 +55,10 @@ class BrowserFragment : BaseBrowserFragment(), UserInteractionHandler {
         )
 
     @Suppress("LongMethod")
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun onViewCreated(
+        view: View,
+        savedInstanceState: Bundle?,
+    ) {
         super.onViewCreated(view, savedInstanceState)
 
         AwesomeBarFeature(awesomeBar, toolbar, engineView)
@@ -66,17 +71,14 @@ class BrowserFragment : BaseBrowserFragment(), UserInteractionHandler {
                 engine = requireComponents.core.engine,
                 limit = 5,
                 filterExactMatch = true,
-            )
-            .addSessionProvider(
+            ).addSessionProvider(
                 resources,
                 requireComponents.core.store,
                 requireComponents.useCases.tabsUseCases.selectTab,
-            )
-            .addHistoryProvider(
+            ).addHistoryProvider(
                 requireComponents.core.historyStorage,
                 requireComponents.useCases.sessionUseCases.loadUrl,
-            )
-            .addClipboardProvider(requireContext(), requireComponents.useCases.sessionUseCases.loadUrl)
+            ).addClipboardProvider(requireContext(), requireComponents.useCases.sessionUseCases.loadUrl)
 
         // We cannot really add a `addSyncedTabsProvider` to `AwesomeBarFeature` coz that would create
         // a dependency on feature-syncedtabs (which depends on Sync).
@@ -149,11 +151,11 @@ class BrowserFragment : BaseBrowserFragment(), UserInteractionHandler {
         }
     }
 
-    override fun onBackPressed(): Boolean =
-        readerViewFeature.onBackPressed() || super.onBackPressed()
+    override fun onBackPressed(): Boolean = readerViewFeature.onBackPressed() || super.onBackPressed()
 
     companion object {
-        fun create(sessionId: String? = null) = BrowserFragment().apply {
+        fun create(sessionId: String? = null) =
+            BrowserFragment().apply {
             arguments = Bundle().apply {
                 putSessionId(sessionId)
             }

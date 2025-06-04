@@ -14,8 +14,10 @@ import org.mozilla.reference.browser.ext.getPreferenceKey
 import org.mozilla.reference.browser.ext.requireComponents
 
 class PrivacySettingsFragment : PreferenceFragmentCompat() {
-
-    override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
+    override fun onCreatePreferences(
+        savedInstanceState: Bundle?,
+        rootKey: String?,
+    ) {
         setPreferencesFromResource(R.xml.privacy_preferences, rootKey)
 
         val context = requireContext()
@@ -39,30 +41,29 @@ class PrivacySettingsFragment : PreferenceFragmentCompat() {
 
         globalPrivacyControl?.onPreferenceChangeListener = getChangeListenerForGPC { enabled ->
             requireComponents.core.engine.settings.globalPrivacyControlEnabled = enabled
-            requireComponents.useCases.sessionUseCases.reload.invoke()
+            requireComponents.useCases.sessionUseCases.reload
+                .invoke()
         }
     }
 
-    private fun getChangeListenerForTelemetry(): OnPreferenceChangeListener {
-        return OnPreferenceChangeListener { _, _ ->
+    private fun getChangeListenerForTelemetry(): OnPreferenceChangeListener =
+        OnPreferenceChangeListener { _, _ ->
             true
         }
-    }
 
     private fun getChangeListenerForTrackingProtection(
         createTrackingProtectionPolicy: (Boolean) -> TrackingProtectionPolicy,
-    ): OnPreferenceChangeListener {
-        return OnPreferenceChangeListener { _, value ->
+    ): OnPreferenceChangeListener =
+        OnPreferenceChangeListener { _, value ->
             val policy = createTrackingProtectionPolicy(value as Boolean)
-            requireComponents.useCases.settingsUseCases.updateTrackingProtection.invoke(policy)
+            requireComponents.useCases.settingsUseCases.updateTrackingProtection
+                .invoke(policy)
             true
         }
-    }
 
-    private fun getChangeListenerForGPC(action: (Boolean) -> Unit): OnPreferenceChangeListener {
-        return OnPreferenceChangeListener { _, enabled ->
+    private fun getChangeListenerForGPC(action: (Boolean) -> Unit): OnPreferenceChangeListener =
+        OnPreferenceChangeListener { _, enabled ->
             action.invoke(enabled as Boolean)
             true
         }
-    }
 }

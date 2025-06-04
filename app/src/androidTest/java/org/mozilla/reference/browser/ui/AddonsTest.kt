@@ -15,7 +15,6 @@ import org.mozilla.reference.browser.helpers.RetryTestRule
 import org.mozilla.reference.browser.ui.robots.navigationToolbar
 
 class AddonsTest {
-
     private lateinit var mockWebServer: MockWebServer
 
     @get:Rule

@@ -41,30 +41,49 @@ class WebExtensionActionPopupActivity : AppCompatActivity() {
             .commit()
     }
 
-    override fun onCreateView(parent: View?, name: String, context: Context, attrs: AttributeSet): View? =
+    override fun onCreateView(
+        parent: View?,
+        name: String,
+        context: Context,
+        attrs: AttributeSet,
+    ): View? =
         when (name) {
-            EngineView::class.java.name -> components.core.engine.createView(context, attrs).asView()
+            EngineView::class.java.name ->
+                components.core.engine
+                .createView(context, attrs)
+                .asView()
             else -> super.onCreateView(parent, name, context, attrs)
         }
 
     /**
      * A fragment to show the web extension action popup with [EngineView].
      */
-    class WebExtensionActionPopupFragment : Fragment(), EngineSession.Observer {
+    class WebExtensionActionPopupFragment :
+        Fragment(),
+        EngineSession.Observer {
         private var engineSession: EngineSession? = null
         private lateinit var webExtensionId: String
 
         private val addonSettingsEngineView: EngineView
             get() = requireView().findViewById<View>(R.id.addonSettingsEngineView) as EngineView
 
-        override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        override fun onCreateView(
+            inflater: LayoutInflater,
+            container: ViewGroup?,
+            savedInstanceState: Bundle?,
+        ): View? {
             webExtensionId = requireNotNull(arguments?.getString("web_extension_id"))
-            engineSession = requireContext().components.core.store.state.extensions[webExtensionId]?.popupSession
+            engineSession = requireContext()
+                .components.core.store.state.extensions[webExtensionId]
+                ?.popupSession
 
             return inflater.inflate(R.layout.fragment_add_on_settings, container, false)
         }
 
-        override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        override fun onViewCreated(
+            view: View,
+            savedInstanceState: Bundle?,
+        ) {
             super.onViewCreated(view, savedInstanceState)
 
             val session = engineSession
@@ -112,7 +131,8 @@ class WebExtensionActionPopupActivity : AppCompatActivity() {
             /**
              * Create an [WebExtensionActionPopupFragment] with webExtensionId as a required parameter.
              */
-            fun create(webExtensionId: String) = WebExtensionActionPopupFragment().apply {
+            fun create(webExtensionId: String) =
+                WebExtensionActionPopupFragment().apply {
                 arguments = Bundle().apply {
                     putString("web_extension_id", webExtensionId)
                 }

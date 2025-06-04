@@ -11,18 +11,21 @@ import org.mozilla.reference.browser.helpers.TestAssetHelper.waitingTime
  * Implementation of Robot Pattern for the Add to homescreen feature.
  */
 class AddToHomeScreenRobot {
-
     fun clickCancelAddToHomeScreenButton() {
         cancelAddToHomeScreenButton().waitForExists(waitingTime)
         cancelAddToHomeScreenButton().click()
     }
+
     fun clickAddAutomaticallyToHomeScreenButton() {
         addAutomaticallyToHomeScreenButton().waitForExists(waitingTime)
         addAutomaticallyToHomeScreenButton().click()
     }
 
     class Transition {
-        fun openHomeScreenShortcut(title: String, interact: BrowserRobot.() -> Unit): BrowserRobot.Transition {
+        fun openHomeScreenShortcut(
+            title: String,
+            interact: BrowserRobot.() -> Unit,
+        ): BrowserRobot.Transition {
             mDevice.findObject(UiSelector().textContains(title)).waitForExists(waitingTime)
             mDevice.findObject((UiSelector().textContains(title))).clickAndWaitForNewWindow(waitingTime)
 
@@ -32,6 +35,7 @@ class AddToHomeScreenRobot {
     }
 
     private fun cancelAddToHomeScreenButton() = mDevice.findObject(UiSelector().textContains("CANCEL"))
+
     private fun addAutomaticallyToHomeScreenButton() =
         mDevice.findObject(UiSelector().textContains("ADD AUTOMATICALLY"))
 }

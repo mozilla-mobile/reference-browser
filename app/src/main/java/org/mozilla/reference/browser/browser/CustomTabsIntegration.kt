@@ -46,9 +46,9 @@ class CustomTabsIntegration(
     private val customTabsUseCases: CustomTabsUseCases,
     sessionId: String,
     private val activity: Activity?,
-) : LifecycleAwareFeature, UserInteractionHandler {
-
-    private val session = store.state.findCustomTab(sessionId)
+) : LifecycleAwareFeature,
+    UserInteractionHandler {
+        private val session = store.state.findCustomTab(sessionId)
     private val logger = Logger("CustomTabsIntegration")
 
     init {
@@ -99,15 +99,13 @@ class CustomTabsIntegration(
         return RowMenuCandidate(listOf(forward, refresh, stop))
     }
 
-    private fun menuItems(sessionState: SessionState?): List<MenuCandidate> {
-        return listOf(
+    private fun menuItems(sessionState: SessionState?): List<MenuCandidate> =
+        listOf(
             menuToolbar(session),
-
             TextMenuCandidate("Share") {
                 val url = sessionState?.content?.url.orEmpty()
                 context.share(url)
             },
-
             CompoundMenuCandidate(
                 text = "Request desktop site",
                 isChecked = sessionState?.content?.desktopMode == true,
@@ -115,11 +113,9 @@ class CustomTabsIntegration(
             ) { checked ->
                 sessionUseCases.requestDesktopSite.invoke(checked, sessionState?.id)
             },
-
             TextMenuCandidate("Find in Page") {
                 FindInPageIntegration.launch?.invoke()
             },
-
             TextMenuCandidate("Open in Browser") {
                 // Release the session from this view so that it can immediately be rendered by a different view
                 engineView.release()
@@ -137,7 +133,6 @@ class CustomTabsIntegration(
                 context.startActivity(intent)
             },
         )
-    }
 
     private val menuController: MenuController = BrowserMenuController()
 
@@ -154,7 +149,8 @@ class CustomTabsIntegration(
         toolbar.display.menuController = menuController
 
         store.flowScoped { flow ->
-            flow.map { state -> state.findCustomTab(sessionId) }
+            flow
+                .map { state -> state.findCustomTab(sessionId) }
                 .distinctUntilChanged()
                 .collect { tab ->
                     val items = menuItems(tab)
@@ -172,7 +168,5 @@ class CustomTabsIntegration(
         feature.stop()
     }
 
-    override fun onBackPressed(): Boolean {
-        return feature.onBackPressed()
-    }
+    override fun onBackPressed(): Boolean = feature.onBackPressed()
 }

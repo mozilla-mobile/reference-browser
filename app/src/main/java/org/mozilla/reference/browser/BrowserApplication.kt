@@ -13,15 +13,14 @@ import mozilla.components.browser.state.action.SystemAction
 import mozilla.components.concept.engine.webextension.isUnsupported
 import mozilla.components.concept.push.PushProcessor
 import mozilla.components.feature.addons.update.GlobalAddonDependencyProvider
+import mozilla.components.support.AppServicesInitializer
 import mozilla.components.support.base.log.Log
 import mozilla.components.support.base.log.logger.Logger
 import mozilla.components.support.base.log.sink.AndroidLogSink
 import mozilla.components.support.ktx.android.content.isMainProcess
 import mozilla.components.support.ktx.android.content.runOnlyInMainProcess
 import mozilla.components.support.rusthttp.RustHttpConfig
-import mozilla.components.support.rustlog.RustLog
 import mozilla.components.support.webextensions.WebExtensionSupport
-import org.mozilla.reference.browser.ext.isCrashReportActive
 import org.mozilla.reference.browser.push.PushFxaIntegration
 import org.mozilla.reference.browser.push.WebPushEngineIntegration
 import java.util.concurrent.TimeUnit
@@ -34,8 +33,10 @@ open class BrowserApplication : Application() {
 
         setupCrashReporting(this)
 
+        AppServicesInitializer.init(components.analytics.crashReporter)
         RustHttpConfig.setClient(lazy { components.core.client })
-        setupLogging()
+
+        Log.addSink(AndroidLogSink())
 
         if (!isMainProcess()) {
             // If this is not the main process then do not continue with the initialization here. Everything that
@@ -115,7 +116,8 @@ open class BrowserApplication : Application() {
     }
 
     @OptIn(DelicateCoroutinesApi::class)
-    private fun restoreBrowserState() = GlobalScope.launch(Dispatchers.Main) {
+    private fun restoreBrowserState() =
+        GlobalScope.launch(Dispatchers.Main) {
         val store = components.core.store
         val sessionStorage = components.core.sessionStorage
 
@@ -123,7 +125,8 @@ open class BrowserApplication : Application() {
 
         // Now that we have restored our previous state (if there's one) let's setup auto saving the state while
         // the app is used.
-        sessionStorage.autoSave(store)
+        sessionStorage
+            .autoSave(store)
             .periodicallyInForeground(interval = 30, unit = TimeUnit.SECONDS)
             .whenGoingToBackground()
             .whenSessionsChange()
@@ -134,17 +137,10 @@ open class BrowserApplication : Application() {
     }
 }
 
-private fun setupLogging() {
-    // We want the log messages of all builds to go to Android logcat
-    Log.addSink(AndroidLogSink())
-    RustLog.enable()
-}
-
 private fun setupCrashReporting(application: BrowserApplication) {
-    if (isCrashReportActive) {
-        application
-            .components
-            .analytics
-            .crashReporter.install(application)
-    }
+    application
+        .components
+        .analytics
+        .crashReporter
+        .install(application)
 }

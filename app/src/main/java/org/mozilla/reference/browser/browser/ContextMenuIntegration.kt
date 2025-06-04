@@ -32,7 +32,6 @@ class ContextMenuIntegration(
     parentView: View,
     sessionId: String? = null,
 ) : LifecycleAwareFeature {
-
     private val candidates = run {
         if (sessionId != null) {
             val snackbarDelegate = DefaultSnackbarDelegate()

@@ -12,7 +12,10 @@ import java.util.Date
 import java.util.GregorianCalendar
 
 @Suppress("MagicNumber")
-fun Long.timeSince(context: Context, time: Long): String {
+fun Long.timeSince(
+    context: Context,
+    time: Long,
+): String {
     val earliestValidSyncDate: Date = GregorianCalendar.getInstance().run {
         set(2000, Calendar.JANUARY, 1, 0, 0, 0)
         getTime()

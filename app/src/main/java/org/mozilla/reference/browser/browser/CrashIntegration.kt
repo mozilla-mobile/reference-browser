@@ -18,16 +18,17 @@ import mozilla.components.lib.crash.Crash
 import mozilla.components.lib.crash.CrashReporter
 import mozilla.components.support.utils.ext.registerReceiverCompat
 import org.mozilla.reference.browser.BrowserApplication.Companion.NON_FATAL_CRASH_BROADCAST
-import org.mozilla.reference.browser.ext.isCrashReportActive
 
 class CrashIntegration(
     private val context: Context,
     private val crashReporter: CrashReporter,
     private val onCrash: (Crash) -> Unit,
 ) : DefaultLifecycleObserver {
-
     private val receiver = object : BroadcastReceiver() {
-        override fun onReceive(context: Context, intent: Intent) {
+        override fun onReceive(
+            context: Context,
+            intent: Intent,
+        ) {
             if (!Crash.isCrashIntent(intent)) {
                 return
             }
@@ -39,20 +40,16 @@ class CrashIntegration(
 
     override fun onStart(owner: LifecycleOwner) {
         super.onStart(owner)
-        if (isCrashReportActive) {
-            context.registerReceiverCompat(
-                receiver,
-                IntentFilter(NON_FATAL_CRASH_BROADCAST),
-                ContextCompat.RECEIVER_NOT_EXPORTED,
-            )
-        }
+        context.registerReceiverCompat(
+            receiver,
+            IntentFilter(NON_FATAL_CRASH_BROADCAST),
+            ContextCompat.RECEIVER_NOT_EXPORTED,
+        )
     }
 
     override fun onStop(owner: LifecycleOwner) {
         super.onStop(owner)
-        if (isCrashReportActive) {
-            context.unregisterReceiver(receiver)
-        }
+        context.unregisterReceiver(receiver)
     }
 
     @OptIn(DelicateCoroutinesApi::class)

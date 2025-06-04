@@ -25,8 +25,9 @@ import org.mozilla.reference.browser.ext.components
  * Component group for all functionality related to analytics e.g. crash
  * reporting and telemetry.
  */
-class Analytics(private val context: Context) {
-
+class Analytics(
+    private val context: Context,
+) {
     /**
      * A generic crash reporter component configured to use both Sentry and Socorro.
      */

@@ -31,7 +31,8 @@ class BrowserRobot {
     fun verifyPageContent(expectedText: String) {
         mDevice.waitForObjects(mDevice.findObject(UiSelector().resourceId("android.webkit.WebView")))
         assertTrue(
-            mDevice.findObject(
+            mDevice
+                .findObject(
                 UiSelector()
                     .textContains(expectedText),
             ).waitForExists(waitingTime),
@@ -47,17 +48,18 @@ class BrowserRobot {
     }
 
     fun verifyUrl(expectedUrl: String) {
-        mDevice.findObject(
+        mDevice
+            .findObject(
             UiSelector()
                 .resourceId("$packageName:id/toolbar"),
-        )
-            .waitForExists(waitingTime)
-        mDevice.findObject(
+        ).waitForExists(waitingTime)
+        mDevice
+            .findObject(
             UiSelector()
                 .resourceId("$packageName:id/mozac_browser_toolbar_url_view"),
-        )
-            .waitForExists(waitingTime)
-        mDevice.findObject(UiSelector().textContains(expectedUrl))
+        ).waitForExists(waitingTime)
+        mDevice
+            .findObject(UiSelector().textContains(expectedUrl))
             .waitForExists(waitingTime)
         onView(
             allOf(
@@ -70,29 +72,36 @@ class BrowserRobot {
 
     fun verifyAboutBrowser() {
         assertTrue(
-            mDevice.findObject(UiSelector().resourceId("$packageName:id/about_content"))
+            mDevice
+                .findObject(UiSelector().resourceId("$packageName:id/about_content"))
                 .waitForExists(waitingTime),
         )
         assertTrue(
-            mDevice.findObject(UiSelector().resourceId("$packageName:id/version_info"))
+            mDevice
+                .findObject(UiSelector().resourceId("$packageName:id/version_info"))
                 .waitForExists(waitingTime),
         )
     }
 
     fun longClickMatchingText(expectedText: String) {
         mDevice.waitForWindowUpdate(packageName, waitingTime)
-        mDevice.findObject(UiSelector().resourceId("$packageName:id/engineView"))
+        mDevice
+            .findObject(UiSelector().resourceId("$packageName:id/engineView"))
             .waitForExists(waitingTime)
         mDevice.findObject(UiSelector().textContains(expectedText)).waitForExists(waitingTime)
         val link = mDevice.findObject(By.textContains(expectedText))
         link.click(LONG_CLICK_DURATION)
     }
 
-    fun longClickAndCopyText(expectedText: String, selectAll: Boolean = false) {
+    fun longClickAndCopyText(
+        expectedText: String,
+        selectAll: Boolean = false,
+    ) {
         try {
             // Long click desired text
             mDevice.waitForWindowUpdate(packageName, waitingTime)
-            mDevice.findObject(UiSelector().resourceId("$packageName:id/engineView"))
+            mDevice
+                .findObject(UiSelector().resourceId("$packageName:id/engineView"))
                 .waitForExists(waitingTime)
             mDevice.findObject(UiSelector().textContains(expectedText)).waitForExists(waitingTime)
             val link = mDevice.findObject(By.textContains(expectedText))
@@ -121,7 +130,8 @@ class BrowserRobot {
 
             // Long click again the desired text
             mDevice.waitForWindowUpdate(packageName, waitingTime)
-            mDevice.findObject(UiSelector().resourceId("$packageName:id/engineView"))
+            mDevice
+                .findObject(UiSelector().resourceId("$packageName:id/engineView"))
                 .waitForExists(waitingTime)
             mDevice.findObject(UiSelector().textContains(expectedText)).waitForExists(waitingTime)
             val link = mDevice.findObject(By.textContains(expectedText))
@@ -143,56 +153,69 @@ class BrowserRobot {
 
     fun verifyLinkContextMenuItems() {
         mDevice.waitForWindowUpdate(packageName, waitingTime)
-        mDevice.findObject(UiSelector().resourceId("$packageName:id/parentPanel"))
+        mDevice
+            .findObject(UiSelector().resourceId("$packageName:id/parentPanel"))
             .waitForExists(waitingTime)
         assertTrue(
-            mDevice.findObject(UiSelector().resourceId("$packageName:id/titleView"))
+            mDevice
+                .findObject(UiSelector().resourceId("$packageName:id/titleView"))
                 .waitForExists(waitingTime),
         )
         assertTrue(
-            mDevice.findObject(UiSelector().textContains("Open link in new tab"))
+            mDevice
+                .findObject(UiSelector().textContains("Open link in new tab"))
                 .waitForExists(waitingTime),
         )
         assertTrue(
-            mDevice.findObject(UiSelector().textContains("Open link in private tab"))
+            mDevice
+                .findObject(UiSelector().textContains("Open link in private tab"))
                 .waitForExists(waitingTime),
         )
         assertTrue(
-            mDevice.findObject(UiSelector().textContains("Copy link"))
+            mDevice
+                .findObject(UiSelector().textContains("Copy link"))
                 .waitForExists(waitingTime),
         )
         assertTrue(
-            mDevice.findObject(UiSelector().textContains("Share link"))
+            mDevice
+                .findObject(UiSelector().textContains("Share link"))
                 .waitForExists(waitingTime),
         )
     }
 
     fun verifyNoControlsVideoContextMenuItems() {
         mDevice.waitForWindowUpdate(packageName, waitingTime)
-        mDevice.findObject(UiSelector().resourceId("$packageName:id/parentPanel"))
+        mDevice
+            .findObject(UiSelector().resourceId("$packageName:id/parentPanel"))
             .waitForExists(waitingTime)
         assertTrue(
-            mDevice.findObject(UiSelector().resourceId("$packageName:id/titleView"))
+            mDevice
+                .findObject(UiSelector().resourceId("$packageName:id/titleView"))
                 .waitForExists(waitingTime),
         )
         assertTrue(
-            mDevice.findObject(UiSelector().textContains("Copy link"))
+            mDevice
+                .findObject(UiSelector().textContains("Copy link"))
                 .waitForExists(waitingTime),
         )
         assertTrue(
-            mDevice.findObject(UiSelector().textContains("Share link"))
+            mDevice
+                .findObject(UiSelector().textContains("Share link"))
                 .waitForExists(waitingTime),
         )
         assertTrue(
-            mDevice.findObject(UiSelector().textContains("Save file to device"))
+            mDevice
+                .findObject(UiSelector().textContains("Save file to device"))
                 .waitForExists(waitingTime),
         )
     }
 
     fun clickContextOpenLinkInNewTab() {
-        mDevice.findObject(UiSelector().resourceId("$packageName:id/parentPanel"))
+        mDevice
+            .findObject(UiSelector().resourceId("$packageName:id/parentPanel"))
             .waitForExists(waitingTime)
-        mDevice.findObject(UiSelector().textContains("Open link in new tab"))
+        mDevice
+            .findObject(UiSelector().textContains("Open link in new tab"))
             .waitForExists(waitingTime)
 
         val contextMenuOpenInNewTab = mDevice.findObject(UiSelector().textContains("Open link in new tab"))
@@ -200,9 +223,11 @@ class BrowserRobot {
     }
 
     fun clickContextOpenLinkInPrivateTab() {
-        mDevice.findObject(UiSelector().resourceId("$packageName:id/parentPanel"))
+        mDevice
+            .findObject(UiSelector().resourceId("$packageName:id/parentPanel"))
             .waitForExists(waitingTime)
-        mDevice.findObject(UiSelector().textContains("Open link in private tab"))
+        mDevice
+            .findObject(UiSelector().textContains("Open link in private tab"))
             .waitForExists(waitingTime)
 
         val contextMenuOpenInNewPrivateTab = mDevice.findObject(UiSelector().textContains("Open link in private tab"))
@@ -210,9 +235,11 @@ class BrowserRobot {
     }
 
     fun clickContextCopyLink() {
-        mDevice.findObject(UiSelector().resourceId("$packageName:id/parentPanel"))
+        mDevice
+            .findObject(UiSelector().resourceId("$packageName:id/parentPanel"))
             .waitForExists(waitingTime)
-        mDevice.findObject(UiSelector().textContains("Copy link"))
+        mDevice
+            .findObject(UiSelector().textContains("Copy link"))
             .waitForExists(waitingTime)
 
         val contextCopyLink = mDevice.findObject(UiSelector().textContains("Copy link"))
@@ -220,7 +247,8 @@ class BrowserRobot {
     }
 
     fun waitUntilCopyLinkSnackbarIsGone() =
-        mDevice.findObject(
+        mDevice
+            .findObject(
             UiSelector()
                 .resourceId("$packageName:id/snackbar_text")
                 .textContains("Link copied to clipboard"),
@@ -239,7 +267,8 @@ class BrowserRobot {
     }
 
     fun clickOpenInAppPromptButton() =
-        mDevice.findObject(
+        mDevice
+            .findObject(
             UiSelector()
                 .resourceId("android:id/button1")
                 .textContains("OPEN"),
@@ -249,7 +278,8 @@ class BrowserRobot {
         }
 
     fun clickSnackbarSwitchButton() =
-        mDevice.findObject(
+        mDevice
+            .findObject(
             UiSelector()
                 .resourceId("$packageName:id/snackbar_action")
                 .textContains("SWITCH"),
@@ -266,9 +296,11 @@ class BrowserRobot {
         }
 
         fun clickContextShareLink(interact: ContentPanelRobot.() -> Unit): ContentPanelRobot.Transition {
-            mDevice.findObject(UiSelector().resourceId("$packageName:id/parentPanel"))
+            mDevice
+                .findObject(UiSelector().resourceId("$packageName:id/parentPanel"))
                 .waitForExists(waitingTime)
-            mDevice.findObject(UiSelector().textContains("Share link"))
+            mDevice
+                .findObject(UiSelector().textContains("Share link"))
                 .waitForExists(waitingTime)
 
             val contextCopyLink = mDevice.findObject(UiSelector().textContains("Share link"))
@@ -280,7 +312,8 @@ class BrowserRobot {
 
         fun goBack(interact: BrowserRobot.() -> Unit): BrowserRobot.Transition {
             mDevice.pressBack()
-            mDevice.findObject(
+            mDevice
+                .findObject(
                 UiSelector()
                     .resourceId("$packageName:id/mozac_browser_toolbar_progress"),
             ).waitUntilGone(waitingTime)

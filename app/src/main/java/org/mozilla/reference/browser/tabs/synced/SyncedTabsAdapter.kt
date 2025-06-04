@@ -18,8 +18,10 @@ class SyncedTabsAdapter(
 ) : ListAdapter<SyncedTabsAdapter.AdapterItem, SyncedTabsViewHolder>(
     DiffCallback,
 ) {
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SyncedTabsViewHolder {
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int,
+    ): SyncedTabsViewHolder {
         val itemView = LayoutInflater.from(parent.context).inflate(viewType, parent, false)
 
         return when (viewType) {
@@ -29,7 +31,10 @@ class SyncedTabsAdapter(
         }
     }
 
-    override fun onBindViewHolder(holder: SyncedTabsViewHolder, position: Int) {
+    override fun onBindViewHolder(
+        holder: SyncedTabsViewHolder,
+        position: Int,
+    ) {
         val item = when (holder) {
             is DeviceViewHolder -> getItem(position) as AdapterItem.Device
             is TabViewHolder -> getItem(position) as AdapterItem.Tab
@@ -37,23 +42,31 @@ class SyncedTabsAdapter(
         holder.bind(item, listener)
     }
 
-    override fun getItemViewType(position: Int): Int {
-        return when (getItem(position)) {
+    override fun getItemViewType(position: Int): Int =
+        when (getItem(position)) {
             is AdapterItem.Device -> DeviceViewHolder.LAYOUT_ID
             is AdapterItem.Tab -> TabViewHolder.LAYOUT_ID
         }
-    }
 
     private object DiffCallback : DiffUtil.ItemCallback<AdapterItem>() {
-        override fun areItemsTheSame(oldItem: AdapterItem, newItem: AdapterItem) =
-            areContentsTheSame(oldItem, newItem)
+        override fun areItemsTheSame(
+            oldItem: AdapterItem,
+            newItem: AdapterItem,
+        ) = areContentsTheSame(oldItem, newItem)
 
-        override fun areContentsTheSame(oldItem: AdapterItem, newItem: AdapterItem) =
-            oldItem == newItem
+        override fun areContentsTheSame(
+            oldItem: AdapterItem,
+            newItem: AdapterItem,
+        ) = oldItem == newItem
     }
 
     sealed class AdapterItem {
-        data class Device(val device: SyncDevice) : AdapterItem()
-        data class Tab(val tab: SyncTab) : AdapterItem()
+        data class Device(
+            val device: SyncDevice,
+        ) : AdapterItem()
+
+        data class Tab(
+            val tab: SyncTab,
+        ) : AdapterItem()
     }
 }

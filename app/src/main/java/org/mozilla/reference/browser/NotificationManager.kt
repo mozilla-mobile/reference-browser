@@ -30,7 +30,6 @@ import android.app.NotificationManager as AndroidNotificationManager
  * Manages notification channels and allows displaying different supported types of notifications.
  */
 object NotificationManager {
-
     // Send Tab
     private const val RECEIVE_TABS_TAG = "org.mozilla.reference.browser.receivedTabs"
     private const val RECEIVE_TABS_CHANNEL_ID = "org.mozilla.reference.browser.ReceivedTabsChannel"
@@ -57,7 +56,11 @@ object NotificationManager {
      * @param tabs A list of tabs to be displayed.
      */
     @SuppressLint("MissingPermission", "NotifyUsage")
-    fun showReceivedTabs(context: Context, device: Device?, tabs: List<TabData>) {
+    fun showReceivedTabs(
+        context: Context,
+        device: Device?,
+        tabs: List<TabData>,
+    ) {
         // In the future, experiment with displaying multiple tabs from the same device as as Notification Groups.
         // For now, a single notification per tab received will suffice.
         logger.debug("Showing ${tabs.size} tab(s) received from deviceID=${device?.id}")
@@ -94,7 +97,8 @@ object NotificationManager {
                 importance,
             )
 
-            val builder = NotificationCompat.Builder(context, channelId)
+            val builder = NotificationCompat
+                .Builder(context, channelId)
                 .setSmallIcon(R.drawable.ic_notification)
                 .setSendTabTitle(context, device, tab)
                 .setWhen(System.currentTimeMillis())
@@ -127,7 +131,10 @@ object NotificationManager {
      * Launch a notification of the data policy, and record notification time and version.
      */
     @SuppressLint("MissingPermission", "NotifyUsage")
-    private fun notifyDataPolicy(context: Context, preferences: SharedPreferences) {
+    private fun notifyDataPolicy(
+        context: Context,
+        preferences: SharedPreferences,
+    ) {
         val resources = context.resources
 
         val notificationTitle = resources.getString(R.string.datareporting_notification_title)
@@ -147,7 +154,8 @@ object NotificationManager {
         val pendingIntent =
             PendingIntent.getActivity(context, REQUEST_CODE_DATA_REPORTING, intent, flags)
 
-        val notificationBuilder = NotificationCompat.Builder(
+        val notificationBuilder = NotificationCompat
+            .Builder(
             context,
             getNotificationChannelId(context),
         ).apply {
@@ -159,7 +167,8 @@ object NotificationManager {
             setStyle(NotificationCompat.BigTextStyle().bigText(notificationSummary))
         }
 
-        NotificationManagerCompat.from(context)
+        NotificationManagerCompat
+            .from(context)
             .notify(DATA_REPORTING_TAG, DATA_REPORTING_NOTIFICATION_ID, notificationBuilder.build())
 
         preferences.edit {

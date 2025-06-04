@@ -15,7 +15,6 @@ import org.mozilla.reference.browser.helpers.TestHelper.packageName
  * Implementation of Robot Pattern for Synced Tabs sub menu.
  */
 class SyncedTabsRobot {
-
     fun verifyNotSignedInSyncTabsView() = assertNotSignedInSyncTabsView()
 
     class Transition {
@@ -27,12 +26,12 @@ class SyncedTabsRobot {
 
     private fun assertNotSignedInSyncTabsView() {
         assertTrue(
-            mDevice.findObject(
+            mDevice
+                .findObject(
                 UiSelector()
                     .resourceId("$packageName:id/synced_tabs_status")
                     .textContains(getStringResource(R.string.synced_tabs_connect_to_sync_account)),
-            )
-                .waitForExists(waitingTime),
+            ).waitForExists(waitingTime),
         )
     }
 }

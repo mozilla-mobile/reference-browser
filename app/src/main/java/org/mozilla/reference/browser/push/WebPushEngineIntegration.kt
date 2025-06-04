@@ -21,7 +21,6 @@ class WebPushEngineIntegration(
     private val engine: Engine,
     private val pushFeature: AutoPushFeature,
 ) : AutoPushFeature.Observer {
-
     private var handler: WebPushHandler? = null
     private val delegate = WebPushEngineDelegate(pushFeature)
 
@@ -35,7 +34,10 @@ class WebPushEngineIntegration(
         pushFeature.unregister(this)
     }
 
-    override fun onMessageReceived(scope: PushScope, message: ByteArray?) {
+    override fun onMessageReceived(
+        scope: PushScope,
+        message: ByteArray?,
+    ) {
         CoroutineScope(Dispatchers.Main).launch {
             handler?.onPushMessage(scope, message)
         }
@@ -53,7 +55,10 @@ internal class WebPushEngineDelegate(
 ) : WebPushDelegate {
     private val logger = Logger("WebPushEngineDelegate")
 
-    override fun onGetSubscription(scope: String, onSubscription: (WebPushSubscription?) -> Unit) {
+    override fun onGetSubscription(
+        scope: String,
+        onSubscription: (WebPushSubscription?) -> Unit,
+    ) {
         // We don't have the appServerKey unless an app is creating a new subscription so we
         // allow the key to be null since it won't be overridden from a previous subscription.
         pushFeature.getSubscription(scope) {
@@ -81,7 +86,10 @@ internal class WebPushEngineDelegate(
         )
     }
 
-    override fun onUnsubscribe(scope: String, onUnsubscribe: (Boolean) -> Unit) {
+    override fun onUnsubscribe(
+        scope: String,
+        onUnsubscribe: (Boolean) -> Unit,
+    ) {
         pushFeature.unsubscribe(
             scope = scope,
             onUnsubscribeError = {
@@ -95,7 +103,8 @@ internal class WebPushEngineDelegate(
     }
 }
 
-internal fun AutoPushSubscription.toEnginePushSubscription() = WebPushSubscription(
+internal fun AutoPushSubscription.toEnginePushSubscription() =
+    WebPushSubscription(
     scope = this.scope,
     publicKey = this.publicKey.toDecodedByteArray(),
     endpoint = this.endpoint,

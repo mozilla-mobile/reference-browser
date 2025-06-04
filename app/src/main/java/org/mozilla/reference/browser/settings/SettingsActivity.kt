@@ -10,9 +10,10 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import mozilla.components.support.base.feature.UserInteractionHandler
 
-class SettingsActivity : AppCompatActivity(), SettingsFragment.ActionBarUpdater {
-
-    override fun onCreate(savedInstanceState: Bundle?) {
+class SettingsActivity :
+    AppCompatActivity(),
+    SettingsFragment.ActionBarUpdater {
+        override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         if (savedInstanceState == null) {
@@ -23,7 +24,8 @@ class SettingsActivity : AppCompatActivity(), SettingsFragment.ActionBarUpdater 
         }
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean = when (item.itemId) {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean =
+        when (item.itemId) {
         android.R.id.home -> {
             onBackPressedDispatcher.onBackPressed()
             true

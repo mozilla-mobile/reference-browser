@@ -69,7 +69,10 @@ class AccountSettingsFragment : PreferenceFragmentCompat() {
         }
     }
 
-    override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
+    override fun onCreatePreferences(
+        savedInstanceState: Bundle?,
+        rootKey: String?,
+    ) {
         setPreferencesFromResource(R.xml.account_preferences, rootKey)
 
         val signOutKey = requireContext().getPreferenceKey(pref_key_sign_out)
@@ -77,7 +80,7 @@ class AccountSettingsFragment : PreferenceFragmentCompat() {
         val manageAccountKey = requireContext().getPreferenceKey(pref_key_sync_manage_account)
 
         // Sign Out
-        val preferenceSignOut = findPreference<CustomColorPreference>(signOutKey)
+        val preferenceSignOut = findPreference<Preference>(signOutKey)
         preferenceSignOut?.onPreferenceClickListener = getClickListenerForSignOut()
 
         // Sync Now
@@ -111,7 +114,11 @@ class AccountSettingsFragment : PreferenceFragmentCompat() {
         )
     }
 
-    fun updateLastSyncedTimePref(context: Context, pref: Preference?, failed: Boolean = false) {
+    fun updateLastSyncedTimePref(
+        context: Context,
+        pref: Preference?,
+        failed: Boolean = false,
+    ) {
         val lastSyncTime = getLastSynced(context)
 
         pref?.summary = if (!failed && lastSyncTime == 0L) {
@@ -135,34 +142,34 @@ class AccountSettingsFragment : PreferenceFragmentCompat() {
         }
     }
 
-    private fun getClickListenerForSignOut(): OnPreferenceClickListener {
-        return OnPreferenceClickListener {
+    private fun getClickListenerForSignOut(): OnPreferenceClickListener =
+        OnPreferenceClickListener {
             CoroutineScope(Dispatchers.Main).launch {
                 requireComponents.backgroundServices.accountManager.logout()
                 activity?.onBackPressedDispatcher?.onBackPressed()
             }
             true
         }
-    }
 
-    private fun getClickListenerForSyncNow(): OnPreferenceClickListener {
-        return OnPreferenceClickListener {
+    private fun getClickListenerForSyncNow(): OnPreferenceClickListener =
+        OnPreferenceClickListener {
             CoroutineScope(Dispatchers.Main).launch {
                 // Trigger a sync & update devices.
                 requireComponents.backgroundServices.accountManager.syncNow(SyncReason.User)
                 // Poll for device events.
-                requireComponents.backgroundServices.accountManager.authenticatedAccount()
-                    ?.deviceConstellation()?.run {
+                requireComponents.backgroundServices.accountManager
+                    .authenticatedAccount()
+                    ?.deviceConstellation()
+                    ?.run {
                         refreshDevices()
                         pollForCommands()
                     }
             }
             true
         }
-    }
 
-    private fun getClickListenerForManageAccount(): OnPreferenceClickListener {
-        return OnPreferenceClickListener {
+    private fun getClickListenerForManageAccount(): OnPreferenceClickListener =
+        OnPreferenceClickListener {
             viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Main) {
                 context?.let {
                     val account =
@@ -176,9 +183,13 @@ class AccountSettingsFragment : PreferenceFragmentCompat() {
             }
             true
         }
-    }
 
-    private fun createCustomTabIntent(context: Context, url: String): Intent = CustomTabsIntent.Builder()
+    private fun createCustomTabIntent(
+        context: Context,
+        url: String,
+    ): Intent =
+        CustomTabsIntent
+        .Builder()
         .setInstantAppsEnabled(false)
         .build()
         .intent
@@ -186,7 +197,11 @@ class AccountSettingsFragment : PreferenceFragmentCompat() {
         .setClassName(context, IntentReceiverActivity::class.java.name)
         .setPackage(context.packageName)
 
-    private fun updateSyncEngineState(context: Context, engine: SyncEngine, newState: Boolean) {
+    private fun updateSyncEngineState(
+        context: Context,
+        engine: SyncEngine,
+        newState: Boolean,
+    ) {
         SyncEnginesStorage(context).setStatus(engine, newState)
         CoroutineScope(Dispatchers.Main).launch {
             requireComponents.backgroundServices.accountManager.syncNow(SyncReason.EngineChange)
@@ -204,7 +219,8 @@ class AccountSettingsFragment : PreferenceFragmentCompat() {
         }
     }
 
-    private fun SyncEngine.prefId(): Int = when (this) {
+    private fun SyncEngine.prefId(): Int =
+        when (this) {
         SyncEngine.History -> pref_key_sync_history
         SyncEngine.Passwords -> pref_key_sync_passwords
         SyncEngine.Tabs -> pref_key_sync_tabs

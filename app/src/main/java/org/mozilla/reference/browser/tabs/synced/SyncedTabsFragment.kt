@@ -24,11 +24,12 @@ class SyncedTabsFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?,
-    ): View? {
-        return inflater.inflate(R.layout.fragment_synced_tabs, container, false)
-    }
+    ): View? = inflater.inflate(R.layout.fragment_synced_tabs, container, false)
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun onViewCreated(
+        view: View,
+        savedInstanceState: Bundle?,
+    ) {
         super.onViewCreated(view, savedInstanceState)
 
         val backgroundServices = requireContext().components.backgroundServices

@@ -28,21 +28,26 @@ object Settings {
             "",
         ) ?: ""
 
-    fun setOverrideAmoUser(context: Context, value: String) {
+    fun setOverrideAmoUser(
+        context: Context,
+        value: String,
+    ) {
         val key = context.getString(R.string.pref_key_override_amo_user)
         PreferenceManager.getDefaultSharedPreferences(context).edit {
             putString(key, value)
         }
     }
 
-    fun setOverrideAmoCollection(context: Context, value: String) {
+    fun setOverrideAmoCollection(
+        context: Context,
+        value: String,
+    ) {
         val key = context.getString(R.string.pref_key_override_amo_collection)
         PreferenceManager.getDefaultSharedPreferences(context).edit {
             putString(key, value)
         }
     }
 
-    fun isAmoCollectionOverrideConfigured(context: Context): Boolean {
-        return getOverrideAmoUser(context).isNotEmpty() && getOverrideAmoCollection(context).isNotEmpty()
-    }
+    fun isAmoCollectionOverrideConfigured(context: Context): Boolean =
+        getOverrideAmoUser(context).isNotEmpty() && getOverrideAmoCollection(context).isNotEmpty()
 }

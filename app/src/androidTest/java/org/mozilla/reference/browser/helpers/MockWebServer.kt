@@ -18,7 +18,6 @@ import java.io.IOException
 import java.io.InputStream
 
 object MockWebServerHelper {
-
     fun initMockWebServerAndReturnEndpoints(vararg messages: String): List<Uri> {
         val mockServer = MockWebServer()
         var uniquePath = 0
@@ -48,13 +47,16 @@ class AndroidAssetDispatcher : Dispatcher() {
     private val mainThreadHandler = Handler(Looper.getMainLooper())
 
     override fun dispatch(request: RecordedRequest): MockResponse {
-        val assetManager = androidx.test.platform.app.InstrumentationRegistry.getInstrumentation().context.assets
+        val assetManager = androidx.test.platform.app.InstrumentationRegistry
+            .getInstrumentation()
+            .context.assets
         try {
             val pathWithoutQueryParams = Uri.parse(request.path!!.drop(1)).path
             assetManager.open(pathWithoutQueryParams!!).use { inputStream ->
                 return fileToResponse(pathWithoutQueryParams, inputStream)
             }
-        } catch (e: IOException) { // e.g. file not found.
+        } catch (e: IOException) {
+            // e.g. file not found.
             // We're on a background thread so we need to forward the exception to the main thread.
             mainThreadHandler.postAtFrontOfQueue { throw e }
             return MockResponse().setResponseCode(HTTP_NOT_FOUND)
@@ -63,12 +65,14 @@ class AndroidAssetDispatcher : Dispatcher() {
 }
 
 @Throws(IOException::class)
-private fun fileToResponse(path: String, file: InputStream): MockResponse {
-    return MockResponse()
+private fun fileToResponse(
+    path: String,
+    file: InputStream,
+): MockResponse =
+    MockResponse()
         .setResponseCode(HTTP_OK)
         .setBody(fileToBytes(file)!!)
         .addHeader("content-type: " + contentType(path))
-}
 
 @Throws(IOException::class)
 private fun fileToBytes(file: InputStream): Buffer? {
@@ -77,8 +81,8 @@ private fun fileToBytes(file: InputStream): Buffer? {
     return result
 }
 
-private fun contentType(path: String): String? {
-    return when {
+private fun contentType(path: String): String? =
+    when {
         path.endsWith(".png") -> "image/png"
         path.endsWith(".jpg") -> "image/jpeg"
         path.endsWith(".jpeg") -> "image/jpeg"
@@ -88,4 +92,3 @@ private fun contentType(path: String): String? {
         path.endsWith(".txt") -> "text/plain; charset=utf-8"
         else -> "application/octet-stream"
     }
-}

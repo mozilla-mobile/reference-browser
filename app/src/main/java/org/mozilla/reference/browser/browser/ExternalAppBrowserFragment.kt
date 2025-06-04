@@ -27,7 +27,9 @@ import org.mozilla.reference.browser.ext.requireComponents
 /**
  * Fragment used for browsing within an external app, such as for custom tabs and PWAs.
  */
-class ExternalAppBrowserFragment : BaseBrowserFragment(), UserInteractionHandler {
+class ExternalAppBrowserFragment :
+    BaseBrowserFragment(),
+    UserInteractionHandler {
     private val customTabsIntegration = ViewBoundFeatureWrapper<CustomTabsIntegration>()
     private val windowFeature = ViewBoundFeatureWrapper<CustomTabWindowFeature>()
     private val hideToolbarFeature = ViewBoundFeatureWrapper<WebAppHideToolbarFeature>()
@@ -44,7 +46,10 @@ class ExternalAppBrowserFragment : BaseBrowserFragment(), UserInteractionHandler
     private val trustedScopes: List<Uri>
         get() = arguments?.getParcelableArrayListCompat(ARG_TRUSTED_SCOPES, Uri::class.java).orEmpty()
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun onViewCreated(
+        view: View,
+        savedInstanceState: Bundle?,
+    ) {
         super.onViewCreated(view, savedInstanceState)
 
         val manifest = this.manifest
@@ -84,7 +89,7 @@ class ExternalAppBrowserFragment : BaseBrowserFragment(), UserInteractionHandler
             ) { toolbarVisible ->
                 toolbar.isVisible = toolbarVisible
                 webAppToolbarShouldBeVisible = toolbarVisible
-                if (!toolbarVisible) { engineView.setDynamicToolbarMaxHeight(0) }
+                if (!toolbarVisible) engineView.setDynamicToolbarMaxHeight(0)
             },
             owner = this,
             view = toolbar,
@@ -115,8 +120,7 @@ class ExternalAppBrowserFragment : BaseBrowserFragment(), UserInteractionHandler
      * Calls [onBackPressed] for features in the base class first,
      * before trying to call the custom tab [UserInteractionHandler].
      */
-    override fun onBackPressed(): Boolean =
-        super.onBackPressed() || customTabsIntegration.onBackPressed()
+    override fun onBackPressed(): Boolean = super.onBackPressed() || customTabsIntegration.onBackPressed()
 
     companion object {
         private const val ARG_TRUSTED_SCOPES = "org.mozilla.samples.browser.TRUSTED_SCOPES"

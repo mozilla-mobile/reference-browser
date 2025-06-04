@@ -21,15 +21,17 @@ import mozilla.components.feature.syncedtabs.view.SyncedTabsView.ErrorType.SYNC_
 import mozilla.components.feature.syncedtabs.view.SyncedTabsView.ErrorType.SYNC_UNAVAILABLE
 import org.mozilla.reference.browser.R
 
-class SyncedTabsLayout @JvmOverloads constructor(
+class SyncedTabsLayout
+    @JvmOverloads
+    constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0,
-) : FrameLayout(context, attrs, defStyleAttr), SyncedTabsView {
+) : FrameLayout(context, attrs, defStyleAttr),
+    SyncedTabsView {
+        override var listener: SyncedTabsView.Listener? = null
 
-    override var listener: SyncedTabsView.Listener? = null
-
-    private val adapter = SyncedTabsAdapter() { listener?.onTabClicked(it) }
+    private val adapter = SyncedTabsAdapter { listener?.onTabClicked(it) }
 
     private val syncedTabsList: RecyclerView
         get() = findViewById(R.id.synced_tabs_list)
@@ -65,7 +67,8 @@ class SyncedTabsLayout @JvmOverloads constructor(
         syncedTabsList.visibility = View.VISIBLE
         syncedTabsStatus.visibility = View.GONE
 
-        val allDeviceTabs = syncedTabs.filter {
+        val allDeviceTabs = syncedTabs
+            .filter {
             it.tabs.isEmpty()
         }.flatMap { (device, tabs) ->
             val deviceTabs = tabs.map { SyncedTabsAdapter.AdapterItem.Tab(it) }

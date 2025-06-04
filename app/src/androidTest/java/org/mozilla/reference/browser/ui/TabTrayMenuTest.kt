@@ -33,7 +33,6 @@ import org.mozilla.reference.browser.ui.robots.navigationToolbar
  */
 
 class TabTrayMenuTest {
-
     private lateinit var mockWebServer: MockWebServer
 
     @get:Rule val activityTestRule = BrowserActivityTestRule()
@@ -53,7 +52,9 @@ class TabTrayMenuTest {
         }
 
         fun optionsButton() = onView(ViewMatchers.withContentDescription("More options"))
+
         fun closeAllTabsButton() = onView(ViewMatchers.withText("Close All Tabs"))
+
         fun goBackButton() = onView(ViewMatchers.withContentDescription("back"))
         val tabCounterButton = onView(withId(R.id.counter_text))
 

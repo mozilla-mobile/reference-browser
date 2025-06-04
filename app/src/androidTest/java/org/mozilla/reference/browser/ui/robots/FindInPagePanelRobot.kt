@@ -22,11 +22,14 @@ import org.mozilla.reference.browser.helpers.click
  * Implementation of Robot Pattern for the FindInPage Panel.
  */
 class FindInPagePanelRobot {
-
     fun verifyFindInPageBar() = assertFindInPageBarExists()
+
     fun verifyFindInPageBarIsDismissed() = assertFindInPageBarIsDismissed()
+
     fun clickFindInPageNextButton() = findInPageNextButton().click()
+
     fun clickFindInPagePreviousButton() = findInPagePreviousButton().click()
+
     fun clickFindInPageCloseButton() = findInPageCloseButton().click()
 
     fun enterFindInPageQuery(expectedText: String) {
@@ -35,21 +38,23 @@ class FindInPagePanelRobot {
     }
 
     fun verifyFindInPageResult(ratioCounter: String) {
-        mDevice.findObject(UiSelector().resourceId("$packageName:id/find_in_page_result_text"))
+        mDevice
+            .findObject(UiSelector().resourceId("$packageName:id/find_in_page_result_text"))
             .waitForExists(waitingTime)
         assertTrue(mDevice.findObject(UiSelector().textContains(ratioCounter)).waitForExists(waitingTime))
     }
 
     class Transition {
-        fun findInPage(): FindInPagePanelRobot.Transition {
-            return FindInPagePanelRobot.Transition()
-        }
+        fun findInPage(): FindInPagePanelRobot.Transition = FindInPagePanelRobot.Transition()
     }
 }
 
 private fun findInPageBar() = onView(withId(R.id.findInPageBar))
+
 private fun findInPageNextButton() = onView(withId(R.id.find_in_page_next_btn))
+
 private fun findInPagePreviousButton() = onView(withId(R.id.find_in_page_prev_btn))
+
 private fun findInPageCloseButton() = onView(withId(R.id.find_in_page_close_btn))
 
 private fun assertFindInPageBarExists() {

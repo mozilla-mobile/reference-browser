@@ -27,7 +27,8 @@ class PictureInPictureIntegration(
 
     override fun start() {
         scope = store.flowScoped { flow ->
-            flow.mapNotNull { state -> state.findTabOrCustomTabOrSelectedTab(customTabId) }
+            flow
+                .mapNotNull { state -> state.findTabOrCustomTabOrSelectedTab(customTabId) }
                 .distinctUntilChangedBy { it.content.url }
                 .collect { whiteListed = isWhitelisted(it.content.url) }
         }
@@ -37,7 +38,8 @@ class PictureInPictureIntegration(
         scope?.cancel()
     }
 
-    fun onHomePressed() = if (whiteListed) {
+    fun onHomePressed() =
+        if (whiteListed) {
         pictureFeature.enterPipModeCompat()
     } else {
         pictureFeature.onHomePressed()

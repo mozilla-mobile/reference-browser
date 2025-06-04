@@ -18,10 +18,13 @@ import com.google.android.material.tabs.TabLayout
 import mozilla.components.feature.tabs.tabstray.TabsFeature
 import org.mozilla.reference.browser.R
 
-class TabsPanel @JvmOverloads constructor(
+class TabsPanel
+    @JvmOverloads
+    constructor(
     context: Context,
     attrs: AttributeSet? = null,
-) : TabLayout(context, attrs), TabLayout.OnTabSelectedListener {
+) : TabLayout(context, attrs),
+    TabLayout.OnTabSelectedListener {
     private var normalTab: Tab
     private var privateTab: Tab
     private var tabsFeature: TabsFeature? = null
@@ -44,7 +47,10 @@ class TabsPanel @JvmOverloads constructor(
         addTab(privateTab)
     }
 
-    fun initialize(tabsFeature: TabsFeature?, updateTabsToolbar: (isPrivate: Boolean) -> Unit) {
+    fun initialize(
+        tabsFeature: TabsFeature?,
+        updateTabsToolbar: (isPrivate: Boolean) -> Unit,
+    ) {
         this.tabsFeature = tabsFeature
         this.updateTabsToolbar = updateTabsToolbar
     }
@@ -73,10 +79,13 @@ class TabsPanel @JvmOverloads constructor(
         tab?.icon?.colorFilter = null
     }
 
-    private fun Resources.getThemedDrawable(@DrawableRes resId: Int) =
-        ResourcesCompat.getDrawable(resources, resId, context.theme)
+    private fun Resources.getThemedDrawable(
+        @DrawableRes resId: Int,
+    ) = ResourcesCompat.getDrawable(resources, resId, context.theme)
 
-    private fun Drawable.colorTint(@ColorRes color: Int) = apply {
+    private fun Drawable.colorTint(
+        @ColorRes color: Int,
+    ) = apply {
         mutate()
         colorFilter = createBlendModeColorFilterCompat(ContextCompat.getColor(context, color), SRC_IN)
     }

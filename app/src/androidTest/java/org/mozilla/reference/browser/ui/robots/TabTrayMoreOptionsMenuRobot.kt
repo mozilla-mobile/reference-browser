@@ -20,8 +20,8 @@ import org.mozilla.reference.browser.helpers.click
  */
 
 class TabTrayMoreOptionsMenuRobot {
-
     fun verifyCloseAllTabsButton() = assertCloseAllTabsButton()
+
     fun verifyCloseAllPrivateTabsButton() = assertCloseAllPrivateTabsButton()
 
     class Transition {
@@ -44,10 +44,14 @@ class TabTrayMoreOptionsMenuRobot {
 }
 
 private fun closeAllTabsButton() = onView(ViewMatchers.withText("Close All Tabs"))
+
 private fun closeAllPrivateTabsButton() = onView(ViewMatchers.withText("Close Private Tabs"))
+
 private fun assertCloseAllTabsButton() {
     val mDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
     mDevice.waitAndInteract(Until.findObject(By.text("Close All Tabs"))) {}
 }
-private fun assertCloseAllPrivateTabsButton() = closeAllPrivateTabsButton()
+
+private fun assertCloseAllPrivateTabsButton() =
+    closeAllPrivateTabsButton()
     .check(ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))

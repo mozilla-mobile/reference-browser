@@ -25,7 +25,9 @@ private const val LEARN_MORE_URL =
 /**
  * An activity to show the permissions of an add-on.
  */
-class PermissionsDetailsActivity : AppCompatActivity(), View.OnClickListener {
+class PermissionsDetailsActivity :
+    AppCompatActivity(),
+    View.OnClickListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_on_permissions)
@@ -56,9 +58,11 @@ class PermissionsDetailsActivity : AppCompatActivity(), View.OnClickListener {
      */
     class PermissionsAdapter(
         private val permissions: List<String>,
-    ) :
-        RecyclerView.Adapter<PermissionViewHolder>() {
-        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PermissionViewHolder {
+    ) : RecyclerView.Adapter<PermissionViewHolder>() {
+        override fun onCreateViewHolder(
+            parent: ViewGroup,
+            viewType: Int,
+        ): PermissionViewHolder {
             val context = parent.context
             val inflater = LayoutInflater.from(context)
             val view = inflater.inflate(R.layout.add_ons_permission_item, parent, false)
@@ -71,7 +75,10 @@ class PermissionsDetailsActivity : AppCompatActivity(), View.OnClickListener {
 
         override fun getItemCount() = permissions.size
 
-        override fun onBindViewHolder(holder: PermissionViewHolder, position: Int) {
+        override fun onBindViewHolder(
+            holder: PermissionViewHolder,
+            position: Int,
+        ) {
             val permission = permissions[position]
             holder.textView.text = permission
         }

@@ -10,7 +10,9 @@ import mozilla.components.feature.tabs.tabstray.TabsFeature
 import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.ext.components
 
-class TabsToolbar @JvmOverloads constructor(
+class TabsToolbar
+    @JvmOverloads
+    constructor(
     context: Context,
     attrs: AttributeSet? = null,
 ) : androidx.appcompat.widget.Toolbar(context, attrs) {
@@ -46,7 +48,10 @@ class TabsToolbar @JvmOverloads constructor(
         }
     }
 
-    fun initialize(tabsFeature: TabsFeature?, closeTabsTray: () -> Unit) {
+    fun initialize(
+        tabsFeature: TabsFeature?,
+        closeTabsTray: () -> Unit,
+    ) {
         this.tabsFeature = tabsFeature
         this.closeTabsTray = closeTabsTray
     }

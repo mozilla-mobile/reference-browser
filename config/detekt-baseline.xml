@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 <SmellBaseline>
-  <ManuallySuppressedIssues></ManuallySuppressedIssues>
+  <ManuallySuppressedIssues/>
   <CurrentIssues>
     <ID>UndocumentedPublicClass:AboutFragment.kt$AboutFragment : Fragment</ID>
     <ID>UndocumentedPublicClass:AccountSettingsFragment.kt$AccountSettingsFragment : PreferenceFragmentCompat</ID>
@@ -61,7 +61,7 @@
     <ID>UndocumentedPublicClass:WebExtensionActionPopupActivity.kt$WebExtensionActionPopupActivity.WebExtensionActionPopupFragment$Companion</ID>
     <ID>UndocumentedPublicClass:WebExtensionPromptFeature.kt$WebExtensionPromptFeature$Companion</ID>
     <ID>UndocumentedPublicClass:WebPushEngineIntegration.kt$WebPushEngineIntegration : Observer</ID>
-    <ID>UndocumentedPublicFunction:AccountSettingsFragment.kt$AccountSettingsFragment$fun updateLastSyncedTimePref(context: Context, pref: Preference?, failed: Boolean = false)</ID>
+    <ID>UndocumentedPublicFunction:AccountSettingsFragment.kt$AccountSettingsFragment$fun updateLastSyncedTimePref( context: Context, pref: Preference?, failed: Boolean = false, )</ID>
     <ID>UndocumentedPublicFunction:Analytics.kt$fun isSentryEnabled()</ID>
     <ID>UndocumentedPublicFunction:AutofillPreference.kt$AutofillPreference$fun updateSwitch()</ID>
     <ID>UndocumentedPublicFunction:AutofillPreference.kt$AutofillPreference.Companion$fun isSupported(context: Context): Boolean</ID>
@@ -72,26 +72,26 @@
     <ID>UndocumentedPublicFunction:ComposableComponents.kt$@Composable fun sessionUseCases(): SessionUseCases</ID>
     <ID>UndocumentedPublicFunction:Config.kt$Config$@JvmStatic fun generateDebugVersionName(): String</ID>
     <ID>UndocumentedPublicFunction:Config.kt$Config$@JvmStatic fun releaseVersionName(project: Project): String</ID>
-    <ID>UndocumentedPublicFunction:Context.kt$fun Context.getPreferenceKey(@StringRes resourceId: Int): String</ID>
+    <ID>UndocumentedPublicFunction:Context.kt$fun Context.getPreferenceKey( @StringRes resourceId: Int, ): String</ID>
     <ID>UndocumentedPublicFunction:CrashIntegration.kt$CrashIntegration$@OptIn(DelicateCoroutinesApi::class) fun sendCrashReport(crash: Crash)</ID>
     <ID>UndocumentedPublicFunction:EngineProvider.kt$EngineProvider$@Synchronized fun getOrCreateRuntime(context: Context): GeckoRuntime</ID>
     <ID>UndocumentedPublicFunction:EngineProvider.kt$EngineProvider$fun createClient(context: Context): Client</ID>
-    <ID>UndocumentedPublicFunction:EngineProvider.kt$EngineProvider$fun createEngine(context: Context, defaultSettings: DefaultSettings): Engine</ID>
+    <ID>UndocumentedPublicFunction:EngineProvider.kt$EngineProvider$fun createEngine( context: Context, defaultSettings: DefaultSettings, ): Engine</ID>
     <ID>UndocumentedPublicFunction:ExternalAppBrowserFragment.kt$ExternalAppBrowserFragment.Companion$fun create( sessionId: String, manifest: WebAppManifest?, trustedScopes: List&lt;Uri&gt;, )</ID>
-    <ID>UndocumentedPublicFunction:Long.kt$@Suppress("MagicNumber") fun Long.timeSince(context: Context, time: Long): String</ID>
+    <ID>UndocumentedPublicFunction:Long.kt$@Suppress("MagicNumber") fun Long.timeSince( context: Context, time: Long, ): String</ID>
     <ID>UndocumentedPublicFunction:NotificationManager.kt$NotificationManager$fun checkAndNotifyPolicy(context: Context)</ID>
     <ID>UndocumentedPublicFunction:PictureInPictureIntegration.kt$PictureInPictureIntegration$fun onHomePressed()</ID>
     <ID>UndocumentedPublicFunction:Settings.kt$Settings$fun getOverrideAmoCollection(context: Context): String</ID>
     <ID>UndocumentedPublicFunction:Settings.kt$Settings$fun getOverrideAmoUser(context: Context): String</ID>
     <ID>UndocumentedPublicFunction:Settings.kt$Settings$fun isAmoCollectionOverrideConfigured(context: Context): Boolean</ID>
     <ID>UndocumentedPublicFunction:Settings.kt$Settings$fun isTelemetryEnabled(context: Context): Boolean</ID>
-    <ID>UndocumentedPublicFunction:Settings.kt$Settings$fun setOverrideAmoCollection(context: Context, value: String)</ID>
-    <ID>UndocumentedPublicFunction:Settings.kt$Settings$fun setOverrideAmoUser(context: Context, value: String)</ID>
+    <ID>UndocumentedPublicFunction:Settings.kt$Settings$fun setOverrideAmoCollection( context: Context, value: String, )</ID>
+    <ID>UndocumentedPublicFunction:Settings.kt$Settings$fun setOverrideAmoUser( context: Context, value: String, )</ID>
     <ID>UndocumentedPublicFunction:SettingsFragment.kt$SettingsFragment.ActionBarUpdater$fun updateTitle(titleResId: Int)</ID>
     <ID>UndocumentedPublicFunction:SyncedTabsIntegration.kt$SyncedTabsIntegration$fun launch()</ID>
-    <ID>UndocumentedPublicFunction:SyncedTabsViewHolder.kt$SyncedTabsViewHolder$abstract fun &lt;T : AdapterItem&gt; bind(item: T, interactor: (Tab) -&gt; Unit)</ID>
-    <ID>UndocumentedPublicFunction:TabsPanel.kt$TabsPanel$fun initialize(tabsFeature: TabsFeature?, updateTabsToolbar: (isPrivate: Boolean) -&gt; Unit)</ID>
-    <ID>UndocumentedPublicFunction:TabsToolbar.kt$TabsToolbar$fun initialize(tabsFeature: TabsFeature?, closeTabsTray: () -&gt; Unit)</ID>
+    <ID>UndocumentedPublicFunction:SyncedTabsViewHolder.kt$SyncedTabsViewHolder$abstract fun &lt;T : AdapterItem&gt; bind( item: T, interactor: (Tab) -&gt; Unit, )</ID>
+    <ID>UndocumentedPublicFunction:TabsPanel.kt$TabsPanel$fun initialize( tabsFeature: TabsFeature?, updateTabsToolbar: (isPrivate: Boolean) -&gt; Unit, )</ID>
+    <ID>UndocumentedPublicFunction:TabsToolbar.kt$TabsToolbar$fun initialize( tabsFeature: TabsFeature?, closeTabsTray: () -&gt; Unit, )</ID>
     <ID>UndocumentedPublicFunction:TabsToolbar.kt$TabsToolbar$fun updateToolbar(isPrivate: Boolean)</ID>
     <ID>UndocumentedPublicFunction:WebPushEngineIntegration.kt$WebPushEngineIntegration$fun start()</ID>
     <ID>UndocumentedPublicFunction:WebPushEngineIntegration.kt$WebPushEngineIntegration$fun stop()</ID>

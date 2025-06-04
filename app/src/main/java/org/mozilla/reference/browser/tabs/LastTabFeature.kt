@@ -21,9 +21,10 @@ class LastTabFeature(
     private val tabId: String? = null,
     private val removeTabUseCase: TabsUseCases.RemoveTabUseCase,
     private val activity: Activity,
-) : LifecycleAwareFeature, UserInteractionHandler {
+) : LifecycleAwareFeature,
+    UserInteractionHandler {
+        override fun start() = Unit
 
-    override fun start() = Unit
     override fun stop() = Unit
 
     /**

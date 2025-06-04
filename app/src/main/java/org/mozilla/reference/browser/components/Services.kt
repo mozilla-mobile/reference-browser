@@ -28,8 +28,7 @@ class Services(
         FirefoxAccountsAuthFeature(
             accountManager,
             redirectUrl = BackgroundServices.REDIRECT_URL,
-        ) {
-                _, authUrl ->
+        ) { _, authUrl ->
             MainScope().launch {
                 tabsUseCases.addTab.invoke(authUrl)
             }
@@ -39,7 +38,6 @@ class Services(
     val appLinksInterceptor by lazy {
         AppLinksInterceptor(
             context,
-            interceptLinkClicks = true,
             launchInApp = {
                 prefs.getBoolean(context.getPreferenceKey(R.string.pref_key_launch_external_app), false)
             },
