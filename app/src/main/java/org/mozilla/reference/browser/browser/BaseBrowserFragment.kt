@@ -54,8 +54,9 @@ import org.mozilla.reference.browser.ext.getPreferenceKey
 import org.mozilla.reference.browser.ext.requireComponents
 import org.mozilla.reference.browser.pip.PictureInPictureIntegration
 import org.mozilla.reference.browser.tabs.LastTabFeature
-import mozilla.components.ui.widgets.behavior.ToolbarPosition as MozacEngineBehaviorToolbarPosition
 import mozilla.components.ui.widgets.behavior.ViewPosition as MozacToolbarBehaviorToolbarPosition
+
+private const val BOTTOM_TOOLBAR_HEIGHT = 0
 
 /**
  * Base fragment extended by [BrowserFragment] and [ExternalAppBrowserFragment].
@@ -360,11 +361,11 @@ abstract class BaseBrowserFragment :
 
         (swipeRefresh.layoutParams as? CoordinatorLayout.LayoutParams)?.apply {
             behavior = EngineViewClippingBehavior(
-                context,
-                null,
-                swipeRefresh,
-                toolbar.height,
-                MozacEngineBehaviorToolbarPosition.BOTTOM,
+                context = requireContext(),
+                attrs = null,
+                engineViewParent = swipeRefresh,
+                topToolbarHeight = toolbar.height,
+                bottomToolbarHeight = BOTTOM_TOOLBAR_HEIGHT,
             )
         }
         swipeRefreshFeature.set(
