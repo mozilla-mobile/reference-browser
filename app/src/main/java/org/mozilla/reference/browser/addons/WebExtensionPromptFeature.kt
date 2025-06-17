@@ -163,6 +163,7 @@ class WebExtensionPromptFeature(
                 addon = addon,
                 permissions = permissions,
                 origins = origins,
+                dataCollectionPermissions = emptyList(),
                 forOptionalPermissions = forOptionalPermissions,
                 onPositiveButtonClicked = { _, privateBrowsingAllowed ->
                     handlePermissions(
