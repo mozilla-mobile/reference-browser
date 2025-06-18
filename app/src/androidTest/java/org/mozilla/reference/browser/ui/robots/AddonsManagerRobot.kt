@@ -139,14 +139,14 @@ class AddonsManagerRobot {
 
         assertTrue(
             mDevice
-                .findObject(UiSelector().textContains("Add $addonName?"))
+                .findObject(UiSelector().textContains("Add $addonName"))
                 .waitForExists(waitingTime),
         )
 
         onView(
             allOf(
                 withId(R.id.optional_or_required_text),
-                withText(containsString("It requires your permission to:")),
+                withText(containsString("Required permissions:")),
             ),
         ).check(matches(isCompletelyDisplayed()))
 
