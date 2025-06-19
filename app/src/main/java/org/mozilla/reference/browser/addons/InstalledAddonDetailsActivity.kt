@@ -8,8 +8,10 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
+import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SwitchCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -19,6 +21,7 @@ import mozilla.components.feature.addons.AddonManagerException
 import mozilla.components.feature.addons.ui.translateName
 import mozilla.components.support.utils.ext.getParcelableExtraCompat
 import org.mozilla.reference.browser.R
+import org.mozilla.reference.browser.ext.applyWindowInsets
 import org.mozilla.reference.browser.ext.components
 
 /**
@@ -28,8 +31,11 @@ class InstalledAddonDetailsActivity : AppCompatActivity() {
     private val scope = CoroutineScope(Dispatchers.IO)
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        enableEdgeToEdge()
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_installed_add_on_details)
+        applyWindowInsets(WindowInsetsCompat.Type.systemBars())
+
         val addon = requireNotNull(
             intent.getParcelableExtraCompat("add_on", Addon::class.java),
         ).also {

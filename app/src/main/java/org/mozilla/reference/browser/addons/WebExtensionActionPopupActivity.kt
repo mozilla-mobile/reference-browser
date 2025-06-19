@@ -10,7 +10,9 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
 import mozilla.components.browser.state.action.WebExtensionAction
 import mozilla.components.concept.engine.EngineSession
@@ -18,6 +20,7 @@ import mozilla.components.concept.engine.EngineView
 import mozilla.components.concept.engine.window.WindowRequest
 import mozilla.components.lib.state.ext.consumeFrom
 import org.mozilla.reference.browser.R
+import org.mozilla.reference.browser.ext.applyWindowInsets
 import org.mozilla.reference.browser.ext.components
 
 /**
@@ -27,8 +30,10 @@ class WebExtensionActionPopupActivity : AppCompatActivity() {
     private lateinit var webExtensionId: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        enableEdgeToEdge()
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_on_settings)
+        applyWindowInsets(WindowInsetsCompat.Type.systemBars())
 
         webExtensionId = requireNotNull(intent.getStringExtra("web_extension_id"))
         intent.getStringExtra("web_extension_name")?.let {
