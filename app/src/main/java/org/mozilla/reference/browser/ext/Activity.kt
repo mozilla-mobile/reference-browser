@@ -15,9 +15,7 @@ import androidx.core.view.updatePadding
  *
  * The default applied insets are [WindowInsetsCompat.Type.systemBars]
  */
-fun Activity.applyWindowInsets(
-    insetsTypeMask: Int = WindowInsetsCompat.Type.systemBars(),
-) {
+fun Activity.applyWindowInsets(insetsTypeMask: Int = WindowInsetsCompat.Type.systemBars()) {
     val content = findViewById<ViewGroup>(android.R.id.content)
     ViewCompat.setOnApplyWindowInsetsListener(content) { view, windowInsets ->
         val insets = windowInsets.getInsets(insetsTypeMask)

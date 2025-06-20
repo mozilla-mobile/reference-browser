@@ -13,7 +13,9 @@ import androidx.core.view.WindowInsetsCompat
 import mozilla.components.support.base.feature.UserInteractionHandler
 import org.mozilla.reference.browser.ext.applyWindowInsets
 
-class SettingsActivity : AppCompatActivity(), SettingsFragment.ActionBarUpdater {
+class SettingsActivity :
+    AppCompatActivity(),
+    SettingsFragment.ActionBarUpdater {
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
