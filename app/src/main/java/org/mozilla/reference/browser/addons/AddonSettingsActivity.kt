@@ -10,7 +10,9 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
 import mozilla.components.concept.engine.EngineSession
 import mozilla.components.concept.engine.EngineView
@@ -19,6 +21,7 @@ import mozilla.components.feature.addons.ui.translateName
 import mozilla.components.support.utils.ext.getParcelableCompat
 import mozilla.components.support.utils.ext.getParcelableExtraCompat
 import org.mozilla.reference.browser.R
+import org.mozilla.reference.browser.ext.applyWindowInsets
 import org.mozilla.reference.browser.ext.components
 
 /**
@@ -26,7 +29,10 @@ import org.mozilla.reference.browser.ext.components
  */
 class AddonSettingsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
+        enableEdgeToEdge()
         super.onCreate(savedInstanceState)
+        applyWindowInsets(WindowInsetsCompat.Type.systemBars())
+
         setContentView(R.layout.activity_add_on_settings)
 
         val addon = requireNotNull(
