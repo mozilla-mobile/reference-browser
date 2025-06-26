@@ -5,15 +5,21 @@
 package org.mozilla.reference.browser.addons
 
 import android.os.Bundle
+import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.WindowInsetsCompat
 import org.mozilla.reference.browser.R
+import org.mozilla.reference.browser.ext.applyWindowInsets
 
 /**
  * An activity to manage add-ons.
  */
 class AddonsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
+        enableEdgeToEdge()
         super.onCreate(savedInstanceState)
+        applyWindowInsets(WindowInsetsCompat.Type.systemBars())
+
         setContentView(R.layout.activity_main)
 
         if (savedInstanceState == null) {
