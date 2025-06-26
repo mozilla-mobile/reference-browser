@@ -6,7 +6,7 @@ android-components = "142.0.20250623212838"
 android-gradle-plugin = "8.11.0"
 
 # Kotlin
-kotlin = "2.1.21"
+kotlin = "2.2.0"
 kotlinx-coroutines = "1.10.2"
 
 # Google
@@ -39,7 +39,7 @@ androidx-test-runner = "1.6.2"
 androidx-test-uiautomator = "2.3.0"
 
 # Third Party Linting & Static Code Analysis
-dependency-analysis = "2.18.0"
+dependency-analysis = "2.19.0"
 detekt = "1.23.8"
 jspecify = "1.0.0"
 ktlint = "1.6.0"
