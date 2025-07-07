@@ -5,22 +5,23 @@
 package org.mozilla.reference.browser.addons
 
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.activity.SystemBarStyle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.net.toUri
-import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import mozilla.components.feature.addons.Addon
 import mozilla.components.feature.addons.ui.translateName
+import mozilla.components.support.ktx.android.view.setupPersistentInsets
 import mozilla.components.support.utils.ext.getParcelableExtraCompat
 import org.mozilla.reference.browser.R
-import org.mozilla.reference.browser.ext.applyWindowInsets
 
 private const val LEARN_MORE_URL =
     "https://support.mozilla.org/kb/permission-request-messages-firefox-extensions"
@@ -32,10 +33,10 @@ class PermissionsDetailsActivity :
     AppCompatActivity(),
     View.OnClickListener {
     override fun onCreate(savedInstanceState: Bundle?) {
-        enableEdgeToEdge()
+        enableEdgeToEdge(SystemBarStyle.dark(Color.TRANSPARENT))
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_on_permissions)
-        applyWindowInsets(WindowInsetsCompat.Type.systemBars())
+        window.setupPersistentInsets()
 
         val addon = requireNotNull(
             intent.getParcelableExtraCompat("add_on", Addon::class.java),

@@ -5,14 +5,15 @@
 package org.mozilla.reference.browser
 
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
+import androidx.activity.SystemBarStyle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.net.toUri
-import androidx.core.view.WindowInsetsCompat
 import mozilla.components.lib.crash.CrashReporter
 import mozilla.components.lib.crash.ui.AbstractCrashListFragment
-import org.mozilla.reference.browser.ext.applyWindowInsets
+import mozilla.components.support.ktx.android.view.setupPersistentInsets
 import org.mozilla.reference.browser.ext.requireComponents
 
 /**
@@ -20,9 +21,9 @@ import org.mozilla.reference.browser.ext.requireComponents
  */
 class CrashListActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
-        enableEdgeToEdge()
+        enableEdgeToEdge(SystemBarStyle.dark(Color.TRANSPARENT))
         super.onCreate(savedInstanceState)
-        applyWindowInsets(WindowInsetsCompat.Type.systemBars())
+        window.setupPersistentInsets()
 
         packageName
         supportFragmentManager

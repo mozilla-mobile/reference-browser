@@ -5,22 +5,23 @@
 package org.mozilla.reference.browser.addons
 
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.text.method.LinkMovementMethod
 import android.view.View
 import android.widget.RatingBar
 import android.widget.TextView
+import androidx.activity.SystemBarStyle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.net.toUri
 import androidx.core.text.HtmlCompat
-import androidx.core.view.WindowInsetsCompat
 import mozilla.components.feature.addons.Addon
 import mozilla.components.feature.addons.ui.translateDescription
 import mozilla.components.feature.addons.ui.translateName
+import mozilla.components.support.ktx.android.view.setupPersistentInsets
 import mozilla.components.support.utils.ext.getParcelableExtraCompat
 import org.mozilla.reference.browser.R
-import org.mozilla.reference.browser.ext.applyWindowInsets
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -30,10 +31,10 @@ import java.util.Locale
  */
 class AddonDetailsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
-        enableEdgeToEdge()
+        enableEdgeToEdge(SystemBarStyle.dark(Color.TRANSPARENT))
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_on_details)
-        applyWindowInsets(WindowInsetsCompat.Type.systemBars())
+        window.setupPersistentInsets()
 
         val addon = requireNotNull(
             intent.getParcelableExtraCompat("add_on", Addon::class.java),
