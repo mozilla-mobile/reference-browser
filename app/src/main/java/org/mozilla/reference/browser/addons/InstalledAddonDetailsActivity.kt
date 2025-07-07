@@ -5,13 +5,14 @@
 package org.mozilla.reference.browser.addons
 
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
+import androidx.activity.SystemBarStyle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SwitchCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -19,9 +20,9 @@ import kotlinx.coroutines.launch
 import mozilla.components.feature.addons.Addon
 import mozilla.components.feature.addons.AddonManagerException
 import mozilla.components.feature.addons.ui.translateName
+import mozilla.components.support.ktx.android.view.setupPersistentInsets
 import mozilla.components.support.utils.ext.getParcelableExtraCompat
 import org.mozilla.reference.browser.R
-import org.mozilla.reference.browser.ext.applyWindowInsets
 import org.mozilla.reference.browser.ext.components
 
 /**
@@ -31,10 +32,10 @@ class InstalledAddonDetailsActivity : AppCompatActivity() {
     private val scope = CoroutineScope(Dispatchers.IO)
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        enableEdgeToEdge()
+        enableEdgeToEdge(SystemBarStyle.dark(Color.TRANSPARENT))
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_installed_add_on_details)
-        applyWindowInsets(WindowInsetsCompat.Type.systemBars())
+        window.setupPersistentInsets()
 
         val addon = requireNotNull(
             intent.getParcelableExtraCompat("add_on", Addon::class.java),

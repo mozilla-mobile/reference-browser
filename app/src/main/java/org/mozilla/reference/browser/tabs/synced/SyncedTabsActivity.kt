@@ -4,18 +4,19 @@
 
 package org.mozilla.reference.browser.tabs.synced
 
+import android.graphics.Color
 import android.os.Bundle
+import androidx.activity.SystemBarStyle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.WindowInsetsCompat
+import mozilla.components.support.ktx.android.view.setupPersistentInsets
 import org.mozilla.reference.browser.R
-import org.mozilla.reference.browser.ext.applyWindowInsets
 
 class SyncedTabsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
-        enableEdgeToEdge()
+        enableEdgeToEdge(SystemBarStyle.dark(Color.TRANSPARENT))
         super.onCreate(savedInstanceState)
-        applyWindowInsets(WindowInsetsCompat.Type.systemBars())
+        window.setupPersistentInsets()
 
         setContentView(R.layout.activity_main)
 

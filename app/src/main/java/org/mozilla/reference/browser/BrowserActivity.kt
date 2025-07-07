@@ -6,12 +6,13 @@ package org.mozilla.reference.browser
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.util.AttributeSet
 import android.view.View
+import androidx.activity.SystemBarStyle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.snackbar.Snackbar.LENGTH_LONG
@@ -22,12 +23,12 @@ import mozilla.components.lib.crash.Crash
 import mozilla.components.support.base.feature.ActivityResultHandler
 import mozilla.components.support.base.feature.UserInteractionHandler
 import mozilla.components.support.base.log.logger.Logger
+import mozilla.components.support.ktx.android.view.setupPersistentInsets
 import mozilla.components.support.utils.SafeIntent
 import mozilla.components.support.webextensions.WebExtensionPopupObserver
 import org.mozilla.reference.browser.addons.WebExtensionActionPopupActivity
 import org.mozilla.reference.browser.browser.BrowserFragment
 import org.mozilla.reference.browser.browser.CrashIntegration
-import org.mozilla.reference.browser.ext.applyWindowInsets
 import org.mozilla.reference.browser.ext.components
 
 /**
@@ -49,9 +50,9 @@ open class BrowserActivity : AppCompatActivity() {
     open fun createBrowserFragment(sessionId: String?): Fragment = BrowserFragment.create(sessionId)
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        enableEdgeToEdge()
+        enableEdgeToEdge(SystemBarStyle.dark(Color.TRANSPARENT))
         super.onCreate(savedInstanceState)
-        applyWindowInsets(WindowInsetsCompat.Type.systemBars())
+        window.setupPersistentInsets()
         setContentView(R.layout.activity_main)
 
         components.notificationsDelegate.bindToActivity(this)

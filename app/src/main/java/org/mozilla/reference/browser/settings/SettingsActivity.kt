@@ -5,19 +5,20 @@
 package org.mozilla.reference.browser.settings
 
 import android.R.id.content
+import android.graphics.Color
 import android.os.Bundle
 import android.view.MenuItem
+import androidx.activity.SystemBarStyle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.WindowInsetsCompat
 import mozilla.components.support.base.feature.UserInteractionHandler
-import org.mozilla.reference.browser.ext.applyWindowInsets
+import mozilla.components.support.ktx.android.view.setupPersistentInsets
 
 class SettingsActivity : AppCompatActivity(), SettingsFragment.ActionBarUpdater {
     override fun onCreate(savedInstanceState: Bundle?) {
-        enableEdgeToEdge()
+        enableEdgeToEdge(SystemBarStyle.dark(Color.TRANSPARENT))
         super.onCreate(savedInstanceState)
-        applyWindowInsets(WindowInsetsCompat.Type.systemBars())
+        window.setupPersistentInsets()
 
         if (savedInstanceState == null) {
             with(supportFragmentManager.beginTransaction()) {
