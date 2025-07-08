@@ -14,7 +14,9 @@ import androidx.appcompat.app.AppCompatActivity
 import mozilla.components.support.base.feature.UserInteractionHandler
 import mozilla.components.support.ktx.android.view.setupPersistentInsets
 
-class SettingsActivity : AppCompatActivity(), SettingsFragment.ActionBarUpdater {
+class SettingsActivity :
+    AppCompatActivity(),
+    SettingsFragment.ActionBarUpdater {
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge(SystemBarStyle.dark(Color.TRANSPARENT))
         super.onCreate(savedInstanceState)
