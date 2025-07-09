@@ -8,7 +8,7 @@
         errorLine2="                 ~~~~~~~~~~~~~">
         <location
             file="src/main/java/org/mozilla/reference/browser/BrowserActivity.kt"
-            line="71"
+            line="77"
             column="18"/>
     </issue>
 
@@ -19,30 +19,8 @@
         errorLine2="                 ~~~~~~~~~~~~~">
         <location
             file="src/main/java/org/mozilla/reference/browser/settings/SettingsActivity.kt"
-            line="41"
+            line="47"
             column="18"/>
-    </issue>
-
-    <issue
-        id="UsingMaterialAndMaterial3Libraries"
-        message="Using a material import while also using the material3 library"
-        errorLine1="import androidx.compose.material.Text"
-        errorLine2="       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/java/mozilla/components/compose/browser/toolbar/BrowserToolbar.kt"
-            line="10"
-            column="8"/>
-    </issue>
-
-    <issue
-        id="UsingMaterialAndMaterial3Libraries"
-        message="Using a material import while also using the material3 library"
-        errorLine1="import androidx.compose.material.TextField"
-        errorLine2="       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/java/mozilla/components/compose/browser/toolbar/BrowserToolbar.kt"
-            line="11"
-            column="8"/>
     </issue>
 
     <issue

@@ -256,7 +256,7 @@ dependencies {
 
     implementation platform(libs.androidx.compose.bom)
     implementation libs.androidx.compose.foundation
-    implementation libs.androidx.compose.material
+    implementation libs.androidx.compose.material3
     implementation libs.androidx.compose.runtime
     implementation libs.androidx.compose.ui.base
     implementation libs.androidx.compose.ui.graphics
@@ -353,6 +353,9 @@ dependencies {
     androidTestImplementation libs.junit
     androidTestImplementation libs.mockwebserver
     androidTestImplementation libs.okhttp
+    constraints {
+        implementation(libs.okio)  // needed to avoid picking up an older release transitively
+    }
     androidTestImplementation libs.okio
 
     androidTestUtil libs.androidx.test.orchestrator
