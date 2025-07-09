@@ -353,6 +353,9 @@ dependencies {
     androidTestImplementation libs.junit
     androidTestImplementation libs.mockwebserver
     androidTestImplementation libs.okhttp
+    constraints {
+        implementation(libs.okio)  // needed to avoid picking up an older release transitively
+    }
     androidTestImplementation libs.okio
 
     androidTestUtil libs.androidx.test.orchestrator
