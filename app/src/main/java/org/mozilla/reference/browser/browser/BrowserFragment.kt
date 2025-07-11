@@ -63,7 +63,6 @@ class BrowserFragment :
 
         AwesomeBarFeature(awesomeBar, toolbar, engineView)
             .addSearchProvider(
-                requireContext(),
                 requireComponents.core.store,
                 requireComponents.useCases.searchUseCases.defaultSearch,
                 fetchClient = requireComponents.core.client,
