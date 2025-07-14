@@ -24,7 +24,7 @@ gcloud:
 
   device:
     - model: MediumPhone.arm
-      version: 34
+      version: 35
       locale: en_US
 
 flank:
