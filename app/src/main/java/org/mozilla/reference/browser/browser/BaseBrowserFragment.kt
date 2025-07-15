@@ -194,10 +194,12 @@ abstract class BaseBrowserFragment :
                 MozacToolbarBehaviorToolbarPosition.BOTTOM,
             )
         }
+
         toolbarIntegration.set(
             feature = ToolbarIntegration(
                 requireContext(),
                 toolbar,
+                view,
                 requireComponents.core.historyStorage,
                 requireComponents.core.store,
                 requireComponents.useCases.sessionUseCases,

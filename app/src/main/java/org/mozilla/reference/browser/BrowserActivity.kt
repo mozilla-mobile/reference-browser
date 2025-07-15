@@ -50,8 +50,8 @@ open class BrowserActivity : AppCompatActivity() {
     open fun createBrowserFragment(sessionId: String?): Fragment = BrowserFragment.create(sessionId)
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        enableEdgeToEdge(SystemBarStyle.dark(Color.TRANSPARENT))
         super.onCreate(savedInstanceState)
+        enableEdgeToEdge(SystemBarStyle.dark(Color.TRANSPARENT))
         window.setupPersistentInsets()
         setContentView(R.layout.activity_main)
 
