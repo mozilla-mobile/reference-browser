@@ -31,9 +31,9 @@ class WebExtensionActionPopupActivity : AppCompatActivity() {
     private lateinit var webExtensionId: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        setContentView(R.layout.activity_add_on_settings)
         enableEdgeToEdge(SystemBarStyle.dark(Color.TRANSPARENT))
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_add_on_settings)
         window.setupPersistentInsets()
 
         webExtensionId = requireNotNull(intent.getStringExtra("web_extension_id"))

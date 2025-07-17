@@ -17,11 +17,10 @@ import org.mozilla.reference.browser.R
  */
 class AddonsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
-        enableEdgeToEdge(SystemBarStyle.dark(Color.TRANSPARENT))
-        super.onCreate(savedInstanceState)
-        window.setupPersistentInsets()
-
         setContentView(R.layout.activity_main)
+        super.onCreate(savedInstanceState)
+        enableEdgeToEdge(SystemBarStyle.dark(Color.TRANSPARENT))
+        window.setupPersistentInsets(true)
 
         if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction().apply {
