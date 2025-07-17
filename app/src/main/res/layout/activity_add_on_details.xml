@@ -114,7 +114,7 @@
                 android:layout_alignParentEnd="true"
                 android:contentDescription="@string/mozac_feature_addons_home_page"
                 android:src="@drawable/mozac_ic_link_24"
-                app:tint="@android:color/black" />
+                app:tint="@color/icons" />
 
         <View
                 android:id="@+id/home_page_divider"

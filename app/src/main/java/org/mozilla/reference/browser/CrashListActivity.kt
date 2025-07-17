@@ -25,7 +25,6 @@ class CrashListActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         window.setupPersistentInsets()
 
-        packageName
         supportFragmentManager
             .beginTransaction()
             .add(android.R.id.content, CrashListFragment())

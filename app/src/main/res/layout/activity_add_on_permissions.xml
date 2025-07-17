@@ -26,7 +26,6 @@
             android:paddingEnd="16dp"
             android:background="?attr/selectableItemBackground"
             android:text="@string/mozac_feature_addons_learn_more"
-            app:drawableTint="@android:color/black"
-            android:textColor="@android:color/black" />
+            app:drawableTint="@color/icons" />
 
 </RelativeLayout>
