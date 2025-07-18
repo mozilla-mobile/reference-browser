@@ -27,7 +27,7 @@
         <item name="android:windowOptOutEdgeToEdgeEnforcement" tools:targetApi="35">true</item>
     </style>
 
-    <style name="AddonsActivityTheme" parent="Theme.AppCompat.Light">
+    <style name="AddonsActivityTheme" parent="AppTheme">
         <item name="mozac_primary_text_color">@color/photonDarkGrey90</item>
         <item name="android:windowOptOutEdgeToEdgeEnforcement" tools:targetApi="35">true</item>
     </style>

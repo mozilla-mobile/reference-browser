@@ -38,10 +38,9 @@
                 android:drawablePadding="10dp"
                 android:padding="16dp"
                 android:text="@string/mozac_feature_addons_settings"
-                android:textColor="@drawable/addon_textview_selector"
                 android:textSize="18sp"
                 app:drawableStartCompat="@drawable/mozac_ic_preferences"
-                app:drawableTint="@android:color/black" />
+                app:drawableTint="@color/icons" />
 
         <TextView
                 android:id="@+id/details"
@@ -52,10 +51,9 @@
                 android:drawablePadding="6dp"
                 android:padding="16dp"
                 android:text="@string/mozac_feature_addons_details"
-                android:textColor="@drawable/addon_textview_selector"
                 android:textSize="18sp"
                 app:drawableStartCompat="@drawable/mozac_ic_information_24"
-                app:drawableTint="@android:color/black" />
+                app:drawableTint="@color/icons" />
 
         <TextView
                 android:id="@+id/permissions"
@@ -66,7 +64,6 @@
                 android:drawablePadding="6dp"
                 android:padding="16dp"
                 android:text="@string/mozac_feature_addons_permissions"
-                android:textColor="@drawable/addon_textview_selector"
                 android:textSize="18sp"
                 app:drawableStartCompat="@drawable/mozac_ic_permissions" />
 

@@ -143,7 +143,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
         OnPreferenceClickListener {
             parentFragmentManager
                 .beginTransaction()
-                .replace(android.R.id.content, PairSettingsFragment())
+                .replace(R.id.container, PairSettingsFragment())
                 .addToBackStack(null)
                 .commit()
             getActionBarUpdater().apply {
@@ -156,7 +156,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
         OnPreferenceClickListener {
             parentFragmentManager
                 .beginTransaction()
-                .replace(android.R.id.content, AccountSettingsFragment())
+                .replace(R.id.container, AccountSettingsFragment())
                 .addToBackStack(null)
                 .commit()
             getActionBarUpdater().apply {
@@ -169,7 +169,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
         OnPreferenceClickListener {
             parentFragmentManager
                 .beginTransaction()
-                .replace(android.R.id.content, PrivacySettingsFragment())
+                .replace(R.id.container, PrivacySettingsFragment())
                 .addToBackStack(null)
                 .commit()
             getActionBarUpdater().apply {
@@ -188,7 +188,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
         OnPreferenceClickListener {
             parentFragmentManager
                 .beginTransaction()
-                .replace(android.R.id.content, AboutFragment())
+                .replace(R.id.container, AboutFragment())
                 .addToBackStack(null)
                 .commit()
             true

@@ -16,7 +16,7 @@ class SyncedTabsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge(SystemBarStyle.dark(Color.TRANSPARENT))
         super.onCreate(savedInstanceState)
-        window.setupPersistentInsets()
+        window.setupPersistentInsets(true)
 
         setContentView(R.layout.activity_main)
 

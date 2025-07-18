@@ -30,11 +30,10 @@ import org.mozilla.reference.browser.ext.components
  */
 class AddonSettingsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
+        setContentView(R.layout.activity_add_on_settings)
         enableEdgeToEdge(SystemBarStyle.dark(Color.TRANSPARENT))
         super.onCreate(savedInstanceState)
-        window.setupPersistentInsets()
-
-        setContentView(R.layout.activity_add_on_settings)
+        window.setupPersistentInsets(true)
 
         val addon = requireNotNull(
             intent.getParcelableExtraCompat("add_on", Addon::class.java),
