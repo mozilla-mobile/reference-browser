@@ -193,7 +193,7 @@ class AddonsManagerRobot {
             mDevice
                 .findObject(
                 UiSelector()
-                    .textContains("$addonName has been added to Reference Browser"),
+                    .textContains("$addonName was added"),
             ).waitForExists(waitingTime),
         )
     }
