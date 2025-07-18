@@ -1,6 +1,6 @@
 [versions]
 # Android Components
-android-components = "142.0.20250717222429"
+android-components = "142.0.20250718092930"
 
 # AGP
 android-gradle-plugin = "8.11.1"
