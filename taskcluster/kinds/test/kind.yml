@@ -62,7 +62,7 @@ tasks:
         treeherder:
             platform: 'ui-test/opt'
             symbol: debug(ui-test-arm)
-        run-on-tasks-for: [github-push, github-pull-request]
+        run-on-tasks-for: [github-push]
         run:
             # TODO Generate APKs in a build task instead
             gradlew: ['clean', 'assembleDebug', 'assembleAndroidTest']
