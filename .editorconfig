@@ -5,6 +5,7 @@ ij_kotlin_allow_trailing_comma=true
 [*]
 insert_final_newline = true
 max_line_length = 120 # same as detekt.yml
+ktlint_standard_expression-operand-wrapping = disabled
 
 # rules we should look into enabling
 ktlint_standard_function-naming = disabled

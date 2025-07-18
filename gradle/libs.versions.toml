@@ -1,6 +1,6 @@
 [versions]
 # Android Components
-android-components = "142.0.20250715090639"
+android-components = "142.0.20250717222429"
 
 # AGP
 android-gradle-plugin = "8.11.1"
@@ -24,7 +24,7 @@ androidx-constraintlayout = "2.2.1"
 androidx-coordinatorlayout = "1.3.0"
 androidx-core = "1.16.0"
 androidx-fragment = "1.8.8"
-androidx-lifecycle = "2.9.1"
+androidx-lifecycle = "2.9.2"
 androidx-preference = "1.2.1"
 androidx-recyclerview = "1.4.0"
 androidx-swiperefreshlayout = "1.1.0"
@@ -42,7 +42,7 @@ androidx-test-uiautomator = "2.3.0"
 dependency-analysis = "2.19.0"
 detekt = "1.23.8"
 jspecify = "1.0.0"
-ktlint = "1.6.0"
+ktlint = "1.7.0"
 
 # Third Party Testing
 hamcrest = "1.3"
