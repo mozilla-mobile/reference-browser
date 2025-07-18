@@ -35,7 +35,7 @@ class InstalledAddonDetailsActivity : AppCompatActivity() {
         enableEdgeToEdge(SystemBarStyle.dark(Color.TRANSPARENT))
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_installed_add_on_details)
-        window.setupPersistentInsets()
+        window.setupPersistentInsets(true)
 
         val addon = requireNotNull(
             intent.getParcelableExtraCompat("add_on", Addon::class.java),

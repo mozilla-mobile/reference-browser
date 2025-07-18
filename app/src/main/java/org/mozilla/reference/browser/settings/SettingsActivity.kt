@@ -4,7 +4,6 @@
 
 package org.mozilla.reference.browser.settings
 
-import android.R.id.content
 import android.graphics.Color
 import android.os.Bundle
 import android.view.MenuItem
@@ -13,18 +12,20 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import mozilla.components.support.base.feature.UserInteractionHandler
 import mozilla.components.support.ktx.android.view.setupPersistentInsets
+import org.mozilla.reference.browser.R
 
 class SettingsActivity :
     AppCompatActivity(),
     SettingsFragment.ActionBarUpdater {
     override fun onCreate(savedInstanceState: Bundle?) {
+        setContentView(R.layout.activity_main)
         enableEdgeToEdge(SystemBarStyle.dark(Color.TRANSPARENT))
         super.onCreate(savedInstanceState)
         window.setupPersistentInsets(true)
 
         if (savedInstanceState == null) {
             with(supportFragmentManager.beginTransaction()) {
-                replace(content, SettingsFragment())
+                replace(R.id.container, SettingsFragment())
                 commit()
             }
         }
