@@ -294,7 +294,7 @@ class ThreeDotMenuTest {
         navigationToolbar {
         }.openThreeDotMenu {
         }.openAddToHomeScreen {
-            clickAddAutomaticallyToHomeScreenButton()
+            clickSystemHomeScreenShortcutAddButton()
         }.openHomeScreenShortcut(defaultWebPage.title) {
             verifyUrl(defaultWebPage.url.toString())
         }

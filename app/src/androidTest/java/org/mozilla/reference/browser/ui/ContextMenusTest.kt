@@ -4,6 +4,7 @@
 
 package org.mozilla.reference.browser.ui
 
+import android.os.Build
 import okhttp3.mockwebserver.MockWebServer
 import org.junit.After
 import org.junit.Before
@@ -13,6 +14,7 @@ import org.mozilla.reference.browser.helpers.AndroidAssetDispatcher
 import org.mozilla.reference.browser.helpers.BrowserActivityTestRule
 import org.mozilla.reference.browser.helpers.RetryTestRule
 import org.mozilla.reference.browser.helpers.TestAssetHelper
+import org.mozilla.reference.browser.helpers.TestHelper.allowOrPreventSystemUIFromReadingTheClipboard
 import org.mozilla.reference.browser.ui.robots.browser
 import org.mozilla.reference.browser.ui.robots.navigationToolbar
 
@@ -32,11 +34,21 @@ class ContextMenusTest {
             dispatcher = AndroidAssetDispatcher()
             start()
         }
+
+        // Prevent the System UI from reading the clipboard content
+        if (Build.VERSION.SDK_INT == Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+            allowOrPreventSystemUIFromReadingTheClipboard(allowToReadClipboard = false)
+        }
     }
 
     @After
     fun tearDown() {
         mockWebServer.shutdown()
+
+        // Allow the System UI from reading the clipboard content
+        if (Build.VERSION.SDK_INT == Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+            allowOrPreventSystemUIFromReadingTheClipboard(allowToReadClipboard = true)
+        }
     }
 
     @Test
