@@ -51,7 +51,7 @@ object TestHelper {
             .getInstrumentation()
             .targetContext
             .applicationContext
-        val pendingIntent = PendingIntent.getActivity(appContext, 0, Intent(), 0)
+        val pendingIntent = PendingIntent.getActivity(appContext, 0, Intent(), PendingIntent.FLAG_IMMUTABLE)
         val customTabsIntent = CustomTabsIntent
             .Builder()
             .setShareState(CustomTabsIntent.SHARE_STATE_ON)
@@ -105,4 +105,14 @@ object TestHelper {
     }
 
     fun getStringResource(id: Int) = appContext.resources.getString(id, appName)
+
+    // Prevent or allow the System UI from reading the clipboard content
+    // By preventing, the quick share or nearby share dialog will not be displayed
+    fun allowOrPreventSystemUIFromReadingTheClipboard(allowToReadClipboard: Boolean) {
+        if (allowToReadClipboard) {
+            mDevice.executeShellCommand("appops set com.android.systemui READ_CLIPBOARD allow")
+        } else {
+            mDevice.executeShellCommand("appops set com.android.systemui READ_CLIPBOARD deny")
+        }
+    }
 }
