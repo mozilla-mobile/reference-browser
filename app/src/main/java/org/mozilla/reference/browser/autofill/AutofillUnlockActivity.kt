@@ -15,7 +15,6 @@ import mozilla.components.feature.autofill.ui.AbstractAutofillUnlockActivity
 import mozilla.components.support.ktx.android.view.setupPersistentInsets
 import org.mozilla.reference.browser.ext.components
 
-@RequiresApi(Build.VERSION_CODES.O)
 class AutofillUnlockActivity : AbstractAutofillUnlockActivity() {
     override val configuration: AutofillConfiguration by lazy { components.autofillConfiguration }
 

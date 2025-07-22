@@ -45,11 +45,6 @@ class SettingsFragment : PreferenceFragmentCompat() {
         fun updateTitle(titleResId: Int)
     }
 
-    private val defaultClickListener = OnPreferenceClickListener { preference ->
-        Toast.makeText(context, "${preference.title} Clicked", LENGTH_SHORT).show()
-        true
-    }
-
     override fun onCreatePreferences(
         savedInstanceState: Bundle?,
         rootKey: String?,
@@ -116,16 +111,12 @@ class SettingsFragment : PreferenceFragmentCompat() {
     }
 
     private fun getClickListenerForMakeDefaultBrowser(): OnPreferenceClickListener =
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
-            OnPreferenceClickListener {
-                val intent = Intent(
-                    Settings.ACTION_MANAGE_DEFAULT_APPS_SETTINGS,
-                )
-                startActivity(intent)
-                true
-            }
-        } else {
-            defaultClickListener
+        OnPreferenceClickListener {
+            val intent = Intent(
+                Settings.ACTION_MANAGE_DEFAULT_APPS_SETTINGS,
+            )
+            startActivity(intent)
+            true
         }
 
     private fun getClickListenerForSignIn(): OnPreferenceClickListener =

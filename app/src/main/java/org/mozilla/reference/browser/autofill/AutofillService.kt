@@ -10,7 +10,6 @@ import mozilla.components.feature.autofill.AbstractAutofillService
 import mozilla.components.feature.autofill.AutofillConfiguration
 import org.mozilla.reference.browser.ext.components
 
-@RequiresApi(Build.VERSION_CODES.O)
 class AutofillService : AbstractAutofillService() {
     override val configuration: AutofillConfiguration by lazy { components.autofillConfiguration }
 }

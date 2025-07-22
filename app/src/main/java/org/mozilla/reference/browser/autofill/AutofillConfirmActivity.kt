@@ -10,7 +10,6 @@ import mozilla.components.feature.autofill.AutofillConfiguration
 import mozilla.components.feature.autofill.ui.AbstractAutofillConfirmActivity
 import org.mozilla.reference.browser.ext.components
 
-@RequiresApi(Build.VERSION_CODES.O)
 class AutofillConfirmActivity : AbstractAutofillConfirmActivity() {
     override val configuration: AutofillConfiguration by lazy { components.autofillConfiguration }
 }

@@ -81,14 +81,10 @@ object NotificationManager {
                 intent,
                 flags,
             )
-            val importance = if (SDK_INT >= Build.VERSION_CODES.N) {
-                // We pick 'IMPORTANCE_HIGH' priority because this is a user-triggered action that is
-                // expected to be part of a continuity flow. That is, user is expected to be waiting for
-                // this notification on their device; make it obvious.
-                AndroidNotificationManager.IMPORTANCE_HIGH
-            } else {
-                null
-            }
+            // We pick 'IMPORTANCE_HIGH' priority because this is a user-triggered action that is
+            // expected to be part of a continuity flow. That is, user is expected to be waiting for
+            // this notification on their device; make it obvious.
+            val importance = AndroidNotificationManager.IMPORTANCE_HIGH
             val channelId = getNotificationChannelId(
                 context,
                 RECEIVE_TABS_CHANNEL_ID,
@@ -184,21 +180,18 @@ object NotificationManager {
         description: String? = null,
         channelImportance: Int? = null,
     ): String {
-        if (SDK_INT >= Build.VERSION_CODES.O) {
-            val importance = channelImportance ?: AndroidNotificationManager.IMPORTANCE_DEFAULT
-            createNotificationChannelIfNeeded(
-                context,
-                channelId,
-                channelName,
-                description,
-                importance,
-            )
-        }
+        val importance = channelImportance ?: AndroidNotificationManager.IMPORTANCE_DEFAULT
+        createNotificationChannelIfNeeded(
+            context,
+            channelId,
+            channelName,
+            description,
+            importance,
+        )
 
         return channelId
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     private fun createNotificationChannelIfNeeded(
         context: Context,
         channelId: String,
