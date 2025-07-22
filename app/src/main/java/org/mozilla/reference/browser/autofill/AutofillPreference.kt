@@ -37,15 +37,10 @@ class AutofillPreference
     }
 
     fun updateSwitch() {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
-            return
-        }
-
         val autofillManager = context.getSystemService(AutofillManager::class.java)
         switchView?.isChecked = autofillManager.hasEnabledAutofillServices()
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     override fun onClick() {
         val intent = Intent(Settings.ACTION_REQUEST_SET_AUTOFILL_SERVICE).apply {
             data = "package:${context.packageName}".toUri()
@@ -55,10 +50,6 @@ class AutofillPreference
 
     companion object {
         fun isSupported(context: Context): Boolean {
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
-                return false
-            }
-
             val autofillManager = context.getSystemService(AutofillManager::class.java)
             return autofillManager.isAutofillSupported
         }

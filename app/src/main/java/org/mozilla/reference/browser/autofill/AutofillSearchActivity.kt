@@ -12,7 +12,6 @@ import mozilla.components.feature.autofill.AutofillConfiguration
 import mozilla.components.feature.autofill.ui.AbstractAutofillSearchActivity
 import org.mozilla.reference.browser.ext.components
 
-@RequiresApi(Build.VERSION_CODES.O)
 class AutofillSearchActivity : AbstractAutofillSearchActivity() {
     override val configuration: AutofillConfiguration by lazy { components.autofillConfiguration }
 
