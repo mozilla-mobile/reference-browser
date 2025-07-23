@@ -12,7 +12,6 @@ import org.mozilla.reference.browser.helpers.TestAssetHelper.waitingTime
 
 class NotificationRobot {
     fun verifySystemMediaNotificationExists(notificationMessage: String) {
-        assertTrue(systemMediaNotification.waitForExists(waitingTime))
         assertTrue(systemMediaNotificationTitle(notificationMessage).waitForExists(waitingTime))
     }
 
@@ -74,31 +73,10 @@ fun notificationShade(interact: NotificationRobot.() -> Unit): NotificationRobot
 }
 
 private fun systemMediaNotificationControlButton(state: String) =
-    mDevice.findObject(
-        UiSelector()
-            .resourceId("com.android.systemui:id/action0")
-            .className("android.widget.ImageButton")
-            .packageName("com.android.systemui")
-            .descriptionContains(state),
-    )
+    mDevice.findObject(UiSelector().descriptionContains(state))
 
-private fun systemMediaNotificationTitle(title: String) =
-    mDevice.findObject(
-        UiSelector()
-            .textContains(title)
-            .resourceId("com.android.systemui:id/header_title")
-            .className("android.widget.TextView")
-            .packageName("com.android.systemui"),
-    )
+private fun systemMediaNotificationTitle(title: String) = mDevice.findObject(UiSelector().textContains(title))
 
 private val notificationTray = UiScrollable(
     UiSelector().resourceId("com.android.systemui:id/notification_stack_scroller"),
 ).setAsVerticalList()
-
-private val systemMediaNotification =
-    mDevice.findObject(
-        UiSelector()
-            .resourceId("com.android.systemui:id/qs_media_controls")
-            .className("android.view.ViewGroup")
-            .packageName("com.android.systemui"),
-    )

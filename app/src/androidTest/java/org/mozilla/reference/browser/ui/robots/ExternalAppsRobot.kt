@@ -41,11 +41,7 @@ private fun assertDefaultAppsLayout() {
 
 private fun assertAutofillServices() {
     mDevice.waitForWindowUpdate(packageName, waitingTime)
-    assertTrue(
-        mDevice
-            .findObject(UiSelector().textContains("Autofill service"))
-            .waitForExists(waitingTime),
-    )
+    assertTrue(mDevice.findObject(UiSelector().descriptionContains("Autofill service")).waitForExists(waitingTime))
 }
 
 private fun assertYouTubeApp() {
