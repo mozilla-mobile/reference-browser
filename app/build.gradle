@@ -343,6 +343,9 @@ dependencies {
 
     androidTestImplementation libs.androidx.test.espresso.core
     androidTestImplementation libs.androidx.test.espresso.idling.resources
+    constraints {
+        implementation(libs.androidx.test.monitor)
+    }
     androidTestImplementation libs.androidx.test.monitor
     androidTestImplementation libs.androidx.test.rules
     androidTestImplementation libs.androidx.test.runner
