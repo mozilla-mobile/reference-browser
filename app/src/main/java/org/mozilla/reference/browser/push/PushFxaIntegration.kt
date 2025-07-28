@@ -16,7 +16,7 @@ import mozilla.components.feature.accounts.push.SendTabFeature
 import mozilla.components.feature.push.AutoPushFeature
 import mozilla.components.feature.push.PushScope
 import mozilla.components.service.fxa.manager.FxaAccountManager
-import mozilla.components.service.fxa.manager.ext.withConstellation
+import mozilla.components.service.fxa.manager.ext.withConstellationIfExists
 import org.mozilla.reference.browser.components.BackgroundServices
 import org.mozilla.reference.browser.components.Push
 
@@ -122,7 +122,7 @@ internal class OneTimeMessageDeliveryObserver(
         authType: AuthType,
     ) {
         MainScope().launch {
-            lazyAccount.value.withConstellation {
+            lazyAccount.value.withConstellationIfExists {
                 processRawEvent(String(message))
             }
 
