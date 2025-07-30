@@ -28,7 +28,7 @@ androidx-lifecycle = "2.9.2"
 androidx-preference = "1.2.1"
 androidx-recyclerview = "1.4.0"
 androidx-swiperefreshlayout = "1.1.0"
-androidx-work = "2.10.2"
+androidx-work = "2.10.3"
 
 # AndroidX Testing
 androidx-test-core = "1.6.1"
