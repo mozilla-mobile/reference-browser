@@ -4,6 +4,7 @@ queue_rules:
       - status-success=pr-complete
     merge_method: rebase
     branch_protection_injection_mode: none
+    merge_bot_account: MickeyMoz
 pull_request_rules:
   - name: MickeyMoz - Auto Merge
     conditions:
