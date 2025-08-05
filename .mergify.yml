@@ -3,6 +3,7 @@ queue_rules:
     conditions:
       - status-success=pr-complete
     merge_method: rebase
+    branch_protection_injection_mode: none
 pull_request_rules:
   - name: MickeyMoz - Auto Merge
     conditions:
@@ -23,3 +24,5 @@ pull_request_rules:
     actions:
       queue:
         name: default
+merge_queue:
+  max_parallel_checks: 1
