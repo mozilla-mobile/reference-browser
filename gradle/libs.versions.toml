@@ -37,7 +37,7 @@ androidx-work = "2.10.3"
 androidx-test-core = "1.7.0"
 androidx-test-espresso = "3.7.0"
 androidx-test-monitor = "1.8.0"
-androidx-test-orchestrator = "1.6.0"
+androidx-test-orchestrator = "1.6.1"
 androidx-test-runner = "1.7.0"
 androidx-test-uiautomator = "2.3.0"
 
