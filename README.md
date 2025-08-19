@@ -35,7 +35,7 @@ Before you attempt to make a contribution please read the [Community Participati
 
 To get the Reference Browser on your device, follow these two steps:
 
-1) Visit https://groups.google.com/forum/#!forum/mozilla-reference-browser and join the Google Group
+1) Visit https://groups.google.com/forum/#!forum/reference-browser and join the Google Group
 2) Visit https://play.google.com/apps/testing/org.mozilla.reference.browser on your device to join the test program and to install the app
 
 Make sure you use the same Google Account for both steps.
