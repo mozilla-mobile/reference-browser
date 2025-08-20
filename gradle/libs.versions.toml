@@ -3,10 +3,10 @@
 android-components = "144.0.20250819090810"
 
 # AGP
-android-gradle-plugin = "8.12.0"
+android-gradle-plugin = "8.12.1"
 
 # Kotlin
-kotlin = "2.2.0"
+kotlin = "2.2.10"
 kotlinx-coroutines = "1.10.2"
 
 # Google
@@ -22,11 +22,11 @@ androidx-annotation = "1.9.1"
 androidx-appcompat = "1.7.1"
 androidx-browser = "1.9.0"
 androidx-cardview = "1.0.0"
-androidx-composeBom = "2025.06.01"
+androidx-composeBom = "2025.08.00"
 androidx-constraintlayout = "2.2.1"
 androidx-coordinatorlayout = "1.3.0"
-androidx-core = "1.16.0"
-androidx-fragment = "1.8.8"
+androidx-core = "1.17.0"
+androidx-fragment = "1.8.9"
 androidx-lifecycle = "2.9.2"
 androidx-preference = "1.2.1"
 androidx-recyclerview = "1.4.0"
@@ -37,7 +37,7 @@ androidx-work = "2.10.3"
 androidx-test-core = "1.7.0"
 androidx-test-espresso = "3.7.0"
 androidx-test-monitor = "1.8.0"
-androidx-test-orchestrator = "1.6.0"
+androidx-test-orchestrator = "1.6.1"
 androidx-test-runner = "1.7.0"
 androidx-test-uiautomator = "2.3.0"
 
