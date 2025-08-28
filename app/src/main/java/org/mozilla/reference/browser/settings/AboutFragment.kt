@@ -71,13 +71,11 @@ class AboutFragment : Fragment() {
         val versionInfoView = view.findViewById<TextView>(R.id.version_info)
         versionInfoView.text = versionInfo
 
-        versionInfoView.setOnTouchListener { v, _ ->
+        versionInfoView.setOnClickListener { v ->
             val clipBoard = requireContext().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
             clipBoard.setPrimaryClip(ClipData.newPlainText(versionInfo, versionInfo))
 
             Toast.makeText(requireContext(), getString(R.string.toast_copied), Toast.LENGTH_SHORT).show()
-
-            v.performClick()
         }
     }
 }
