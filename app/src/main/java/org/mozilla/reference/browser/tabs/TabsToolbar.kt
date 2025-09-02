@@ -9,6 +9,7 @@ import android.util.AttributeSet
 import mozilla.components.feature.tabs.tabstray.TabsFeature
 import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.ext.components
+import mozilla.components.ui.icons.R as iconsR
 
 class TabsToolbar
     @JvmOverloads
@@ -22,7 +23,7 @@ class TabsToolbar
 
     init {
         navigationContentDescription = "back"
-        setNavigationIcon(R.drawable.mozac_ic_back_24)
+        setNavigationIcon(iconsR.drawable.mozac_ic_back_24)
         setNavigationOnClickListener {
             closeTabsTray?.invoke()
         }

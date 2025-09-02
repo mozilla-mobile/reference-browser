@@ -22,6 +22,8 @@ import org.mozilla.reference.browser.ext.waitAndInteract
 import org.mozilla.reference.browser.helpers.TestAssetHelper.waitingTime
 import org.mozilla.reference.browser.helpers.TestHelper.packageName
 import org.mozilla.reference.browser.helpers.click
+import mozilla.components.browser.toolbar.R as toolbarR
+import mozilla.components.ui.tabcounter.R as tabcounterR
 
 /**
  * Implementation of Robot Pattern for the navigation toolbar menu.
@@ -98,18 +100,18 @@ fun navigationToolbar(interact: NavigationToolbarRobot.() -> Unit): NavigationTo
     return NavigationToolbarRobot.Transition()
 }
 
-private fun openTabTray() = onView(withId(R.id.counter_box))
+private fun openTabTray() = onView(withId(tabcounterR.id.counter_box))
 
-private var numberOfOpenTabsTabCounter = onView(withId(R.id.counter_text))
+private var numberOfOpenTabsTabCounter = onView(withId(tabcounterR.id.counter_text))
 
 private fun urlBar() = mDevice.findObject(UiSelector().resourceId("$packageName:id/mozac_browser_toolbar_url_view"))
 
 private fun awesomeBar() =
     mDevice.findObject(UiSelector().resourceId("$packageName:id/mozac_browser_toolbar_edit_url_view"))
 
-private fun threeDotMenuButton() = onView(withId(R.id.mozac_browser_toolbar_menu))
+private fun threeDotMenuButton() = onView(withId(toolbarR.id.mozac_browser_toolbar_menu))
 
-private fun readerViewButton() = onView(withId(R.id.mozac_browser_toolbar_page_actions))
+private fun readerViewButton() = onView(withId(toolbarR.id.mozac_browser_toolbar_page_actions))
 
 private fun assertNoTabAddressText() {
     mDevice.waitAndInteract(Until.findObject(By.text("Search or enter address"))) {}

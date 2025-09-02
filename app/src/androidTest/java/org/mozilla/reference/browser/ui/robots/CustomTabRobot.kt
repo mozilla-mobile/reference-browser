@@ -19,6 +19,7 @@ import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.helpers.TestAssetHelper.waitingTime
 import org.mozilla.reference.browser.helpers.TestHelper.packageName
 import org.mozilla.reference.browser.helpers.click
+import mozilla.components.browser.toolbar.R as toolbarR
 
 /**
  *  Implementation of the robot pattern for Custom tabs
@@ -139,13 +140,13 @@ fun customTabScreen(interact: CustomTabRobot.() -> Unit): CustomTabRobot.Transit
     return CustomTabRobot.Transition()
 }
 
-private fun closeButton() = onView(withId(R.id.mozac_browser_toolbar_navigation_actions))
+private fun closeButton() = onView(withId(toolbarR.id.mozac_browser_toolbar_navigation_actions))
 
-private fun trackingProtectionIcon() = onView(withId(R.id.mozac_browser_toolbar_tracking_protection_indicator))
+private fun trackingProtectionIcon() = onView(withId(toolbarR.id.mozac_browser_toolbar_tracking_protection_indicator))
 
-private fun securityIndicator() = onView(withId(R.id.mozac_browser_toolbar_site_info_indicator))
+private fun securityIndicator() = onView(withId(toolbarR.id.mozac_browser_toolbar_site_info_indicator))
 
-private fun menuButton() = onView(withId(R.id.mozac_browser_toolbar_menu))
+private fun menuButton() = onView(withId(toolbarR.id.mozac_browser_toolbar_menu))
 
 private fun actionButton() = onView(withContentDescription("Share link"))
 

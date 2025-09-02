@@ -20,6 +20,7 @@ import org.mozilla.reference.browser.helpers.Constants.LONG_CLICK_DURATION
 import org.mozilla.reference.browser.helpers.TestAssetHelper.waitingTime
 import org.mozilla.reference.browser.helpers.TestHelper.packageName
 import org.mozilla.reference.browser.helpers.TestHelper.waitForObjects
+import mozilla.components.browser.toolbar.R as toolbarR
 
 /**
  * Implementation of Robot Pattern for browser action.
@@ -64,8 +65,8 @@ class BrowserRobot {
         onView(
             allOf(
                 withSubstring(expectedUrl),
-                withId(R.id.mozac_browser_toolbar_url_view),
-                isDescendantOfA(withId(R.id.mozac_browser_toolbar_origin_view)),
+                withId(toolbarR.id.mozac_browser_toolbar_url_view),
+                isDescendantOfA(withId(toolbarR.id.mozac_browser_toolbar_origin_view)),
             ),
         ).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
     }

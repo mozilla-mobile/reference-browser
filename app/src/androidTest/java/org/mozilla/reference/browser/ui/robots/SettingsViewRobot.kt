@@ -7,6 +7,7 @@ package org.mozilla.reference.browser.ui.robots
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.matcher.RootMatchers.isDialog
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.isCompletelyDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.isDescendantOfA
@@ -18,6 +19,7 @@ import androidx.test.uiautomator.By
 import androidx.test.uiautomator.UiSelector
 import androidx.test.uiautomator.Until
 import org.hamcrest.CoreMatchers.allOf
+import org.hamcrest.CoreMatchers.anyOf
 import org.junit.Assert.assertTrue
 import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.helpers.TestAssetHelper
@@ -182,7 +184,7 @@ private fun privacySummary() = Espresso.onView(withText(R.string.preferences_pri
 private fun openLinksInAppsToggle() =
     Espresso.onView(
     allOf(
-        withId(R.id.switchWidget),
+        withId(androidx.preference.R.id.switchWidget),
         hasCousin(withText(R.string.open_links_in_apps)),
     ),
 )
@@ -200,7 +202,7 @@ private fun developerToolsHeading() = Espresso.onView(withText(R.string.develope
 private fun remoteDebuggingToggle() =
     Espresso.onView(
     allOf(
-        withId(R.id.switchWidget),
+        withId(androidx.preference.R.id.switchWidget),
         hasCousin(withText(R.string.preferences_remote_debugging)),
     ),
 )
@@ -284,7 +286,10 @@ private fun assertCustomAddonCollectionPanel() {
     onView(
         allOf(
             withText(R.string.preferences_customize_amo_collection),
-            isDescendantOfA(withId(R.id.title_template)),
+            anyOf(
+                withId(androidx.appcompat.R.id.alertTitle),
+                withId(android.R.id.title),
+            ),
         ),
-    ).check(matches(isCompletelyDisplayed()))
+    ).inRoot(isDialog()).check(matches(isCompletelyDisplayed()))
 }
