@@ -24,6 +24,7 @@ import org.mozilla.reference.browser.helpers.TestAssetHelper
 import org.mozilla.reference.browser.helpers.click
 import org.mozilla.reference.browser.ui.robots.mDevice
 import org.mozilla.reference.browser.ui.robots.navigationToolbar
+import mozilla.components.ui.tabcounter.R as tabcounterR
 
 /**
  *  Tests for verifying tab tray menu:
@@ -56,7 +57,7 @@ class TabTrayMenuTest {
         fun closeAllTabsButton() = onView(ViewMatchers.withText("Close All Tabs"))
 
         fun goBackButton() = onView(ViewMatchers.withContentDescription("back"))
-        val tabCounterButton = onView(withId(R.id.counter_text))
+        val tabCounterButton = onView(withId(tabcounterR.id.counter_text))
 
         mDevice.waitForIdle()
         tabCounterButton.click()

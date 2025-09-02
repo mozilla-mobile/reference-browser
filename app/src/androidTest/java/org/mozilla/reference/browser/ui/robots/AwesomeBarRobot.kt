@@ -21,6 +21,7 @@ import org.mozilla.reference.browser.helpers.Constants.LONG_CLICK_DURATION
 import org.mozilla.reference.browser.helpers.TestAssetHelper.waitingTime
 import org.mozilla.reference.browser.helpers.TestHelper.packageName
 import org.mozilla.reference.browser.helpers.click
+import mozilla.components.browser.toolbar.R as toolbarR
 
 /**
  * Implementation of Robot Pattern for awesomebar.
@@ -96,8 +97,8 @@ fun browserScreen(interact: AwesomeBarRobot.() -> Unit): AwesomeBarRobot.Transit
 private fun awesomeBar() =
     onView(
         allOf(
-            withId(R.id.mozac_browser_toolbar_edit_url_view),
-            isDescendantOfA(withId(R.id.mozac_browser_toolbar_container)),
+            withId(toolbarR.id.mozac_browser_toolbar_edit_url_view),
+            isDescendantOfA(withId(toolbarR.id.mozac_browser_toolbar_container)),
         ),
     )
 
@@ -138,7 +139,7 @@ private fun assertPastedToolbarText(expectedText: String) {
     onView(
         allOf(
             withSubstring(expectedText),
-            withId(R.id.mozac_browser_toolbar_edit_url_view),
+            withId(toolbarR.id.mozac_browser_toolbar_edit_url_view),
         ),
     ).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
 }

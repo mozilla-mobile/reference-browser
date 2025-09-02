@@ -17,6 +17,8 @@ import androidx.core.graphics.BlendModeCompat.SRC_IN
 import com.google.android.material.tabs.TabLayout
 import mozilla.components.feature.tabs.tabstray.TabsFeature
 import org.mozilla.reference.browser.R
+import mozilla.components.ui.colors.R as colorsR
+import mozilla.components.ui.icons.R as iconsR
 
 class TabsPanel
     @JvmOverloads
@@ -33,12 +35,12 @@ class TabsPanel
     init {
         normalTab = newTab().apply {
             contentDescription = "Tabs"
-            icon = resources.getThemedDrawable(R.drawable.mozac_ic_tab)
+            icon = resources.getThemedDrawable(iconsR.drawable.mozac_ic_tab)
         }
 
         privateTab = newTab().apply {
             contentDescription = "Private tabs"
-            icon = resources.getThemedDrawable(R.drawable.mozac_ic_private_mode_24)
+            icon = resources.getThemedDrawable(iconsR.drawable.mozac_ic_private_mode_24)
         }
 
         addOnTabSelectedListener(this)
@@ -57,7 +59,7 @@ class TabsPanel
 
     override fun onTabSelected(tab: Tab?) {
         // Tint the selected tab's icon.
-        tab?.icon?.colorTint(R.color.photonPurple50)
+        tab?.icon?.colorTint(colorsR.color.photonPurple50)
 
         tabsFeature?.filterTabs { tabSessionState ->
             if (tab == normalTab) {

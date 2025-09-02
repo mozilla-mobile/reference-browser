@@ -17,6 +17,7 @@ import org.mozilla.reference.browser.helpers.TestAssetHelper.waitingTime
 import org.mozilla.reference.browser.helpers.TestHelper.packageName
 import org.mozilla.reference.browser.helpers.TestHelper.waitForObjects
 import org.mozilla.reference.browser.helpers.click
+import mozilla.components.feature.findinpage.R as findinpageR
 
 /**
  * Implementation of Robot Pattern for the FindInPage Panel.
@@ -51,11 +52,11 @@ class FindInPagePanelRobot {
 
 private fun findInPageBar() = onView(withId(R.id.findInPageBar))
 
-private fun findInPageNextButton() = onView(withId(R.id.find_in_page_next_btn))
+private fun findInPageNextButton() = onView(withId(findinpageR.id.find_in_page_next_btn))
 
-private fun findInPagePreviousButton() = onView(withId(R.id.find_in_page_prev_btn))
+private fun findInPagePreviousButton() = onView(withId(findinpageR.id.find_in_page_prev_btn))
 
-private fun findInPageCloseButton() = onView(withId(R.id.find_in_page_close_btn))
+private fun findInPageCloseButton() = onView(withId(findinpageR.id.find_in_page_close_btn))
 
 private fun assertFindInPageBarExists() {
     mDevice.waitForObjects(mDevice.findObject(UiSelector().resourceId("$packageName:id/findInPageBar")))

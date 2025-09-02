@@ -22,6 +22,7 @@ import org.mozilla.reference.browser.helpers.TestAssetHelper.waitingTime
 import org.mozilla.reference.browser.helpers.TestHelper.packageName
 import org.mozilla.reference.browser.helpers.click
 import org.mozilla.reference.browser.ui.robots.mDevice
+import mozilla.components.feature.readerview.R as readerviewR
 
 /**
  * Implementation of Robot Pattern for Reader View UI.
@@ -130,7 +131,7 @@ private fun appearanceMenu() =
 private fun fontGroupButtons() =
     onView(
         allOf(
-            withId(R.id.mozac_feature_readerview_font_group),
+            withId(readerviewR.id.mozac_feature_readerview_font_group),
             withParent(withId(R.id.readerViewBar)),
         ),
     )
@@ -138,16 +139,16 @@ private fun fontGroupButtons() =
 private fun sansSerifButton() =
     onView(
         allOf(
-            withId(R.id.mozac_feature_readerview_font_sans_serif),
-            withParent(withId(R.id.mozac_feature_readerview_font_group)),
+            withId(readerviewR.id.mozac_feature_readerview_font_sans_serif),
+            withParent(withId(readerviewR.id.mozac_feature_readerview_font_group)),
         ),
     )
 
 private fun serifButton() =
     onView(
         allOf(
-            withId(R.id.mozac_feature_readerview_font_serif),
-            withParent(withId(R.id.mozac_feature_readerview_font_group)),
+            withId(readerviewR.id.mozac_feature_readerview_font_serif),
+            withParent(withId(readerviewR.id.mozac_feature_readerview_font_group)),
         ),
     )
 
@@ -170,7 +171,7 @@ private fun decreaseFontSizeButton() =
 private fun colorSchemeGroupButtons() =
     onView(
         allOf(
-            withId(R.id.mozac_feature_readerview_color_scheme_group),
+            withId(readerviewR.id.mozac_feature_readerview_color_scheme_group),
             withParent(withId(R.id.readerViewBar)),
         ),
     )
@@ -179,7 +180,7 @@ private fun lightColorButton() =
     onView(
         allOf(
             withText("Light"),
-            withParent(withId(R.id.mozac_feature_readerview_color_scheme_group)),
+            withParent(withId(readerviewR.id.mozac_feature_readerview_color_scheme_group)),
         ),
     )
 
@@ -187,7 +188,7 @@ private fun sepiaColorButton() =
     onView(
         allOf(
             withText("Sepia"),
-            withParent(withId(R.id.mozac_feature_readerview_color_scheme_group)),
+            withParent(withId(readerviewR.id.mozac_feature_readerview_color_scheme_group)),
         ),
     )
 
@@ -195,7 +196,7 @@ private fun darkColorButton() =
     onView(
         allOf(
             withText("Dark"),
-            withParent(withId(R.id.mozac_feature_readerview_color_scheme_group)),
+            withParent(withId(readerviewR.id.mozac_feature_readerview_color_scheme_group)),
         ),
     )
 

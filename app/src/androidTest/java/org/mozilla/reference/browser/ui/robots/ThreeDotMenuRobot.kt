@@ -18,6 +18,8 @@ import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.helpers.TestAssetHelper.waitingTime
 import org.mozilla.reference.browser.helpers.TestHelper.packageName
 import org.mozilla.reference.browser.helpers.click
+import mozilla.components.browser.menu.R as menuR
+import mozilla.components.browser.toolbar.R as toolbarR
 
 /**
  * Implementation of Robot Pattern for three dot menu.
@@ -189,10 +191,10 @@ class ThreeDotMenuRobot {
 }
 
 private fun threeDotMenuRecyclerViewExists() {
-    onView(withId(R.id.mozac_browser_menu_recyclerView)).check(matches(isDisplayed()))
+    onView(withId(menuR.id.mozac_browser_menu_recyclerView)).check(matches(isDisplayed()))
 }
 
-private fun threeDotMenuButton() = onView(withId(R.id.mozac_browser_toolbar_menu))
+private fun threeDotMenuButton() = onView(withId(toolbarR.id.mozac_browser_toolbar_menu))
 
 private fun forwardButton() = onView(ViewMatchers.withContentDescription("Forward"))
 
