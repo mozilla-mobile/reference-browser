@@ -10,6 +10,7 @@ import android.graphics.Color
 import android.os.Bundle
 import android.util.AttributeSet
 import android.view.View
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.SystemBarStyle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -71,6 +72,15 @@ open class BrowserActivity : AppCompatActivity() {
 
         NotificationManager.checkAndNotifyPolicy(this)
         lifecycle.addObserver(webExtensionPopupObserver)
+
+        onBackPressedDispatcher.addCallback(
+            this,
+            object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    onBackPressed()
+                }
+            },
+        )
     }
 
     @Suppress("MissingSuperCall", "OVERRIDE_DEPRECATION")
