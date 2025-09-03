@@ -25,6 +25,7 @@ import mozilla.components.support.base.feature.LifecycleAwareFeature
 import mozilla.components.support.ktx.android.content.appVersionName
 import mozilla.components.ui.widgets.withCenterAlignedButtons
 import org.mozilla.reference.browser.R
+import mozilla.components.feature.addons.R as addonsR
 
 /**
  * Feature implementation for handling [WebExtensionPromptRequest] and showing the respective UI.
@@ -275,14 +276,14 @@ class WebExtensionPromptFeature(
     @VisibleForTesting
     internal fun handleInstallationFailedRequest(exception: WebExtensionInstallException) {
         val addonName = exception.extensionName ?: ""
-        var title = context.getString(R.string.mozac_feature_addons_cant_install_extension, "")
+        var title = context.getString(addonsR.string.mozac_feature_addons_cant_install_extension, "")
         val message = when (exception) {
             is WebExtensionInstallException.Blocklisted -> {
-                context.getString(R.string.mozac_feature_addons_blocklisted_2, addonName, R.string.app_name)
+                context.getString(addonsR.string.mozac_feature_addons_blocklisted_2, addonName, R.string.app_name)
             }
 
             is WebExtensionInstallException.SoftBlocked -> {
-                context.getString(R.string.mozac_feature_addons_soft_blocked_1, addonName, R.string.app_name)
+                context.getString(addonsR.string.mozac_feature_addons_soft_blocked_1, addonName, R.string.app_name)
             }
 
             is WebExtensionInstallException.UserCancelled -> {
@@ -298,23 +299,23 @@ class WebExtensionPromptFeature(
                 // Message = Failed to install $addonName
                 title = ""
                 if (addonName.isNotEmpty()) {
-                    context.getString(R.string.mozac_feature_addons_failed_to_install, addonName)
+                    context.getString(addonsR.string.mozac_feature_addons_failed_to_install, addonName)
                 } else {
-                    context.getString(R.string.mozac_feature_addons_extension_failed_to_install)
+                    context.getString(addonsR.string.mozac_feature_addons_extension_failed_to_install)
                 }
             }
 
             is WebExtensionInstallException.NetworkFailure -> {
-                context.getString(R.string.mozac_feature_addons_extension_failed_to_install_network_error)
+                context.getString(addonsR.string.mozac_feature_addons_extension_failed_to_install_network_error)
             }
 
             is WebExtensionInstallException.CorruptFile -> {
-                context.getString(R.string.mozac_feature_addons_extension_failed_to_install_corrupt_error)
+                context.getString(addonsR.string.mozac_feature_addons_extension_failed_to_install_corrupt_error)
             }
 
             is WebExtensionInstallException.NotSigned -> {
                 context.getString(
-                    R.string.mozac_feature_addons_extension_failed_to_install_not_signed_error,
+                    addonsR.string.mozac_feature_addons_extension_failed_to_install_not_signed_error,
                 )
             }
 
@@ -322,7 +323,7 @@ class WebExtensionPromptFeature(
                 val appName = context.getString(R.string.app_name)
                 val version = context.appVersionName
                 context.getString(
-                    R.string.mozac_feature_addons_failed_to_install_incompatible_error,
+                    addonsR.string.mozac_feature_addons_failed_to_install_incompatible_error,
                     addonName,
                     appName,
                     version,
@@ -330,7 +331,7 @@ class WebExtensionPromptFeature(
             }
 
             is WebExtensionInstallException.AdminInstallOnly -> {
-                context.getString(R.string.mozac_feature_addons_admin_install_only, addonName)
+                context.getString(addonsR.string.mozac_feature_addons_admin_install_only, addonName)
             }
         }
 

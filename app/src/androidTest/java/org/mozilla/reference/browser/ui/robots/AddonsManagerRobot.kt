@@ -32,6 +32,7 @@ import org.mozilla.reference.browser.helpers.TestHelper.itemWithResId
 import org.mozilla.reference.browser.helpers.TestHelper.itemWithResIdContainingText
 import org.mozilla.reference.browser.helpers.TestHelper.packageName
 import org.mozilla.reference.browser.helpers.click
+import mozilla.components.feature.addons.R as addonsR
 
 /**
  * Implementation of Robot Pattern for the addons manager.
@@ -83,14 +84,14 @@ class AddonsManagerRobot {
         mDevice.waitAndInteract(
             Until.findObject(
                 By.text(
-                    getStringResource(R.string.mozac_feature_addons_installed_dialog_okay_button_2),
+                    getStringResource(addonsR.string.mozac_feature_addons_installed_dialog_okay_button_2),
                 ),
             ),
         ) {}
         mDevice
             .findObject(
             UiSelector().textContains(
-                getStringResource(R.string.mozac_feature_addons_installed_dialog_okay_button_2),
+                getStringResource(addonsR.string.mozac_feature_addons_installed_dialog_okay_button_2),
             ),
         ).click()
     }
@@ -145,22 +146,22 @@ class AddonsManagerRobot {
 
         onView(
             allOf(
-                withId(R.id.optional_or_required_text),
+                withId(addonsR.id.optional_or_required_text),
                 withText(containsString("Required permissions:")),
             ),
         ).check(matches(isCompletelyDisplayed()))
 
         onView(
             allOf(
-                withId(R.id.allow_button),
-                withText(R.string.mozac_feature_addons_permissions_dialog_add),
+                withId(addonsR.id.allow_button),
+                withText(addonsR.string.mozac_feature_addons_permissions_dialog_add),
             ),
         ).check(matches(isCompletelyDisplayed()))
 
         onView(
             allOf(
-                withId(R.id.deny_button),
-                withText(R.string.mozac_feature_addons_permissions_dialog_cancel),
+                withId(addonsR.id.deny_button),
+                withText(addonsR.string.mozac_feature_addons_permissions_dialog_cancel),
             ),
         ).check(matches(isCompletelyDisplayed()))
     }
@@ -168,8 +169,8 @@ class AddonsManagerRobot {
     private fun cancelInstallButton() {
         onView(
             allOf(
-                withId(R.id.deny_button),
-                withText(R.string.mozac_feature_addons_permissions_dialog_cancel),
+                withId(addonsR.id.deny_button),
+                withText(addonsR.string.mozac_feature_addons_permissions_dialog_cancel),
             ),
         ).check(matches(isCompletelyDisplayed()))
             .perform(click())
@@ -180,8 +181,8 @@ class AddonsManagerRobot {
 
         onView(
             allOf(
-                withId(R.id.allow_button),
-                withText(R.string.mozac_feature_addons_permissions_dialog_add),
+                withId(addonsR.id.allow_button),
+                withText(addonsR.string.mozac_feature_addons_permissions_dialog_add),
             ),
         ).check(matches(isCompletelyDisplayed()))
             .perform(click())

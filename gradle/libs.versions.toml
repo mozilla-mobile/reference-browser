@@ -3,7 +3,7 @@
 android-components = "144.0.20250903093330"
 
 # AGP
-android-gradle-plugin = "8.12.1"
+android-gradle-plugin = "8.13.0"
 
 # Kotlin
 kotlin = "2.2.10"
@@ -42,7 +42,7 @@ androidx-test-runner = "1.7.0"
 androidx-test-uiautomator = "2.3.0"
 
 # Third Party Linting & Static Code Analysis
-dependency-analysis = "3.0.0"
+dependency-analysis = "3.0.1"
 detekt = "1.23.8"
 jspecify = "1.0.0"
 ktlint = "1.7.1"

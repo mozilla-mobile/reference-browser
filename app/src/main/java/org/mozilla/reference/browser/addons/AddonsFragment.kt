@@ -23,6 +23,7 @@ import mozilla.components.feature.addons.ui.AddonsManagerAdapterDelegate
 import mozilla.components.support.base.feature.ViewBoundFeatureWrapper
 import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.ext.components
+import mozilla.components.feature.addons.R as addonsR
 
 /**
  * Fragment use for managing add-ons.
@@ -94,7 +95,7 @@ class AddonsFragment :
                     Toast
                         .makeText(
                         activity,
-                        R.string.mozac_feature_addons_failed_to_query_extensions,
+                        addonsR.string.mozac_feature_addons_failed_to_query_extensions,
                         Toast.LENGTH_SHORT,
                     ).show()
                 }

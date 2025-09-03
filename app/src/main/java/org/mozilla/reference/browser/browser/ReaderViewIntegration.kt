@@ -20,6 +20,8 @@ import mozilla.components.feature.readerview.view.ReaderViewControlsView
 import mozilla.components.support.base.feature.LifecycleAwareFeature
 import mozilla.components.support.base.feature.UserInteractionHandler
 import org.mozilla.reference.browser.R
+import mozilla.components.ui.colors.R as colorsR
+import mozilla.components.ui.icons.R as iconsR
 
 class ReaderViewIntegration(
     context: Context,
@@ -33,9 +35,9 @@ class ReaderViewIntegration(
         private var readerViewButtonVisible = false
 
     private val readerViewButton: BrowserToolbar.ToggleButton = BrowserToolbar.ToggleButton(
-        image = ContextCompat.getDrawable(context, R.drawable.mozac_ic_reader_view_24)!!,
-        imageSelected = ContextCompat.getDrawable(context, R.drawable.mozac_ic_reader_view_24)!!.mutate().apply {
-            setTint(ContextCompat.getColor(context, R.color.photonBlue40))
+        image = ContextCompat.getDrawable(context, iconsR.drawable.mozac_ic_reader_view_24)!!,
+        imageSelected = ContextCompat.getDrawable(context, iconsR.drawable.mozac_ic_reader_view_24)!!.mutate().apply {
+            setTint(ContextCompat.getColor(context, colorsR.color.photonBlue40))
         },
         contentDescription = "Enable Reader View",
         contentDescriptionSelected = "Disable Reader View",

@@ -24,6 +24,7 @@ import mozilla.components.support.ktx.android.view.setupPersistentInsets
 import mozilla.components.support.utils.ext.getParcelableExtraCompat
 import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.ext.components
+import mozilla.components.feature.addons.R as addonsR
 
 /**
  * An activity to show the details of a installed add-on.
@@ -65,7 +66,7 @@ class InstalledAddonDetailsActivity : AppCompatActivity() {
                     Toast
                         .makeText(
                         baseContext,
-                        R.string.mozac_feature_addons_failed_to_query_extensions,
+                        addonsR.string.mozac_feature_addons_failed_to_query_extensions,
                         Toast.LENGTH_SHORT,
                     ).show()
                 }
@@ -101,7 +102,10 @@ class InstalledAddonDetailsActivity : AppCompatActivity() {
                         Toast
                             .makeText(
                             this,
-                            getString(R.string.mozac_feature_addons_successfully_enabled, addon.translateName(this)),
+                            getString(
+                                addonsR.string.mozac_feature_addons_successfully_enabled,
+                                addon.translateName(this),
+                            ),
                             Toast.LENGTH_SHORT,
                         ).show()
                     },
@@ -109,7 +113,7 @@ class InstalledAddonDetailsActivity : AppCompatActivity() {
                         Toast
                             .makeText(
                             this,
-                            getString(R.string.mozac_feature_addons_failed_to_enable, addon.translateName(this)),
+                            getString(addonsR.string.mozac_feature_addons_failed_to_enable, addon.translateName(this)),
                             Toast.LENGTH_SHORT,
                         ).show()
                     },
@@ -122,7 +126,10 @@ class InstalledAddonDetailsActivity : AppCompatActivity() {
                         Toast
                             .makeText(
                             this,
-                            getString(R.string.mozac_feature_addons_successfully_disabled, addon.translateName(this)),
+                            getString(
+                                addonsR.string.mozac_feature_addons_successfully_disabled,
+                                addon.translateName(this),
+                            ),
                             Toast.LENGTH_SHORT,
                         ).show()
                     },
@@ -130,7 +137,7 @@ class InstalledAddonDetailsActivity : AppCompatActivity() {
                         Toast
                             .makeText(
                             this,
-                            getString(R.string.mozac_feature_addons_failed_to_disable, addon.translateName(this)),
+                            getString(addonsR.string.mozac_feature_addons_failed_to_disable, addon.translateName(this)),
                             Toast.LENGTH_SHORT,
                         ).show()
                     },
@@ -188,7 +195,10 @@ class InstalledAddonDetailsActivity : AppCompatActivity() {
                     Toast
                         .makeText(
                         this,
-                        getString(R.string.mozac_feature_addons_successfully_uninstalled, addon.translateName(this)),
+                        getString(
+                            addonsR.string.mozac_feature_addons_successfully_uninstalled,
+                            addon.translateName(this),
+                        ),
                         Toast.LENGTH_SHORT,
                     ).show()
                     finish()
@@ -197,7 +207,7 @@ class InstalledAddonDetailsActivity : AppCompatActivity() {
                     Toast
                         .makeText(
                         this,
-                        getString(R.string.mozac_feature_addons_failed_to_uninstall, addon.translateName(this)),
+                        getString(addonsR.string.mozac_feature_addons_failed_to_uninstall, addon.translateName(this)),
                         Toast.LENGTH_SHORT,
                     ).show()
                 },
