@@ -77,21 +77,14 @@ open class BrowserActivity : AppCompatActivity() {
             this,
             object : OnBackPressedCallback(true) {
                 override fun handleOnBackPressed() {
-                    onBackPressed()
+                    supportFragmentManager.fragments.forEach {
+                        if (it is UserInteractionHandler && it.onBackPressed()) {
+                            return
+                        }
+                    }
                 }
             },
         )
-    }
-
-    @Suppress("MissingSuperCall", "OVERRIDE_DEPRECATION")
-    override fun onBackPressed() {
-        supportFragmentManager.fragments.forEach {
-            if (it is UserInteractionHandler && it.onBackPressed()) {
-                return
-            }
-        }
-
-        super.onBackPressedDispatcher.onBackPressed()
     }
 
     @Suppress("DEPRECATION") // ComponentActivity wants us to use registerForActivityResult
