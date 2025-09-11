@@ -7,17 +7,6 @@
         errorLine1="    override fun onBackPressed() {"
         errorLine2="                 ~~~~~~~~~~~~~">
         <location
-            file="src/main/java/org/mozilla/reference/browser/BrowserActivity.kt"
-            line="77"
-            column="18"/>
-    </issue>
-
-    <issue
-        id="GestureBackNavigation"
-        message="`onBackPressed` is no longer called for back gestures; migrate to AndroidX&apos;s backward compatible `OnBackPressedDispatcher`"
-        errorLine1="    override fun onBackPressed() {"
-        errorLine2="                 ~~~~~~~~~~~~~">
-        <location
             file="src/main/java/org/mozilla/reference/browser/settings/SettingsActivity.kt"
             line="48"
             column="18"/>
