@@ -20,8 +20,7 @@
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
 
--keep class mozilla.appservices.** { *; }
-
+# Needed for snakeyaml
 -dontwarn java.beans.BeanInfo
 -dontwarn java.beans.FeatureDescriptor
 -dontwarn java.beans.IntrospectionException
