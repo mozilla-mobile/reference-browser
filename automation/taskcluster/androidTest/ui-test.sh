@@ -26,11 +26,8 @@ display_help() {
     echo "Usage: $0 Build_Variant [Number_Shards...]"
     echo
     echo "Examples:"
-    echo "To run UI tests on ARM device shard (1 test / shard)"
-    echo "$ ui-test.sh component arm"
-    echo
-    echo "To run UI tests on X86 device (on 3 shards)"
-    echo "$ ui-test.sh x86 3"
+    echo "To run UI tests on arm64-v8a device (on 3 shards)"
+    echo "$ ui-test.sh arm64-v8a 3"
     echo
 }
 
@@ -41,7 +38,7 @@ if [[ $# -lt 1 ]]; then
     exit 1
 fi
 
-device_type="$1"  # arm | x86
+device_type="$1"  # arm64-v8a
 if [[ ! -z "$2" ]]; then
     num_shards=$2
 fi
@@ -72,10 +69,6 @@ if [[ "${device_type,,}" == "arm64-v8a" ]]
 then
     flank_template="${PATH_TEST}/flank-arm64-v8a.yml"
     APK_APP="${PATH_APK}/app-arm64-v8a-debug.apk"
-elif [[ "${device_type,,}" == "x86" ]]
-then
-    flank_template="${PATH_TEST}/flank-x86.yml"
-    APK_APP="${PATH_APK}/app-x86-debug.apk"
 else
      echo "NOT FOUND"
 #    exitcode=1
