@@ -1,6 +1,6 @@
 [versions]
 # Android Components
-android-components = "144.0.20250910093711"
+android-components = "144.0.20250913092312"
 
 # AGP
 android-gradle-plugin = "8.13.0"
@@ -11,7 +11,7 @@ kotlinx-coroutines = "1.10.2"
 
 # Google
 desugar-jdk-libs = "2.1.5"
-material = "1.12.0"
+material = "1.13.0"
 
 # JNA
 jna = "5.17.0"
