@@ -99,23 +99,6 @@ class InstalledAddonDetailsActivity : AppCompatActivity() {
                     addon,
                     onSuccess = {
                         switch.setState(true)
-                        Toast
-                            .makeText(
-                            this,
-                            getString(
-                                addonsR.string.mozac_feature_addons_successfully_enabled,
-                                addon.translateName(this),
-                            ),
-                            Toast.LENGTH_SHORT,
-                        ).show()
-                    },
-                    onError = {
-                        Toast
-                            .makeText(
-                            this,
-                            getString(addonsR.string.mozac_feature_addons_failed_to_enable, addon.translateName(this)),
-                            Toast.LENGTH_SHORT,
-                        ).show()
                     },
                 )
             } else {
@@ -123,23 +106,6 @@ class InstalledAddonDetailsActivity : AppCompatActivity() {
                     addon,
                     onSuccess = {
                         switch.setState(false)
-                        Toast
-                            .makeText(
-                            this,
-                            getString(
-                                addonsR.string.mozac_feature_addons_successfully_disabled,
-                                addon.translateName(this),
-                            ),
-                            Toast.LENGTH_SHORT,
-                        ).show()
-                    },
-                    onError = {
-                        Toast
-                            .makeText(
-                            this,
-                            getString(addonsR.string.mozac_feature_addons_failed_to_disable, addon.translateName(this)),
-                            Toast.LENGTH_SHORT,
-                        ).show()
                     },
                 )
             }
@@ -192,24 +158,7 @@ class InstalledAddonDetailsActivity : AppCompatActivity() {
             this.components.core.addonManager.uninstallAddon(
                 addon,
                 onSuccess = {
-                    Toast
-                        .makeText(
-                        this,
-                        getString(
-                            addonsR.string.mozac_feature_addons_successfully_uninstalled,
-                            addon.translateName(this),
-                        ),
-                        Toast.LENGTH_SHORT,
-                    ).show()
                     finish()
-                },
-                onError = { _, _ ->
-                    Toast
-                        .makeText(
-                        this,
-                        getString(addonsR.string.mozac_feature_addons_failed_to_uninstall, addon.translateName(this)),
-                        Toast.LENGTH_SHORT,
-                    ).show()
                 },
             )
         }
