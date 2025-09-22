@@ -93,10 +93,6 @@ android {
         }
     }
 
-    compileOptions {
-        coreLibraryDesugaringEnabled = true
-    }
-
     namespace = 'org.mozilla.reference.browser'
 }
 
@@ -239,7 +235,6 @@ project.configurations.configureEach {
 }
 
 dependencies {
-    coreLibraryDesugaring libs.desugar.jdk.libs
 
     // We pick up JNA transitively by way of Glean, which is currently on version 5.14.0.
     // However, we need to force version 5.17.0 due to Google Play's 16KB page size requirement.
