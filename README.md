@@ -50,7 +50,7 @@ Signed Nightly builds can be downloaded from:
 
 > Please note that these builds do not auto-update, you will have to keep up to date manually.
 
-The latest Nightly build task can be found [here](https://firefox-ci-tc.services.mozilla.com/tasks/index/project.mobile.reference-browser.v3.nightly/latest).
+The latest Nightly build task can be found [here](https://firefox-ci-tc.services.mozilla.com/tasks/index/mobile.v2.reference-browser.nightly.latest).
 
 # Getting Involved
 
