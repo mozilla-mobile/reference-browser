@@ -24,6 +24,7 @@ import mozilla.components.support.webextensions.WebExtensionSupport
 import org.mozilla.reference.browser.push.PushFxaIntegration
 import org.mozilla.reference.browser.push.WebPushEngineIntegration
 import java.util.concurrent.TimeUnit
+import mozilla.components.support.AppServicesInitializer.Config as AppServicesConfig
 
 open class BrowserApplication : Application() {
     val components by lazy { Components(this) }
@@ -33,7 +34,9 @@ open class BrowserApplication : Application() {
 
         setupCrashReporting(this)
 
-        AppServicesInitializer.init(components.analytics.crashReporter)
+        AppServicesInitializer.init(
+            AppServicesConfig(components.analytics.crashReporter),
+        )
         RustHttpConfig.setClient(lazy { components.core.client })
 
         Log.addSink(AndroidLogSink())
