@@ -56,11 +56,6 @@ android {
         debug {
             applicationIdSuffix ".debug"
         }
-        raptor releaseTemplate >> { // the ">>" concatenates the raptor-specific options with the template
-            applicationIdSuffix ".raptor"
-            manifestPlaceholders.isRaptorEnabled = "true"
-            matchingFallbacks = ['release']
-        }
         nightly releaseTemplate >> {
             buildConfigField "boolean", "IS_RELEASED", "true"
         }

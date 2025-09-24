@@ -25,14 +25,6 @@ _ALL_VARIANTS = [
         "name": "debug",
     }, {
         "apks": [
-            {"abi": "arm64-v8a", "fileName": "app-arm64-v8a-raptor-unsigned.apk"},
-            {"abi": "armeabi-v7a", "fileName": "app-armeabi-v7a-raptor-unsigned.apk"},
-            {"abi": "x86_64", "fileName": "app-x86_64-raptor-unsigned.apk"},
-        ],
-        "build_type": "raptor",
-        "name": "raptor",
-    }, {
-        "apks": [
             {"abi": "arm64-v8a", "fileName": "app-arm64-v8a-nightly-unsigned.apk"},
             {"abi": "armeabi-v7a", "fileName": "app-armeabi-v7a-nightly-unsigned.apk"},
             {"abi": "x86_64", "fileName": "app-x86_64-nightly-unsigned.apk"},
