@@ -18,8 +18,13 @@ import groovy.json.JsonOutput
 android {
     defaultConfig {
         applicationId "org.mozilla.reference.browser"
+        buildToolsVersion Config.buildToolsVersion
+        compileSdk {
+            version = release(Config.compileSdkMajorVersion) {
+                minorApiLevel = Config.compileSdkMinorVersion
+            }
+        }
         minSdkVersion Config.minSdkVersion
-        compileSdk = Config.compileSdkVersion
         targetSdkVersion Config.targetSdkVersion
         versionCode 1
         versionName Config.generateDebugVersionName()
