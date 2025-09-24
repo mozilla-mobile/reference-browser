@@ -5,7 +5,6 @@
 package org.mozilla.reference.browser.ui.robots
 
 import android.os.Build
-import android.util.Log
 import androidx.test.uiautomator.UiSelector
 import org.mozilla.reference.browser.helpers.TestAssetHelper.waitingTime
 import org.mozilla.reference.browser.helpers.TestAssetHelper.waitingTimeShort
