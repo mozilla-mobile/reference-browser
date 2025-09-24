@@ -6,11 +6,9 @@ package org.mozilla.reference.browser.autofill
 
 import android.content.Context
 import android.content.Intent
-import android.os.Build
 import android.provider.Settings
 import android.util.AttributeSet
 import android.view.autofill.AutofillManager
-import androidx.annotation.RequiresApi
 import androidx.appcompat.widget.SwitchCompat
 import androidx.core.net.toUri
 import androidx.preference.Preference

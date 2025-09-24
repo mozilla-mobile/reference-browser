@@ -5,11 +5,9 @@
 package org.mozilla.reference.browser.autofill
 
 import android.graphics.Color
-import android.os.Build
 import android.os.Bundle
 import androidx.activity.SystemBarStyle
 import androidx.activity.enableEdgeToEdge
-import androidx.annotation.RequiresApi
 import mozilla.components.feature.autofill.AutofillConfiguration
 import mozilla.components.feature.autofill.ui.AbstractAutofillUnlockActivity
 import mozilla.components.support.ktx.android.view.setupPersistentInsets

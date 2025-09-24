@@ -13,7 +13,6 @@ import android.provider.Settings
 import android.view.View
 import android.widget.EditText
 import android.widget.Toast
-import android.widget.Toast.LENGTH_SHORT
 import androidx.appcompat.app.AlertDialog
 import androidx.preference.Preference
 import androidx.preference.Preference.OnPreferenceChangeListener

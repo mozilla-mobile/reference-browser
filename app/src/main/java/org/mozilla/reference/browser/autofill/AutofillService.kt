@@ -4,8 +4,6 @@
 
 package org.mozilla.reference.browser.autofill
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import mozilla.components.feature.autofill.AbstractAutofillService
 import mozilla.components.feature.autofill.AutofillConfiguration
 import org.mozilla.reference.browser.ext.components
