@@ -42,55 +42,6 @@ def add_variants(config, tasks):
                 test["primary-dependency"] = dep_task
                 yield test
 
-
-@transforms.add
-def build_raptor_task(config, tasks):
-    for task in tasks:
-        signing = task.pop("primary-dependency")
-        build_type = task["attributes"]["build-type"]
-        abi = task["attributes"]["abi"]
-        apk = task["attributes"]["apk"]
-
-        test_name = task.pop("test-name")
-
-        task["name"] = "{}-{}-{}".format(task["name"], build_type, abi)
-        task["description"] = "{}: {}-{}".format(task["description"], build_type, abi)
-
-        resolve_keyed_by(task, "worker-type", item_name=task["name"], **{"abi": abi})
-
-        task["treeherder"] = inherit_treeherder_from_dep(task, signing)
-        task["treeherder"]["platform"] += f"-{abi}"
-        task["dependencies"]["signing"] = signing.label
-
-        extra_config = {
-            "installer_url": f"<signing/{apk}>",
-            "test_packages_url": "<geckoview-nightly/public/build/en-US/target.test_packages.json>",
-        }
-        env = task["worker"]["env"]
-        env["EXTRA_MOZHARNESS_CONFIG"] = {
-            "artifact-reference": json.dumps(extra_config, sort_keys=True)
-        }
-        env["GECKO_HEAD_REV"] = "default"
-        env["MOZILLA_BUILD_URL"] = {"artifact-reference": f"<signing/{apk}>"}
-        env["MOZHARNESS_URL"] = {
-            "artifact-reference": "<geckoview-nightly/public/build/en-US/mozharness.zip>"
-        }
-
-        worker = task["worker"]
-        worker.setdefault("mounts", []).append(
-            {
-                "content": {
-                    "url": "https://hg.mozilla.org/mozilla-central/raw-file/default/taskcluster/scripts/tester/test-linux.sh"
-                },
-                "file": "./test-linux.sh",
-            }
-        )
-        task["run"]["command"].append(f"--test={test_name}")
-        task["run"]["command"].extend(task.pop("args", []))
-
-        yield task
-
-
 @transforms.add
 def fill_email_data(config, tasks):
     product_name = config.graph_config['taskgraph']['repositories']['mobile']['name']

@@ -17,7 +17,7 @@ job-template:
     description: Sign Reference Browser
     index:
         by-build-type:
-            (nightly|raptor):
+            (nightly):
                 type: signing
             default: {}
     treeherder:
