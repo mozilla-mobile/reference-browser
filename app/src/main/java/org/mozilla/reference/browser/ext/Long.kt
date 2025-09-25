@@ -11,7 +11,11 @@ import java.util.Calendar
 import java.util.Date
 import java.util.GregorianCalendar
 
-@Suppress("MagicNumber")
+/**
+ * Returns a human-readable string describing how long ago a given timestamp occurred,
+ * relative to this `Long` value (typically representing the current system time in millis).
+ *
+ */
 fun Long.timeSince(
     context: Context,
     time: Long,
