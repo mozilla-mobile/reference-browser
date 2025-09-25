@@ -197,6 +197,9 @@ class ToolbarIntegration(
         toolbar.display.colors = toolbar.display.colors.copy(
             text = ResourcesCompat.getColor(context.resources, colorsR.color.photonWhite, context.theme),
         )
+        toolbar.edit.colors = toolbar.edit.colors.copy(
+            text = ResourcesCompat.getColor(context.resources, colorsR.color.photonWhite, context.theme),
+        )
 
         ImeInsetsSynchronizer.setup(
             targetView = toolbar,
