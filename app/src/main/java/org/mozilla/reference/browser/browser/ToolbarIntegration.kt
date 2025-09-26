@@ -175,28 +175,35 @@ class ToolbarIntegration(
     private val menuController: MenuController = BrowserMenuController()
 
     init {
-        toolbar.display.indicators = listOf(
-            DisplayToolbar.Indicators.SECURITY,
-            DisplayToolbar.Indicators.TRACKING_PROTECTION,
-        )
-        toolbar.display.displayIndicatorSeparator = true
-        toolbar.display.menuController = menuController
+        toolbar.display.apply {
+            indicators = listOf(
+                DisplayToolbar.Indicators.SECURITY,
+                DisplayToolbar.Indicators.TRACKING_PROTECTION,
+            )
+            displayIndicatorSeparator = true
+            menuController = menuController
+            hint = context.getString(R.string.toolbar_hint)
 
-        toolbar.display.hint = context.getString(R.string.toolbar_hint)
-        toolbar.edit.hint = context.getString(R.string.toolbar_hint)
+            setUrlBackground(
+                ResourcesCompat.getDrawable(context.resources, R.drawable.url_background, context.theme),
+            )
+            colors = colors.copy(
+                text = ResourcesCompat.getColor(context.resources, colorsR.color.photonWhite, context.theme),
+            )
+        }
+
+        toolbar.edit.apply {
+            hint = context.getString(R.string.toolbar_hint)
+            colors = colors.copy(
+                text = ResourcesCompat.getColor(context.resources, colorsR.color.photonWhite, context.theme),
+            )
+        }
 
         ToolbarAutocompleteFeature(toolbar).apply {
             updateAutocompleteProviders(
                 listOf(historyStorage, shippedDomainsProvider),
             )
         }
-
-        toolbar.display.setUrlBackground(
-            ResourcesCompat.getDrawable(context.resources, R.drawable.url_background, context.theme),
-        )
-        toolbar.display.colors = toolbar.display.colors.copy(
-            text = ResourcesCompat.getColor(context.resources, colorsR.color.photonWhite, context.theme),
-        )
 
         ImeInsetsSynchronizer.setup(
             targetView = toolbar,
