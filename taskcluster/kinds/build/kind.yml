@@ -50,10 +50,6 @@ tasks:
         include-shippable-secrets: true
         run:
             gradlew: ["-PcrashReportEnabled=true", "-Ptelemetry=true", "assembleNightly"]
-    raptor:
-        run-on-tasks-for: [github-push]
-        run:
-            gradlew: ["assembleRaptor"]
     debug:
         attributes:
             code-review: true

@@ -41,12 +41,6 @@ tasks:
         include-nightly-version: true
         run:
             gradlew: ['clean', 'testNightlyUnitTest']
-    raptor:
-        run-on-tasks-for:
-            - github-push
-            - github-pull-request
-        run:
-            gradlew: ['clean', 'testRaptorUnitTest']
     debug:
         attributes:
             code-review: true
