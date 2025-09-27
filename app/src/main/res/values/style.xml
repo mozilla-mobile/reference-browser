@@ -3,7 +3,7 @@
    - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
 
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <style name="AppThemeNotActionBar" parent="Theme.Material3.DayNight.NoActionBar">
+    <style name="AppThemeNotActionBar" parent="Theme.Material3.Dark.NoActionBar">
         <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
 
         <item name="colorPrimary">@color/dark</item>
@@ -15,7 +15,7 @@
         <item name="android:windowOptOutEdgeToEdgeEnforcement" tools:targetApi="35">true</item>
     </style>
 
-    <style name="AppTheme" parent="Theme.Material3.DayNight">
+    <style name="AppTheme" parent="Theme.Material3.Dark">
         <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
 
         <item name="colorPrimary">@color/dark</item>
