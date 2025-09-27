@@ -172,7 +172,7 @@ class ToolbarIntegration(
         )
     }
 
-    private val menuController: MenuController = BrowserMenuController()
+    private val browserMenuController: MenuController = BrowserMenuController()
 
     init {
         toolbar.display.apply {
@@ -181,7 +181,7 @@ class ToolbarIntegration(
                 DisplayToolbar.Indicators.TRACKING_PROTECTION,
             )
             displayIndicatorSeparator = true
-            menuController = menuController
+            menuController = browserMenuController
             hint = context.getString(R.string.toolbar_hint)
 
             setUrlBackground(
@@ -234,7 +234,7 @@ class ToolbarIntegration(
                 .map { state -> state.selectedTab }
                 .distinctUntilChanged()
                 .collect { tab ->
-                    menuController.submitList(menuItems(tab))
+                    browserMenuController.submitList(menuItems(tab))
                 }
         }
     }
