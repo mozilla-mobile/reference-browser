@@ -19,8 +19,8 @@ RUN apt-get update -qq \
 
 ENV NEXUS_ARCHIVE='nexus-bundle.tar.gz' \
     NEXUS_ROOT='/opt/sonatype/nexus' \
-    NEXUS_SHA1SUM=0fcb4f002eec0cbad6b421b90a8fe99959d78e93 \
-    NEXUS_VERSION=2.15.1-02 \
+    NEXUS_SHA1SUM=5af5a26fc7587bf7f21ded5832189f485e6142ed \
+    NEXUS_VERSION=2.15.2-03 \
     NEXUS_WORK=/builds/worker/workspace/nexus
 
 RUN mkdir -p "$NEXUS_ROOT" \
