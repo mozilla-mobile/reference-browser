@@ -13,7 +13,7 @@ kotlinx-coroutines = "1.10.2"
 material = "1.13.0"
 
 # JNA
-jna = "5.18.0"
+jna = "5.18.1"
 
 # AndroidX
 androidx-activity = "1.11.0"
