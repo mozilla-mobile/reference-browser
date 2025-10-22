@@ -50,8 +50,8 @@ ktlint = "1.7.1"
 hamcrest = "1.3"
 jacoco = "0.8.14"
 junit = "4.13.2"
-okhttp = "5.2.0"
-okio = "3.16.0"
+okhttp = "5.2.1"
+okio = "3.16.2"
 
 [libraries]
 # Kotlin
