@@ -37,7 +37,10 @@ class SettingsActivity :
             onBackPressedDispatcher.onBackPressed()
             true
         }
-        else -> super.onOptionsItemSelected(item)
+
+        else -> {
+            super.onOptionsItemSelected(item)
+        }
     }
 
     override fun updateTitle(titleResId: Int) {

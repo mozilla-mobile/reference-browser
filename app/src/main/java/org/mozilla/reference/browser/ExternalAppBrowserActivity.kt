@@ -26,6 +26,7 @@ class ExternalAppBrowserActivity : BrowserActivity() {
                 WebAppManifest.DisplayMode.MINIMAL_UI,
                 WebAppManifest.DisplayMode.BROWSER,
                 -> null
+
                 else -> null
             }
 
