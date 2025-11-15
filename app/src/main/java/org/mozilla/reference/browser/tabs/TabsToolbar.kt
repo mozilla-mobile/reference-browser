@@ -38,6 +38,7 @@ class TabsToolbar
                     }
                     closeTabsTray?.invoke()
                 }
+
                 R.id.closeTab -> {
                     when (isPrivateTray) {
                         true -> tabsUseCases.removePrivateTabs.invoke()

@@ -22,6 +22,7 @@ class AddToHomeScreenRobot {
         when (Build.VERSION.SDK_INT) {
             // For Android Oreo(API 26) to Android 11(API 30), click the "Add Automatically" button
             in Build.VERSION_CODES.O..Build.VERSION_CODES.R -> clickAddAutomaticallyButton()
+
             // For Android 12(API 31) to Vanilla Ice Cream(API 35), click the "Add to Home Screen" button
             in Build.VERSION_CODES.S..Build.VERSION_CODES.VANILLA_ICE_CREAM -> clickAddToHomeScreenButton()
         }
