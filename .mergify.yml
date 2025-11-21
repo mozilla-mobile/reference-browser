@@ -1,6 +1,8 @@
 queue_rules:
   - name: default
-    conditions:
+    merge_conditions:
+      - status-success=pr-complete
+    queue_conditions:
       - status-success=pr-complete
     merge_method: rebase
     branch_protection_injection_mode: none
