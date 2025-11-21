@@ -6,6 +6,7 @@ queue_rules:
     branch_protection_injection_mode: none
     merge_bot_account: jonalmeida
     autoqueue: true
+    allow_inplace_checks: true
 pull_request_rules:
   - name: MickeyMoz - Auto Merge
     conditions:
