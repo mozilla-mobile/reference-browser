@@ -7,7 +7,6 @@ queue_rules:
     merge_method: rebase
     branch_protection_injection_mode: none
     merge_bot_account: jonalmeida
-    autoqueue: true
 pull_request_rules:
   - name: MickeyMoz - Auto Merge
     conditions:
