@@ -1,8 +1,15 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
 import io.gitlab.arturbosch.detekt.Detekt
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 buildscript {
+    dependencies {
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin") {
+            version { strictly(libs.versions.kotlin.get()) }
+        }
+    }
+
     repositories {
         if (project.hasProperty("googleRepo")) {
             maven {
@@ -31,7 +38,6 @@ plugins {
     alias libs.plugins.compose.compiler apply false
     alias libs.plugins.dependency.analysis
     alias libs.plugins.detekt
-    alias libs.plugins.kotlin.android apply false
 }
 
 allprojects {
@@ -88,9 +94,6 @@ subprojects {
             }
 
             android {
-                kotlinOptions {
-                    kotlinOptions.allWarningsAsErrors = true
-                }
 
                 testOptions {
                     unitTests {
@@ -101,6 +104,12 @@ subprojects {
                 lintOptions {
                     warningsAsErrors = true
                     abortOnError = true
+                }
+            }
+
+            tasks.withType(KotlinCompile).configureEach {
+                compilerOptions {
+                    allWarningsAsErrors = true
                 }
             }
 

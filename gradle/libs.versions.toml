@@ -3,7 +3,7 @@
 android-components = "147.0.20251201213546"
 
 # AGP
-android-gradle-plugin = "8.13.1"
+android-gradle-plugin = "9.0.0-beta03"
 
 # Kotlin
 kotlin = "2.2.21"
@@ -193,4 +193,3 @@ android-application = { id = "com.android.application", version.ref = "android-g
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 dependency-analysis = { id = "com.autonomousapps.dependency-analysis", version.ref = "dependency-analysis" }
 detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
