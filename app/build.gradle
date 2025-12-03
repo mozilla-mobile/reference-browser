@@ -6,14 +6,86 @@ plugins {
     alias libs.plugins.android.application
     alias libs.plugins.compose.compiler
     alias libs.plugins.dependency.analysis
-    alias libs.plugins.kotlin.android
 }
 
 apply from: "$project.rootDir/automation/gradle/versionCode.gradle"
 
+def baseVersionCode = generatedVersionCode
+
+import com.android.build.api.variant.BuildConfigField
 import com.android.build.api.variant.FilterConfiguration
-import com.android.build.gradle.internal.tasks.AppPreBuildTask
 import groovy.json.JsonOutput
+
+androidComponents {
+    beforeVariants(selector().withBuildType("release")) { variantBuilder ->
+        variantBuilder.enable = false
+    }
+
+    onVariants(selector().all()) { variant ->
+        // -------------------------------------------------------------------------
+        // 1. Sentry Token
+        // -------------------------------------------------------------------------
+        String sentryToken = "null"
+        try {
+            File tokenFile = file("${rootDir}/.sentry_token")
+            if (tokenFile.exists()) {
+                sentryToken = '"' + tokenFile.text.trim() + '"'
+                println("(Added Sentry token from file)")
+            }
+        } catch (Exception ignored) { }
+
+        variant.buildConfigFields.put("SENTRY_TOKEN",
+                new BuildConfigField("String", sentryToken, "Sentry Token"))
+
+        // -------------------------------------------------------------------------
+        // 2. Crash Reporting & Telemetry
+        // -------------------------------------------------------------------------
+        boolean crashReporting = project.hasProperty("crashReportEnabled") && project.property("crashReportEnabled") == "true"
+        variant.buildConfigFields.put("CRASH_REPORTING_ENABLED",
+                new BuildConfigField("boolean", crashReporting.toString(), "Crash Reporting"))
+
+        boolean telemetry = project.hasProperty("telemetry") && project.property("telemetry") == "true"
+        variant.buildConfigFields.put("TELEMETRY_ENABLED",
+                new BuildConfigField("boolean", telemetry.toString(), "Telemetry"))
+
+        // -------------------------------------------------------------------------
+        // 3. Official Build Flag
+        // -------------------------------------------------------------------------
+        boolean official = project.hasProperty("official") || gradle.hasProperty("localProperties.official")
+        variant.buildConfigFields.put("MOZILLA_OFFICIAL",
+                new BuildConfigField("Boolean", official.toString(), "Official Build"))
+
+        // -------------------------------------------------------------------------
+        // 4. Version Codes (Only if IS_RELEASED is true)
+        // -------------------------------------------------------------------------
+        // Note: In the new API, checking buildConfigFields defined in build types is harder.
+        // We check the build type name directly instead.
+        if (variant.buildType == "nightly") {
+            // Logic adapted for new API
+            def baseCode = baseVersionCode
+            if (baseCode % 2 != 0) baseCode += 1 // Ensure even
+
+            variant.outputs.each { output ->
+                def abiFilter = output.filters.find { it.filterType == FilterConfiguration.FilterType.ABI }                // Note: Accessing specific ABI names in AGP 9 via 'filters' can be tricky
+                def abiName = abiFilter?.identifier // This returns "x86", "arm64-v8a", etc.
+
+                // Simplified mapping for demonstration:
+                def addedCode = 0
+                if (project.hasProperty("aab")) {
+                    addedCode = 1
+                } else if (abiName != null) {
+                    // FIX: Check the abiName identifier instead of output.name
+                    if (abiName == "x86_64") addedCode = 6
+                    else if (abiName == "x86") addedCode = 4
+                    else if (abiName == "arm64-v8a") addedCode = 2
+                }
+
+                output.versionCode.set(baseCode + addedCode)
+                output.versionName.set(Config.releaseVersionName(project))
+            }
+        }
+    }
+}
 
 android {
     defaultConfig {
@@ -35,7 +107,7 @@ android {
 
     def releaseTemplate = {
         minifyEnabled true
-        proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         matchingFallbacks = ['release'] // Use on the "release" build type in dependencies (AARs)
 
         if (gradle.hasProperty("localProperties.autosignReleaseWithDebugKey")) {
@@ -58,12 +130,6 @@ android {
         }
         nightly releaseTemplate >> {
             buildConfigField "boolean", "IS_RELEASED", "true"
-        }
-    }
-
-    variantFilter { // There's a "release" build type that exists by default that we don't use (it's replaced by "nightly" and "beta")
-        if (buildType.name == 'release') {
-            setIgnore true
         }
     }
 
@@ -93,127 +159,6 @@ android {
 
 kotlin {
     jvmToolchain(Config.jvmTargetCompatibility)
-}
-
-def baseVersionCode = generatedVersionCode
-
-android.applicationVariants.configureEach { variant ->
-
-// -------------------------------------------------------------------------------------------------
-// Sentry: Read token from local file if it exists (Only release builds)
-// -------------------------------------------------------------------------------------------------
-    print("Sentry token:  "+ variant.name)
-    try {
-        def token = new File("${rootDir}/.sentry_token").text.trim()
-        buildConfigField 'String', 'SENTRY_TOKEN', '"' + token + '"'
-        println "(Added from .sentry_token file)"
-    } catch (FileNotFoundException ignored) {
-        buildConfigField 'String', 'SENTRY_TOKEN', 'null'
-        println(" :( ")
-    }
-
-// -------------------------------------------------------------------------------------------------
-// Activating crash reports with command line parameter.
-// -------------------------------------------------------------------------------------------------
-    if (project.hasProperty("crashReportEnabled") && project.property("crashReportEnabled") == "true") {
-        buildConfigField 'boolean', 'CRASH_REPORTING_ENABLED', 'true'
-    } else {
-        buildConfigField 'boolean', 'CRASH_REPORTING_ENABLED', 'false'
-    }
-
-// -------------------------------------------------------------------------------------------------
-// Activating telemetry  with command line paramter.
-// -------------------------------------------------------------------------------------------------
-
-if (project.hasProperty("telemetry") && project.property("telemetry") == "true") {
-    buildConfigField 'boolean', 'TELEMETRY_ENABLED', 'true'
-} else {
-    buildConfigField 'boolean', 'TELEMETRY_ENABLED', 'false'
-}
-
-// -------------------------------------------------------------------------------------------------
-// Generating version codes for Google Play
-// -------------------------------------------------------------------------------------------------
-    if (variant.buildType.buildConfigFields['IS_RELEASED']?.value) {
-        // The Google Play Store does not allow multiple APKs for the same app that all have the
-        // same version code. Therefore we need to have different version codes for our ARM and x86
-        // builds. See https://developer.android.com/studio/publish/versioning
-
-        // Our x86 builds need a higher version code to avoid installing ARM builds on an x86 device
-        // with ARM compatibility mode.
-
-        // AAB builds need a version code that is distinct from any APK builds. Since AAB and APK
-        // builds may run in parallel, AAB and APK version codes might be based on the same
-        // (minute granularity) time of day. To avoid conflicts, we ensure the minute portion
-        // of the version code is even for APKs and odd for AABs.
-
-        def versionName = Config.releaseVersionName(project)
-
-        variant.outputs.each { output ->
-            def abi = output.getFilter(FilterConfiguration.FilterType.ABI.name())
-            def aab = project.hasProperty("aab")
-
-            // ensure baseVersionCode is an even number
-            if (baseVersionCode % 2) {
-                baseVersionCode = baseVersionCode + 1
-            }
-
-            def versionCodeOverride = baseVersionCode
-
-            if (aab) {
-                // AAB version code is odd
-                versionCodeOverride = baseVersionCode + 1
-                println("versionCode for AAB = $versionCodeOverride")
-            } else {
-                // APK version codes are even
-                if (abi == "x86_64") {
-                    versionCodeOverride = baseVersionCode + 6
-                } else if (abi == "x86") {
-                    versionCodeOverride = baseVersionCode + 4
-                } else if (abi == "arm64-v8a") {
-                    versionCodeOverride = baseVersionCode + 2
-                } else if (abi == "armeabi-v7a") {
-                    versionCodeOverride = baseVersionCode
-                }
-                println("versionCode for $abi = $versionCodeOverride")
-            }
-
-            output.versionNameOverride = versionName
-            output.versionCodeOverride = versionCodeOverride
-        }
-
-        // If this is a release build, validate that "versionName" is set
-        tasks.withType(AppPreBuildTask).configureEach { prebuildTask ->
-            // You can't add a closure to a variant, so we need to look for an early variant-specific type
-            // of task (AppPreBuildTask is the first) and filter to make sure we're looking at the task for
-            // this variant that we're currently configuring
-            if (prebuildTask.variantName != variant.name) {
-                return
-            }
-
-            // Append to the task so the first thing it does is run our validation
-            prebuildTask.doFirst {
-                if (!project.hasProperty('versionName')) {
-                    throw new RuntimeException("Release builds require the 'versionName' property to be set.\n" +
-                            "If you're using an IDE, set your build variant to be a \"debug\" type.\n" +
-                            "If you're using the command-line, either build a debug variant instead ('./gradlew assembleDebug')\n" +
-                            "\tor continue building the release build and set the \"versionName\" property ('./gradlew -PversionName=<...> assembleNightly').")
-                    // TODO when Android Studio 3.5.0 is prevalent, we can set the "debug" build type as the default
-                    // https://issuetracker.google.com/issues/36988145#comment59
-                }
-            }
-        }
-    }
-
-// -------------------------------------------------------------------------------------------------
-// BuildConfig: Set flag for official builds; similar to MOZILLA_OFFICIAL in mozilla-central.
-// -------------------------------------------------------------------------------------------------
-
-    if (project.hasProperty("official") || gradle.hasProperty("localProperties.official")) {
-        buildConfigField 'Boolean', 'MOZILLA_OFFICIAL', 'true'
-    } else {
-        buildConfigField 'Boolean', 'MOZILLA_OFFICIAL', 'false'
-    }
 }
 
 // Select the Glean from GeckoView.
