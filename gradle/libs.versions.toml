@@ -1,9 +1,9 @@
 [versions]
 # Android Components
-android-components = "148.0.20251217091959"
+android-components = "148.0.20251218095601"
 
 # AGP
-android-gradle-plugin = "9.0.0-beta05"
+android-gradle-plugin = "9.0.0-rc01"
 
 # Kotlin
 kotlin = "2.3.0"
@@ -55,6 +55,7 @@ okio = "3.16.4"
 
 [libraries]
 # Kotlin
+kotlin-gradle-plugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
 kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "kotlinx-coroutines" }
 
 # Google

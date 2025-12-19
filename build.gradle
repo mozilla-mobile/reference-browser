@@ -5,9 +5,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 buildscript {
     dependencies {
-        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin") {
-            version { strictly(libs.versions.kotlin.get()) }
-        }
+        classpath(libs.kotlin.gradle.plugin)
     }
 
     repositories {
