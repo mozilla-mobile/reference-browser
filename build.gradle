@@ -87,13 +87,11 @@ subprojects {
 
     afterEvaluate {
         if (it.hasProperty('android')) {
-            jacoco {
-                toolVersion = libs.versions.jacoco.get()
-            }
-
             android {
-
                 testOptions {
+                    testCoverage {
+                        jacocoVersion = libs.versions.jacoco.get()
+                    }
                     unitTests {
                         includeAndroidResources = true
                     }

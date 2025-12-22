@@ -19,7 +19,7 @@ pushd $PROJECT_DIR
 . taskcluster/scripts/toolchain/android-gradle-dependencies/before.sh
 
 # We build everything to be sure to fetch all dependencies
-./gradlew --no-daemon -PgoogleRepo='http://localhost:8081/nexus/content/repositories/google/' -PcentralRepo='http://localhost:8081/nexus/content/repositories/central/' assemble assembleAndroidTest bundle test lint ktlint detekt
+./gradlew --no-daemon -Pcoverage -PgoogleRepo='http://localhost:8081/nexus/content/repositories/google/' -PcentralRepo='http://localhost:8081/nexus/content/repositories/central/' assemble assembleAndroidTest bundle test lint ktlint detekt
 
 . taskcluster/scripts/toolchain/android-gradle-dependencies/after.sh
 
