@@ -88,7 +88,7 @@ subprojects {
     afterEvaluate {
         if (it.hasProperty('android')) {
             jacoco {
-                toolVersion = libs.versions.jacoco
+                toolVersion = libs.versions.jacoco.get()
             }
 
             android {
