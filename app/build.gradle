@@ -290,6 +290,8 @@ dependencies {
     implementation libs.mozilla.ui.tabcounter
     implementation libs.mozilla.ui.widgets
 
+    testImplementation libs.junit
+
     androidTestImplementation libs.androidx.test.espresso.core
     androidTestImplementation libs.androidx.test.espresso.idling.resources
     constraints {
