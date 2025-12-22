@@ -36,9 +36,11 @@ linux64-android-gradle-dependencies:
         script: android-gradle-dependencies.sh
         sparse-profile: null
         resources:
-            - taskcluster/scripts/toolchain/android-gradle-dependencies.sh
+            - '*.gradle'
+            - 'app/*.gradle'
+            - 'gradle.properties'
+            - 'gradle/**'
             - taskcluster/scripts/toolchain/android-gradle-dependencies/**
-            - gradle/libs.versions.toml
         toolchain-artifact: public/build/android-gradle-dependencies.tar.xz
         toolchain-alias: android-gradle-dependencies
     treeherder:
