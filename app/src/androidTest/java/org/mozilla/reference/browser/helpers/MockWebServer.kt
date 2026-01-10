@@ -7,10 +7,10 @@ package org.mozilla.reference.browser.helpers
 import android.net.Uri
 import android.os.Handler
 import android.os.Looper
-import okhttp3.mockwebserver.Dispatcher
-import okhttp3.mockwebserver.MockResponse
-import okhttp3.mockwebserver.MockWebServer
-import okhttp3.mockwebserver.RecordedRequest
+import mockwebserver3.Dispatcher
+import mockwebserver3.MockResponse
+import mockwebserver3.MockWebServer
+import mockwebserver3.RecordedRequest
 import okio.Buffer
 import okio.source
 import org.mozilla.reference.browser.helpers.ext.toUri
@@ -22,23 +22,21 @@ object MockWebServerHelper {
         val mockServer = MockWebServer()
         var uniquePath = 0
         val uris = mutableListOf<Uri>()
+
         messages.forEach { message ->
-            val response = MockResponse().setBody("<html><body>$message</body></html>")
+            val response = MockResponse(body = "<html><body>$message</body></html>")
             mockServer.enqueue(response)
+
             val endpoint = mockServer.url(uniquePath++.toString()).toString().toUri()!!
             uris += endpoint
         }
+
         return uris
     }
 }
 
 /**
  * A [MockWebServer] [Dispatcher] that will return Android assets in the body of requests.
- *
- * If the dispatcher is unable to read a requested asset, it will fail the test by throwing an
- * Exception on the main thread.
- *
- * @sample [org.mozilla.tv.firefox.ui.BasicNavigationTest.basicNavigationTest]
  */
 const val HTTP_OK = 200
 const val HTTP_NOT_FOUND = 404
@@ -50,16 +48,17 @@ class AndroidAssetDispatcher : Dispatcher() {
         val assetManager = androidx.test.platform.app.InstrumentationRegistry
             .getInstrumentation()
             .context.assets
-        try {
-            val pathWithoutQueryParams = Uri.parse(request.path!!.drop(1)).path
-            assetManager.open(pathWithoutQueryParams!!).use { inputStream ->
-                return fileToResponse(pathWithoutQueryParams, inputStream)
+
+        return try {
+            val assetPath = request.url.encodedPath.removePrefix("/")
+            val normalizedPath = Uri.parse(assetPath).path ?: assetPath
+
+            assetManager.open(normalizedPath).use { inputStream ->
+                fileToResponse(normalizedPath, inputStream)
             }
         } catch (e: IOException) {
-            // e.g. file not found.
-            // We're on a background thread so we need to forward the exception to the main thread.
             mainThreadHandler.postAtFrontOfQueue { throw e }
-            return MockResponse().setResponseCode(HTTP_NOT_FOUND)
+            MockResponse(code = HTTP_NOT_FOUND)
         }
     }
 }
@@ -69,10 +68,12 @@ private fun fileToResponse(
     path: String,
     file: InputStream,
 ): MockResponse =
-    MockResponse()
-        .setResponseCode(HTTP_OK)
-        .setBody(fileToBytes(file)!!)
+    MockResponse
+        .Builder()
+        .code(HTTP_OK)
+        .body(fileToBytes(file)!!)
         .addHeader("content-type: " + contentType(path))
+        .build()
 
 @Throws(IOException::class)
 private fun fileToBytes(file: InputStream): Buffer? {
