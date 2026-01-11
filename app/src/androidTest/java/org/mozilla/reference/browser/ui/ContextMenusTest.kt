@@ -5,7 +5,7 @@
 package org.mozilla.reference.browser.ui
 
 import android.os.Build
-import okhttp3.mockwebserver.MockWebServer
+import mockwebserver3.MockWebServer
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
@@ -43,7 +43,7 @@ class ContextMenusTest {
 
     @After
     fun tearDown() {
-        mockWebServer.shutdown()
+        runCatching { mockWebServer.close() }
 
         // Allow the System UI from reading the clipboard content
         if (Build.VERSION.SDK_INT == Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {

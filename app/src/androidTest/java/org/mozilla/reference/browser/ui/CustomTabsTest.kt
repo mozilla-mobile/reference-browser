@@ -7,7 +7,7 @@
 package org.mozilla.reference.browser.ui
 
 import androidx.test.rule.ActivityTestRule
-import okhttp3.mockwebserver.MockWebServer
+import mockwebserver3.MockWebServer
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
@@ -47,7 +47,7 @@ class CustomTabsTest {
 
     @After
     fun tearDown() {
-        mockWebServer.shutdown()
+        runCatching { mockWebServer.close() }
     }
 
     @Test

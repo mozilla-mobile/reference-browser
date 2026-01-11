@@ -10,7 +10,7 @@ import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.uiautomator.UiDevice
 import androidx.test.uiautomator.UiSelector
-import okhttp3.mockwebserver.MockWebServer
+import mockwebserver3.MockWebServer
 import org.junit.After
 import org.junit.Before
 import org.junit.Ignore
@@ -73,7 +73,7 @@ class TabTrayMenuTest {
 
     @After
     fun tearDown() {
-        mockWebServer.shutdown()
+        runCatching { mockWebServer.close() }
     }
 
     // This test verifies the tab tray menu items are all in place

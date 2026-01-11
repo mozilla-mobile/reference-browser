@@ -8,7 +8,7 @@ package org.mozilla.reference.browser.ui
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.uiautomator.UiDevice
-import okhttp3.mockwebserver.MockWebServer
+import mockwebserver3.MockWebServer
 import org.junit.After
 import org.junit.Before
 import org.junit.Ignore
@@ -59,7 +59,7 @@ class ThreeDotMenuTest {
 
     @After
     fun tearDown() {
-        mockWebServer.shutdown()
+        runCatching { mockWebServer.close() }
     }
 
     @Test

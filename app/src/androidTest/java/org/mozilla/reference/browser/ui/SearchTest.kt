@@ -4,7 +4,7 @@
 
 package org.mozilla.reference.browser.ui
 
-import okhttp3.mockwebserver.MockWebServer
+import mockwebserver3.MockWebServer
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
@@ -35,7 +35,7 @@ class SearchTest {
 
     @After
     fun tearDown() {
-        mockWebServer.shutdown()
+        runCatching { mockWebServer.close() }
     }
 
     @Test
