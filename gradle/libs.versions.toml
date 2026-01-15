@@ -1,12 +1,12 @@
 [versions]
 # Android Components
-android-components = "148.0.20260109202627"
+android-components = "149.0.20260113093356"
 
 # AGP
 android-gradle-plugin = "9.0.0-rc01"
 
 # Kotlin
-kotlin = "2.3.0"
+kotlin = "2.3.20-Beta1"
 kotlinx-coroutines = "1.10.2"
 
 # Google
