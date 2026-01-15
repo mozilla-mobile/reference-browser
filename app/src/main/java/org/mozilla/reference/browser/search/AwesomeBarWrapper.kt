@@ -14,6 +14,7 @@ import mozilla.components.compose.browser.awesomebar.AwesomeBar
 import mozilla.components.compose.browser.awesomebar.AwesomeBarDefaults
 import mozilla.components.compose.browser.awesomebar.AwesomeBarOrientation
 import mozilla.components.concept.awesomebar.AwesomeBar
+import mozilla.components.concept.awesomebar.AwesomeBar.GroupedSuggestion
 import mozilla.components.support.ktx.android.view.hideKeyboard
 import org.mozilla.reference.browser.ext.components
 
@@ -32,8 +33,10 @@ class AwesomeBarWrapper
     AwesomeBar {
     private val providers = mutableStateOf(emptyList<AwesomeBar.SuggestionProvider>())
     private val text = mutableStateOf("")
+    private val hiddenSuggestions = mutableStateOf(emptySet<GroupedSuggestion>())
     private var onEditSuggestionListener: ((String) -> Unit)? = null
     private var onStopListener: (() -> Unit)? = null
+    private var onSuggestionRemovedListener: ((GroupedSuggestion) -> Unit)? = null
 
     @Composable
     @Suppress("MagicNumber")
@@ -45,6 +48,7 @@ class AwesomeBarWrapper
         AwesomeBar(
             text = text.value,
             providers = providers.value,
+            hiddenSuggestions = hiddenSuggestions.value,
             orientation = AwesomeBarOrientation.BOTTOM,
             colors = AwesomeBarDefaults.colors(
                 background = Color(0xff222222),
@@ -60,6 +64,9 @@ class AwesomeBarWrapper
                 onEditSuggestionListener?.invoke(suggestion.editSuggestion!!)
             },
             onScroll = { hideKeyboard() },
+            onRemoveClicked = {
+                onSuggestionRemovedListener?.invoke(it)
+            },
             profiler = context.components.core.engine.profiler,
         )
     }
@@ -74,6 +81,7 @@ class AwesomeBarWrapper
         providers.value.any { current -> current.id == provider.id }
 
     override fun onInputChanged(text: String) {
+        hiddenSuggestions.value = emptySet()
         this.text.value = text
     }
 
@@ -93,5 +101,22 @@ class AwesomeBarWrapper
 
     override fun setOnStopListener(listener: () -> Unit) {
         onStopListener = listener
+    }
+
+    override fun setOnRemoveSuggestionButtonClicked(listener: (GroupedSuggestion) -> Unit) {
+        onSuggestionRemovedListener = listener
+    }
+
+    override fun updateHiddenSuggestions(hiddenSuggestions: Set<GroupedSuggestion>) {
+        this.hiddenSuggestions.value = hiddenSuggestions
+    }
+
+    /**
+     * Hide a new search suggestion.
+     *
+     * @param suggestion The new suggestion to hide.
+     */
+    fun addHiddenSuggestion(suggestion: GroupedSuggestion) {
+        this.hiddenSuggestions.value += suggestion
     }
 }
