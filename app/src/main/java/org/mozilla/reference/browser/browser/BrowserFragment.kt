@@ -6,10 +6,15 @@ package org.mozilla.reference.browser.browser
 
 import android.os.Bundle
 import android.view.View
+import androidx.lifecycle.lifecycleScope
 import androidx.preference.PreferenceManager
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import mozilla.components.browser.thumbnails.BrowserThumbnails
 import mozilla.components.browser.toolbar.BrowserToolbar
+import mozilla.components.concept.awesomebar.AwesomeBar.Suggestion
 import mozilla.components.concept.engine.EngineView
 import mozilla.components.feature.awesomebar.AwesomeBarFeature
 import mozilla.components.feature.awesomebar.provider.SearchSuggestionProvider
@@ -88,6 +93,10 @@ class BrowserFragment :
                 requireComponents.core.icons,
             ),
         )
+        awesomeBar.setOnRemoveSuggestionButtonClicked {
+            awesomeBar.addHiddenSuggestion(it)
+            deleteHistorySuggestion(it.suggestion)
+        }
 
         TabsToolbarFeature(
             toolbar = toolbar,
@@ -147,6 +156,15 @@ class BrowserFragment :
         activity?.supportFragmentManager?.beginTransaction()?.apply {
             replace(R.id.container, TabsTrayFragment())
             commit()
+        }
+    }
+
+    @OptIn(DelicateCoroutinesApi::class)
+    private fun deleteHistorySuggestion(suggestion: Suggestion) {
+        lifecycleScope.launch(Dispatchers.IO) {
+            suggestion.description?.let {
+                requireComponents.core.historyStorage.deleteHistoryMetadataForUrl(it)
+            }
         }
     }
 
