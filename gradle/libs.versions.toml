@@ -1,9 +1,9 @@
 [versions]
 # Android Components
-android-components = "149.0.20260113093356"
+android-components = "149.0.20260116093521"
 
 # AGP
-android-gradle-plugin = "9.0.0-rc01"
+android-gradle-plugin = "9.0.0"
 
 # Kotlin
 kotlin = "2.3.20-Beta1"
@@ -110,7 +110,7 @@ ktlint = { group = "com.pinterest.ktlint", name = "ktlint-cli", version.ref = "k
 hamcrest-core = { group = "org.hamcrest", name = "hamcrest-core", version.ref = "hamcrest" }
 hamcrest-library = { group = "org.hamcrest", name = "hamcrest-library", version.ref = "hamcrest" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
-mockwebserver = { group = "com.squareup.okhttp3", name = "mockwebserver", version.ref = "okhttp" }
+mockwebserver = { group = "com.squareup.okhttp3", name = "mockwebserver3", version.ref = "okhttp" }
 okhttp = { group = "com.squareup.okhttp3", name = "okhttp", version.ref = "okhttp" }
 okio = { group = "com.squareup.okio", name = "okio", version.ref = "okio" }
 
