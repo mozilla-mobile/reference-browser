@@ -6,6 +6,7 @@ pluginManagement {
 }
 
 include ':app'
+include ':macrobenchmark'
 
 def log(message) {
     logger.lifecycle("[settings] ${message}")

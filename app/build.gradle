@@ -136,6 +136,12 @@ android {
         nightly releaseTemplate >> {
             buildConfigField "boolean", "IS_RELEASED", "true"
         }
+        benchmark {
+            // Enable all the optimizations like in the release build type.
+            initWith(buildTypes.release)
+            matchingFallbacks = ["release"]
+            signingConfig = signingConfigs.debug
+        }
     }
 
     testOptions {

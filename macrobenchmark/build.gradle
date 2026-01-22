@@ -1,0 +1,57 @@
+
+plugins {
+    id("com.android.test")
+}
+
+android {
+    namespace = "org.mozilla.reference.browser.macrobenchmark"
+    compileSdk = 36
+
+    defaultConfig {
+        minSdk = 26
+        targetSdk = 36
+
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        benchmark {
+            debuggable = true
+            signingConfig = signingConfigs.debug
+            matchingFallbacks = ["release"]
+        }
+    }
+
+    targetProjectPath = ":app"
+    experimentalProperties["android.experimental.self-instrumenting"] = true
+}
+
+dependencies {
+    implementation libs.androidx.benchmark.macro.junit4
+    implementation libs.androidx.core.ktx
+    implementation libs.androidx.test.espresso.core
+    implementation libs.androidx.test.uiautomator
+    implementation libs.mockwebserver
+    implementation libs.androidx.test.junit
+}
+
+/**
+ * This fixes the dependency resolution issue with Glean Native. The glean gradle plugin does this
+ * and that's applied to the app module. Since there are no other uses of the glean plugin in the
+ * benchmark module, we do this manually here.
+ */
+configurations.configureEach {
+    resolutionStrategy.capabilitiesResolution.withCapability("org.mozilla.telemetry:glean-native") {
+        def toBeSelected = candidates.find { it.id instanceof ModuleComponentIdentifier && it.id.module.contains('geckoview') }
+        if (toBeSelected != null) {
+            select(toBeSelected)
+        }
+        because 'use GeckoView Glean instead of standalone Glean'
+    }
+}
+
+androidComponents {
+    beforeVariants(selector().all()) {
+        enabled = buildType == "benchmark"
+    }
+}

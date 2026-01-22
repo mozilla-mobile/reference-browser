@@ -1,0 +1,71 @@
+<!doctype html>
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Long Page</title>
+    <style>
+      :root {
+        --sat: 85%;
+        --light: 55%;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+      }
+      .panel {
+        height: 100vh;
+      }
+
+      .panel:nth-child(1) {
+        background: hsl(0 var(--sat) var(--light));
+      }
+      .panel:nth-child(2) {
+        background: hsl(36 var(--sat) var(--light));
+      }
+      .panel:nth-child(3) {
+        background: hsl(72 var(--sat) var(--light));
+      }
+      .panel:nth-child(4) {
+        background: hsl(108 var(--sat) var(--light));
+      }
+      .panel:nth-child(5) {
+        background: hsl(144 var(--sat) var(--light));
+      }
+      .panel:nth-child(6) {
+        background: hsl(180 var(--sat) var(--light));
+      }
+      .panel:nth-child(7) {
+        background: hsl(216 var(--sat) var(--light));
+      }
+      .panel:nth-child(8) {
+        background: hsl(252 var(--sat) var(--light));
+      }
+      .panel:nth-child(9) {
+        background: hsl(288 var(--sat) var(--light));
+      }
+      .panel:nth-child(10) {
+        background: hsl(324 var(--sat) var(--light));
+      }
+    </style>
+  </head>
+  <body>
+    <div class="panel"></div>
+    <div class="panel"></div>
+    <div class="panel"></div>
+    <div class="panel"></div>
+    <div class="panel"></div>
+    <div class="panel"></div>
+    <div class="panel"></div>
+    <div class="panel"></div>
+    <div class="panel"></div>
+    <div class="panel"></div>
+  </body>
+</html>
