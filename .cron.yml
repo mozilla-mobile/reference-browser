@@ -11,6 +11,7 @@ jobs:
           target-tasks-method: nightly
       when:
           - {hour: 9, minute: 0}
+      run-on-projects: [reference-browser]
     # Cannot name the following entry "bump-android-component" because the full hookId is larger
     # than 64 characters. For more details see: https://phabricator.services.mozilla.com/D67443
     - name: bump-android-comp
@@ -23,3 +24,4 @@ jobs:
           - {hour: 10, minute: 0}
           - {hour: 16, minute: 0}
           - {hour: 22, minute: 0}
+      run-on-projects: [reference-browser]
