@@ -38,7 +38,7 @@ androidx-test-espresso = "3.7.0"
 androidx-test-monitor = "1.8.0"
 androidx-test-orchestrator = "1.6.1"
 androidx-test-runner = "1.7.0"
-androidx-test-uiautomator = "2.3.0"
+androidx-test-uiautomator = "2.4.0-beta01"
 
 # Third Party Linting & Static Code Analysis
 dependency-analysis = "3.5.1"
