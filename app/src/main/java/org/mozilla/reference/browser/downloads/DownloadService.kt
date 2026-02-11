@@ -4,6 +4,7 @@
 
 package org.mozilla.reference.browser.downloads
 
+import android.os.Environment
 import mozilla.components.browser.state.store.BrowserStore
 import mozilla.components.feature.downloads.AbstractFetchDownloadService
 import mozilla.components.feature.downloads.DefaultPackageNameProvider
@@ -11,6 +12,8 @@ import mozilla.components.feature.downloads.DownloadEstimator
 import mozilla.components.feature.downloads.FileSizeFormatter
 import mozilla.components.feature.downloads.PackageNameProvider
 import mozilla.components.support.base.android.NotificationsDelegate
+import mozilla.components.support.utils.DefaultDownloadFileUtils
+import mozilla.components.support.utils.DownloadFileUtils
 import org.mozilla.reference.browser.ext.components
 
 class DownloadService : AbstractFetchDownloadService() {
@@ -19,5 +22,13 @@ class DownloadService : AbstractFetchDownloadService() {
     override val notificationsDelegate: NotificationsDelegate by lazy { components.notificationsDelegate }
     override val fileSizeFormatter: FileSizeFormatter by lazy { components.fileSizeFormatter }
     override val downloadEstimator: DownloadEstimator by lazy { components.downloadEstimator }
+    override val downloadFileUtils: DownloadFileUtils by lazy {
+        DefaultDownloadFileUtils(
+            context = applicationContext,
+            downloadLocation = {
+                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).path
+            },
+        )
+    }
     override val packageNameProvider: PackageNameProvider by lazy { DefaultPackageNameProvider(applicationContext) }
 }
