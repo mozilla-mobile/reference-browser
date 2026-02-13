@@ -8,6 +8,7 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import androidx.core.content.ContextCompat
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import mozilla.components.browser.menu2.BrowserMenuController
@@ -148,7 +149,7 @@ class CustomTabsIntegration(
     init {
         toolbar.display.menuController = menuController
 
-        store.flowScoped { flow ->
+        store.flowScoped(dispatcher = Dispatchers.Main) { flow ->
             flow
                 .map { state -> state.findCustomTab(sessionId) }
                 .distinctUntilChanged()
