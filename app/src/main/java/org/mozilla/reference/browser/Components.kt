@@ -8,12 +8,12 @@ import android.annotation.SuppressLint
 import android.content.Context
 import androidx.core.app.NotificationManagerCompat
 import mozilla.components.feature.autofill.AutofillConfiguration
-import mozilla.components.feature.downloads.DateTimeProvider
-import mozilla.components.feature.downloads.DefaultDateTimeProvider
 import mozilla.components.feature.downloads.DefaultFileSizeFormatter
 import mozilla.components.feature.downloads.DownloadEstimator
 import mozilla.components.feature.downloads.FileSizeFormatter
 import mozilla.components.support.base.android.NotificationsDelegate
+import mozilla.components.support.utils.DateTimeProvider
+import mozilla.components.support.utils.DefaultDateTimeProvider
 import org.mozilla.reference.browser.autofill.AutofillConfirmActivity
 import org.mozilla.reference.browser.autofill.AutofillSearchActivity
 import org.mozilla.reference.browser.autofill.AutofillUnlockActivity
