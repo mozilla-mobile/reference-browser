@@ -359,7 +359,7 @@ if (gradle.hasProperty('localProperties.dependencySubstitutions.geckoviewTopsrcd
 
 if (gradle.hasProperty('localProperties.autoPublish.android-components.dir')) {
     ext.acSrcDir = gradle."localProperties.autoPublish.android-components.dir"
-    apply from: "../${acSrcDir}/substitute-local-ac.gradle"
+    apply from: "${acSrcDir}/substitute-local-ac.gradle"
 }
 
 if (gradle.hasProperty('localProperties.autoPublish.application-services.dir')) {
