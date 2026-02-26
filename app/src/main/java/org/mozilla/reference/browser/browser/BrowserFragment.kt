@@ -95,7 +95,7 @@ class BrowserFragment :
         )
         awesomeBar.setOnRemoveSuggestionButtonClicked {
             awesomeBar.addHiddenSuggestion(it)
-            deleteHistorySuggestion(it.suggestion)
+            (it.suggestion as? Suggestion)?.let { s -> deleteHistorySuggestion(s) }
         }
 
         TabsToolbarFeature(

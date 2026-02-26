@@ -6,6 +6,7 @@ package org.mozilla.reference.browser.components
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.os.Environment
 import androidx.preference.PreferenceManager
 import mozilla.components.browser.engine.gecko.permission.GeckoSitePermissionsStorage
 import mozilla.components.browser.icons.BrowserIcons
@@ -43,6 +44,7 @@ import mozilla.components.lib.dataprotect.SecureAbove22Preferences
 import mozilla.components.service.location.LocationService
 import mozilla.components.service.sync.logins.SyncableLoginsStorage
 import mozilla.components.support.base.worker.Frequency
+import mozilla.components.support.utils.DefaultDownloadFileUtils
 import org.mozilla.reference.browser.AppRequestInterceptor
 import org.mozilla.reference.browser.BrowserActivity
 import org.mozilla.reference.browser.EngineProvider
@@ -100,7 +102,17 @@ class Core(
     val store by lazy {
         BrowserStore(
             middleware = listOf(
-                DownloadMiddleware(context, DownloadService::class.java, { false }),
+                DownloadMiddleware(
+                    applicationContext = context,
+                    downloadServiceClass = DownloadService::class.java,
+                    deleteFileFromStorage = { false },
+                    downloadFileUtils = DefaultDownloadFileUtils(
+                        context = context,
+                        downloadLocation = {
+                            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).path
+                        },
+                    ),
+                ),
                 ThumbnailsMiddleware(thumbnailStorage),
                 ReaderViewMiddleware(),
                 RegionMiddleware(
