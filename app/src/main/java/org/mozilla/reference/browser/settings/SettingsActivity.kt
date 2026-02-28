@@ -7,6 +7,7 @@ package org.mozilla.reference.browser.settings
 import android.graphics.Color
 import android.os.Bundle
 import android.view.MenuItem
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.SystemBarStyle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -22,6 +23,21 @@ class SettingsActivity :
         enableEdgeToEdge(SystemBarStyle.dark(Color.TRANSPARENT))
         super.onCreate(savedInstanceState)
         window.setupPersistentInsets(true)
+
+        onBackPressedDispatcher.addCallback(
+            this,
+            object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                val handled = supportFragmentManager.fragments.any {
+                    it is UserInteractionHandler && it.onBackPressed()
+                }
+                if (!handled) {
+                    remove()
+                    onBackPressedDispatcher.onBackPressed()
+                }
+            }
+        },
+        )
 
         if (savedInstanceState == null) {
             with(supportFragmentManager.beginTransaction()) {
@@ -45,16 +61,5 @@ class SettingsActivity :
 
     override fun updateTitle(titleResId: Int) {
         setTitle(titleResId)
-    }
-
-    @Suppress("MissingSuperCall", "OVERRIDE_DEPRECATION")
-    override fun onBackPressed() {
-        supportFragmentManager.fragments.forEach {
-            if (it is UserInteractionHandler && it.onBackPressed()) {
-                return
-            } else {
-                super.onBackPressedDispatcher.onBackPressed()
-            }
-        }
     }
 }
