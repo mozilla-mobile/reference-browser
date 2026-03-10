@@ -2,11 +2,9 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-@file:Suppress("DEPRECATION")
-
 package org.mozilla.reference.browser.ui
 
-import androidx.test.rule.ActivityTestRule
+import androidx.test.core.app.ActivityScenario
 import mockwebserver3.MockWebServer
 import org.junit.After
 import org.junit.Before
@@ -25,13 +23,6 @@ class CustomTabsTest {
 
     @get:Rule
     val activityTestRule = BrowserActivityTestRule()
-
-    @get:Rule
-    val intentReceiverActivityTestRule = ActivityTestRule(
-        IntentReceiverActivity::class.java,
-        true,
-        false,
-    )
 
     @Rule
     @JvmField
@@ -54,20 +45,19 @@ class CustomTabsTest {
     fun openCustomTabTest() {
         val customTabPage = TestAssetHelper.getGenericAsset(mockWebServer, 1)
 
-        intentReceiverActivityTestRule.launchActivity(
-            createCustomTabIntent(
-                customTabPage.url.toString(),
-            ),
-        )
-
-        customTabScreen {
-            verifyCloseButton()
-            verifyTrackingProtectionIcon()
-            verifySecurityIndicator()
-            verifyPageTitle(customTabPage.title)
-            verifyPageUrl(customTabPage.url.toString())
-            verifyActionButton()
-            verifyMenuButton()
+        ActivityScenario
+            .launch<IntentReceiverActivity>(
+            createCustomTabIntent(customTabPage.url.toString()),
+        ).use {
+            customTabScreen {
+                verifyCloseButton()
+                verifyTrackingProtectionIcon()
+                verifySecurityIndicator()
+                verifyPageTitle(customTabPage.title)
+                verifyPageUrl(customTabPage.url.toString())
+                verifyActionButton()
+                verifyMenuButton()
+            }
         }
     }
 
@@ -75,21 +65,20 @@ class CustomTabsTest {
     fun verifyCustomTabMenuItemsTest() {
         val customTabPage = TestAssetHelper.getGenericAsset(mockWebServer, 1)
 
-        intentReceiverActivityTestRule.launchActivity(
-            createCustomTabIntent(
-                customTabPage.url.toString(),
-            ),
-        )
-
-        customTabScreen {
-        }.openMainMenu {
-            verifyForwardButton()
-            verifyRefreshButton()
-            verifyStopButton()
-            verifyShareButton()
-            verifyRequestDesktopButton()
-            verifyFindInPageButton()
-            verifyOpenInBrowserButton()
+        ActivityScenario
+            .launch<IntentReceiverActivity>(
+            createCustomTabIntent(customTabPage.url.toString()),
+        ).use {
+            customTabScreen {
+            }.openMainMenu {
+                verifyForwardButton()
+                verifyRefreshButton()
+                verifyStopButton()
+                verifyShareButton()
+                verifyRequestDesktopButton()
+                verifyFindInPageButton()
+                verifyOpenInBrowserButton()
+            }
         }
     }
 
@@ -98,23 +87,22 @@ class CustomTabsTest {
         val pageLinks = TestAssetHelper.getGenericAsset(mockWebServer, 4)
         val genericURL = TestAssetHelper.getGenericAsset(mockWebServer, 1)
 
-        intentReceiverActivityTestRule.launchActivity(
-            createCustomTabIntent(
-                pageLinks.url.toString(),
-            ),
-        )
-
-        customTabScreen {
-            clickGenericLink("Link 1")
-            verifyPageTitle(genericURL.title)
-            verifyPageUrl(genericURL.url.toString())
-        }.goBack {
-            verifyPageTitle(pageLinks.title)
-            verifyPageUrl(pageLinks.url.toString())
-        }.openMainMenu {
-            clickForwardButton()
-            verifyPageTitle(genericURL.title)
-            verifyPageUrl(genericURL.url.toString())
+        ActivityScenario
+            .launch<IntentReceiverActivity>(
+            createCustomTabIntent(pageLinks.url.toString()),
+        ).use {
+            customTabScreen {
+                clickGenericLink("Link 1")
+                verifyPageTitle(genericURL.title)
+                verifyPageUrl(genericURL.url.toString())
+            }.goBack {
+                verifyPageTitle(pageLinks.title)
+                verifyPageUrl(pageLinks.url.toString())
+            }.openMainMenu {
+                clickForwardButton()
+                verifyPageTitle(genericURL.title)
+                verifyPageUrl(genericURL.url.toString())
+            }
         }
     }
 
@@ -122,16 +110,15 @@ class CustomTabsTest {
     fun customTabShareTest() {
         val customTabPage = TestAssetHelper.getGenericAsset(mockWebServer, 1)
 
-        intentReceiverActivityTestRule.launchActivity(
-            createCustomTabIntent(
-                customTabPage.url.toString(),
-            ),
-        )
-
-        customTabScreen {
-        }.openMainMenu {
-        }.clickShareButton {
-            verifyShareContentPanel()
+        ActivityScenario
+            .launch<IntentReceiverActivity>(
+            createCustomTabIntent(customTabPage.url.toString()),
+        ).use {
+            customTabScreen {
+            }.openMainMenu {
+            }.clickShareButton {
+                verifyShareContentPanel()
+            }
         }
     }
 
@@ -139,20 +126,19 @@ class CustomTabsTest {
     fun customTabRequestDesktopSiteTest() {
         val customTabPage = TestAssetHelper.getGenericAsset(mockWebServer, 1)
 
-        intentReceiverActivityTestRule.launchActivity(
-            createCustomTabIntent(
-                customTabPage.url.toString(),
-            ),
-        )
-
-        customTabScreen {
-        }.openMainMenu {
-            switchRequestDesktopSiteToggle()
-        }.openMainMenu {
-            verifyRequestDesktopSiteIsTurnedOn()
-            switchRequestDesktopSiteToggle()
-        }.openMainMenu {
-            verifyRequestDesktopSiteIsTurnedOff()
+        ActivityScenario
+            .launch<IntentReceiverActivity>(
+            createCustomTabIntent(customTabPage.url.toString()),
+        ).use {
+            customTabScreen {
+            }.openMainMenu {
+                switchRequestDesktopSiteToggle()
+            }.openMainMenu {
+                verifyRequestDesktopSiteIsTurnedOn()
+                switchRequestDesktopSiteToggle()
+            }.openMainMenu {
+                verifyRequestDesktopSiteIsTurnedOff()
+            }
         }
     }
 
@@ -160,16 +146,15 @@ class CustomTabsTest {
     fun customTabOpenInBrowserTest() {
         val customTabPage = TestAssetHelper.getGenericAsset(mockWebServer, 1)
 
-        intentReceiverActivityTestRule.launchActivity(
-            createCustomTabIntent(
-                customTabPage.url.toString(),
-            ),
-        )
-
-        customTabScreen {
-        }.openMainMenu {
-        }.clickOpenInBrowserButton {
-            verifyUrl(customTabPage.url.toString())
+        ActivityScenario
+            .launch<IntentReceiverActivity>(
+            createCustomTabIntent(customTabPage.url.toString()),
+        ).use {
+            customTabScreen {
+            }.openMainMenu {
+            }.clickOpenInBrowserButton {
+                verifyUrl(customTabPage.url.toString())
+            }
         }
     }
 }
