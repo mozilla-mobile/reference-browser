@@ -29,7 +29,7 @@ class BrowserActivityTestRule : ExternalResource() {
         get() {
             var result: BrowserActivity? = null
             scenario.onActivity { result = it }
-            return result!!
+            return checkNotNull(result) { "Activity unavailable — scenario may be in a terminal state" }
         }
 
     override fun before() {

@@ -4,7 +4,9 @@
 
 package org.mozilla.reference.browser.ui
 
+import android.content.ComponentName
 import androidx.test.core.app.ActivityScenario
+import androidx.test.platform.app.InstrumentationRegistry
 import mockwebserver3.MockWebServer
 import org.junit.After
 import org.junit.Before
@@ -28,6 +30,19 @@ class CustomTabsTest {
     @JvmField
     val retryTestRule = RetryTestRule(3)
 
+    // ActivityScenario.launch resolves intents via normal Android routing, so an ACTION_VIEW
+    // intent with an HTTP URL would resolve to the browser rather than IntentReceiverActivity.
+    // Setting the component explicitly forces it to launch within the test process.
+    private fun launchCustomTab(pageUrl: String) =
+        ActivityScenario.launch<IntentReceiverActivity>(
+        createCustomTabIntent(pageUrl).apply {
+            component = ComponentName(
+                InstrumentationRegistry.getInstrumentation().targetContext,
+                IntentReceiverActivity::class.java,
+            )
+        },
+    )
+
     @Before
     fun setUp() {
         mockWebServer = MockWebServer().apply {
@@ -45,10 +60,7 @@ class CustomTabsTest {
     fun openCustomTabTest() {
         val customTabPage = TestAssetHelper.getGenericAsset(mockWebServer, 1)
 
-        ActivityScenario
-            .launch<IntentReceiverActivity>(
-            createCustomTabIntent(customTabPage.url.toString()),
-        ).use {
+        launchCustomTab(customTabPage.url.toString()).use {
             customTabScreen {
                 verifyCloseButton()
                 verifyTrackingProtectionIcon()
@@ -65,10 +77,7 @@ class CustomTabsTest {
     fun verifyCustomTabMenuItemsTest() {
         val customTabPage = TestAssetHelper.getGenericAsset(mockWebServer, 1)
 
-        ActivityScenario
-            .launch<IntentReceiverActivity>(
-            createCustomTabIntent(customTabPage.url.toString()),
-        ).use {
+        launchCustomTab(customTabPage.url.toString()).use {
             customTabScreen {
             }.openMainMenu {
                 verifyForwardButton()
@@ -87,10 +96,7 @@ class CustomTabsTest {
         val pageLinks = TestAssetHelper.getGenericAsset(mockWebServer, 4)
         val genericURL = TestAssetHelper.getGenericAsset(mockWebServer, 1)
 
-        ActivityScenario
-            .launch<IntentReceiverActivity>(
-            createCustomTabIntent(pageLinks.url.toString()),
-        ).use {
+        launchCustomTab(pageLinks.url.toString()).use {
             customTabScreen {
                 clickGenericLink("Link 1")
                 verifyPageTitle(genericURL.title)
@@ -110,10 +116,7 @@ class CustomTabsTest {
     fun customTabShareTest() {
         val customTabPage = TestAssetHelper.getGenericAsset(mockWebServer, 1)
 
-        ActivityScenario
-            .launch<IntentReceiverActivity>(
-            createCustomTabIntent(customTabPage.url.toString()),
-        ).use {
+        launchCustomTab(customTabPage.url.toString()).use {
             customTabScreen {
             }.openMainMenu {
             }.clickShareButton {
@@ -126,10 +129,7 @@ class CustomTabsTest {
     fun customTabRequestDesktopSiteTest() {
         val customTabPage = TestAssetHelper.getGenericAsset(mockWebServer, 1)
 
-        ActivityScenario
-            .launch<IntentReceiverActivity>(
-            createCustomTabIntent(customTabPage.url.toString()),
-        ).use {
+        launchCustomTab(customTabPage.url.toString()).use {
             customTabScreen {
             }.openMainMenu {
                 switchRequestDesktopSiteToggle()
@@ -146,10 +146,7 @@ class CustomTabsTest {
     fun customTabOpenInBrowserTest() {
         val customTabPage = TestAssetHelper.getGenericAsset(mockWebServer, 1)
 
-        ActivityScenario
-            .launch<IntentReceiverActivity>(
-            createCustomTabIntent(customTabPage.url.toString()),
-        ).use {
+        launchCustomTab(customTabPage.url.toString()).use {
             customTabScreen {
             }.openMainMenu {
             }.clickOpenInBrowserButton {
