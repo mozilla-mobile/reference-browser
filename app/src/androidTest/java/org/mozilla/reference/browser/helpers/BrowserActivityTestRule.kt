@@ -2,24 +2,17 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-@file:Suppress("DEPRECATION")
-
 package org.mozilla.reference.browser.helpers
 
+import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.IdlingRegistry
-import androidx.test.rule.ActivityTestRule
+import org.junit.rules.ExternalResource
 import org.mozilla.reference.browser.BrowserActivity
 
 /**
  * A [org.junit.Rule] to handle shared test set up for tests on [BrowserActivity].
- *
- * @param initialTouchMode See [ActivityTestRule]
- * @param launchActivity See [ActivityTestRule]
  */
-class BrowserActivityTestRule(
-    initialTouchMode: Boolean = false,
-    launchActivity: Boolean = true,
-) : ActivityTestRule<BrowserActivity>(BrowserActivity::class.java, initialTouchMode, launchActivity) {
+class BrowserActivityTestRule : ExternalResource() {
     /**
      * Ensures the test doesn't advance until session page load is completed.
      *
@@ -29,16 +22,25 @@ class BrowserActivityTestRule(
      * implementation changes and the tests break. In that case, this code might be
      * broken because it's not used, and thus tested, at present.
      */
-
     private lateinit var loadingIdlingResource: SessionLoadedIdlingResource
+    private lateinit var scenario: ActivityScenario<BrowserActivity>
 
-    override fun beforeActivityLaunched() {
+    val activity: BrowserActivity
+        get() {
+            var result: BrowserActivity? = null
+            scenario.onActivity { result = it }
+            return result!!
+        }
+
+    override fun before() {
         loadingIdlingResource = SessionLoadedIdlingResource().also {
             IdlingRegistry.getInstance().register(it)
         }
+        scenario = ActivityScenario.launch(BrowserActivity::class.java)
     }
 
-    override fun afterActivityFinished() {
+    override fun after() {
+        scenario.close()
         IdlingRegistry.getInstance().unregister(loadingIdlingResource)
     }
 }
