@@ -8,6 +8,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import androidx.core.view.isVisible
+import androidx.lifecycle.lifecycleScope
 import mozilla.components.browser.toolbar.BrowserToolbar
 import mozilla.components.concept.engine.EngineView
 import mozilla.components.concept.engine.manifest.WebAppManifest
@@ -86,6 +87,7 @@ class ExternalAppBrowserFragment :
                 requireComponents.core.customTabsStore,
                 sessionId,
                 manifest,
+                scope = viewLifecycleOwner.lifecycleScope,
             ) { toolbarVisible ->
                 toolbar.isVisible = toolbarVisible
                 webAppToolbarShouldBeVisible = toolbarVisible
