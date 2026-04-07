@@ -9,11 +9,11 @@ import java.util.Locale
 
 object Config {
     // Synchronized build configuration for all modules
-    const val buildToolsVersion = "36.1.0"
-    const val compileSdkMajorVersion = 36
-    const val compileSdkMinorVersion = 1
+    const val buildToolsVersion = "37.0.0"
+    const val compileSdkMajorVersion = 37
+    const val compileSdkMinorVersion = 0
     const val minSdkVersion = 26
-    const val targetSdkVersion = 36
+    const val targetSdkVersion = 37
     const val jvmTargetCompatibility = 17
 
     @JvmStatic
