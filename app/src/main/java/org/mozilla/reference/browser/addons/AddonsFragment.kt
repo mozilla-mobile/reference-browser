@@ -95,7 +95,7 @@ class AddonsFragment :
                     Toast
                         .makeText(
                         activity,
-                        addonsR.string.mozac_feature_addons_failed_to_query_extensions,
+                        addonsR.string.mozac_feature_addons_failed_to_load_extensions,
                         Toast.LENGTH_SHORT,
                     ).show()
                 }
