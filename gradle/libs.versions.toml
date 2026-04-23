@@ -17,7 +17,7 @@ jna = "5.18.1"
 
 # AndroidX
 androidx-activity = "1.13.0"
-androidx-annotation = "1.9.1"
+androidx-annotation = "1.10.0"
 androidx-appcompat = "1.7.1"
 androidx-browser = "1.10.0"
 androidx-cardview = "1.0.0"
