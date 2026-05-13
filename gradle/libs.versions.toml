@@ -10,7 +10,7 @@ kotlin = "2.3.21"
 kotlinx-coroutines = "1.10.2"
 
 # Google
-material = "1.13.0"
+material = "1.14.0"
 
 # JNA
 jna = "5.18.1"
