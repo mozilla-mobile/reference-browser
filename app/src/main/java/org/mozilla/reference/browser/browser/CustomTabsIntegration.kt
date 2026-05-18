@@ -90,7 +90,7 @@ class CustomTabsIntegration(
             contentDescription = "Stop",
             icon = DrawableMenuIcon(
                 context,
-                mozilla.components.ui.icons.R.drawable.mozac_ic_stop,
+                mozilla.components.ui.icons.R.drawable.mozac_ic_cross_24,
                 tint = tint,
             ),
         ) {

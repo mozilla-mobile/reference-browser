@@ -71,7 +71,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end|bottom"
-        android:src="@drawable/mozac_ic_font"
+        android:src="@drawable/mozac_ic_reader_view_24"
         android:contentDescription="@string/reader_view_appearance_button"
         android:visibility="gone"
         android:layout_marginRight="16dp"
