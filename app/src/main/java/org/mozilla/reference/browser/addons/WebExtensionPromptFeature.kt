@@ -52,20 +52,18 @@ class WebExtensionPromptFeature(
         scope = store.flowScoped(dispatcher = mainDispatcher) { flow ->
             flow
                 .mapNotNull { state ->
-                state.webExtensionPromptRequest
-            }.distinctUntilChanged()
+                    state.webExtensionPromptRequest
+                }.distinctUntilChanged()
                 .collect { promptRequest ->
-                when (promptRequest) {
-                    is WebExtensionPromptRequest.AfterInstallation -> {
+                    if (promptRequest is WebExtensionPromptRequest.AfterInstallation) {
                         handleAfterInstallationRequest(promptRequest)
                     }
 
-                    is WebExtensionPromptRequest.BeforeInstallation.InstallationFailed -> {
+                    if (promptRequest is WebExtensionPromptRequest.BeforeInstallation.InstallationFailed) {
                         handleBeforeInstallationRequest(promptRequest)
                         consumePromptRequest()
                     }
                 }
-            }
         }
         tryToReAttachButtonHandlersToPreviousDialog()
     }
@@ -239,6 +237,10 @@ class WebExtensionPromptFeature(
                     isPrivateModeGranted = privateBrowsingAllowed,
                 )
                 promptRequest.onConfirm(response)
+            }
+
+            is WebExtensionPromptRequest.InstallationRequested -> {
+                // opt-out
             }
 
             is WebExtensionPromptRequest.AfterInstallation.PostInstallation -> {
