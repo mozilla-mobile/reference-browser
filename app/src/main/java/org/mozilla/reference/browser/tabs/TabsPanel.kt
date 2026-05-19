@@ -34,7 +34,7 @@ class TabsPanel
     init {
         normalTab = newTab().apply {
             contentDescription = "Tabs"
-            icon = resources.getThemedDrawable(iconsR.drawable.mozac_ic_tab)
+            icon = resources.getThemedDrawable(iconsR.drawable.mozac_ic_tab_24)
         }
 
         privateTab = newTab().apply {
