@@ -41,6 +41,7 @@ androidx-test-runner = "1.7.0"
 androidx-test-uiautomator = "2.4.0-beta02"
 
 # Third Party Linting & Static Code Analysis
+androidx-lint = "1.0.0-rc01"
 dependency-analysis = "3.10.0"
 detekt = "1.23.8"
 jspecify = "1.0.0"
@@ -104,6 +105,7 @@ androidx-test-runner = { group = "androidx.test", name = "runner", version.ref =
 androidx-test-uiautomator = { group = "androidx.test.uiautomator", name = "uiautomator", version.ref = "androidx-test-uiautomator" }
 
 # Third Party Linting & Static Code Analysis
+androidx-lint = { group = "androidx.lint", name = "lint-gradle", version.ref = "androidx-lint" }
 jspecify = { group = "org.jspecify", name = "jspecify", version.ref = "jspecify" }
 ktlint = { group = "com.pinterest.ktlint", name = "ktlint-cli", version.ref = "ktlint" }
 
