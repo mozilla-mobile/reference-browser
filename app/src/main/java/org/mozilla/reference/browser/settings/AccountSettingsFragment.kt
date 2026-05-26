@@ -97,7 +97,7 @@ class AccountSettingsFragment : PreferenceFragmentCompat() {
             val preferenceKey = requireContext().getPreferenceKey(it.prefId())
             (findPreference<CheckBoxPreference>(preferenceKey) as CheckBoxPreference).apply {
                 setOnPreferenceChangeListener { _, newValue ->
-                    updateSyncEngineState(context, it, newValue as Boolean)
+                    updateSyncEngineState(it, newValue as Boolean)
                     true
                 }
             }
@@ -198,13 +198,11 @@ class AccountSettingsFragment : PreferenceFragmentCompat() {
         .setPackage(context.packageName)
 
     private fun updateSyncEngineState(
-        context: Context,
         engine: SyncEngine,
         newState: Boolean,
     ) {
-        SyncEnginesStorage(context).setStatus(engine, newState)
         CoroutineScope(Dispatchers.Main).launch {
-            requireComponents.backgroundServices.accountManager.syncNow(SyncReason.EngineChange)
+            requireComponents.backgroundServices.accountManager.setEngineEnabled(engine, newState)
         }
     }
 

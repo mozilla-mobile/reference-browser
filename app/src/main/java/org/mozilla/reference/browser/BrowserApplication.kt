@@ -60,10 +60,10 @@ open class BrowserApplication : Application() {
         WebExtensionSupport.initialize(
             runtime = components.core.engine,
             store = components.core.store,
-            onNewTabOverride = { _, engineSession, url ->
+            onNewTabOverride = { _, engineSession, url, selected ->
                 val tabId = components.useCases.tabsUseCases.addTab(
                     url = url,
-                    selectTab = true,
+                    selectTab = selected,
                     engineSession = engineSession,
                 )
                 tabId
