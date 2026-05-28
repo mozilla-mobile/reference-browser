@@ -168,6 +168,13 @@ dependencyAnalysis {
                 // We explicitly want to pull in these dependencies transitively from AC
                 exclude('org.mozilla.appservices.nightly:fxaclient', 'org.mozilla.geckoview:geckoview-nightly-omni')
             }
+            onDuplicateClassWarnings {
+                // Android R classes are duplicated by design between :app and its library
+                // dependencies, so they're not a real classpath conflict. Filter them out
+                // rather than disabling duplicate-class detection entirely.
+                // https://github.com/autonomousapps/dependency-analysis-gradle-plugin/issues/1335
+                excludeRegex('.*[./]R(\\$.*)?')
+            }
         }
     }
 }
