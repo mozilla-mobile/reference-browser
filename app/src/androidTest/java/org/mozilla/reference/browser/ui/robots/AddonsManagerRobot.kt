@@ -177,15 +177,14 @@ class AddonsManagerRobot {
     }
 
     private fun allowInstallAddonButton() {
-        assertTrue(mDevice.findObject(UiSelector().text("Add")).waitForExists(waitingTime))
-
-        onView(
-            allOf(
-                withId(addonsR.id.allow_button),
-                withText(addonsR.string.mozac_feature_addons_permissions_dialog_add),
-            ),
-        ).check(matches(isCompletelyDisplayed()))
-            .perform(click())
+        // The permissions dialog disables the "Add" button for ~1s as
+        // clickjacking protection. Wait until it becomes enabled.
+        val allowButton = mDevice.wait(
+            Until.findObject(By.res("$packageName:id/allow_button").enabled(true)),
+            waitingTime,
+        )
+        assertTrue("Allow button did not become enabled", allowButton != null)
+        allowButton.click()
     }
 
     private fun assertAddonDownloadCompletedPrompt(addonName: String) {
