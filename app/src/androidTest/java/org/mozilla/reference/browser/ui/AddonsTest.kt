@@ -7,6 +7,7 @@ package org.mozilla.reference.browser.ui
 import mockwebserver3.MockWebServer
 import org.junit.After
 import org.junit.Before
+import org.junit.Ignore
 import org.junit.Rule
 import org.junit.Test
 import org.mozilla.reference.browser.helpers.AndroidAssetDispatcher
@@ -60,6 +61,7 @@ class AddonsTest {
         }
     }
 
+    @Ignore("Failing, see: https://github.com/mozilla-mobile/reference-browser/issues/4335")
     @Test
     fun installAddonTest() {
         val addonName = "uBlock Origin"
@@ -75,6 +77,7 @@ class AddonsTest {
         }
     }
 
+    @Ignore("Failing, see: https://github.com/mozilla-mobile/reference-browser/issues/4335")
     @Test
     fun verifyAddonElementsTest() {
         val addonName = "uBlock Origin"
@@ -92,6 +95,7 @@ class AddonsTest {
         }
     }
 
+    @Ignore("Failing, see: https://github.com/mozilla-mobile/reference-browser/issues/4335")
     @Test
     fun removeAddonTest() {
         val addonName = "uBlock Origin"
