@@ -42,7 +42,7 @@ androidx-test-uiautomator = "2.4.0-beta02"
 
 # Third Party Linting & Static Code Analysis
 androidx-lint = "1.0.0-rc01"
-dependency-analysis = "3.10.0"
+dependency-analysis = "3.15.0"
 detekt = "1.23.8"
 jspecify = "1.0.0"
 ktlint = "1.8.0"
