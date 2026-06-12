@@ -148,6 +148,15 @@ android {
         disable 'GradleDependency', 'AndroidGradlePluginVersion'
     }
 
+    // Compress native libraries so the per-ABI APK stays under Google Play's 160 MB
+    // developer-verification upload limit. Only used for the verification artifact;
+    // distributed builds page-align (uncompress) native libs for runtime mmap.
+    packaging {
+        jniLibs {
+            useLegacyPackaging = true
+        }
+    }
+
     splits {
         abi {
             enable = true
