@@ -6,7 +6,7 @@ android-components = "157.0.20260910002721"
 android-gradle-plugin = "9.3.1"
 
 # Kotlin
-kotlin = "2.4.10"
+kotlin = "2.4.20"
 kotlinx-coroutines = "1.11.0"
 
 # Google
