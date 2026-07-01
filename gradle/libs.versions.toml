@@ -21,12 +21,12 @@ androidx-annotation = "1.10.0"
 androidx-appcompat = "1.7.1"
 androidx-browser = "1.10.0"
 androidx-cardview = "1.0.0"
-androidx-composeBom = "2026.05.01"
+androidx-composeBom = "2026.06.01"
 androidx-constraintlayout = "2.2.1"
 androidx-coordinatorlayout = "1.3.0"
 androidx-core = "1.19.0"
 androidx-fragment = "1.8.9"
-androidx-lifecycle = "2.11.0-rc01"
+androidx-lifecycle = "2.11.0"
 androidx-preference = "1.2.1"
 androidx-recyclerview = "1.4.0"
 androidx-swiperefreshlayout = "1.2.0"
@@ -38,10 +38,9 @@ androidx-test-espresso = "3.7.0"
 androidx-test-monitor = "1.8.0"
 androidx-test-orchestrator = "1.6.1"
 androidx-test-runner = "1.7.0"
-androidx-test-uiautomator = "2.4.0-beta02"
+androidx-test-uiautomator = "2.4.0"
 
 # Third Party Linting & Static Code Analysis
-androidx-lint = "1.0.0-rc01"
 dependency-analysis = "3.16.0"
 detekt = "1.23.8"
 jspecify = "1.0.0"
@@ -105,7 +104,6 @@ androidx-test-runner = { group = "androidx.test", name = "runner", version.ref =
 androidx-test-uiautomator = { group = "androidx.test.uiautomator", name = "uiautomator", version.ref = "androidx-test-uiautomator" }
 
 # Third Party Linting & Static Code Analysis
-androidx-lint = { group = "androidx.lint", name = "lint-gradle", version.ref = "androidx-lint" }
 jspecify = { group = "org.jspecify", name = "jspecify", version.ref = "jspecify" }
 ktlint = { group = "com.pinterest.ktlint", name = "ktlint-cli", version.ref = "ktlint" }
 
