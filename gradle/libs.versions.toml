@@ -1,6 +1,6 @@
 [versions]
 # Android Components
-android-components = "154.0.20260701092714"
+android-components = "154.0.20260701192917"
 
 # AGP
 android-gradle-plugin = "9.2.1"
@@ -42,7 +42,7 @@ androidx-test-uiautomator = "2.4.0-beta02"
 
 # Third Party Linting & Static Code Analysis
 androidx-lint = "1.0.0-rc01"
-dependency-analysis = "3.15.0"
+dependency-analysis = "3.16.0"
 detekt = "1.23.8"
 jspecify = "1.0.0"
 ktlint = "1.8.0"

@@ -6,6 +6,9 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 buildscript {
     dependencies {
         classpath(libs.kotlin.gradle.plugin)
+        // Temporary workaround for DAGP Kotlin 2.4 incompatibility
+        // https://github.com/autonomousapps/dependency-analysis-gradle-plugin/issues/1661
+        classpath("org.jetbrains.kotlin:kotlin-metadata-jvm:2.3.21")
     }
 
     repositories {
