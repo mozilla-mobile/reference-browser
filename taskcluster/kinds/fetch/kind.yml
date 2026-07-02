@@ -17,9 +17,9 @@ tasks:
         description: Android SDK
         fetch:
             type: static-url
-            url: https://dl.google.com/android/repository/commandlinetools-linux-13114758_latest.zip
+            url: https://dl.google.com/android/repository/commandlinetools-linux-15641748_latest.zip
             artifact-name: sdk-tools-linux.zip
-            sha256: 7ec965280a073311c339e571cd5de778b9975026cfcbe79f2b1cdcb1e15317ee
-            size: 164760899
+            sha256: a66d5ef0238fc0162e9c1446602ce0dd41702d4dd7a94d2ce42d12b7f80baf7e
+            size: 174244366
         artifact-prefix: mobile/android-sdk
         fetch-alias: android-sdk
