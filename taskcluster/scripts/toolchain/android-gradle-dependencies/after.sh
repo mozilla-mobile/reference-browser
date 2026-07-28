@@ -16,6 +16,10 @@ echo "running as" $(id)
 
 set -v
 
+# Resolved before the `pushd` below leaves the project directory.
+DEPENDENCY_INVENTORY="$PWD/gradle/verification-metadata.dryrun.xml"
+VERIFY_DEPENDENCIES="$PWD/taskcluster/scripts/toolchain/android-gradle-dependencies/verify_dependencies.py"
+
 # Package everything up.
 pushd $WORKSPACE
 mkdir -p android-gradle-dependencies /builds/worker/artifacts
@@ -26,6 +30,15 @@ cp -R ${NEXUS_WORK}/storage/gradle-plugins android-gradle-dependencies || {
     echo "FATAL ERROR: no gradle-plugins storage. Did plugin resolution reach the proxy?"
     exit 1
 }
+
+# Bug 1953671: catch intermittently incomplete artifacts here rather than
+# downstream.
+# The Mozilla repositories in build.gradle are not proxied, so what they serve
+# is legitimately absent from the packaged tree.
+python3 "$VERIFY_DEPENDENCIES" --inventory "$DEPENDENCY_INVENTORY" \
+    --unproxied org/mozilla \
+    android-gradle-dependencies/central android-gradle-dependencies/google \
+    android-gradle-dependencies/gradle-plugins
 
 tar cavf /builds/worker/artifacts/android-gradle-dependencies.tar.zst android-gradle-dependencies
 
