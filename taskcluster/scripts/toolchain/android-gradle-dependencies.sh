@@ -19,7 +19,8 @@ pushd $PROJECT_DIR
 . taskcluster/scripts/toolchain/android-gradle-dependencies/before.sh
 
 GRADLE_FLAGS=(
-    --no-daemon
+    # Overrides the daemon=false the base image puts in GRADLE_OPTS.
+    --daemon
     --no-configuration-cache
     -Pcoverage
     -PgoogleRepo='http://localhost:8081/nexus/content/repositories/google/'
@@ -32,6 +33,9 @@ GRADLE_FLAGS=(
 
 # AGP resolves the aapt2 binary while its tasks run, so the pass above misses it.
 ./gradlew "${GRADLE_FLAGS[@]}" :app:processDebugResources
+
+# Don't leave a 4GB heap sitting there while `after.sh` packages everything up.
+./gradlew --stop
 
 . taskcluster/scripts/toolchain/android-gradle-dependencies/after.sh
 
