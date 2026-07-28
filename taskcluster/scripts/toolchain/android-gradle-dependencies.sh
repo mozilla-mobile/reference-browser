@@ -18,8 +18,20 @@ pushd $PROJECT_DIR
 
 . taskcluster/scripts/toolchain/android-gradle-dependencies/before.sh
 
-# We build everything to be sure to fetch all dependencies
-./gradlew --no-daemon -Pcoverage -PgoogleRepo='http://localhost:8081/nexus/content/repositories/google/' -PcentralRepo='http://localhost:8081/nexus/content/repositories/central/' assemble assembleAndroidTest bundle test lint ktlint detekt
+GRADLE_FLAGS=(
+    --no-daemon
+    --no-configuration-cache
+    -Pcoverage
+    -PgoogleRepo='http://localhost:8081/nexus/content/repositories/google/'
+    -PcentralRepo='http://localhost:8081/nexus/content/repositories/central/'
+)
+
+# Enumerates and downloads the dependencies of every resolvable configuration
+# without running the requested tasks.
+./gradlew "${GRADLE_FLAGS[@]}" --write-verification-metadata sha256 --dry-run assemble assembleAndroidTest bundle test lint ktlint detekt
+
+# AGP resolves the aapt2 binary while its tasks run, so the pass above misses it.
+./gradlew "${GRADLE_FLAGS[@]}" :app:processDebugResources
 
 . taskcluster/scripts/toolchain/android-gradle-dependencies/after.sh
 
