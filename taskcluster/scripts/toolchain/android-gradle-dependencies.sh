@@ -28,7 +28,7 @@ GRADLE_FLAGS=(
 
 # Enumerates and downloads the dependencies of every resolvable configuration
 # without running the requested tasks.
-./gradlew "${GRADLE_FLAGS[@]}" --write-verification-metadata sha256 --dry-run assemble assembleAndroidTest bundle test lint ktlint detekt
+./gradlew "${GRADLE_FLAGS[@]}" --write-verification-metadata sha256 --dry-run detekt ktlint lint buildHealth build
 
 # AGP resolves the aapt2 binary while its tasks run, so the pass above misses it.
 ./gradlew "${GRADLE_FLAGS[@]}" :app:processDebugResources
