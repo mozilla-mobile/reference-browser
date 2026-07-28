@@ -7,5 +7,15 @@ plugins {
 }
 
 repositories {
-    mavenCentral()
+    // Mirrors the root project so that CI resolves through the local Nexus.
+    val centralRepo = providers.gradleProperty("centralRepo")
+    if (centralRepo.isPresent) {
+        maven {
+            name = "MavenCentral"
+            url = uri(centralRepo.get())
+            isAllowInsecureProtocol = true // Local Nexus in CI uses HTTP
+        }
+    } else {
+        mavenCentral()
+    }
 }

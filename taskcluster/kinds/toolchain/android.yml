@@ -38,6 +38,7 @@ linux64-android-gradle-dependencies:
         resources:
             - '*.gradle'
             - 'app/*.gradle'
+            - 'buildSrc/**'
             - 'gradle.properties'
             - 'gradle/**'
             - taskcluster/scripts/toolchain/android-gradle-dependencies/**
