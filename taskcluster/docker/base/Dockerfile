@@ -42,10 +42,11 @@ RUN apt-get update -qq \
                           locales \
                           unzip \
                           mercurial \
+                          zstd \
     && apt-get clean
 
 RUN pip3 install --upgrade pip
-RUN pip3 install taskcluster
+RUN pip3 install taskcluster zstandard
 
 RUN locale-gen "$LANG"
 

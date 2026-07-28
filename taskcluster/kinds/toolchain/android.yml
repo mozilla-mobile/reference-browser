@@ -41,7 +41,7 @@ linux64-android-gradle-dependencies:
             - 'gradle.properties'
             - 'gradle/**'
             - taskcluster/scripts/toolchain/android-gradle-dependencies/**
-        toolchain-artifact: public/build/android-gradle-dependencies.tar.xz
+        toolchain-artifact: public/build/android-gradle-dependencies.tar.zst
         toolchain-alias: android-gradle-dependencies
     treeherder:
         symbol: TL(gradle-dependencies)
