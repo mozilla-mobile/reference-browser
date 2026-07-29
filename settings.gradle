@@ -1,7 +1,29 @@
 pluginManagement {
     repositories {
-        google()
-        mavenCentral()
+        // Without these, plugin resolution reaches past the local Nexus in CI to
+        // the real repositories, and whatever it fetches is missing from the
+        // android-gradle-dependencies artifact.
+        def googleRepo = providers.gradleProperty("googleRepo")
+        if (googleRepo.present) {
+            maven {
+                name "Google"
+                url googleRepo.get()
+                allowInsecureProtocol true // Local Nexus in CI uses HTTP
+            }
+        } else {
+            google()
+        }
+
+        def centralRepo = providers.gradleProperty("centralRepo")
+        if (centralRepo.present) {
+            maven {
+                name "MavenCentral"
+                url centralRepo.get()
+                allowInsecureProtocol true // Local Nexus in CI uses HTTP
+            }
+        } else {
+            mavenCentral()
+        }
     }
 }
 

@@ -95,10 +95,14 @@ def _extract_gradlew_command(run, fetches_dir):
 
     maven_dependencies_dir = path.join(fetches_dir, "android-gradle-dependencies")
     gradle_repos_args = [
-        "-P{repo_name}Repo=file://{dir}/{repo_name}".format(
-            dir=maven_dependencies_dir, repo_name=repo_name
+        "-P{property_name}=file://{dir}/{repo_name}".format(
+            dir=maven_dependencies_dir, property_name=property_name, repo_name=repo_name
         )
-        for repo_name in ("google", "central")
+        for property_name, repo_name in (
+            ("centralRepo", "central"),
+            ("googleRepo", "google"),
+            ("pluginRepo", "gradle-plugins"),
+        )
     ]
     gradle_command = ["./gradlew"] + gradle_repos_args + ["listRepositories"] + run.pop("gradlew")
     post_gradle_commands = run.pop("post-gradlew", [])
