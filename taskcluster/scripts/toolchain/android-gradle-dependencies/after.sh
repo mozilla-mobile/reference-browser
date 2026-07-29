@@ -6,7 +6,7 @@
 
 # This is copy of
 # https://searchfox.org/mozilla-central/rev/2cd2d511c0d94a34fb7fa3b746f54170ee759e35/taskcluster/scripts/misc/android-gradle-dependencies/after.sh.
-# gradle-plugins was removed because it's not used in this project.
+# Later changes to that file have been picked up piecemeal.
 
 set -x -e
 
@@ -22,6 +22,10 @@ mkdir -p android-gradle-dependencies /builds/worker/artifacts
 
 cp -R ${NEXUS_WORK}/storage/central android-gradle-dependencies
 cp -R ${NEXUS_WORK}/storage/google android-gradle-dependencies
+cp -R ${NEXUS_WORK}/storage/gradle-plugins android-gradle-dependencies || {
+    echo "FATAL ERROR: no gradle-plugins storage. Did plugin resolution reach the proxy?"
+    exit 1
+}
 
 tar cavf /builds/worker/artifacts/android-gradle-dependencies.tar.zst android-gradle-dependencies
 

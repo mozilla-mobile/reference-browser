@@ -221,5 +221,8 @@ tasks.register('listRepositories') {
     doLast {
         println "Repositories:"
         project.repositories.each { println "Name: " + it.name + "; url: " + it.url }
+        // Plugin repositories have no url to report, being wrappers.
+        println "Buildscript repositories:"
+        buildscript.repositories.each { println "Name: " + it.name }
     }
 }

@@ -23,8 +23,9 @@ GRADLE_FLAGS=(
     --daemon
     --no-configuration-cache
     -Pcoverage
-    -PgoogleRepo='http://localhost:8081/nexus/content/repositories/google/'
     -PcentralRepo='http://localhost:8081/nexus/content/repositories/central/'
+    -PgoogleRepo='http://localhost:8081/nexus/content/repositories/google/'
+    -PpluginRepo='http://localhost:8081/nexus/content/repositories/gradle-plugins/'
 )
 
 # Enumerates and downloads the dependencies of every resolvable configuration
