@@ -18,19 +18,17 @@ import org.mozilla.reference.browser.ui.robots.navigationToolbar
 class ReaderViewTest {
     private lateinit var mockWebServer: MockWebServer
 
-    @get:Rule
-    val activityTestRule = BrowserActivityTestRule()
+    @get:Rule val activityTestRule = BrowserActivityTestRule()
 
-    @Rule
-    @JvmField
-    val retryTestRule = RetryTestRule(3)
+    @Rule @JvmField val retryTestRule = RetryTestRule(3)
 
     @Before
     fun setUp() {
-        mockWebServer = MockWebServer().apply {
-            dispatcher = AndroidAssetDispatcher()
-            start()
-        }
+        mockWebServer =
+            MockWebServer().apply {
+                dispatcher = AndroidAssetDispatcher()
+                start()
+            }
     }
 
     @After
@@ -42,87 +40,83 @@ class ReaderViewTest {
     fun verifyReaderViewDetectionTest() {
         val readerViewPage = TestAssetHelper.getLoremIpsumAsset(mockWebServer)
 
-        navigationToolbar {
-        }.enterUrlAndEnterToBrowser(readerViewPage.url) {
-        }
+        navigationToolbar {}.enterUrlAndEnterToBrowser(readerViewPage.url) {}
         navigationToolbar {
             verifyReaderViewButton()
-        }.clickReaderViewButton {
-            verifyAppearanceButtonExists()
-            clickAppearanceButton()
-            verifyAppearanceMenuExists()
-        }.dismissAppearanceMenu {
         }
-        navigationToolbar {
-        }.clickReaderViewButton {
-            verifyAppearanceButtonDoesntExists()
-        }
+            .clickReaderViewButton {
+                verifyAppearanceButtonExists()
+                clickAppearanceButton()
+                verifyAppearanceMenuExists()
+            }
+            .dismissAppearanceMenu {}
+        navigationToolbar {}
+            .clickReaderViewButton {
+                verifyAppearanceButtonDoesntExists()
+            }
     }
 
     @Test
     fun readerViewFontChangeTest() {
         val readerViewPage = TestAssetHelper.getLoremIpsumAsset(mockWebServer)
 
-        navigationToolbar {
-        }.enterUrlAndEnterToBrowser(readerViewPage.url) {
-        }
+        navigationToolbar {}.enterUrlAndEnterToBrowser(readerViewPage.url) {}
         navigationToolbar {
             verifyReaderViewButton()
-        }.clickReaderViewButton {
-            verifyAppearanceButtonExists()
-            clickAppearanceButton()
-            verifyAppearanceMenuExists()
-            verifyFontGroupButtons()
-            clickSansSerifButton()
-            verifyActiveAppearanceFont("SANSSERIF")
-            clickSerifButton()
-            verifyActiveAppearanceFont("SERIF")
         }
+            .clickReaderViewButton {
+                verifyAppearanceButtonExists()
+                clickAppearanceButton()
+                verifyAppearanceMenuExists()
+                verifyFontGroupButtons()
+                clickSansSerifButton()
+                verifyActiveAppearanceFont("SANSSERIF")
+                clickSerifButton()
+                verifyActiveAppearanceFont("SERIF")
+            }
     }
 
     @Test
     fun readerViewFontSizeChangeTest() {
         val readerViewPage = TestAssetHelper.getLoremIpsumAsset(mockWebServer)
 
-        navigationToolbar {
-        }.enterUrlAndEnterToBrowser(readerViewPage.url) {
-        }
+        navigationToolbar {}.enterUrlAndEnterToBrowser(readerViewPage.url) {}
         navigationToolbar {
             verifyReaderViewButton()
-        }.clickReaderViewButton {
-            verifyAppearanceButtonExists()
-            clickAppearanceButton()
-            verifyAppearanceMenuExists()
-            verifyIncreaseFontSizeButton()
-            verifyDecreaseFontSizeButton()
-            verifyAppearanceFontSize(3)
-            clickIncreaseFontSizeButton()
-            verifyAppearanceFontSize(4)
-            clickDecreaseFontSizeButton()
-            verifyAppearanceFontSize(3)
         }
+            .clickReaderViewButton {
+                verifyAppearanceButtonExists()
+                clickAppearanceButton()
+                verifyAppearanceMenuExists()
+                verifyIncreaseFontSizeButton()
+                verifyDecreaseFontSizeButton()
+                verifyAppearanceFontSize(3)
+                clickIncreaseFontSizeButton()
+                verifyAppearanceFontSize(4)
+                clickDecreaseFontSizeButton()
+                verifyAppearanceFontSize(3)
+            }
     }
 
     @Test
     fun readerViewColorSchemeChangeTest() {
         val readerViewPage = TestAssetHelper.getLoremIpsumAsset(mockWebServer)
 
-        navigationToolbar {
-        }.enterUrlAndEnterToBrowser(readerViewPage.url) {
-        }
+        navigationToolbar {}.enterUrlAndEnterToBrowser(readerViewPage.url) {}
         navigationToolbar {
             verifyReaderViewButton()
-        }.clickReaderViewButton {
-            verifyAppearanceButtonExists()
-            clickAppearanceButton()
-            verifyAppearanceMenuExists()
-            verifyColorSchemeGroupButtons()
-            clickSepiaColorButton()
-            verifyAppearanceColorScheme("SEPIA")
-            clickDarkColorButton()
-            verifyAppearanceColorScheme("DARK")
-            clickLightColorButton()
-            verifyAppearanceColorScheme("LIGHT")
         }
+            .clickReaderViewButton {
+                verifyAppearanceButtonExists()
+                clickAppearanceButton()
+                verifyAppearanceMenuExists()
+                verifyColorSchemeGroupButtons()
+                clickSepiaColorButton()
+                verifyAppearanceColorScheme("SEPIA")
+                clickDarkColorButton()
+                verifyAppearanceColorScheme("DARK")
+                clickLightColorButton()
+                verifyAppearanceColorScheme("LIGHT")
+            }
     }
 }

@@ -18,19 +18,15 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import mozilla.components.feature.addons.Addon
 import mozilla.components.feature.addons.AddonManagerException
+import mozilla.components.feature.addons.R as addonsR
 import mozilla.components.feature.addons.ui.AddonsManagerAdapter
 import mozilla.components.feature.addons.ui.AddonsManagerAdapterDelegate
 import mozilla.components.support.base.feature.ViewBoundFeatureWrapper
 import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.ext.components
-import mozilla.components.feature.addons.R as addonsR
 
-/**
- * Fragment use for managing add-ons.
- */
-class AddonsFragment :
-    Fragment(),
-    AddonsManagerAdapterDelegate {
+/** Fragment use for managing add-ons. */
+class AddonsFragment : Fragment(), AddonsManagerAdapterDelegate {
     private val webExtensionPromptFeature = ViewBoundFeatureWrapper<WebExtensionPromptFeature>()
     private lateinit var recyclerView: RecyclerView
     private val scope = CoroutineScope(Dispatchers.IO)
@@ -53,11 +49,12 @@ class AddonsFragment :
         super.onViewCreated(rootView, savedInstanceState)
         bindRecyclerView(rootView)
         webExtensionPromptFeature.set(
-            feature = WebExtensionPromptFeature(
-                store = requireContext().components.core.store,
-                context = requireContext(),
-                fragmentManager = parentFragmentManager,
-            ),
+            feature =
+                WebExtensionPromptFeature(
+                    store = requireContext().components.core.store,
+                    context = requireContext(),
+                    fragmentManager = parentFragmentManager,
+                ),
             owner = this,
             view = rootView,
         )
@@ -78,26 +75,25 @@ class AddonsFragment :
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
         scope.launch {
             try {
-                addons = requireContext()
-                    .components.core.addonManager
-                    .getAddons()
+                addons = requireContext().components.core.addonManager.getAddons()
 
                 scope.launch(Dispatchers.Main) {
-                    adapter = AddonsManagerAdapter(
-                        this@AddonsFragment,
-                        addons,
-                        store = requireContext().components.core.store,
-                    )
+                    adapter =
+                        AddonsManagerAdapter(
+                            this@AddonsFragment,
+                            addons,
+                            store = requireContext().components.core.store,
+                        )
                     recyclerView.adapter = adapter
                 }
             } catch (e: AddonManagerException) {
                 scope.launch(Dispatchers.Main) {
-                    Toast
-                        .makeText(
-                        activity,
-                        addonsR.string.mozac_feature_addons_failed_to_load_extensions,
-                        Toast.LENGTH_SHORT,
-                    ).show()
+                    Toast.makeText(
+                            activity,
+                            addonsR.string.mozac_feature_addons_failed_to_load_extensions,
+                            Toast.LENGTH_SHORT,
+                        )
+                        .show()
                 }
             }
         }
@@ -125,28 +121,30 @@ class AddonsFragment :
     private val installAddon: ((Addon) -> Unit) = { addon ->
         addonProgressOverlay.visibility = View.VISIBLE
         isInstallationInProgress = true
-        requireContext().components.core.addonManager.installAddon(
-            url = addon.downloadUrl,
-            onSuccess = {
-                runIfFragmentIsAttached {
-                    isInstallationInProgress = false
-                    this@AddonsFragment.view?.let { view ->
-                        bindRecyclerView(view)
+        requireContext()
+            .components
+            .core
+            .addonManager
+            .installAddon(
+                url = addon.downloadUrl,
+                onSuccess = {
+                    runIfFragmentIsAttached {
+                        isInstallationInProgress = false
+                        this@AddonsFragment.view?.let { view ->
+                            bindRecyclerView(view)
+                        }
+                        addonProgressOverlay.visibility = View.GONE
                     }
-                    addonProgressOverlay.visibility = View.GONE
-                }
-            },
-            onError = { _ ->
-                runIfFragmentIsAttached {
-                    addonProgressOverlay.visibility = View.GONE
-                    isInstallationInProgress = false
-                }
-            },
-        )
+                },
+                onError = { _ ->
+                    runIfFragmentIsAttached {
+                        addonProgressOverlay.visibility = View.GONE
+                        isInstallationInProgress = false
+                    }
+                },
+            )
     }
 
-    /**
-     * Whether or not an add-on installation is in progress.
-     */
+    /** Whether or not an add-on installation is in progress. */
     private var isInstallationInProgress = false
 }

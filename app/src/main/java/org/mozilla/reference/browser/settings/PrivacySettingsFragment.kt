@@ -41,25 +41,21 @@ class PrivacySettingsFragment : PreferenceFragmentCompat() {
 
         globalPrivacyControl?.onPreferenceChangeListener = getChangeListenerForGPC { enabled ->
             requireComponents.core.engine.settings.globalPrivacyControlEnabled = enabled
-            requireComponents.useCases.sessionUseCases.reload
-                .invoke()
+            requireComponents.useCases.sessionUseCases.reload.invoke()
         }
     }
 
-    private fun getChangeListenerForTelemetry(): OnPreferenceChangeListener =
-        OnPreferenceChangeListener { _, _ ->
-            true
-        }
+    private fun getChangeListenerForTelemetry(): OnPreferenceChangeListener = OnPreferenceChangeListener { _, _ ->
+        true
+    }
 
     private fun getChangeListenerForTrackingProtection(
-        createTrackingProtectionPolicy: (Boolean) -> TrackingProtectionPolicy,
-    ): OnPreferenceChangeListener =
-        OnPreferenceChangeListener { _, value ->
-            val policy = createTrackingProtectionPolicy(value as Boolean)
-            requireComponents.useCases.settingsUseCases.updateTrackingProtection
-                .invoke(policy)
-            true
-        }
+        createTrackingProtectionPolicy: (Boolean) -> TrackingProtectionPolicy
+    ): OnPreferenceChangeListener = OnPreferenceChangeListener { _, value ->
+        val policy = createTrackingProtectionPolicy(value as Boolean)
+        requireComponents.useCases.settingsUseCases.updateTrackingProtection.invoke(policy)
+        true
+    }
 
     private fun getChangeListenerForGPC(action: (Boolean) -> Unit): OnPreferenceChangeListener =
         OnPreferenceChangeListener { _, enabled ->

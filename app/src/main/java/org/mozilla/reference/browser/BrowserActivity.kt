@@ -32,9 +32,7 @@ import org.mozilla.reference.browser.browser.BrowserFragment
 import org.mozilla.reference.browser.browser.CrashIntegration
 import org.mozilla.reference.browser.ext.components
 
-/**
- * Activity that holds the [BrowserFragment].
- */
+/** Activity that holds the [BrowserFragment]. */
 open class BrowserActivity : AppCompatActivity() {
     private lateinit var crashIntegration: CrashIntegration
 
@@ -45,9 +43,7 @@ open class BrowserActivity : AppCompatActivity() {
         WebExtensionPopupObserver(components.core.store, ::openPopup)
     }
 
-    /**
-     * Returns a new instance of [BrowserFragment] to display.
-     */
+    /** Returns a new instance of [BrowserFragment] to display. */
     open fun createBrowserFragment(sessionId: String?): Fragment = BrowserFragment.create(sessionId)
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -65,9 +61,10 @@ open class BrowserActivity : AppCompatActivity() {
             }
         }
 
-        crashIntegration = CrashIntegration(this, components.analytics.crashReporter) { crash ->
-            onNonFatalCrash(crash)
-        }
+        crashIntegration =
+            CrashIntegration(this, components.analytics.crashReporter) { crash ->
+                onNonFatalCrash(crash)
+            }
         lifecycle.addObserver(crashIntegration)
 
         NotificationManager.checkAndNotifyPolicy(this)
@@ -91,7 +88,7 @@ open class BrowserActivity : AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         Logger.info(
             "Activity onActivityResult received with " +
-                "requestCode: $requestCode, resultCode: $resultCode, data: $data",
+                "requestCode: $requestCode, resultCode: $resultCode, data: $data"
         )
 
         supportFragmentManager.fragments.forEach {
@@ -126,9 +123,7 @@ open class BrowserActivity : AppCompatActivity() {
     ): View? =
         when (name) {
             EngineView::class.java.name -> {
-                components.core.engine
-                .createView(context, attrs)
-                .asView()
+                components.core.engine.createView(context, attrs).asView()
             }
 
             else -> {
@@ -137,11 +132,11 @@ open class BrowserActivity : AppCompatActivity() {
         }
 
     private fun onNonFatalCrash(crash: Crash) {
-        Snackbar
-            .make(findViewById(android.R.id.content), R.string.crash_report_non_fatal_message, LENGTH_LONG)
+        Snackbar.make(findViewById(android.R.id.content), R.string.crash_report_non_fatal_message, LENGTH_LONG)
             .setAction(R.string.crash_report_non_fatal_action) {
                 crashIntegration.sendCrashReport(crash)
-            }.show()
+            }
+            .show()
     }
 
     private fun openPopup(webExtensionState: WebExtensionState) {

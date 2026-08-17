@@ -10,9 +10,7 @@ import androidx.test.uiautomator.UiSelector
 import org.junit.Assert.assertTrue
 import org.mozilla.reference.browser.helpers.TestAssetHelper.waitingTime
 
-/**
- * Implementation of Robot Pattern for the content panel.
- */
+/** Implementation of Robot Pattern for the content panel. */
 class ContentPanelRobot {
     fun verifyShareContentPanel() = assertShareContentPanel()
 

@@ -18,26 +18,20 @@ import org.mozilla.reference.browser.BrowserApplication
 import org.mozilla.reference.browser.Components
 import org.mozilla.reference.browser.R
 
-/**
- * Get the BrowserApplication object from a context.
- */
+/** Get the BrowserApplication object from a context. */
 val Context.application: BrowserApplication
     get() = applicationContext as BrowserApplication
 
-/**
- * Get the requireComponents of this application.
- */
+/** Get the requireComponents of this application. */
 val Context.components: Components
     get() = application.components
 
-fun Context.getPreferenceKey(
-    @StringRes resourceId: Int,
-): String = resources.getString(resourceId)
+fun Context.getPreferenceKey(@StringRes resourceId: Int): String = resources.getString(resourceId)
 
 /**
- *  Shares content via [ACTION_SEND] intent.
+ * Shares content via [ACTION_SEND] intent.
  *
- * @param text the data to be shared  [EXTRA_TEXT]
+ * @param text the data to be shared [EXTRA_TEXT]
  * @param subject of the intent [EXTRA_TEXT]
  * @return true it is able to share false otherwise.
  */
@@ -46,16 +40,18 @@ fun Context.share(
     subject: String = "",
 ): Boolean =
     try {
-        val intent = Intent(ACTION_SEND).apply {
-            type = "text/plain"
-            putExtra(EXTRA_SUBJECT, subject)
-            putExtra(EXTRA_TEXT, text)
-            flags = FLAG_ACTIVITY_NEW_TASK
-        }
+        val intent =
+            Intent(ACTION_SEND).apply {
+                type = "text/plain"
+                putExtra(EXTRA_SUBJECT, subject)
+                putExtra(EXTRA_TEXT, text)
+                flags = FLAG_ACTIVITY_NEW_TASK
+            }
 
-        val shareIntent = Intent.createChooser(intent, getString(R.string.menu_share_with)).apply {
-            flags = FLAG_ACTIVITY_NEW_TASK
-        }
+        val shareIntent =
+            Intent.createChooser(intent, getString(R.string.menu_share_with)).apply {
+                flags = FLAG_ACTIVITY_NEW_TASK
+            }
 
         startActivity(shareIntent)
         true

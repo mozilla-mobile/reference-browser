@@ -21,19 +21,17 @@ import org.mozilla.reference.browser.ui.robots.navigationToolbar
 class ContextMenusTest {
     private lateinit var mockWebServer: MockWebServer
 
-    @get:Rule
-    val activityTestRule = BrowserActivityTestRule()
+    @get:Rule val activityTestRule = BrowserActivityTestRule()
 
-    @Rule
-    @JvmField
-    val retryTestRule = RetryTestRule(3)
+    @Rule @JvmField val retryTestRule = RetryTestRule(3)
 
     @Before
     fun setUp() {
-        mockWebServer = MockWebServer().apply {
-            dispatcher = AndroidAssetDispatcher()
-            start()
-        }
+        mockWebServer =
+            MockWebServer().apply {
+                dispatcher = AndroidAssetDispatcher()
+                start()
+            }
 
         // Prevent the System UI from reading the clipboard content
         if (Build.VERSION.SDK_INT == Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
@@ -55,11 +53,11 @@ class ContextMenusTest {
     fun verifyLinkContextMenuItems() {
         val pageLinks = TestAssetHelper.getGenericAsset(mockWebServer, 4)
 
-        navigationToolbar {
-        }.enterUrlAndEnterToBrowser(pageLinks.url) {
-            longClickMatchingText("Link 1")
-            verifyLinkContextMenuItems()
-        }
+        navigationToolbar {}
+            .enterUrlAndEnterToBrowser(pageLinks.url) {
+                longClickMatchingText("Link 1")
+                verifyLinkContextMenuItems()
+            }
     }
 
     @Test
@@ -67,18 +65,18 @@ class ContextMenusTest {
         val pageLinks = TestAssetHelper.getGenericAsset(mockWebServer, 4)
         val genericURL = TestAssetHelper.getGenericAsset(mockWebServer, 1)
 
-        navigationToolbar {
-        }.enterUrlAndEnterToBrowser(pageLinks.url) {
-            longClickMatchingText("Link 1")
-            clickContextOpenLinkInNewTab()
-            clickSnackbarSwitchButton()
-        }
-        navigationToolbar {
-        }.openTabTrayMenu {
-            verifyRegularBrowsingTab()
-            verifyExistingOpenTabs(pageLinks.title)
-            verifyExistingOpenTabs(genericURL.title)
-        }
+        navigationToolbar {}
+            .enterUrlAndEnterToBrowser(pageLinks.url) {
+                longClickMatchingText("Link 1")
+                clickContextOpenLinkInNewTab()
+                clickSnackbarSwitchButton()
+            }
+        navigationToolbar {}
+            .openTabTrayMenu {
+                verifyRegularBrowsingTab()
+                verifyExistingOpenTabs(pageLinks.title)
+                verifyExistingOpenTabs(genericURL.title)
+            }
     }
 
     @Test
@@ -86,18 +84,18 @@ class ContextMenusTest {
         val pageLinks = TestAssetHelper.getGenericAsset(mockWebServer, 4)
         val genericURL = TestAssetHelper.getGenericAsset(mockWebServer, 1)
 
-        navigationToolbar {
-        }.enterUrlAndEnterToBrowser(pageLinks.url) {
-            longClickMatchingText("Link 1")
-            clickContextOpenLinkInPrivateTab()
-            clickSnackbarSwitchButton()
-        }
-        navigationToolbar {
-        }.openTabTrayMenu {
-            openPrivateBrowsing()
-            verifyPrivateBrowsingTab()
-            verifyExistingOpenTabs(genericURL.title)
-        }
+        navigationToolbar {}
+            .enterUrlAndEnterToBrowser(pageLinks.url) {
+                longClickMatchingText("Link 1")
+                clickContextOpenLinkInPrivateTab()
+                clickSnackbarSwitchButton()
+            }
+        navigationToolbar {}
+            .openTabTrayMenu {
+                openPrivateBrowsing()
+                verifyPrivateBrowsingTab()
+                verifyExistingOpenTabs(genericURL.title)
+            }
     }
 
     @Test
@@ -105,16 +103,16 @@ class ContextMenusTest {
         val pageLinks = TestAssetHelper.getGenericAsset(mockWebServer, 4)
         val genericURL = TestAssetHelper.getGenericAsset(mockWebServer, 1)
 
-        navigationToolbar {
-        }.enterUrlAndEnterToBrowser(pageLinks.url) {
-            longClickMatchingText("Link 1")
-            clickContextCopyLink()
-            waitUntilCopyLinkSnackbarIsGone()
-        }
-        navigationToolbar {
-        }.clickToolbar {
-            pasteAndLoadCopiedLink()
-        }
+        navigationToolbar {}
+            .enterUrlAndEnterToBrowser(pageLinks.url) {
+                longClickMatchingText("Link 1")
+                clickContextCopyLink()
+                waitUntilCopyLinkSnackbarIsGone()
+            }
+        navigationToolbar {}
+            .clickToolbar {
+                pasteAndLoadCopiedLink()
+            }
 
         browser {
             verifyUrl(genericURL.url.toString())
@@ -125,45 +123,46 @@ class ContextMenusTest {
     fun contextShareLinkTest() {
         val pageLinks = TestAssetHelper.getGenericAsset(mockWebServer, 4)
 
-        navigationToolbar {
-        }.enterUrlAndEnterToBrowser(pageLinks.url) {
-            longClickMatchingText("Link 1")
-        }.clickContextShareLink {
-            verifyShareContentPanel()
-        }
+        navigationToolbar {}
+            .enterUrlAndEnterToBrowser(pageLinks.url) {
+                longClickMatchingText("Link 1")
+            }
+            .clickContextShareLink {
+                verifyShareContentPanel()
+            }
     }
 
     @Test
     fun copyTextTest() {
         val genericURL = TestAssetHelper.getGenericAsset(mockWebServer, 1)
 
-        navigationToolbar {
-        }.enterUrlAndEnterToBrowser(genericURL.url) {
-            longClickAndCopyText("content")
-        }
-        navigationToolbar {
-        }.clickToolbar {
-            clickClearToolbarButton()
-            longClickToolbar()
-            clickPasteText()
-            verifyPastedToolbarText("content")
-        }
+        navigationToolbar {}
+            .enterUrlAndEnterToBrowser(genericURL.url) {
+                longClickAndCopyText("content")
+            }
+        navigationToolbar {}
+            .clickToolbar {
+                clickClearToolbarButton()
+                longClickToolbar()
+                clickPasteText()
+                verifyPastedToolbarText("content")
+            }
     }
 
     @Test
     fun selectAllAndCopyTextTest() {
         val genericURL = TestAssetHelper.getGenericAsset(mockWebServer, 1)
 
-        navigationToolbar {
-        }.enterUrlAndEnterToBrowser(genericURL.url) {
-            longClickAndCopyText("content", true)
-        }
-        navigationToolbar {
-        }.clickToolbar {
-            clickClearToolbarButton()
-            longClickToolbar()
-            clickPasteText()
-            verifyPastedToolbarText("Page content: 1")
-        }
+        navigationToolbar {}
+            .enterUrlAndEnterToBrowser(genericURL.url) {
+                longClickAndCopyText("content", true)
+            }
+        navigationToolbar {}
+            .clickToolbar {
+                clickClearToolbarButton()
+                longClickToolbar()
+                clickPasteText()
+                verifyPastedToolbarText("Page content: 1")
+            }
     }
 }

@@ -11,9 +11,7 @@ import androidx.test.uiautomator.By
 import androidx.test.uiautomator.Until
 import org.mozilla.reference.browser.helpers.TestAssetHelper
 
-/**
- * Implementation of Robot Pattern for the settings privacy menu.
- */
+/** Implementation of Robot Pattern for the settings privacy menu. */
 class SettingsViewPrivacyRobot {
     fun verifyPrivacyUpButton() = assertPrivacyUpButton()
 
@@ -57,28 +55,28 @@ private fun assertPrivacyUpButton() {
 
 private fun assertPrivacySettingsView() =
     privacySettingsView()
-    .check(ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+        .check(ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
 
 private fun assertTrackingProtectionHeading() =
     trackingProtectionHeading()
-    .check(ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+        .check(ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
 
 private fun assertTpEnableInNormalBrowsing() =
     tpEnableInNormalBrowsing()
-    .check(ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+        .check(ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
 
 private fun assertTpEnableInPrivateBrowsing() =
     tpEnableInPrivateBrowsing()
-    .check(ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+        .check(ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
 
 private fun assertDataChoicesHeading() =
     dataChoicesHeading()
-    .check(ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+        .check(ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
 
 private fun assertUseTelemetryToggle() =
     useTelemetryToggle()
-    .check(ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+        .check(ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
 
 private fun assertTelemetrySummary() =
     telemetrySummary()
-    .check(ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+        .check(ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))

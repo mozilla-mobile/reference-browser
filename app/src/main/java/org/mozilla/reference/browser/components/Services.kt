@@ -15,9 +15,7 @@ import mozilla.components.service.fxa.manager.FxaAccountManager
 import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.ext.getPreferenceKey
 
-/**
- * Component group which encapsulates foreground-friendly services.
- */
+/** Component group which encapsulates foreground-friendly services. */
 class Services(
     private val context: Context,
     private val accountManager: FxaAccountManager,

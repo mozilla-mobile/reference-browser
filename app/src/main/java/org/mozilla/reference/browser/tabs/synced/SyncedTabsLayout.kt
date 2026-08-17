@@ -22,21 +22,22 @@ import mozilla.components.feature.syncedtabs.view.SyncedTabsView.ErrorType.SYNC_
 import org.mozilla.reference.browser.R
 
 class SyncedTabsLayout
-    @JvmOverloads
-    constructor(
+@JvmOverloads
+constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0,
-) : FrameLayout(context, attrs, defStyleAttr),
-    SyncedTabsView {
-        override var listener: SyncedTabsView.Listener? = null
+) : FrameLayout(context, attrs, defStyleAttr), SyncedTabsView {
+    override var listener: SyncedTabsView.Listener? = null
 
     private val adapter = SyncedTabsAdapter { listener?.onTabClicked(it) }
 
     private val syncedTabsList: RecyclerView
         get() = findViewById(R.id.synced_tabs_list)
+
     private val syncedTabsPullToRefresh: SwipeRefreshLayout
         get() = findViewById(R.id.synced_tabs_pull_to_refresh)
+
     private val syncedTabsStatus: TextView
         get() = findViewById(R.id.synced_tabs_status)
 
@@ -50,12 +51,14 @@ class SyncedTabsLayout
     }
 
     override fun onError(error: SyncedTabsView.ErrorType) {
-        val stringResId = when (error) {
-            MULTIPLE_DEVICES_UNAVAILABLE, NO_TABS_AVAILABLE -> R.string.synced_tabs_connect_another_device
-            SYNC_ENGINE_UNAVAILABLE -> R.string.synced_tabs_enable_tab_syncing
-            SYNC_UNAVAILABLE -> R.string.synced_tabs_connect_to_sync_account
-            SYNC_NEEDS_REAUTHENTICATION -> R.string.synced_tabs_reauth
-        }
+        val stringResId =
+            when (error) {
+                MULTIPLE_DEVICES_UNAVAILABLE,
+                NO_TABS_AVAILABLE -> R.string.synced_tabs_connect_another_device
+                SYNC_ENGINE_UNAVAILABLE -> R.string.synced_tabs_enable_tab_syncing
+                SYNC_UNAVAILABLE -> R.string.synced_tabs_connect_to_sync_account
+                SYNC_NEEDS_REAUTHENTICATION -> R.string.synced_tabs_reauth
+            }
 
         syncedTabsStatus.text = context.getText(stringResId)
 
@@ -67,14 +70,16 @@ class SyncedTabsLayout
         syncedTabsList.visibility = View.VISIBLE
         syncedTabsStatus.visibility = View.GONE
 
-        val allDeviceTabs = syncedTabs
-            .filter {
-            it.tabs.isEmpty()
-        }.flatMap { (device, tabs) ->
-            val deviceTabs = tabs.map { SyncedTabsAdapter.AdapterItem.Tab(it) }
+        val allDeviceTabs =
+            syncedTabs
+                .filter {
+                    it.tabs.isEmpty()
+                }
+                .flatMap { (device, tabs) ->
+                    val deviceTabs = tabs.map { SyncedTabsAdapter.AdapterItem.Tab(it) }
 
-            listOf(SyncedTabsAdapter.AdapterItem.Device(device)) + deviceTabs
-        }
+                    listOf(SyncedTabsAdapter.AdapterItem.Device(device)) + deviceTabs
+                }
 
         adapter.submitList(allDeviceTabs)
     }

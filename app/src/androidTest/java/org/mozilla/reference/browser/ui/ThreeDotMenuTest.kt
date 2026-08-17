@@ -21,9 +21,9 @@ import org.mozilla.reference.browser.helpers.TestAssetHelper
 import org.mozilla.reference.browser.ui.robots.navigationToolbar
 
 /**
- *  Tests for verifying the main three dot menu options
+ * Tests for verifying the main three dot menu options
  *
- *  Including:
+ * Including:
  * - Verify all menu items present
  * - Forward button navigates forward to a page
  * - Refresh button refreshes page content
@@ -37,24 +37,21 @@ import org.mozilla.reference.browser.ui.robots.navigationToolbar
  * - TODO: Request desktop site (user mockWebServer to parse request headers)
  * - Stop button stops page loading (covered by smoke tests)
  */
-
 class ThreeDotMenuTest {
     private val mDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
     private lateinit var mockWebServer: MockWebServer
 
-    @get:Rule
-    val activityTestRule = BrowserActivityTestRule()
+    @get:Rule val activityTestRule = BrowserActivityTestRule()
 
-    @Rule
-    @JvmField
-    val retryTestRule = RetryTestRule(3)
+    @Rule @JvmField val retryTestRule = RetryTestRule(3)
 
     @Before
     fun setUp() {
-        mockWebServer = MockWebServer().apply {
-            dispatcher = AndroidAssetDispatcher()
-            start()
-        }
+        mockWebServer =
+            MockWebServer().apply {
+                dispatcher = AndroidAssetDispatcher()
+                start()
+            }
     }
 
     @After
@@ -64,48 +61,49 @@ class ThreeDotMenuTest {
 
     @Test
     fun homeScreenMenuTest() {
-        navigationToolbar {
-        }.openThreeDotMenu {
-            verifyThreeDotMenuExists()
-            // These items should not exist in the home screen menu
-            verifyForwardButtonDoesntExist()
-            verifyReloadButtonDoesntExist()
-            verifyStopButtonDoesntExist()
-            verifyShareButtonDoesntExist()
-            verifyRequestDesktopSiteToggleDoesntExist()
-            verifyAddToHomescreenButtonDoesntExist()
-            verifyFindInPageButtonDoesntExist()
-            // Only these items should exist in the home screen menu
-            verifyAddOnsButtonExists()
-            verifySyncedTabsButtonExists()
-            verifyReportIssueExists()
-            verifyOpenSettingsExists()
-        }
+        navigationToolbar {}
+            .openThreeDotMenu {
+                verifyThreeDotMenuExists()
+                // These items should not exist in the home screen menu
+                verifyForwardButtonDoesntExist()
+                verifyReloadButtonDoesntExist()
+                verifyStopButtonDoesntExist()
+                verifyShareButtonDoesntExist()
+                verifyRequestDesktopSiteToggleDoesntExist()
+                verifyAddToHomescreenButtonDoesntExist()
+                verifyFindInPageButtonDoesntExist()
+                // Only these items should exist in the home screen menu
+                verifyAddOnsButtonExists()
+                verifySyncedTabsButtonExists()
+                verifyReportIssueExists()
+                verifyOpenSettingsExists()
+            }
     }
 
     @Test
     fun threeDotMenuItemsTest() {
         val defaultWebPage = TestAssetHelper.getGenericAsset(mockWebServer, 1)
         navigationToolbar {
-            // pull up URL to ensure this is not a first-user 3 dot menu
-        }.enterUrlAndEnterToBrowser(defaultWebPage.url) {
-            mDevice.waitForIdle()
-        }
-        navigationToolbar {
-        }.openThreeDotMenu {
-            verifyThreeDotMenuExists()
-            verifyForwardButtonExists()
-            verifyReloadButtonExists()
-            verifyStopButtonExists()
-            verifyShareButtonExists()
-            verifyRequestDesktopSiteToggleExists()
-            verifyAddToHomescreenButtonExists()
-            verifyFindInPageButtonExists()
-            verifyAddOnsButtonExists()
-            verifySyncedTabsButtonExists()
-            verifyReportIssueExists()
-            verifyOpenSettingsExists()
-        }
+                // pull up URL to ensure this is not a first-user 3 dot menu
+            }
+            .enterUrlAndEnterToBrowser(defaultWebPage.url) {
+                mDevice.waitForIdle()
+            }
+        navigationToolbar {}
+            .openThreeDotMenu {
+                verifyThreeDotMenuExists()
+                verifyForwardButtonExists()
+                verifyReloadButtonExists()
+                verifyStopButtonExists()
+                verifyShareButtonExists()
+                verifyRequestDesktopSiteToggleExists()
+                verifyAddToHomescreenButtonExists()
+                verifyFindInPageButtonExists()
+                verifyAddOnsButtonExists()
+                verifySyncedTabsButtonExists()
+                verifyReportIssueExists()
+                verifyOpenSettingsExists()
+            }
     }
 
     @Test
@@ -113,21 +111,22 @@ class ThreeDotMenuTest {
         val defaultWebPage = TestAssetHelper.getGenericAsset(mockWebServer, 1)
         val nextWebPage = TestAssetHelper.getGenericAsset(mockWebServer, 2)
 
-        navigationToolbar {
-        }.enterUrlAndEnterToBrowser(defaultWebPage.url) {
-            verifyPageContent("Page content: 1")
-        }
-        navigationToolbar {
-        }.enterUrlAndEnterToBrowser(nextWebPage.url) {
-            verifyPageContent("Page content: 2")
-        }.goBack {
-            verifyPageContent("Page content: 1")
-        }
-        navigationToolbar {
-        }.openThreeDotMenu {
-        }.goForward {
-            verifyPageContent("Page content: 2")
-        }
+        navigationToolbar {}
+            .enterUrlAndEnterToBrowser(defaultWebPage.url) {
+                verifyPageContent("Page content: 1")
+            }
+        navigationToolbar {}
+            .enterUrlAndEnterToBrowser(nextWebPage.url) {
+                verifyPageContent("Page content: 2")
+            }
+            .goBack {
+                verifyPageContent("Page content: 1")
+            }
+        navigationToolbar {}
+            .openThreeDotMenu {}
+            .goForward {
+                verifyPageContent("Page content: 2")
+            }
     }
 
     @Ignore("Failing, see: https://github.com/mozilla-mobile/reference-browser/issues/2085")
@@ -136,24 +135,26 @@ class ThreeDotMenuTest {
         val defaultWebPage = TestAssetHelper.getGenericAsset(mockWebServer, 1)
         val nextWebPage = TestAssetHelper.getGenericAsset(mockWebServer, 2)
 
-        navigationToolbar {
-        }.openTabTrayMenu {
-            openPrivateBrowsing()
-        }.openNewTab {
-        }.enterUrlAndEnterToBrowser(defaultWebPage.url) {
-            verifyUrl(defaultWebPage.url.toString())
-        }
-        navigationToolbar {
-        }.enterUrlAndEnterToBrowser(nextWebPage.url) {
-            verifyUrl(nextWebPage.url.toString())
-        }.goBack {
-            verifyUrl(defaultWebPage.url.toString())
-        }
-        navigationToolbar {
-        }.openThreeDotMenu {
-        }.goForward {
-            verifyUrl(nextWebPage.url.toString())
-        }
+        navigationToolbar {}
+            .openTabTrayMenu {
+                openPrivateBrowsing()
+            }
+            .openNewTab {}
+            .enterUrlAndEnterToBrowser(defaultWebPage.url) {
+                verifyUrl(defaultWebPage.url.toString())
+            }
+        navigationToolbar {}
+            .enterUrlAndEnterToBrowser(nextWebPage.url) {
+                verifyUrl(nextWebPage.url.toString())
+            }
+            .goBack {
+                verifyUrl(defaultWebPage.url.toString())
+            }
+        navigationToolbar {}
+            .openThreeDotMenu {}
+            .goForward {
+                verifyUrl(nextWebPage.url.toString())
+            }
     }
 
     // need to add clear cache setup to ensure correct starting page
@@ -164,54 +165,54 @@ class ThreeDotMenuTest {
         val refreshWebPage = TestAssetHelper.getRefreshAsset(mockWebServer)
 
         navigationToolbar {
-            // load the default page, to be refreshed
-            // (test assumes no cookies cached at test start)
-        }.enterUrlAndEnterToBrowser(refreshWebPage.url) {
-            verifyPageContent("DEFAULT")
-        }
-        navigationToolbar {
-        }.openThreeDotMenu {
-            // refresh page and verify
-        }.refreshPage {
-            verifyPageContent("REFRESHED")
-        }
+                // load the default page, to be refreshed
+                // (test assumes no cookies cached at test start)
+            }
+            .enterUrlAndEnterToBrowser(refreshWebPage.url) {
+                verifyPageContent("DEFAULT")
+            }
+        navigationToolbar {}
+            .openThreeDotMenu {
+                // refresh page and verify
+            }
+            .refreshPage {
+                verifyPageContent("REFRESHED")
+            }
     }
 
     @Test
     fun doShareTest() {
         val genericURL = TestAssetHelper.getGenericAsset(mockWebServer, 1)
 
-        navigationToolbar {
-        }.enterUrlAndEnterToBrowser(genericURL.url) {
-        }
-        navigationToolbar {
-        }.openThreeDotMenu {
-        }.openShare {
-            verifyShareContentPanel()
-        }
+        navigationToolbar {}.enterUrlAndEnterToBrowser(genericURL.url) {}
+        navigationToolbar {}
+            .openThreeDotMenu {}
+            .openShare {
+                verifyShareContentPanel()
+            }
     }
 
     @Test
     fun findInPageTest() {
         val defaultWebPage = TestAssetHelper.getGenericAsset(mockWebServer, 1)
 
-        navigationToolbar {
-        }.enterUrlAndEnterToBrowser(defaultWebPage.url) {
-            verifyPageContent("Page content: 1")
-        }
-        navigationToolbar {
-        }.openThreeDotMenu {
-        }.openFindInPage {
-            verifyFindInPageBar()
-            enterFindInPageQuery("e")
-            verifyFindInPageResult("1/2")
-            clickFindInPageNextButton()
-            verifyFindInPageResult("2/2")
-            clickFindInPagePreviousButton()
-            verifyFindInPageResult("1/2")
-            clickFindInPageCloseButton()
-            verifyFindInPageBarIsDismissed()
-        }
+        navigationToolbar {}
+            .enterUrlAndEnterToBrowser(defaultWebPage.url) {
+                verifyPageContent("Page content: 1")
+            }
+        navigationToolbar {}
+            .openThreeDotMenu {}
+            .openFindInPage {
+                verifyFindInPageBar()
+                enterFindInPageQuery("e")
+                verifyFindInPageResult("1/2")
+                clickFindInPageNextButton()
+                verifyFindInPageResult("2/2")
+                clickFindInPagePreviousButton()
+                verifyFindInPageResult("1/2")
+                clickFindInPageCloseButton()
+                verifyFindInPageBarIsDismissed()
+            }
     }
 
     // so less flaky, we only test redirect to github login
@@ -220,25 +221,25 @@ class ThreeDotMenuTest {
     fun reportIssueTest() {
         val loremIpsumWebPage = TestAssetHelper.getLoremIpsumAsset(mockWebServer)
 
-        navigationToolbar {
-        }.enterUrlAndEnterToBrowser(loremIpsumWebPage.url) {
-            mDevice.waitForIdle()
-        }
-        navigationToolbar {
-        }.openThreeDotMenu {
-        }.reportIssue {
-            mDevice.waitForIdle()
-            verifyGithubUrl()
-        }
+        navigationToolbar {}
+            .enterUrlAndEnterToBrowser(loremIpsumWebPage.url) {
+                mDevice.waitForIdle()
+            }
+        navigationToolbar {}
+            .openThreeDotMenu {}
+            .reportIssue {
+                mDevice.waitForIdle()
+                verifyGithubUrl()
+            }
     }
 
     @Test
     fun openSettingsTest() {
-        navigationToolbar {
-        }.openThreeDotMenu {
-        }.openSettings {
-            verifySettingsViewExists()
-        }
+        navigationToolbar {}
+            .openThreeDotMenu {}
+            .openSettings {
+                verifySettingsViewExists()
+            }
     }
 
     // Verifies the Synced tabs menu opens from a tab's 3 dot menu and
@@ -247,14 +248,12 @@ class ThreeDotMenuTest {
     fun openSyncedTabsTest() {
         val defaultWebPage = TestAssetHelper.getGenericAsset(mockWebServer, 1)
 
-        navigationToolbar {
-        }.enterUrlAndEnterToBrowser(defaultWebPage.url) {
-        }
-        navigationToolbar {
-        }.openThreeDotMenu {
-        }.openSyncedTabs {
-            verifyNotSignedInSyncTabsView()
-        }
+        navigationToolbar {}.enterUrlAndEnterToBrowser(defaultWebPage.url) {}
+        navigationToolbar {}
+            .openThreeDotMenu {}
+            .openSyncedTabs {
+                verifyNotSignedInSyncTabsView()
+            }
     }
 
     @Ignore("Failing with frequent ANR: https://bugzilla.mozilla.org/show_bug.cgi?id=1764605")
@@ -262,41 +261,39 @@ class ThreeDotMenuTest {
     fun requestDesktopSiteTest() {
         val defaultWebPage = TestAssetHelper.getGenericAsset(mockWebServer, 1)
 
-        navigationToolbar {
-        }.enterUrlAndEnterToBrowser(defaultWebPage.url) {
-        }
-        navigationToolbar {
-        }.openThreeDotMenu {
-        }.switchRequestDesktopSiteToggle {
-        }.openThreeDotMenu {
-            verifyRequestDesktopSiteIsTurnedOn()
-        }.goBack {
-        }.openThreeDotMenu {
-        }.switchRequestDesktopSiteToggle {
-        }.openThreeDotMenu {
-            verifyRequestDesktopSiteIsTurnedOff()
-        }
+        navigationToolbar {}.enterUrlAndEnterToBrowser(defaultWebPage.url) {}
+        navigationToolbar {}
+            .openThreeDotMenu {}
+            .switchRequestDesktopSiteToggle {}
+            .openThreeDotMenu {
+                verifyRequestDesktopSiteIsTurnedOn()
+            }
+            .goBack {}
+            .openThreeDotMenu {}
+            .switchRequestDesktopSiteToggle {}
+            .openThreeDotMenu {
+                verifyRequestDesktopSiteIsTurnedOff()
+            }
     }
 
     @Test
     fun addToHomeScreenTest() {
         val defaultWebPage = TestAssetHelper.getGenericAsset(mockWebServer, 1)
 
-        navigationToolbar {
-        }.enterUrlAndEnterToBrowser(defaultWebPage.url) {
-        }
-        navigationToolbar {
-        }.openThreeDotMenu {
-        }.openAddToHomeScreen {
-            clickCancelAddToHomeScreenButton()
-        }
+        navigationToolbar {}.enterUrlAndEnterToBrowser(defaultWebPage.url) {}
+        navigationToolbar {}
+            .openThreeDotMenu {}
+            .openAddToHomeScreen {
+                clickCancelAddToHomeScreenButton()
+            }
 
-        navigationToolbar {
-        }.openThreeDotMenu {
-        }.openAddToHomeScreen {
-            clickSystemHomeScreenShortcutAddButton()
-        }.openHomeScreenShortcut(defaultWebPage.title) {
-            verifyUrl(defaultWebPage.url.toString())
-        }
+        navigationToolbar {}
+            .openThreeDotMenu {}
+            .openAddToHomeScreen {
+                clickSystemHomeScreenShortcutAddButton()
+            }
+            .openHomeScreenShortcut(defaultWebPage.title) {
+                verifyUrl(defaultWebPage.url.toString())
+            }
     }
 }

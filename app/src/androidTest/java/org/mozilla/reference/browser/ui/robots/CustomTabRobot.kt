@@ -13,16 +13,14 @@ import androidx.test.espresso.matcher.ViewMatchers.withSubstring
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.uiautomator.By
 import androidx.test.uiautomator.UiSelector
+import mozilla.components.browser.toolbar.R as toolbarR
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.mozilla.reference.browser.helpers.TestAssetHelper.waitingTime
 import org.mozilla.reference.browser.helpers.TestHelper.packageName
 import org.mozilla.reference.browser.helpers.click
-import mozilla.components.browser.toolbar.R as toolbarR
 
-/**
- *  Implementation of the robot pattern for Custom tabs
- */
+/** Implementation of the robot pattern for Custom tabs */
 class CustomTabRobot {
     fun verifyCloseButton() = assertCloseButton()
 
@@ -59,9 +57,7 @@ class CustomTabRobot {
     fun clickForwardButton() = forwardButton().click()
 
     fun clickGenericLink(expectedText: String) {
-        mDevice
-            .findObject(UiSelector().resourceId("$packageName:id/engineView"))
-            .waitForExists(waitingTime)
+        mDevice.findObject(UiSelector().resourceId("$packageName:id/engineView")).waitForExists(waitingTime)
         mDevice.findObject(UiSelector().textContains(expectedText)).waitForExists(waitingTime)
         val link = mDevice.findObject(By.textContains(expectedText))
         link.click()
@@ -70,29 +66,21 @@ class CustomTabRobot {
     fun switchRequestDesktopSiteToggle() {
         try {
             // Click the Request desktop site toggle
-            mDevice
-                .findObject(UiSelector().textContains("Request desktop site"))
-                .waitForExists(waitingTime)
+            mDevice.findObject(UiSelector().textContains("Request desktop site")).waitForExists(waitingTime)
             requestDesktopButton().click()
             mDevice.waitForIdle()
             assertTrue(
                 mDevice
-                    .findObject(
-                    UiSelector()
-                        .resourceId("$packageName:id/mozac_browser_menu_recyclerView"),
-                ).waitUntilGone(waitingTime),
+                    .findObject(UiSelector().resourceId("$packageName:id/mozac_browser_menu_recyclerView"))
+                    .waitUntilGone(waitingTime)
             )
         } catch (e: AssertionError) {
             println("Failed to click request desktop toggle")
             // If the click didn't succeed the main menu remains displayed and should be dismissed
             mDevice.pressBack()
-            customTabScreen {
-            }.openMainMenu {
-            }
+            customTabScreen {}.openMainMenu {}
             // Click again the Request desktop site toggle
-            mDevice
-                .findObject(UiSelector().textContains("Request desktop site"))
-                .waitForExists(waitingTime)
+            mDevice.findObject(UiSelector().textContains("Request desktop site")).waitForExists(waitingTime)
             requestDesktopButton().click()
             mDevice.waitForIdle()
         }
@@ -210,13 +198,9 @@ private fun assertOpenInBrowserButton() =
     openInBrowserButton().check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
 
 private fun assertRequestDesktopSiteIsTurnedOff() {
-    assertFalse(
-        mDevice.findObject(UiSelector().textContains("Request desktop site")).isChecked,
-    )
+    assertFalse(mDevice.findObject(UiSelector().textContains("Request desktop site")).isChecked)
 }
 
 private fun assertRequestDesktopSiteIsTurnedOn() {
-    assertTrue(
-        mDevice.findObject(UiSelector().textContains("Request desktop site")).isChecked,
-    )
+    assertTrue(mDevice.findObject(UiSelector().textContains("Request desktop site")).isChecked)
 }

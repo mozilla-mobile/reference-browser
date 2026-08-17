@@ -21,19 +21,17 @@ import org.mozilla.reference.browser.ui.robots.notificationShade
 class DownloadTest {
     private lateinit var mockWebServer: MockWebServer
 
-    @get:Rule
-    val activityTestRule = BrowserActivityTestRule()
+    @get:Rule val activityTestRule = BrowserActivityTestRule()
 
-    @Rule
-    @JvmField
-    val retryTestRule = RetryTestRule(3)
+    @Rule @JvmField val retryTestRule = RetryTestRule(3)
 
     @Before
     fun setUp() {
-        mockWebServer = MockWebServer().apply {
-            dispatcher = AndroidAssetDispatcher()
-            start()
-        }
+        mockWebServer =
+            MockWebServer().apply {
+                dispatcher = AndroidAssetDispatcher()
+                start()
+            }
     }
 
     @After
@@ -46,8 +44,7 @@ class DownloadTest {
         val downloadPage = TestAssetHelper.getDownloadAsset(mockWebServer)
         val downloadFileName = "web_icon.png"
 
-        navigationToolbar {
-        }.enterUrlAndEnterToBrowser(downloadPage.url) {}
+        navigationToolbar {}.enterUrlAndEnterToBrowser(downloadPage.url) {}
 
         downloadRobot {
             cancelDownload()
@@ -55,7 +52,8 @@ class DownloadTest {
 
         notificationShade {
             verifyDownloadNotificationDoesNotExist("Download completed", downloadFileName)
-        }.closeNotification {}
+        }
+            .closeNotification {}
     }
 
     @Ignore("Disabled - https://github.com/mozilla-mobile/reference-browser/issues/2130")
@@ -64,8 +62,7 @@ class DownloadTest {
         val downloadPage = TestAssetHelper.getDownloadAsset(mockWebServer)
         val downloadFileName = "web_icon.png"
 
-        navigationToolbar {
-        }.enterUrlAndEnterToBrowser(downloadPage.url) {}
+        navigationToolbar {}.enterUrlAndEnterToBrowser(downloadPage.url) {}
 
         downloadRobot {
             confirmDownload()
@@ -73,6 +70,7 @@ class DownloadTest {
 
         notificationShade {
             verifyDownloadNotificationExist("Download completed", downloadFileName)
-        }.closeNotification {}
+        }
+            .closeNotification {}
     }
 }

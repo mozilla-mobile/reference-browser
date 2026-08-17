@@ -40,30 +40,37 @@ class AboutFragment : Fragment() {
         val appName = requireContext().resources.getString(R.string.app_name)
         (activity as AppCompatActivity).title = getString(R.string.preferences_about_page)
 
-        val aboutText = try {
-            val packageInfo = requireContext().packageManager.getPackageInfo(requireContext().packageName, 0)
-            val geckoVersion = PackageInfoCompat.getLongVersionCode(packageInfo).toString() + " GV: " +
-                MOZ_APP_VERSION + "-" + MOZ_APP_BUILDID
-            String.format(
-                "%s (Build #%s)\n",
-                packageInfo.versionName,
-                geckoVersion,
-            )
-        } catch (e: PackageManager.NameNotFoundException) {
-            ""
-        }
+        val aboutText =
+            try {
+                val packageInfo = requireContext().packageManager.getPackageInfo(requireContext().packageName, 0)
+                val geckoVersion =
+                    PackageInfoCompat.getLongVersionCode(packageInfo).toString() +
+                        " GV: " +
+                        MOZ_APP_VERSION +
+                        "-" +
+                        MOZ_APP_BUILDID
+                String.format(
+                    "%s (Build #%s)\n",
+                    packageInfo.versionName,
+                    geckoVersion,
+                )
+            } catch (e: PackageManager.NameNotFoundException) {
+                ""
+            }
 
-        val versionInfo = String.format(
-            "%s \uD83D\uDCE6: %s, %s\n\uD83D\uDEA2: %s",
-            aboutText,
-            Build.VERSION,
-            Build.GIT_HASH,
-            Build.APPLICATION_SERVICES_VERSION,
-        )
-        val content = HtmlCompat.fromHtml(
-            resources.getString(R.string.about_content, appName),
-            FROM_HTML_SEPARATOR_LINE_BREAK_LIST_ITEM,
-        )
+        val versionInfo =
+            String.format(
+                "%s \uD83D\uDCE6: %s, %s\n\uD83D\uDEA2: %s",
+                aboutText,
+                Build.VERSION,
+                Build.GIT_HASH,
+                Build.APPLICATION_SERVICES_VERSION,
+            )
+        val content =
+            HtmlCompat.fromHtml(
+                resources.getString(R.string.about_content, appName),
+                FROM_HTML_SEPARATOR_LINE_BREAK_LIST_ITEM,
+            )
 
         val aboutView = view.findViewById<TextView>(R.id.about_content)
         aboutView.text = content

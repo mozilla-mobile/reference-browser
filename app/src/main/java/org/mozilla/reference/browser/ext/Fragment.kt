@@ -6,8 +6,6 @@ package org.mozilla.reference.browser.ext
 
 import org.mozilla.reference.browser.Components
 
-/**
- * Get the requireComponents of this application.
- */
+/** Get the requireComponents of this application. */
 val androidx.fragment.app.Fragment.requireComponents: Components
     get() = requireContext().components

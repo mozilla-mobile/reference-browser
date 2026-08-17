@@ -27,12 +27,13 @@ class PictureInPictureIntegration(
     private var whiteListed = false
 
     override fun start() {
-        scope = store.flowScoped(dispatcher = Dispatchers.Main) { flow ->
-            flow
-                .mapNotNull { state -> state.findTabOrCustomTabOrSelectedTab(customTabId) }
-                .distinctUntilChangedBy { it.content.url }
-                .collect { whiteListed = isWhitelisted(it.content.url) }
-        }
+        scope =
+            store.flowScoped(dispatcher = Dispatchers.Main) { flow ->
+                flow
+                    .mapNotNull { state -> state.findTabOrCustomTabOrSelectedTab(customTabId) }
+                    .distinctUntilChangedBy { it.content.url }
+                    .collect { whiteListed = isWhitelisted(it.content.url) }
+            }
     }
 
     override fun stop() {
@@ -41,10 +42,10 @@ class PictureInPictureIntegration(
 
     fun onHomePressed() =
         if (whiteListed) {
-        pictureFeature.enterPipModeCompat()
-    } else {
-        pictureFeature.onHomePressed()
-    }
+            pictureFeature.enterPipModeCompat()
+        } else {
+            pictureFeature.onHomePressed()
+        }
 
     private fun isWhitelisted(url: String): Boolean {
         val exists = whiteList.firstOrNull { url.contains(it) }

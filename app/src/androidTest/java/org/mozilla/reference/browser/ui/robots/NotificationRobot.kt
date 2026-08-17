@@ -77,6 +77,5 @@ private fun systemMediaNotificationControlButton(state: String) =
 
 private fun systemMediaNotificationTitle(title: String) = mDevice.findObject(UiSelector().textContains(title))
 
-private val notificationTray = UiScrollable(
-    UiSelector().resourceId("com.android.systemui:id/notification_stack_scroller"),
-).setAsVerticalList()
+private val notificationTray =
+    UiScrollable(UiSelector().resourceId("com.android.systemui:id/notification_stack_scroller")).setAsVerticalList()

@@ -23,32 +23,31 @@ import org.mozilla.reference.browser.ui.robots.customTabScreen
 class CustomTabsTest {
     private lateinit var mockWebServer: MockWebServer
 
-    @get:Rule
-    val activityTestRule = BrowserActivityTestRule()
+    @get:Rule val activityTestRule = BrowserActivityTestRule()
 
-    @Rule
-    @JvmField
-    val retryTestRule = RetryTestRule(3)
+    @Rule @JvmField val retryTestRule = RetryTestRule(3)
 
     // ActivityScenario.launch resolves intents via normal Android routing, so an ACTION_VIEW
     // intent with an HTTP URL would resolve to the browser rather than IntentReceiverActivity.
     // Setting the component explicitly forces it to launch within the test process.
     private fun launchCustomTab(pageUrl: String) =
         ActivityScenario.launch<IntentReceiverActivity>(
-        createCustomTabIntent(pageUrl).apply {
-            component = ComponentName(
-                InstrumentationRegistry.getInstrumentation().targetContext,
-                IntentReceiverActivity::class.java,
-            )
-        },
-    )
+            createCustomTabIntent(pageUrl).apply {
+                component =
+                    ComponentName(
+                        InstrumentationRegistry.getInstrumentation().targetContext,
+                        IntentReceiverActivity::class.java,
+                    )
+            }
+        )
 
     @Before
     fun setUp() {
-        mockWebServer = MockWebServer().apply {
-            dispatcher = AndroidAssetDispatcher()
-            start()
-        }
+        mockWebServer =
+            MockWebServer().apply {
+                dispatcher = AndroidAssetDispatcher()
+                start()
+            }
     }
 
     @After
@@ -78,16 +77,16 @@ class CustomTabsTest {
         val customTabPage = TestAssetHelper.getGenericAsset(mockWebServer, 1)
 
         launchCustomTab(customTabPage.url.toString()).use {
-            customTabScreen {
-            }.openMainMenu {
-                verifyForwardButton()
-                verifyRefreshButton()
-                verifyStopButton()
-                verifyShareButton()
-                verifyRequestDesktopButton()
-                verifyFindInPageButton()
-                verifyOpenInBrowserButton()
-            }
+            customTabScreen {}
+                .openMainMenu {
+                    verifyForwardButton()
+                    verifyRefreshButton()
+                    verifyStopButton()
+                    verifyShareButton()
+                    verifyRequestDesktopButton()
+                    verifyFindInPageButton()
+                    verifyOpenInBrowserButton()
+                }
         }
     }
 
@@ -101,14 +100,16 @@ class CustomTabsTest {
                 clickGenericLink("Link 1")
                 verifyPageTitle(genericURL.title)
                 verifyPageUrl(genericURL.url.toString())
-            }.goBack {
-                verifyPageTitle(pageLinks.title)
-                verifyPageUrl(pageLinks.url.toString())
-            }.openMainMenu {
-                clickForwardButton()
-                verifyPageTitle(genericURL.title)
-                verifyPageUrl(genericURL.url.toString())
             }
+                .goBack {
+                    verifyPageTitle(pageLinks.title)
+                    verifyPageUrl(pageLinks.url.toString())
+                }
+                .openMainMenu {
+                    clickForwardButton()
+                    verifyPageTitle(genericURL.title)
+                    verifyPageUrl(genericURL.url.toString())
+                }
         }
     }
 
@@ -117,11 +118,11 @@ class CustomTabsTest {
         val customTabPage = TestAssetHelper.getGenericAsset(mockWebServer, 1)
 
         launchCustomTab(customTabPage.url.toString()).use {
-            customTabScreen {
-            }.openMainMenu {
-            }.clickShareButton {
-                verifyShareContentPanel()
-            }
+            customTabScreen {}
+                .openMainMenu {}
+                .clickShareButton {
+                    verifyShareContentPanel()
+                }
         }
     }
 
@@ -130,15 +131,17 @@ class CustomTabsTest {
         val customTabPage = TestAssetHelper.getGenericAsset(mockWebServer, 1)
 
         launchCustomTab(customTabPage.url.toString()).use {
-            customTabScreen {
-            }.openMainMenu {
-                switchRequestDesktopSiteToggle()
-            }.openMainMenu {
-                verifyRequestDesktopSiteIsTurnedOn()
-                switchRequestDesktopSiteToggle()
-            }.openMainMenu {
-                verifyRequestDesktopSiteIsTurnedOff()
-            }
+            customTabScreen {}
+                .openMainMenu {
+                    switchRequestDesktopSiteToggle()
+                }
+                .openMainMenu {
+                    verifyRequestDesktopSiteIsTurnedOn()
+                    switchRequestDesktopSiteToggle()
+                }
+                .openMainMenu {
+                    verifyRequestDesktopSiteIsTurnedOff()
+                }
         }
     }
 
@@ -147,11 +150,11 @@ class CustomTabsTest {
         val customTabPage = TestAssetHelper.getGenericAsset(mockWebServer, 1)
 
         launchCustomTab(customTabPage.url.toString()).use {
-            customTabScreen {
-            }.openMainMenu {
-            }.clickOpenInBrowserButton {
-                verifyUrl(customTabPage.url.toString())
-            }
+            customTabScreen {}
+                .openMainMenu {}
+                .clickOpenInBrowserButton {
+                    verifyUrl(customTabPage.url.toString())
+                }
         }
     }
 }

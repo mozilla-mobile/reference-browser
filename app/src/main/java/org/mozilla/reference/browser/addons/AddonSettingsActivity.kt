@@ -25,9 +25,7 @@ import mozilla.components.support.utils.ext.getParcelableExtraCompat
 import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.ext.components
 
-/**
- * An activity to show the settings of an add-on.
- */
+/** An activity to show the settings of an add-on. */
 class AddonSettingsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         setContentView(R.layout.activity_add_on_settings)
@@ -35,9 +33,7 @@ class AddonSettingsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         window.setupPersistentInsets(true)
 
-        val addon = requireNotNull(
-            intent.getParcelableExtraCompat("add_on", Addon::class.java),
-        )
+        val addon = requireNotNull(intent.getParcelableExtraCompat("add_on", Addon::class.java))
 
         title = addon.translateName(this)
 
@@ -55,9 +51,7 @@ class AddonSettingsActivity : AppCompatActivity() {
     ): View? =
         when (name) {
             EngineView::class.java.name -> {
-                components.core.engine
-                .createView(context, attrs)
-                .asView()
+                components.core.engine.createView(context, attrs).asView()
             }
 
             else -> {
@@ -65,9 +59,7 @@ class AddonSettingsActivity : AppCompatActivity() {
             }
         }
 
-    /**
-     * A fragment to show the settings of an add-on with [EngineView].
-     */
+    /** A fragment to show the settings of an add-on with [EngineView]. */
     class AddonSettingsFragment : Fragment() {
         private lateinit var optionsPageUrl: String
         private lateinit var engineSession: EngineSession
@@ -77,18 +69,18 @@ class AddonSettingsActivity : AppCompatActivity() {
             container: ViewGroup?,
             savedInstanceState: Bundle?,
         ): View? {
-            optionsPageUrl = requireNotNull(
-                arguments
-                    ?.getParcelableCompat(
-                    "add_on",
-                    Addon::class.java,
-                )?.installedState
-                    ?.optionsPageUrl,
-            )
+            optionsPageUrl =
+                requireNotNull(
+                    arguments
+                        ?.getParcelableCompat(
+                            "add_on",
+                            Addon::class.java,
+                        )
+                        ?.installedState
+                        ?.optionsPageUrl
+                )
 
-            engineSession = requireContext()
-                .components.core.engine
-                .createSession()
+            engineSession = requireContext().components.core.engine.createSession()
 
             return inflater.inflate(R.layout.fragment_add_on_settings, container, false)
         }
@@ -110,15 +102,14 @@ class AddonSettingsActivity : AppCompatActivity() {
         }
 
         companion object {
-            /**
-             * Create an [AddonSettingsFragment] with add_on as a required parameter.
-             */
+            /** Create an [AddonSettingsFragment] with add_on as a required parameter. */
             fun create(addon: Addon) =
                 AddonSettingsFragment().apply {
-                arguments = Bundle().apply {
-                    putParcelable("add_on", addon)
+                    arguments =
+                        Bundle().apply {
+                            putParcelable("add_on", addon)
+                        }
                 }
-            }
         }
     }
 }

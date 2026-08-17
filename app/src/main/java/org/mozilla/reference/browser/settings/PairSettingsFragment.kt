@@ -22,9 +22,7 @@ import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.ext.requireComponents
 import org.mozilla.reference.browser.sync.BrowserFxAEntryPoint
 
-class PairSettingsFragment :
-    Fragment(),
-    UserInteractionHandler {
+class PairSettingsFragment : Fragment(), UserInteractionHandler {
     private val qrFeature = ViewBoundFeatureWrapper<QrFeature>()
     private lateinit var requestPermissionLauncher: ActivityResultLauncher<String>
 
@@ -50,22 +48,23 @@ class PairSettingsFragment :
     ) {
         super.onViewCreated(view, savedInstanceState)
         qrFeature.set(
-            feature = QrFeature(
-                requireContext(),
-                fragmentManager = parentFragmentManager,
-                onNeedToRequestPermissions = { permissions ->
-                    requestPermissionLauncher.launch(permissions[0])
-                },
-                onScanResult = { pairingUrl ->
-                    requireComponents.services.accountsAuthFeature.beginPairingAuthentication(
-                        requireContext(),
-                        pairingUrl,
-                        BrowserFxAEntryPoint.HomeMenu,
-                        setOf(SCOPE_SYNC, SCOPE_PROFILE, SCOPE_SESSION),
-                    )
-                    activity?.finish()
-                },
-            ),
+            feature =
+                QrFeature(
+                    requireContext(),
+                    fragmentManager = parentFragmentManager,
+                    onNeedToRequestPermissions = { permissions ->
+                        requestPermissionLauncher.launch(permissions[0])
+                    },
+                    onScanResult = { pairingUrl ->
+                        requireComponents.services.accountsAuthFeature.beginPairingAuthentication(
+                            requireContext(),
+                            pairingUrl,
+                            BrowserFxAEntryPoint.HomeMenu,
+                            setOf(SCOPE_SYNC, SCOPE_PROFILE, SCOPE_SESSION),
+                        )
+                        activity?.finish()
+                    },
+                ),
             owner = this,
             view = view,
         )

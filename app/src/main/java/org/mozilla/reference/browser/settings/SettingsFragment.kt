@@ -19,6 +19,7 @@ import androidx.preference.Preference.OnPreferenceChangeListener
 import androidx.preference.Preference.OnPreferenceClickListener
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreferenceCompat
+import kotlin.system.exitProcess
 import mozilla.components.service.fxa.manager.SCOPE_PROFILE
 import mozilla.components.service.fxa.manager.SCOPE_SYNC
 import mozilla.components.support.ktx.android.view.showKeyboard
@@ -35,7 +36,6 @@ import org.mozilla.reference.browser.autofill.AutofillPreference
 import org.mozilla.reference.browser.ext.getPreferenceKey
 import org.mozilla.reference.browser.ext.requireComponents
 import org.mozilla.reference.browser.sync.BrowserFxAEntryPoint
-import kotlin.system.exitProcess
 
 private typealias RBSettings = org.mozilla.reference.browser.settings.Settings
 
@@ -109,64 +109,57 @@ class SettingsFragment : PreferenceFragmentCompat() {
         preferenceCustomAddons?.onPreferenceClickListener = getClickListenerForCustomAddons()
     }
 
-    private fun getClickListenerForMakeDefaultBrowser(): OnPreferenceClickListener =
-        OnPreferenceClickListener {
-            val intent = Intent(
-                Settings.ACTION_MANAGE_DEFAULT_APPS_SETTINGS,
-            )
-            startActivity(intent)
-            true
-        }
+    private fun getClickListenerForMakeDefaultBrowser(): OnPreferenceClickListener = OnPreferenceClickListener {
+        val intent = Intent(Settings.ACTION_MANAGE_DEFAULT_APPS_SETTINGS)
+        startActivity(intent)
+        true
+    }
 
-    private fun getClickListenerForSignIn(): OnPreferenceClickListener =
-        OnPreferenceClickListener {
-            requireComponents.services.accountsAuthFeature.beginAuthentication(
-                requireContext(),
-                BrowserFxAEntryPoint.HomeMenu,
-                setOf(SCOPE_PROFILE, SCOPE_SYNC),
-            )
-            activity?.finish()
-            true
-        }
+    private fun getClickListenerForSignIn(): OnPreferenceClickListener = OnPreferenceClickListener {
+        requireComponents.services.accountsAuthFeature.beginAuthentication(
+            requireContext(),
+            BrowserFxAEntryPoint.HomeMenu,
+            setOf(SCOPE_PROFILE, SCOPE_SYNC),
+        )
+        activity?.finish()
+        true
+    }
 
-    private fun getClickListenerForPairingSignIn(): OnPreferenceClickListener =
-        OnPreferenceClickListener {
-            parentFragmentManager
-                .beginTransaction()
-                .replace(R.id.container, PairSettingsFragment())
-                .addToBackStack(null)
-                .commit()
-            getActionBarUpdater().apply {
-                updateTitle(R.string.pair_preferences)
-            }
-            true
+    private fun getClickListenerForPairingSignIn(): OnPreferenceClickListener = OnPreferenceClickListener {
+        parentFragmentManager
+            .beginTransaction()
+            .replace(R.id.container, PairSettingsFragment())
+            .addToBackStack(null)
+            .commit()
+        getActionBarUpdater().apply {
+            updateTitle(R.string.pair_preferences)
         }
+        true
+    }
 
-    private fun getClickListenerForFirefoxAccount(): OnPreferenceClickListener =
-        OnPreferenceClickListener {
-            parentFragmentManager
-                .beginTransaction()
-                .replace(R.id.container, AccountSettingsFragment())
-                .addToBackStack(null)
-                .commit()
-            getActionBarUpdater().apply {
-                updateTitle(R.string.account_settings)
-            }
-            true
+    private fun getClickListenerForFirefoxAccount(): OnPreferenceClickListener = OnPreferenceClickListener {
+        parentFragmentManager
+            .beginTransaction()
+            .replace(R.id.container, AccountSettingsFragment())
+            .addToBackStack(null)
+            .commit()
+        getActionBarUpdater().apply {
+            updateTitle(R.string.account_settings)
         }
+        true
+    }
 
-    private fun getClickListenerForPrivacy(): OnPreferenceClickListener =
-        OnPreferenceClickListener {
-            parentFragmentManager
-                .beginTransaction()
-                .replace(R.id.container, PrivacySettingsFragment())
-                .addToBackStack(null)
-                .commit()
-            getActionBarUpdater().apply {
-                updateTitle(R.string.privacy_settings)
-            }
-            true
+    private fun getClickListenerForPrivacy(): OnPreferenceClickListener = OnPreferenceClickListener {
+        parentFragmentManager
+            .beginTransaction()
+            .replace(R.id.container, PrivacySettingsFragment())
+            .addToBackStack(null)
+            .commit()
+        getActionBarUpdater().apply {
+            updateTitle(R.string.privacy_settings)
         }
+        true
+    }
 
     private fun getChangeListenerForRemoteDebugging(): OnPreferenceChangeListener =
         OnPreferenceChangeListener { _, newValue ->
@@ -174,28 +167,21 @@ class SettingsFragment : PreferenceFragmentCompat() {
             true
         }
 
-    private fun getAboutPageListener(): OnPreferenceClickListener =
-        OnPreferenceClickListener {
-            parentFragmentManager
-                .beginTransaction()
-                .replace(R.id.container, AboutFragment())
-                .addToBackStack(null)
-                .commit()
-            true
-        }
+    private fun getAboutPageListener(): OnPreferenceClickListener = OnPreferenceClickListener {
+        parentFragmentManager.beginTransaction().replace(R.id.container, AboutFragment()).addToBackStack(null).commit()
+        true
+    }
 
     private fun getActionBarUpdater() = activity as ActionBarUpdater
 
-    private fun getClickListenerForCustomAddons(): OnPreferenceClickListener =
-        OnPreferenceClickListener {
-            val context = requireContext()
-            val dialogView = View.inflate(context, R.layout.amo_collection_override_dialog, null)
-            val userView = dialogView.findViewById<EditText>(R.id.custom_amo_user)
-            val collectionView = dialogView.findViewById<EditText>(R.id.custom_amo_collection)
+    private fun getClickListenerForCustomAddons(): OnPreferenceClickListener = OnPreferenceClickListener {
+        val context = requireContext()
+        val dialogView = View.inflate(context, R.layout.amo_collection_override_dialog, null)
+        val userView = dialogView.findViewById<EditText>(R.id.custom_amo_user)
+        val collectionView = dialogView.findViewById<EditText>(R.id.custom_amo_collection)
 
-            AlertDialog
-                .Builder(context)
-                .apply {
+        AlertDialog.Builder(context)
+            .apply {
                 setTitle(context.getString(R.string.preferences_customize_amo_collection))
                 setView(dialogView)
                 setNegativeButton(R.string.customize_addon_collection_cancel) { dialog: DialogInterface, _ ->
@@ -206,19 +192,20 @@ class SettingsFragment : PreferenceFragmentCompat() {
                     RBSettings.setOverrideAmoUser(context, userView.text.toString())
                     RBSettings.setOverrideAmoCollection(context, collectionView.text.toString())
 
-                    Toast
-                        .makeText(
-                        context,
-                        getString(R.string.toast_customize_addon_collection_done),
-                        Toast.LENGTH_LONG,
-                    ).show()
+                    Toast.makeText(
+                            context,
+                            getString(R.string.toast_customize_addon_collection_done),
+                            Toast.LENGTH_LONG,
+                        )
+                        .show()
 
-                    Handler(Looper.getMainLooper()).postDelayed(
-                        {
-                            exitProcess(0)
-                        },
-                        AMO_COLLECTION_OVERRIDE_EXIT_DELAY,
-                    )
+                    Handler(Looper.getMainLooper())
+                        .postDelayed(
+                            {
+                                exitProcess(0)
+                            },
+                            AMO_COLLECTION_OVERRIDE_EXIT_DELAY,
+                        )
                 }
 
                 collectionView.setText(RBSettings.getOverrideAmoCollection(context))
@@ -226,9 +213,10 @@ class SettingsFragment : PreferenceFragmentCompat() {
                 userView.requestFocus()
                 userView.showKeyboard()
                 create()
-            }.show()
-            true
-        }
+            }
+            .show()
+        true
+    }
 
     companion object {
         private const val AMO_COLLECTION_OVERRIDE_EXIT_DELAY = 3000L

@@ -5,21 +5,21 @@
 package mozilla.components.lib.state
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State as ComposeState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import mozilla.components.lib.state.ext.observe
-import androidx.compose.runtime.State as ComposeState
 
 /**
- * Starts observing this [Store] and represents the mapped state (using [map]) via [ComposeState].
- * Every time the [Store] state changes the returned [ComposeState] will be updated causing
- * recomposition of every [ComposeState.value] usage.
+ * Starts observing this [Store] and represents the mapped state (using [map]) via [ComposeState]. Every time the
+ * [Store] state changes the returned [ComposeState] will be updated causing recomposition of every [ComposeState.value]
+ * usage.
  *
- * The [Store] observer will automatically be removed when this composable disposes or the current
- * [LifecycleOwner] moves to the [Lifecycle.State.DESTROYED] state.
+ * The [Store] observer will automatically be removed when this composable disposes or the current [LifecycleOwner]
+ * moves to the [Lifecycle.State.DESTROYED] state.
  */
 @Composable
 fun <S : State, A : Action, R> Store<S, A>.observeAsState(map: (S) -> R): ComposeState<R?> {

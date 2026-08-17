@@ -18,9 +18,7 @@ import org.mozilla.reference.browser.helpers.TestAssetHelper.waitingTime
 import org.mozilla.reference.browser.helpers.TestAssetHelper.waitingTimeShort
 import org.mozilla.reference.browser.helpers.TestHelper.packageName
 
-/**
- * Implementation of Robot Pattern for any non-Reference Browser (external) apps.
- */
+/** Implementation of Robot Pattern for any non-Reference Browser (external) apps. */
 class ExternalAppsRobot {
     fun verifyAndroidDefaultApps() = assertDefaultAppsLayout()
 
@@ -48,30 +46,19 @@ private fun assertYouTubeApp() {
     try {
         // Check youtube's home buttons
         mDevice.waitForIdle()
-        assertTrue(
-            mDevice
-                .findObject(UiSelector().text("Home"))
-                .waitForExists(waitingTime),
-        )
-        assertTrue(
-            mDevice
-                .findObject(UiSelector().text("Subscriptions"))
-                .waitForExists(waitingTime),
-        )
+        assertTrue(mDevice.findObject(UiSelector().text("Home")).waitForExists(waitingTime))
+        assertTrue(mDevice.findObject(UiSelector().text("Subscriptions")).waitForExists(waitingTime))
     } catch (e: AssertionError) {
         println("The native youtube app opens but needs to be updated")
         // In case the app isn't up to date on the emulator an update message will be displayed
         assertTrue(
-            mDevice
-                .findObject(UiSelector().text("Update for a faster, better YouTube"))
-                .waitForExists(waitingTime),
+            mDevice.findObject(UiSelector().text("Update for a faster, better YouTube")).waitForExists(waitingTime)
         )
     }
 }
 
 private fun assertFXAQrCode() {
-    onView(withText(R.string.pair_preferences))
-        .check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+    onView(withText(R.string.pair_preferences)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
     onView(withText(R.string.pair_instructions))
         .check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
 }

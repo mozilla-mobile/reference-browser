@@ -10,7 +10,7 @@ import android.net.Uri
 
 fun String?.toUri(): Uri? =
     if (this == null) {
-    null
-} else {
-    Uri.parse(this)
-}
+        null
+    } else {
+        Uri.parse(this)
+    }

@@ -17,19 +17,17 @@ import org.mozilla.reference.browser.ui.robots.navigationToolbar
 class AddonsTest {
     private lateinit var mockWebServer: MockWebServer
 
-    @get:Rule
-    val activityTestRule = BrowserActivityTestRule()
+    @get:Rule val activityTestRule = BrowserActivityTestRule()
 
-    @Rule
-    @JvmField
-    val retryTestRule = RetryTestRule(3)
+    @Rule @JvmField val retryTestRule = RetryTestRule(3)
 
     @Before
     fun setUp() {
-        mockWebServer = MockWebServer().apply {
-            dispatcher = AndroidAssetDispatcher()
-            start()
-        }
+        mockWebServer =
+            MockWebServer().apply {
+                dispatcher = AndroidAssetDispatcher()
+                start()
+            }
     }
 
     @After
@@ -39,74 +37,74 @@ class AddonsTest {
 
     @Test
     fun addonsListingPageTest() {
-        navigationToolbar {
-        }.openThreeDotMenu {
-        }.openAddonsManager {
-            verifyAddonsRecommendedView()
-        }
+        navigationToolbar {}
+            .openThreeDotMenu {}
+            .openAddonsManager {
+                verifyAddonsRecommendedView()
+            }
     }
 
     @Test
     fun cancelAddonInstallTest() {
         val addonName = "uBlock Origin"
 
-        navigationToolbar {
-        }.openThreeDotMenu {
-        }.openAddonsManager {
-            clickInstallAddonButton(addonName)
-            verifyInstallAddonPrompt(addonName)
-            clickCancelInstallButton()
-            verifyAddonsRecommendedView()
-        }
+        navigationToolbar {}
+            .openThreeDotMenu {}
+            .openAddonsManager {
+                clickInstallAddonButton(addonName)
+                verifyInstallAddonPrompt(addonName)
+                clickCancelInstallButton()
+                verifyAddonsRecommendedView()
+            }
     }
 
     @Test
     fun installAddonTest() {
         val addonName = "uBlock Origin"
 
-        navigationToolbar {
-        }.openThreeDotMenu {
-        }.openAddonsManager {
-            clickInstallAddonButton(addonName)
-            verifyInstallAddonPrompt(addonName)
-            clickAllowInstallAddonButton()
-            waitForAddonDownloadComplete()
-            verifyAddonDownloadCompletedPrompt(addonName)
-        }
+        navigationToolbar {}
+            .openThreeDotMenu {}
+            .openAddonsManager {
+                clickInstallAddonButton(addonName)
+                verifyInstallAddonPrompt(addonName)
+                clickAllowInstallAddonButton()
+                waitForAddonDownloadComplete()
+                verifyAddonDownloadCompletedPrompt(addonName)
+            }
     }
 
     @Test
     fun verifyAddonElementsTest() {
         val addonName = "uBlock Origin"
 
-        navigationToolbar {
-        }.openThreeDotMenu {
-        }.openAddonsManager {
-            verifyAddonsRecommendedView()
-            clickInstallAddonButton(addonName)
-            clickAllowInstallAddonButton()
-            waitForAddonDownloadComplete()
-            dismissAddonDownloadCompletedPrompt(addonName)
-            openAddon(addonName)
-            verifyAddonElementsView(addonName)
-        }
+        navigationToolbar {}
+            .openThreeDotMenu {}
+            .openAddonsManager {
+                verifyAddonsRecommendedView()
+                clickInstallAddonButton(addonName)
+                clickAllowInstallAddonButton()
+                waitForAddonDownloadComplete()
+                dismissAddonDownloadCompletedPrompt(addonName)
+                openAddon(addonName)
+                verifyAddonElementsView(addonName)
+            }
     }
 
     @Test
     fun removeAddonTest() {
         val addonName = "uBlock Origin"
 
-        navigationToolbar {
-        }.openThreeDotMenu {
-        }.openAddonsManager {
-            verifyAddonsRecommendedView()
-            clickInstallAddonButton(addonName)
-            clickAllowInstallAddonButton()
-            waitForAddonDownloadComplete()
-            dismissAddonDownloadCompletedPrompt(addonName)
-            openAddon(addonName)
-            clickRemoveAddonButton()
-            verifyAddonsRecommendedView()
-        }
+        navigationToolbar {}
+            .openThreeDotMenu {}
+            .openAddonsManager {
+                verifyAddonsRecommendedView()
+                clickInstallAddonButton(addonName)
+                clickAllowInstallAddonButton()
+                waitForAddonDownloadComplete()
+                dismissAddonDownloadCompletedPrompt(addonName)
+                openAddon(addonName)
+                clickRemoveAddonButton()
+                verifyAddonsRecommendedView()
+            }
     }
 }
