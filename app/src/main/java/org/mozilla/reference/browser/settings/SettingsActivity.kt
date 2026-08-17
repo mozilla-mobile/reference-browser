@@ -15,9 +15,7 @@ import mozilla.components.support.base.feature.UserInteractionHandler
 import mozilla.components.support.ktx.android.view.setupPersistentInsets
 import org.mozilla.reference.browser.R
 
-class SettingsActivity :
-    AppCompatActivity(),
-    SettingsFragment.ActionBarUpdater {
+class SettingsActivity : AppCompatActivity(), SettingsFragment.ActionBarUpdater {
     override fun onCreate(savedInstanceState: Bundle?) {
         setContentView(R.layout.activity_main)
         enableEdgeToEdge(SystemBarStyle.dark(Color.TRANSPARENT))
@@ -27,16 +25,17 @@ class SettingsActivity :
         onBackPressedDispatcher.addCallback(
             this,
             object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                val handled = supportFragmentManager.fragments.any {
-                    it is UserInteractionHandler && it.onBackPressed()
+                override fun handleOnBackPressed() {
+                    val handled =
+                        supportFragmentManager.fragments.any {
+                            it is UserInteractionHandler && it.onBackPressed()
+                        }
+                    if (!handled) {
+                        remove()
+                        onBackPressedDispatcher.onBackPressed()
+                    }
                 }
-                if (!handled) {
-                    remove()
-                    onBackPressedDispatcher.onBackPressed()
-                }
-            }
-        },
+            },
         )
 
         if (savedInstanceState == null) {
@@ -49,15 +48,15 @@ class SettingsActivity :
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean =
         when (item.itemId) {
-        android.R.id.home -> {
-            onBackPressedDispatcher.onBackPressed()
-            true
-        }
+            android.R.id.home -> {
+                onBackPressedDispatcher.onBackPressed()
+                true
+            }
 
-        else -> {
-            super.onOptionsItemSelected(item)
+            else -> {
+                super.onOptionsItemSelected(item)
+            }
         }
-    }
 
     override fun updateTitle(titleResId: Int) {
         setTitle(titleResId)

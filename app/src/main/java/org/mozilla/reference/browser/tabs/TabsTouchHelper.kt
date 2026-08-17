@@ -5,15 +5,16 @@
 package org.mozilla.reference.browser.tabs
 
 import androidx.recyclerview.widget.ItemTouchHelper
+import kotlin.math.abs
 import mozilla.components.browser.state.state.TabSessionState
 import mozilla.components.browser.tabstray.TabTouchCallback
-import kotlin.math.abs
 
-class TabsTouchHelper(
-    observable: (TabSessionState) -> Unit,
-) : ItemTouchHelper(object : TabTouchCallback(observable) {
-        override fun alphaForItemSwipe(
-            dX: Float,
-            distanceToAlphaMin: Int,
-        ): Float = 1f - 2f * abs(dX) / distanceToAlphaMin
-    })
+class TabsTouchHelper(observable: (TabSessionState) -> Unit) :
+    ItemTouchHelper(
+        object : TabTouchCallback(observable) {
+            override fun alphaForItemSwipe(
+                dX: Float,
+                distanceToAlphaMin: Int,
+            ): Float = 1f - 2f * abs(dX) / distanceToAlphaMin
+        }
+    )

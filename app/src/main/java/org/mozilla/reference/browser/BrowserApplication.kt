@@ -5,6 +5,7 @@
 package org.mozilla.reference.browser
 
 import android.app.Application
+import java.util.concurrent.TimeUnit
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -14,6 +15,7 @@ import mozilla.components.concept.engine.webextension.isUnsupported
 import mozilla.components.concept.push.PushProcessor
 import mozilla.components.feature.addons.update.GlobalAddonDependencyProvider
 import mozilla.components.support.AppServicesInitializer
+import mozilla.components.support.AppServicesInitializer.Config as AppServicesConfig
 import mozilla.components.support.base.log.Log
 import mozilla.components.support.base.log.logger.Logger
 import mozilla.components.support.base.log.sink.AndroidLogSink
@@ -23,8 +25,6 @@ import mozilla.components.support.rusthttp.RustHttpConfig
 import mozilla.components.support.webextensions.WebExtensionSupport
 import org.mozilla.reference.browser.push.PushFxaIntegration
 import org.mozilla.reference.browser.push.WebPushEngineIntegration
-import java.util.concurrent.TimeUnit
-import mozilla.components.support.AppServicesInitializer.Config as AppServicesConfig
 
 open class BrowserApplication : Application() {
     val components by lazy { Components(this) }
@@ -34,9 +34,7 @@ open class BrowserApplication : Application() {
 
         setupCrashReporting(this)
 
-        AppServicesInitializer.init(
-            AppServicesConfig(components.analytics.crashReporter),
-        )
+        AppServicesInitializer.init(AppServicesConfig(components.analytics.crashReporter))
         RustHttpConfig.setClient(lazy { components.core.client })
 
         Log.addSink(AndroidLogSink())
@@ -61,12 +59,13 @@ open class BrowserApplication : Application() {
             runtime = components.core.engine,
             store = components.core.store,
             onNewTabOverride = { _, engineSession, url, selected, isPrivate ->
-                val tabId = components.useCases.tabsUseCases.addTab(
-                    url = url,
-                    selectTab = selected,
-                    engineSession = engineSession,
-                    private = isPrivate,
-                )
+                val tabId =
+                    components.useCases.tabsUseCases.addTab(
+                        url = url,
+                        selectTab = selected,
+                        engineSession = engineSession,
+                        private = isPrivate,
+                    )
                 tabId
             },
             onCloseTabOverride = { _, sessionId ->
@@ -122,19 +121,19 @@ open class BrowserApplication : Application() {
     @OptIn(DelicateCoroutinesApi::class)
     private fun restoreBrowserState() =
         GlobalScope.launch(Dispatchers.Main) {
-        val store = components.core.store
-        val sessionStorage = components.core.sessionStorage
+            val store = components.core.store
+            val sessionStorage = components.core.sessionStorage
 
-        components.useCases.tabsUseCases.restore(sessionStorage)
+            components.useCases.tabsUseCases.restore(sessionStorage)
 
-        // Now that we have restored our previous state (if there's one) let's setup auto saving the state while
-        // the app is used.
-        sessionStorage
-            .autoSave(store)
-            .periodicallyInForeground(interval = 30, unit = TimeUnit.SECONDS)
-            .whenGoingToBackground()
-            .whenSessionsChange()
-    }
+            // Now that we have restored our previous state (if there's one) let's setup auto saving the state while
+            // the app is used.
+            sessionStorage
+                .autoSave(store)
+                .periodicallyInForeground(interval = 30, unit = TimeUnit.SECONDS)
+                .whenGoingToBackground()
+                .whenSessionsChange()
+        }
 
     companion object {
         const val NON_FATAL_CRASH_BROADCAST = "org.mozilla.reference.browser"
@@ -142,9 +141,5 @@ open class BrowserApplication : Application() {
 }
 
 private fun setupCrashReporting(application: BrowserApplication) {
-    application
-        .components
-        .analytics
-        .crashReporter
-        .install(application)
+    application.components.analytics.crashReporter.install(application)
 }

@@ -37,37 +37,38 @@ import org.mozilla.reference.browser.ext.requireComponents
 import org.mozilla.reference.browser.sync.BrowserFxAEntryPoint
 
 class AccountSettingsFragment : PreferenceFragmentCompat() {
-    private val syncStatusObserver = object : SyncStatusObserver {
-        override fun onStarted() {
-            CoroutineScope(Dispatchers.Main).launch {
-                val pref = findPreference<Preference>(requireContext().getPreferenceKey(pref_key_sync_now))
+    private val syncStatusObserver =
+        object : SyncStatusObserver {
+            override fun onStarted() {
+                CoroutineScope(Dispatchers.Main).launch {
+                    val pref = findPreference<Preference>(requireContext().getPreferenceKey(pref_key_sync_now))
 
-                pref?.title = getString(R.string.syncing)
-                pref?.isEnabled = false
+                    pref?.title = getString(R.string.syncing)
+                    pref?.isEnabled = false
+                }
+            }
+
+            // Sync stopped successfully.
+            override fun onIdle() {
+                CoroutineScope(Dispatchers.Main).launch {
+                    val pref = findPreference<Preference>(requireContext().getPreferenceKey(pref_key_sync_now))
+                    pref?.title = getString(R.string.sync_now)
+                    pref?.isEnabled = true
+                    updateLastSyncedTimePref(context!!, pref, failed = false)
+                    updateSyncEngineStates()
+                }
+            }
+
+            // Sync stopped after encountering a problem.
+            override fun onError(error: Exception?) {
+                CoroutineScope(Dispatchers.Main).launch {
+                    val pref = findPreference<Preference>(requireContext().getPreferenceKey(pref_key_sync_now))
+                    pref?.title = getString(R.string.sync_now)
+                    pref?.isEnabled = true
+                    updateLastSyncedTimePref(context!!, pref, failed = true)
+                }
             }
         }
-
-        // Sync stopped successfully.
-        override fun onIdle() {
-            CoroutineScope(Dispatchers.Main).launch {
-                val pref = findPreference<Preference>(requireContext().getPreferenceKey(pref_key_sync_now))
-                pref?.title = getString(R.string.sync_now)
-                pref?.isEnabled = true
-                updateLastSyncedTimePref(context!!, pref, failed = false)
-                updateSyncEngineStates()
-            }
-        }
-
-        // Sync stopped after encountering a problem.
-        override fun onError(error: Exception?) {
-            CoroutineScope(Dispatchers.Main).launch {
-                val pref = findPreference<Preference>(requireContext().getPreferenceKey(pref_key_sync_now))
-                pref?.title = getString(R.string.sync_now)
-                pref?.isEnabled = true
-                updateLastSyncedTimePref(context!!, pref, failed = true)
-            }
-        }
-    }
 
     override fun onCreatePreferences(
         savedInstanceState: Bundle?,
@@ -121,81 +122,74 @@ class AccountSettingsFragment : PreferenceFragmentCompat() {
     ) {
         val lastSyncTime = getLastSynced(context)
 
-        pref?.summary = if (!failed && lastSyncTime == 0L) {
-            // Never tried to sync.
-            getString(R.string.preferences_sync_never_synced_summary)
-        } else if (failed && lastSyncTime == 0L) {
-            // Failed to sync, never succeeded before.
-            getString(R.string.preferences_sync_failed_never_synced_summary)
-        } else if (!failed && lastSyncTime != 0L) {
-            // Successfully synced.
-            getString(
-                R.string.preferences_sync_last_synced_summary,
-                DateUtils.getRelativeTimeSpanString(lastSyncTime),
-            )
-        } else {
-            // Failed to sync, succeeded before.
-            getString(
-                R.string.preferences_sync_failed_summary,
-                DateUtils.getRelativeTimeSpanString(lastSyncTime),
-            )
-        }
+        pref?.summary =
+            if (!failed && lastSyncTime == 0L) {
+                // Never tried to sync.
+                getString(R.string.preferences_sync_never_synced_summary)
+            } else if (failed && lastSyncTime == 0L) {
+                // Failed to sync, never succeeded before.
+                getString(R.string.preferences_sync_failed_never_synced_summary)
+            } else if (!failed && lastSyncTime != 0L) {
+                // Successfully synced.
+                getString(
+                    R.string.preferences_sync_last_synced_summary,
+                    DateUtils.getRelativeTimeSpanString(lastSyncTime),
+                )
+            } else {
+                // Failed to sync, succeeded before.
+                getString(
+                    R.string.preferences_sync_failed_summary,
+                    DateUtils.getRelativeTimeSpanString(lastSyncTime),
+                )
+            }
     }
 
-    private fun getClickListenerForSignOut(): OnPreferenceClickListener =
-        OnPreferenceClickListener {
-            CoroutineScope(Dispatchers.Main).launch {
-                requireComponents.backgroundServices.accountManager.logout()
-                activity?.onBackPressedDispatcher?.onBackPressed()
-            }
-            true
+    private fun getClickListenerForSignOut(): OnPreferenceClickListener = OnPreferenceClickListener {
+        CoroutineScope(Dispatchers.Main).launch {
+            requireComponents.backgroundServices.accountManager.logout()
+            activity?.onBackPressedDispatcher?.onBackPressed()
         }
+        true
+    }
 
-    private fun getClickListenerForSyncNow(): OnPreferenceClickListener =
-        OnPreferenceClickListener {
-            CoroutineScope(Dispatchers.Main).launch {
-                // Trigger a sync & update devices.
-                requireComponents.backgroundServices.accountManager.syncNow(SyncReason.User)
-                // Poll for device events.
-                requireComponents.backgroundServices.accountManager
-                    .authenticatedAccount()
-                    ?.deviceConstellation()
-                    ?.run {
-                        refreshDevices()
-                        pollForCommands()
-                    }
+    private fun getClickListenerForSyncNow(): OnPreferenceClickListener = OnPreferenceClickListener {
+        CoroutineScope(Dispatchers.Main).launch {
+            // Trigger a sync & update devices.
+            requireComponents.backgroundServices.accountManager.syncNow(SyncReason.User)
+            // Poll for device events.
+            requireComponents.backgroundServices.accountManager.authenticatedAccount()?.deviceConstellation()?.run {
+                refreshDevices()
+                pollForCommands()
             }
-            true
         }
+        true
+    }
 
-    private fun getClickListenerForManageAccount(): OnPreferenceClickListener =
-        OnPreferenceClickListener {
-            viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Main) {
-                context?.let {
-                    val account =
-                        requireComponents.backgroundServices.accountManager.authenticatedAccount()
-                    val url = account?.getManageAccountURL(BrowserFxAEntryPoint.AccountSettings)
-                    if (url != null) {
-                        val intent = createCustomTabIntent(it, url)
-                        startActivity(intent)
-                    }
+    private fun getClickListenerForManageAccount(): OnPreferenceClickListener = OnPreferenceClickListener {
+        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Main) {
+            context?.let {
+                val account = requireComponents.backgroundServices.accountManager.authenticatedAccount()
+                val url = account?.getManageAccountURL(BrowserFxAEntryPoint.AccountSettings)
+                if (url != null) {
+                    val intent = createCustomTabIntent(it, url)
+                    startActivity(intent)
                 }
             }
-            true
         }
+        true
+    }
 
     private fun createCustomTabIntent(
         context: Context,
         url: String,
     ): Intent =
-        CustomTabsIntent
-        .Builder()
-        .setInstantAppsEnabled(false)
-        .build()
-        .intent
-        .setData(url.toUri())
-        .setClassName(context, IntentReceiverActivity::class.java.name)
-        .setPackage(context.packageName)
+        CustomTabsIntent.Builder()
+            .setInstantAppsEnabled(false)
+            .build()
+            .intent
+            .setData(url.toUri())
+            .setClassName(context, IntentReceiverActivity::class.java.name)
+            .setPackage(context.packageName)
 
     private fun updateSyncEngineState(
         engine: SyncEngine,
@@ -219,9 +213,9 @@ class AccountSettingsFragment : PreferenceFragmentCompat() {
 
     private fun SyncEngine.prefId(): Int =
         when (this) {
-        SyncEngine.History -> pref_key_sync_history
-        SyncEngine.Passwords -> pref_key_sync_passwords
-        SyncEngine.Tabs -> pref_key_sync_tabs
-        else -> throw IllegalStateException("Accessing unsupported sync engines")
-    }
+            SyncEngine.History -> pref_key_sync_history
+            SyncEngine.Passwords -> pref_key_sync_passwords
+            SyncEngine.Tabs -> pref_key_sync_tabs
+            else -> throw IllegalStateException("Accessing unsupported sync engines")
+        }
 }

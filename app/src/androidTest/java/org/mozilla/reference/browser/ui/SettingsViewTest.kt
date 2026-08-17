@@ -15,57 +15,55 @@ import org.mozilla.reference.browser.ui.robots.mDevice
 import org.mozilla.reference.browser.ui.robots.navigationToolbar
 
 /**
- *   Tests for verifying the settings view options exist as expected:
+ * Tests for verifying the settings view options exist as expected:
  * - Appears when the settings submenu is tapped
  * - Expected options are displayed as listed below
  */
-
 class SettingsViewTest {
     // Grant the app access to the camera so that we can test the Firefox Accounts QR code reader
-    @Rule @JvmField
+    @Rule
+    @JvmField
     val grantPermissionRule: GrantPermissionRule = GrantPermissionRule.grant(android.Manifest.permission.CAMERA)
 
     @get:Rule val browserActivityTestRule = BrowserActivityTestRule()
 
-    @Rule
-    @JvmField
-    val retryTestRule = RetryTestRule(3)
+    @Rule @JvmField val retryTestRule = RetryTestRule(3)
 
     // This test verifies settings view items are all in place
     @Test
     fun settingsItemsTest() {
-        navigationToolbar {
-        }.openThreeDotMenu {
-        }.openSettings {
-            verifySettingsRecyclerViewToExist()
-            verifyNavigateUp()
-            verifySyncSigninButton()
-            verifySyncHistorySummary()
-            verifySyncQrCodeButton()
-            verifySyncQrSummary()
-            verifyPrivacyButton()
-            verifyPrivacySummary()
-            verifyOpenLinksInApps()
-            verifyMakeDefaultBrowserButton()
-            verifyAutofillAppsButton()
-            varifyAutofillAppsSummary()
-            verifyJetpackComposeButton()
-            verifyDeveloperToolsHeading()
-            verifyRemoteDebugging()
-            verifyCustomAddonCollectionButton()
-            verifyMozillaHeading()
-            verifyAboutReferenceBrowserButton()
-        }
+        navigationToolbar {}
+            .openThreeDotMenu {}
+            .openSettings {
+                verifySettingsRecyclerViewToExist()
+                verifyNavigateUp()
+                verifySyncSigninButton()
+                verifySyncHistorySummary()
+                verifySyncQrCodeButton()
+                verifySyncQrSummary()
+                verifyPrivacyButton()
+                verifyPrivacySummary()
+                verifyOpenLinksInApps()
+                verifyMakeDefaultBrowserButton()
+                verifyAutofillAppsButton()
+                varifyAutofillAppsSummary()
+                verifyJetpackComposeButton()
+                verifyDeveloperToolsHeading()
+                verifyRemoteDebugging()
+                verifyCustomAddonCollectionButton()
+                verifyMozillaHeading()
+                verifyAboutReferenceBrowserButton()
+            }
     }
 
     @Test
     fun openFXATest() {
-        navigationToolbar {
-        }.openThreeDotMenu {
-        }.openSettings {
-        }.openFXASignin {
-            verifyFXAUrl()
-        }
+        navigationToolbar {}
+            .openThreeDotMenu {}
+            .openSettings {}
+            .openFXASignin {
+                verifyFXAUrl()
+            }
     }
 
     // openFXAQrCodeTest tests that we get to the camera
@@ -73,72 +71,72 @@ class SettingsViewTest {
     @Ignore("Test instrumentation process crash, see: https://github.com/mozilla-mobile/reference-browser/issues/1502")
     @Test
     fun openFXAQrCodeTest() {
-        navigationToolbar {
-        }.openThreeDotMenu {
-        }.openSettings {
-        }.openFXAQrCode {
-            mDevice.waitForIdle()
-            verifyFxAQrCode()
-            mDevice.pressBack()
-        }
+        navigationToolbar {}
+            .openThreeDotMenu {}
+            .openSettings {}
+            .openFXAQrCode {
+                mDevice.waitForIdle()
+                verifyFxAQrCode()
+                mDevice.pressBack()
+            }
     }
 
     @Test
     fun privacySettingsItemsTest() {
-        navigationToolbar {
-        }.openThreeDotMenu {
-        }.openSettings {
-        }.openSettingsViewPrivacy {
-            verifyPrivacyUpButton()
-            verifyPrivacySettings()
-            verifyTrackingProtectionHeading()
-            verifyTPEnableInNormalBrowsing()
-            verifyTPEnableinPrivateBrowsing()
-            verifyDataChoicesHeading()
-            verifyUseTelemetryToggle()
-            verifyTelemetrySummary()
-        }
+        navigationToolbar {}
+            .openThreeDotMenu {}
+            .openSettings {}
+            .openSettingsViewPrivacy {
+                verifyPrivacyUpButton()
+                verifyPrivacySettings()
+                verifyTrackingProtectionHeading()
+                verifyTPEnableInNormalBrowsing()
+                verifyTPEnableinPrivateBrowsing()
+                verifyDataChoicesHeading()
+                verifyUseTelemetryToggle()
+                verifyTelemetrySummary()
+            }
     }
 
     @Test
     fun setDefaultBrowserTest() {
-        navigationToolbar {
-        }.openThreeDotMenu {
-        }.openSettings {
-        }.makeDefaultBrowser {
-            verifyAndroidDefaultApps()
-        }
+        navigationToolbar {}
+            .openThreeDotMenu {}
+            .openSettings {}
+            .makeDefaultBrowser {
+                verifyAndroidDefaultApps()
+            }
     }
 
     @Test
     fun autofillAppsTest() {
-        navigationToolbar {
-        }.openThreeDotMenu {
-        }.openSettings {
-        }.clickAutofillAppsButton {
-            verifyAndroidAutofillServices()
-        }
+        navigationToolbar {}
+            .openThreeDotMenu {}
+            .openSettings {}
+            .clickAutofillAppsButton {
+                verifyAndroidAutofillServices()
+            }
     }
 
     @Test
     fun remoteDebuggingViaUSB() {
-        navigationToolbar {
-        }.openThreeDotMenu {
-        }.openSettings {
-            toggleRemoteDebuggingOn()
-            toggleRemoteDebuggingOff()
-            toggleRemoteDebuggingOn()
-        }
+        navigationToolbar {}
+            .openThreeDotMenu {}
+            .openSettings {
+                toggleRemoteDebuggingOn()
+                toggleRemoteDebuggingOff()
+                toggleRemoteDebuggingOn()
+            }
     }
 
     @Test
     fun aboutReferenceBrowserTest() {
-        navigationToolbar {
-        }.openThreeDotMenu {
-        }.openSettings {
-        }.openAboutReferenceBrowser {
-            verifyAboutBrowser()
-        }
+        navigationToolbar {}
+            .openThreeDotMenu {}
+            .openSettings {}
+            .openAboutReferenceBrowser {
+                verifyAboutBrowser()
+            }
     }
 
     /* Can't check further because after creating the custom add-on collection
@@ -148,29 +146,31 @@ class SettingsViewTest {
     will cause the test instrumentation process to crash */
     @Test
     fun customAddonsCollectionTest() {
-        navigationToolbar {
-        }.openThreeDotMenu {
-        }.openSettings {
-            verifyCustomAddonCollectionButton()
-            clickCustomAddonCollectionButton()
-            verifyCustomAddonCollectionPanelExist()
-        }
+        navigationToolbar {}
+            .openThreeDotMenu {}
+            .openSettings {
+                verifyCustomAddonCollectionButton()
+                clickCustomAddonCollectionButton()
+                verifyCustomAddonCollectionPanelExist()
+            }
     }
 
     @Ignore("Failing, see: https://github.com/mozilla-mobile/reference-browser/issues/2260")
     @Test
     fun openLinksInAppsTest() {
         val url = "m.youtube.com"
-        navigationToolbar {
-        }.openThreeDotMenu {
-        }.openSettings {
-            verifyOpenLinksInApps()
-            clickOpenLinksInApps()
-        }.goBack {
-        }.enterUrlAndEnterToBrowser(url.toUri()) {
-            clickOpenInAppPromptButton()
-        }.checkExternalApps {
-            verifyYouTubeApp()
-        }
+        navigationToolbar {}
+            .openThreeDotMenu {}
+            .openSettings {
+                verifyOpenLinksInApps()
+                clickOpenLinksInApps()
+            }
+            .goBack {}
+            .enterUrlAndEnterToBrowser(url.toUri()) {
+                clickOpenInAppPromptButton()
+            }
+            .checkExternalApps {
+                verifyYouTubeApp()
+            }
     }
 }

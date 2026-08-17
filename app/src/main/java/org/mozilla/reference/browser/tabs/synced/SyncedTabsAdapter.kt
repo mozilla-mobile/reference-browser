@@ -8,16 +8,13 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
-import org.mozilla.reference.browser.tabs.synced.SyncedTabsViewHolder.DeviceViewHolder
-import org.mozilla.reference.browser.tabs.synced.SyncedTabsViewHolder.TabViewHolder
 import mozilla.components.browser.storage.sync.Tab as SyncTab
 import mozilla.components.concept.sync.Device as SyncDevice
+import org.mozilla.reference.browser.tabs.synced.SyncedTabsViewHolder.DeviceViewHolder
+import org.mozilla.reference.browser.tabs.synced.SyncedTabsViewHolder.TabViewHolder
 
-class SyncedTabsAdapter(
-    private val listener: (SyncTab) -> Unit,
-) : ListAdapter<SyncedTabsAdapter.AdapterItem, SyncedTabsViewHolder>(
-    DiffCallback,
-) {
+class SyncedTabsAdapter(private val listener: (SyncTab) -> Unit) :
+    ListAdapter<SyncedTabsAdapter.AdapterItem, SyncedTabsViewHolder>(DiffCallback) {
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
@@ -35,10 +32,11 @@ class SyncedTabsAdapter(
         holder: SyncedTabsViewHolder,
         position: Int,
     ) {
-        val item = when (holder) {
-            is DeviceViewHolder -> getItem(position) as AdapterItem.Device
-            is TabViewHolder -> getItem(position) as AdapterItem.Tab
-        }
+        val item =
+            when (holder) {
+                is DeviceViewHolder -> getItem(position) as AdapterItem.Device
+                is TabViewHolder -> getItem(position) as AdapterItem.Tab
+            }
         holder.bind(item, listener)
     }
 
@@ -61,12 +59,8 @@ class SyncedTabsAdapter(
     }
 
     sealed class AdapterItem {
-        data class Device(
-            val device: SyncDevice,
-        ) : AdapterItem()
+        data class Device(val device: SyncDevice) : AdapterItem()
 
-        data class Tab(
-            val tab: SyncTab,
-        ) : AdapterItem()
+        data class Tab(val tab: SyncTab) : AdapterItem()
     }
 }

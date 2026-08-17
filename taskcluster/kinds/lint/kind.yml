@@ -61,13 +61,13 @@ tasks:
             gradlew: [detekt]
         treeherder:
             symbol: detekt
-    ktlint:
-        description: 'Running ktlint over all modules'
+    ktfmt:
+        description: 'Running ktfmt over all modules'
         run:
             using: gradlew
-            gradlew: [ktlint]
+            gradlew: [ktfmtCheck]
         treeherder:
-            symbol: ktlint
+            symbol: ktfmt
     lint:
         description: 'Running lint over all modules'
         run:

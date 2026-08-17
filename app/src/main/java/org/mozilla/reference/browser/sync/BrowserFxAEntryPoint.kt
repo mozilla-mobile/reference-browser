@@ -6,19 +6,11 @@ package org.mozilla.reference.browser.sync
 
 import mozilla.components.concept.sync.FxAEntryPoint
 
-/**
- * Reference Browser implementation of [FxAEntryPoint].
- */
-enum class BrowserFxAEntryPoint(
-    override val entryName: String,
-) : FxAEntryPoint {
-    /**
-     * Authenticating from the home menu (the hamburger menu)
-     */
+/** Reference Browser implementation of [FxAEntryPoint]. */
+enum class BrowserFxAEntryPoint(override val entryName: String) : FxAEntryPoint {
+    /** Authenticating from the home menu (the hamburger menu) */
     HomeMenu("home-menu"),
 
-    /**
-     * Authenticating from the account settings
-     */
+    /** Authenticating from the account settings */
     AccountSettings("account-settings"),
 }

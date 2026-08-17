@@ -29,44 +29,44 @@ class ReaderViewIntegration(
     toolbar: BrowserToolbar,
     view: ReaderViewControlsView,
     readerViewAppearanceButton: FloatingActionButton,
-) : LifecycleAwareFeature,
-    UserInteractionHandler {
-        private var readerViewButtonVisible = false
+) : LifecycleAwareFeature, UserInteractionHandler {
+    private var readerViewButtonVisible = false
 
-    private val readerViewButton: BrowserToolbar.ToggleButton = BrowserToolbar.ToggleButton(
-        image = ContextCompat.getDrawable(context, iconsR.drawable.mozac_ic_reader_view_24)!!,
-        imageSelected = ContextCompat.getDrawable(context, iconsR.drawable.mozac_ic_reader_view_24)!!.mutate().apply {
-            setTint(ContextCompat.getColor(context, colorsR.color.photonBlue40))
-        },
-        contentDescription = "Enable Reader View",
-        contentDescriptionSelected = "Disable Reader View",
-        selected = store.state.selectedTab
-            ?.readerState
-            ?.active ?: false,
-        visible = { readerViewButtonVisible },
-    ) { enabled ->
-        if (enabled) {
-            feature.showReaderView()
-            readerViewAppearanceButton.show()
-        } else {
-            feature.hideReaderView()
-            feature.hideControls()
-            readerViewAppearanceButton.hide()
+    private val readerViewButton: BrowserToolbar.ToggleButton =
+        BrowserToolbar.ToggleButton(
+            image = ContextCompat.getDrawable(context, iconsR.drawable.mozac_ic_reader_view_24)!!,
+            imageSelected =
+                ContextCompat.getDrawable(context, iconsR.drawable.mozac_ic_reader_view_24)!!.mutate().apply {
+                    setTint(ContextCompat.getColor(context, colorsR.color.photonBlue40))
+                },
+            contentDescription = "Enable Reader View",
+            contentDescriptionSelected = "Disable Reader View",
+            selected = store.state.selectedTab?.readerState?.active ?: false,
+            visible = { readerViewButtonVisible },
+        ) { enabled ->
+            if (enabled) {
+                feature.showReaderView()
+                readerViewAppearanceButton.show()
+            } else {
+                feature.hideReaderView()
+                feature.hideControls()
+                readerViewAppearanceButton.hide()
+            }
         }
-    }
 
     init {
         toolbar.addPageAction(readerViewButton)
         readerViewAppearanceButton.setOnClickListener { feature.showControls() }
     }
 
-    private val feature = ReaderViewFeature(context, engine, store, view) { available, active ->
-        readerViewButtonVisible = available
-        readerViewButton.setSelected(active)
+    private val feature =
+        ReaderViewFeature(context, engine, store, view) { available, active ->
+            readerViewButtonVisible = available
+            readerViewButton.setSelected(active)
 
-        if (active) readerViewAppearanceButton.show() else readerViewAppearanceButton.hide()
-        toolbar.invalidateActions()
-    }
+            if (active) readerViewAppearanceButton.show() else readerViewAppearanceButton.hide()
+            toolbar.invalidateActions()
+        }
 
     override fun start() {
         feature.start()
@@ -80,8 +80,8 @@ class ReaderViewIntegration(
 }
 
 /**
- * [CoordinatorLayout.Behavior] that will always position the reader view appearance button above
- * the [FindInPageBar] (including when the browser toolbar is scrolling or performing a snap animation).
+ * [CoordinatorLayout.Behavior] that will always position the reader view appearance button above the [FindInPageBar]
+ * (including when the browser toolbar is scrolling or performing a snap animation).
  */
 @Suppress("unused") // Referenced from XML
 class ReaderViewAppearanceButtonBehavior(

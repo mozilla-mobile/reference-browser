@@ -16,8 +16,8 @@ import androidx.preference.PreferenceViewHolder
 import org.mozilla.reference.browser.R
 
 class AutofillPreference
-    @JvmOverloads
-    constructor(
+@JvmOverloads
+constructor(
     context: Context,
     attrs: AttributeSet? = null,
 ) : Preference(context, attrs) {
@@ -40,9 +40,10 @@ class AutofillPreference
     }
 
     override fun onClick() {
-        val intent = Intent(Settings.ACTION_REQUEST_SET_AUTOFILL_SERVICE).apply {
-            data = "package:${context.packageName}".toUri()
-        }
+        val intent =
+            Intent(Settings.ACTION_REQUEST_SET_AUTOFILL_SERVICE).apply {
+                data = "package:${context.packageName}".toUri()
+            }
         context.startActivity(intent)
     }
 

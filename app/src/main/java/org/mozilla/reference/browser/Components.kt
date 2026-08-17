@@ -25,12 +25,8 @@ import org.mozilla.reference.browser.components.Services
 import org.mozilla.reference.browser.components.UseCases
 import org.mozilla.reference.browser.components.Utilities
 
-/**
- * Provides access to all components.
- */
-class Components(
-    private val context: Context,
-) {
+/** Provides access to all components. */
+class Components(private val context: Context) {
     val core by lazy { Core(context, analytics.crashReporter) }
     val useCases by lazy {
         UseCases(
@@ -81,9 +77,7 @@ class Components(
     private val notificationManagerCompat = NotificationManagerCompat.from(context)
 
     val notificationsDelegate: NotificationsDelegate by lazy {
-        NotificationsDelegate(
-            notificationManagerCompat,
-        )
+        NotificationsDelegate(notificationManagerCompat)
     }
 
     val fileSizeFormatter: FileSizeFormatter by lazy { DefaultFileSizeFormatter(context.applicationContext) }

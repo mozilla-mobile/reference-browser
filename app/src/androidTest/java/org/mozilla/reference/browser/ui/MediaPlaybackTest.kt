@@ -19,19 +19,17 @@ import org.mozilla.reference.browser.ui.robots.notificationShade
 class MediaPlaybackTest {
     private lateinit var mockWebServer: MockWebServer
 
-    @get:Rule
-    val activityTestRule = BrowserActivityTestRule()
+    @get:Rule val activityTestRule = BrowserActivityTestRule()
 
-    @Rule
-    @JvmField
-    val retryTestRule = RetryTestRule(3)
+    @Rule @JvmField val retryTestRule = RetryTestRule(3)
 
     @Before
     fun setUp() {
-        mockWebServer = MockWebServer().apply {
-            dispatcher = AndroidAssetDispatcher()
-            start()
-        }
+        mockWebServer =
+            MockWebServer().apply {
+                dispatcher = AndroidAssetDispatcher()
+                start()
+            }
     }
 
     @After
@@ -43,45 +41,47 @@ class MediaPlaybackTest {
     fun audioPlaybackTest() {
         val audioTestPage = TestAssetHelper.getAudioPageAsset(mockWebServer)
 
-        navigationToolbar {
-        }.enterUrlAndEnterToBrowser(audioTestPage.url) {
-            verifyMediaPlayerControlButtonState("Play")
-            clickMediaPlayerControlButton("Play")
-        }
+        navigationToolbar {}
+            .enterUrlAndEnterToBrowser(audioTestPage.url) {
+                verifyMediaPlayerControlButtonState("Play")
+                clickMediaPlayerControlButton("Play")
+            }
 
         notificationShade {
             verifySystemMediaNotificationExists(audioTestPage.title)
             verifySystemMediaNotificationControlButtonState("Pause")
             clickSystemMediaNotificationControlButton("Pause")
             verifySystemMediaNotificationControlButtonState("Play")
-        }.closeNotification {}
+        }
+            .closeNotification {}
     }
 
     @Test
     fun videoPlaybackTest() {
         val videoTestPage = TestAssetHelper.getVideoPageAsset(mockWebServer)
 
-        navigationToolbar {
-        }.enterUrlAndEnterToBrowser(videoTestPage.url) {
-            clickMediaPlayerControlButton("Play")
-        }
+        navigationToolbar {}
+            .enterUrlAndEnterToBrowser(videoTestPage.url) {
+                clickMediaPlayerControlButton("Play")
+            }
 
         notificationShade {
             verifySystemMediaNotificationExists(videoTestPage.title)
             verifySystemMediaNotificationControlButtonState("Pause")
             clickSystemMediaNotificationControlButton("Pause")
             verifySystemMediaNotificationControlButtonState("Play")
-        }.closeNotification {}
+        }
+            .closeNotification {}
     }
 
     @Test
     fun hiddenVideoControlsContextMenuTest() {
         val noControlsVideoTestPage = TestAssetHelper.getNoControlsVideoPageAsset(mockWebServer)
 
-        navigationToolbar {
-        }.enterUrlAndEnterToBrowser(noControlsVideoTestPage.url) {
-            longClickMatchingText("test_link_video")
-            verifyNoControlsVideoContextMenuItems()
-        }
+        navigationToolbar {}
+            .enterUrlAndEnterToBrowser(noControlsVideoTestPage.url) {
+                longClickMatchingText("test_link_video")
+                verifyNoControlsVideoContextMenuItems()
+            }
     }
 }

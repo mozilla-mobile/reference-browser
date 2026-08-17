@@ -9,9 +9,8 @@ import android.graphics.Color
 import org.junit.Assert.assertEquals
 
 /**
- * Asserts the two bitmaps are the same by ensuring their dimensions, config, and
- * pixel data are the same (within the provided delta): this is the same metrics that
- * [Bitmap.sameAs] uses.
+ * Asserts the two bitmaps are the same by ensuring their dimensions, config, and pixel data are the same (within the
+ * provided delta): this is the same metrics that [Bitmap.sameAs] uses.
  */
 fun assertEqualsWithDelta(
     expectedB: Bitmap,

@@ -45,7 +45,6 @@ dependency-analysis = "3.18.0"
 detekt = "1.23.8"
 jspecify = "1.0.0"
 ktfmt = "0.64"
-ktlint = "1.8.0"
 spotless = "8.10.0"
 
 # Third Party Testing
@@ -107,7 +106,6 @@ androidx-test-uiautomator = { group = "androidx.test.uiautomator", name = "uiaut
 
 # Third Party Linting & Static Code Analysis
 jspecify = { group = "org.jspecify", name = "jspecify", version.ref = "jspecify" }
-ktlint = { group = "com.pinterest.ktlint", name = "ktlint-cli", version.ref = "ktlint" }
 
 # Third Party Testing
 hamcrest-core = { group = "org.hamcrest", name = "hamcrest-core", version.ref = "hamcrest" }

@@ -11,9 +11,7 @@ import org.mozilla.reference.browser.helpers.TestAssetHelper.waitingTime
 import org.mozilla.reference.browser.helpers.TestHelper.getStringResource
 import org.mozilla.reference.browser.helpers.TestHelper.packageName
 
-/**
- * Implementation of Robot Pattern for Synced Tabs sub menu.
- */
+/** Implementation of Robot Pattern for Synced Tabs sub menu. */
 class SyncedTabsRobot {
     fun verifyNotSignedInSyncTabsView() = assertNotSignedInSyncTabsView()
 
@@ -28,10 +26,11 @@ class SyncedTabsRobot {
         assertTrue(
             mDevice
                 .findObject(
-                UiSelector()
-                    .resourceId("$packageName:id/synced_tabs_status")
-                    .textContains(getStringResource(R.string.synced_tabs_connect_to_sync_account)),
-            ).waitForExists(waitingTime),
+                    UiSelector()
+                        .resourceId("$packageName:id/synced_tabs_status")
+                        .textContains(getStringResource(R.string.synced_tabs_connect_to_sync_account))
+                )
+                .waitForExists(waitingTime)
         )
     }
 }

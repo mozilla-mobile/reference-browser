@@ -5,13 +5,11 @@
 package org.mozilla.reference.browser.helpers
 
 import android.net.Uri
+import java.util.concurrent.TimeUnit
 import mockwebserver3.MockWebServer
 import org.mozilla.reference.browser.helpers.ext.toUri
-import java.util.concurrent.TimeUnit
 
-/**
- * Helper for hosting web pages locally for testing purposes.
- */
+/** Helper for hosting web pages locally for testing purposes. */
 object TestAssetHelper {
     val waitingTime: Long = TimeUnit.SECONDS.toMillis(15)
     val waitingTimeShort: Long = TimeUnit.SECONDS.toMillis(1)
@@ -23,12 +21,10 @@ object TestAssetHelper {
     )
 
     /**
-     * Hosts 3 simple websites, found at androidTest/assets/pages/generic[1|2|3].html
-     * Returns a list of TestAsset, which can be used to navigate to each and
-     * assert that the correct information is being displayed.
+     * Hosts 3 simple websites, found at androidTest/assets/pages/generic[1|2|3].html Returns a list of TestAsset, which
+     * can be used to navigate to each and assert that the correct information is being displayed.
      *
-     * Content for these pages all follow the same pattern. See [generic1.html] for
-     * content implementation details.
+     * Content for these pages all follow the same pattern. See [generic1.html] for content implementation details.
      */
     fun getGenericAssets(server: MockWebServer): List<TestAsset> =
         (1..4).map {

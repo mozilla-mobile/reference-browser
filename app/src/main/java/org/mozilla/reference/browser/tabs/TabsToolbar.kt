@@ -7,13 +7,13 @@ package org.mozilla.reference.browser.tabs
 import android.content.Context
 import android.util.AttributeSet
 import mozilla.components.feature.tabs.tabstray.TabsFeature
+import mozilla.components.ui.icons.R as iconsR
 import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.ext.components
-import mozilla.components.ui.icons.R as iconsR
 
 class TabsToolbar
-    @JvmOverloads
-    constructor(
+@JvmOverloads
+constructor(
     context: Context,
     attrs: AttributeSet? = null,
 ) : androidx.appcompat.widget.Toolbar(context, attrs) {
@@ -63,11 +63,12 @@ class TabsToolbar
         isPrivateTray = isPrivate
 
         // Update the menu option text
-        menu.findItem(R.id.closeTab).title = if (isPrivate) {
-            context.getString(R.string.menu_action_close_tabs_private)
-        } else {
-            context.getString(R.string.menu_action_close_tabs)
-        }
+        menu.findItem(R.id.closeTab).title =
+            if (isPrivate) {
+                context.getString(R.string.menu_action_close_tabs_private)
+            } else {
+                context.getString(R.string.menu_action_close_tabs)
+            }
     }
 
     private val components = context.components

@@ -10,25 +10,21 @@ import mozilla.components.browser.state.selector.selectedTab
 import org.mozilla.reference.browser.BrowserApplication
 
 /**
- * An IdlingResource implementation that waits until the current session is not loading anymore.
- * Only after loading has completed further actions will be performed.
+ * An IdlingResource implementation that waits until the current session is not loading anymore. Only after loading has
+ * completed further actions will be performed.
  */
-
 class SessionLoadedIdlingResource : IdlingResource {
     private var resourceCallback: IdlingResource.ResourceCallback? = null
 
     override fun getName(): String = SessionLoadedIdlingResource::class.java.simpleName
 
     override fun isIdleNow(): Boolean {
-        val context = InstrumentationRegistry.getInstrumentation().targetContext.applicationContext
-            as BrowserApplication
+        val context =
+            InstrumentationRegistry.getInstrumentation().targetContext.applicationContext as BrowserApplication
 
         val store = context.components.core.store
 
-        return if (store.state.selectedTab
-            ?.content
-            ?.loading == true
-        ) {
+        return if (store.state.selectedTab?.content?.loading == true) {
             false
         } else {
             invokeCallback()

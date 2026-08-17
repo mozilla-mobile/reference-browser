@@ -11,9 +11,7 @@ import org.hamcrest.Matcher
 import org.hamcrest.TypeSafeMatcher
 import org.mozilla.reference.browser.R
 
-/**
- * A custom matcher for finding tabs to match text within them.
- */
+/** A custom matcher for finding tabs to match text within them. */
 class TabMatcher<T : View>(
     val id: Int,
     val matcher: (T) -> Boolean,
@@ -35,9 +33,7 @@ class TabMatcher<T : View>(
 
     companion object {
         fun withText(text: String): Matcher<View> =
-            TabMatcher<View>(
-                R.id.mozac_browser_tabstray_title,
-            ) {
+            TabMatcher<View>(R.id.mozac_browser_tabstray_title) {
                 (it as TextView).text == text
             }
     }

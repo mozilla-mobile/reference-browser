@@ -7,6 +7,8 @@ package org.mozilla.reference.browser.helpers
 import android.net.Uri
 import android.os.Handler
 import android.os.Looper
+import java.io.IOException
+import java.io.InputStream
 import mockwebserver3.Dispatcher
 import mockwebserver3.MockResponse
 import mockwebserver3.MockWebServer
@@ -14,8 +16,6 @@ import mockwebserver3.RecordedRequest
 import okio.Buffer
 import okio.source
 import org.mozilla.reference.browser.helpers.ext.toUri
-import java.io.IOException
-import java.io.InputStream
 
 object MockWebServerHelper {
     fun initMockWebServerAndReturnEndpoints(vararg messages: String): List<Uri> {
@@ -35,9 +35,7 @@ object MockWebServerHelper {
     }
 }
 
-/**
- * A [MockWebServer] [Dispatcher] that will return Android assets in the body of requests.
- */
+/** A [MockWebServer] [Dispatcher] that will return Android assets in the body of requests. */
 const val HTTP_OK = 200
 const val HTTP_NOT_FOUND = 404
 
@@ -45,9 +43,7 @@ class AndroidAssetDispatcher : Dispatcher() {
     private val mainThreadHandler = Handler(Looper.getMainLooper())
 
     override fun dispatch(request: RecordedRequest): MockResponse {
-        val assetManager = androidx.test.platform.app.InstrumentationRegistry
-            .getInstrumentation()
-            .context.assets
+        val assetManager = androidx.test.platform.app.InstrumentationRegistry.getInstrumentation().context.assets
 
         return try {
             val assetPath = request.url.encodedPath.removePrefix("/")
@@ -68,8 +64,7 @@ private fun fileToResponse(
     path: String,
     file: InputStream,
 ): MockResponse =
-    MockResponse
-        .Builder()
+    MockResponse.Builder()
         .code(HTTP_OK)
         .body(fileToBytes(file)!!)
         .addHeader("content-type: " + contentType(path))

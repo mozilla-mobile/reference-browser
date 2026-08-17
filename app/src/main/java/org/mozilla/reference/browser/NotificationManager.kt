@@ -7,6 +7,7 @@ package org.mozilla.reference.browser
 import android.annotation.SuppressLint
 import android.app.Notification
 import android.app.NotificationChannel
+import android.app.NotificationManager as AndroidNotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
@@ -23,11 +24,8 @@ import mozilla.components.concept.sync.TabData
 import mozilla.components.support.base.ids.SharedIdsHelper
 import mozilla.components.support.base.log.logger.Logger
 import org.mozilla.reference.browser.IntentRequestCodes.REQUEST_CODE_DATA_REPORTING
-import android.app.NotificationManager as AndroidNotificationManager
 
-/**
- * Manages notification channels and allows displaying different supported types of notifications.
- */
+/** Manages notification channels and allows displaying different supported types of notifications. */
 object NotificationManager {
     // Send Tab
     private const val RECEIVE_TABS_TAG = "org.mozilla.reference.browser.receivedTabs"
@@ -39,8 +37,7 @@ object NotificationManager {
     private const val DATA_REPORTING_TAG = "org.mozilla.reference.browser.DataReporting"
     private const val DATA_REPORTING_NOTIFICATION_ID = 1
     private const val PREFS_POLICY_VERSION = "datareporting.policy.dataSubmissionPolicyVersion"
-    private const val PREFS_POLICY_NOTIFIED_TIME =
-        "datareporting.policy.dataSubmissionPolicyNotifiedTime"
+    private const val PREFS_POLICY_NOTIFIED_TIME = "datareporting.policy.dataSubmissionPolicyNotifiedTime"
 
     // Default
     private const val NOTIFICATION_CHANNEL_ID = "default-notification-channel"
@@ -65,50 +62,55 @@ object NotificationManager {
         logger.debug("Showing ${tabs.size} tab(s) received from deviceID=${device?.id}")
 
         tabs.forEach { tab ->
-            val intent = Intent(Intent.ACTION_VIEW, tab.url.toUri()).apply {
-                flags = Intent.FLAG_ACTIVITY_NEW_TASK
-            }
-            val flags = if (SDK_INT >= Build.VERSION_CODES.S) {
-                PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_ONE_SHOT
-            } else {
-                PendingIntent.FLAG_ONE_SHOT
-            }
+            val intent =
+                Intent(Intent.ACTION_VIEW, tab.url.toUri()).apply {
+                    flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                }
+            val flags =
+                if (SDK_INT >= Build.VERSION_CODES.S) {
+                    PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_ONE_SHOT
+                } else {
+                    PendingIntent.FLAG_ONE_SHOT
+                }
             val notificationId = SharedIdsHelper.getNextIdForTag(context, RECEIVE_TABS_TAG)
-            val pendingIntent: PendingIntent = PendingIntent.getActivity(
-                context,
-                notificationId,
-                intent,
-                flags,
-            )
+            val pendingIntent: PendingIntent =
+                PendingIntent.getActivity(
+                    context,
+                    notificationId,
+                    intent,
+                    flags,
+                )
             // We pick 'IMPORTANCE_HIGH' priority because this is a user-triggered action that is
             // expected to be part of a continuity flow. That is, user is expected to be waiting for
             // this notification on their device; make it obvious.
             val importance = AndroidNotificationManager.IMPORTANCE_HIGH
-            val channelId = getNotificationChannelId(
-                context,
-                RECEIVE_TABS_CHANNEL_ID,
-                context.getString(R.string.fxa_received_tab_channel_name),
-                context.getString(R.string.fxa_received_tab_channel_description),
-                importance,
-            )
+            val channelId =
+                getNotificationChannelId(
+                    context,
+                    RECEIVE_TABS_CHANNEL_ID,
+                    context.getString(R.string.fxa_received_tab_channel_name),
+                    context.getString(R.string.fxa_received_tab_channel_description),
+                    importance,
+                )
 
-            val builder = NotificationCompat
-                .Builder(context, channelId)
-                .setSmallIcon(R.drawable.ic_notification)
-                .setSendTabTitle(context, device, tab)
-                .setWhen(System.currentTimeMillis())
-                .setContentText(tab.url)
-                .setContentIntent(pendingIntent)
-                .setAutoCancel(true)
-                .setPriority(NotificationCompat.PRIORITY_HIGH)
-                .setDefaults(Notification.DEFAULT_VIBRATE or Notification.DEFAULT_SOUND)
-                .setCategory(NotificationCompat.CATEGORY_REMINDER)
+            val builder =
+                NotificationCompat.Builder(context, channelId)
+                    .setSmallIcon(R.drawable.ic_notification)
+                    .setSendTabTitle(context, device, tab)
+                    .setWhen(System.currentTimeMillis())
+                    .setContentText(tab.url)
+                    .setContentIntent(pendingIntent)
+                    .setAutoCancel(true)
+                    .setPriority(NotificationCompat.PRIORITY_HIGH)
+                    .setDefaults(Notification.DEFAULT_VIBRATE or Notification.DEFAULT_SOUND)
+                    .setCategory(NotificationCompat.CATEGORY_REMINDER)
 
-            NotificationManagerCompat.from(context).notify(
-                RECEIVE_TABS_TAG,
-                notificationId,
-                builder.build(),
-            )
+            NotificationManagerCompat.from(context)
+                .notify(
+                    RECEIVE_TABS_TAG,
+                    notificationId,
+                    builder.build(),
+                )
         }
     }
 
@@ -122,9 +124,7 @@ object NotificationManager {
         }
     }
 
-    /**
-     * Launch a notification of the data policy, and record notification time and version.
-     */
+    /** Launch a notification of the data policy, and record notification time and version. */
     @SuppressLint("MissingPermission", "NotifyUsage")
     private fun notifyDataPolicy(
         context: Context,
@@ -135,35 +135,36 @@ object NotificationManager {
         val notificationTitle = resources.getString(R.string.datareporting_notification_title)
         val notificationSummary = resources.getString(R.string.datareporting_notification_summary)
 
-        val intent = Intent(Intent.ACTION_VIEW).apply {
-            data = PRIVACY_NOTICE_URL.toUri()
-            setPackage(context.packageName)
-        }
+        val intent =
+            Intent(Intent.ACTION_VIEW).apply {
+                data = PRIVACY_NOTICE_URL.toUri()
+                setPackage(context.packageName)
+            }
 
-        val flags = if (SDK_INT >= Build.VERSION_CODES.S) {
-            PendingIntent.FLAG_IMMUTABLE
-        } else {
-            0
-        }
+        val flags =
+            if (SDK_INT >= Build.VERSION_CODES.S) {
+                PendingIntent.FLAG_IMMUTABLE
+            } else {
+                0
+            }
 
-        val pendingIntent =
-            PendingIntent.getActivity(context, REQUEST_CODE_DATA_REPORTING, intent, flags)
+        val pendingIntent = PendingIntent.getActivity(context, REQUEST_CODE_DATA_REPORTING, intent, flags)
 
-        val notificationBuilder = NotificationCompat
-            .Builder(
-            context,
-            getNotificationChannelId(context),
-        ).apply {
-            setContentTitle(notificationTitle)
-            setContentText(notificationSummary)
-            setSmallIcon(R.drawable.ic_notification)
-            setAutoCancel(true)
-            setContentIntent(pendingIntent)
-            setStyle(NotificationCompat.BigTextStyle().bigText(notificationSummary))
-        }
+        val notificationBuilder =
+            NotificationCompat.Builder(
+                    context,
+                    getNotificationChannelId(context),
+                )
+                .apply {
+                    setContentTitle(notificationTitle)
+                    setContentText(notificationSummary)
+                    setSmallIcon(R.drawable.ic_notification)
+                    setAutoCancel(true)
+                    setContentIntent(pendingIntent)
+                    setStyle(NotificationCompat.BigTextStyle().bigText(notificationSummary))
+                }
 
-        NotificationManagerCompat
-            .from(context)
+        NotificationManagerCompat.from(context)
             .notify(DATA_REPORTING_TAG, DATA_REPORTING_NOTIFICATION_ID, notificationBuilder.build())
 
         preferences.edit {
@@ -198,20 +199,21 @@ object NotificationManager {
         channelDescription: String?,
         importance: Int = AndroidNotificationManager.IMPORTANCE_DEFAULT,
     ) {
-        val notificationManager =
-            context.getSystemService(Context.NOTIFICATION_SERVICE) as AndroidNotificationManager
+        val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as AndroidNotificationManager
 
         if (null != notificationManager.getNotificationChannel(channelId)) {
             return
         }
 
-        val channel = NotificationChannel(
-            channelId,
-            channelName,
-            importance,
-        ).apply {
-            description = channelDescription
-        }
+        val channel =
+            NotificationChannel(
+                    channelId,
+                    channelName,
+                    importance,
+                )
+                .apply {
+                    description = channelDescription
+                }
 
         notificationManager.createNotificationChannel(channel)
     }
@@ -226,7 +228,7 @@ object NotificationManager {
                 context.getString(
                     R.string.fxa_tab_received_from_notification_name,
                     it.displayName,
-                ),
+                )
             )
             return this
         }

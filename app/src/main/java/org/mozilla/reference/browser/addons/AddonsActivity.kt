@@ -12,9 +12,7 @@ import androidx.appcompat.app.AppCompatActivity
 import mozilla.components.support.ktx.android.view.setupPersistentInsets
 import org.mozilla.reference.browser.R
 
-/**
- * An activity to manage add-ons.
- */
+/** An activity to manage add-ons. */
 class AddonsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         setContentView(R.layout.activity_main)

@@ -20,27 +20,28 @@ import mozilla.components.ui.colors.R as colorsR
 import mozilla.components.ui.icons.R as iconsR
 
 class TabsPanel
-    @JvmOverloads
-    constructor(
+@JvmOverloads
+constructor(
     context: Context,
     attrs: AttributeSet? = null,
-) : TabLayout(context, attrs),
-    TabLayout.OnTabSelectedListener {
+) : TabLayout(context, attrs), TabLayout.OnTabSelectedListener {
     private var normalTab: Tab
     private var privateTab: Tab
     private var tabsFeature: TabsFeature? = null
     private var updateTabsToolbar: ((isPrivate: Boolean) -> Unit)? = null
 
     init {
-        normalTab = newTab().apply {
-            contentDescription = "Tabs"
-            icon = resources.getThemedDrawable(iconsR.drawable.mozac_ic_tab_24)
-        }
+        normalTab =
+            newTab().apply {
+                contentDescription = "Tabs"
+                icon = resources.getThemedDrawable(iconsR.drawable.mozac_ic_tab_24)
+            }
 
-        privateTab = newTab().apply {
-            contentDescription = "Private tabs"
-            icon = resources.getThemedDrawable(iconsR.drawable.mozac_ic_private_mode_24)
-        }
+        privateTab =
+            newTab().apply {
+                contentDescription = "Private tabs"
+                icon = resources.getThemedDrawable(iconsR.drawable.mozac_ic_private_mode_24)
+            }
 
         addOnTabSelectedListener(this)
 
@@ -80,13 +81,10 @@ class TabsPanel
         tab?.icon?.colorFilter = null
     }
 
-    private fun Resources.getThemedDrawable(
-        @DrawableRes resId: Int,
-    ) = ResourcesCompat.getDrawable(resources, resId, context.theme)
+    private fun Resources.getThemedDrawable(@DrawableRes resId: Int) =
+        ResourcesCompat.getDrawable(resources, resId, context.theme)
 
-    private fun Drawable.colorTint(
-        @ColorRes color: Int,
-    ) = apply {
+    private fun Drawable.colorTint(@ColorRes color: Int) = apply {
         mutate()
         colorFilter = createBlendModeColorFilterCompat(ContextCompat.getColor(context, color), SRC_IN)
     }

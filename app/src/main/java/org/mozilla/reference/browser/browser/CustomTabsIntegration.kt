@@ -47,9 +47,8 @@ class CustomTabsIntegration(
     private val customTabsUseCases: CustomTabsUseCases,
     sessionId: String,
     private val activity: Activity?,
-) : LifecycleAwareFeature,
-    UserInteractionHandler {
-        private val session = store.state.findCustomTab(sessionId)
+) : LifecycleAwareFeature, UserInteractionHandler {
+    private val session = store.state.findCustomTab(sessionId)
     private val logger = Logger("CustomTabsIntegration")
 
     init {
@@ -64,38 +63,44 @@ class CustomTabsIntegration(
         val tint = ContextCompat.getColor(context, R.color.icons)
         val tabId = session?.id
 
-        val forward = SmallMenuCandidate(
-            contentDescription = "Forward",
-            icon = DrawableMenuIcon(
-                context,
-                mozilla.components.ui.icons.R.drawable.mozac_ic_forward_24,
-                tint = tint,
-            ),
-        ) {
-            sessionUseCases.goForward.invoke(tabId)
-        }
+        val forward =
+            SmallMenuCandidate(
+                contentDescription = "Forward",
+                icon =
+                    DrawableMenuIcon(
+                        context,
+                        mozilla.components.ui.icons.R.drawable.mozac_ic_forward_24,
+                        tint = tint,
+                    ),
+            ) {
+                sessionUseCases.goForward.invoke(tabId)
+            }
 
-        val refresh = SmallMenuCandidate(
-            contentDescription = "Refresh",
-            icon = DrawableMenuIcon(
-                context,
-                mozilla.components.ui.icons.R.drawable.mozac_ic_arrow_clockwise_24,
-                tint = tint,
-            ),
-        ) {
-            sessionUseCases.reload.invoke(tabId)
-        }
+        val refresh =
+            SmallMenuCandidate(
+                contentDescription = "Refresh",
+                icon =
+                    DrawableMenuIcon(
+                        context,
+                        mozilla.components.ui.icons.R.drawable.mozac_ic_arrow_clockwise_24,
+                        tint = tint,
+                    ),
+            ) {
+                sessionUseCases.reload.invoke(tabId)
+            }
 
-        val stop = SmallMenuCandidate(
-            contentDescription = "Stop",
-            icon = DrawableMenuIcon(
-                context,
-                mozilla.components.ui.icons.R.drawable.mozac_ic_cross_24,
-                tint = tint,
-            ),
-        ) {
-            sessionUseCases.stopLoading.invoke(tabId)
-        }
+        val stop =
+            SmallMenuCandidate(
+                contentDescription = "Stop",
+                icon =
+                    DrawableMenuIcon(
+                        context,
+                        mozilla.components.ui.icons.R.drawable.mozac_ic_cross_24,
+                        tint = tint,
+                    ),
+            ) {
+                sessionUseCases.stopLoading.invoke(tabId)
+            }
 
         return RowMenuCandidate(listOf(forward, refresh, stop))
     }
@@ -137,14 +142,15 @@ class CustomTabsIntegration(
 
     private val menuController: MenuController = BrowserMenuController()
 
-    private val feature = CustomTabsToolbarFeature(
-        store,
-        toolbar,
-        sessionId,
-        customTabsUseCases,
-        window = activity?.window,
-        closeListener = { activity?.finish() },
-    )
+    private val feature =
+        CustomTabsToolbarFeature(
+            store,
+            toolbar,
+            sessionId,
+            customTabsUseCases,
+            window = activity?.window,
+            closeListener = { activity?.finish() },
+        )
 
     init {
         toolbar.display.menuController = menuController

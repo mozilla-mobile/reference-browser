@@ -16,17 +16,15 @@ import androidx.test.uiautomator.By
 import androidx.test.uiautomator.UiDevice
 import androidx.test.uiautomator.UiSelector
 import androidx.test.uiautomator.Until
+import mozilla.components.browser.toolbar.R as toolbarR
+import mozilla.components.ui.tabcounter.R as tabcounterR
 import org.mozilla.fenix.ui.robots.ReaderViewRobot
 import org.mozilla.reference.browser.ext.waitAndInteract
 import org.mozilla.reference.browser.helpers.TestAssetHelper.waitingTime
 import org.mozilla.reference.browser.helpers.TestHelper.packageName
 import org.mozilla.reference.browser.helpers.click
-import mozilla.components.browser.toolbar.R as toolbarR
-import mozilla.components.ui.tabcounter.R as tabcounterR
 
-/**
- * Implementation of Robot Pattern for the navigation toolbar menu.
- */
+/** Implementation of Robot Pattern for the navigation toolbar menu. */
 class NavigationToolbarRobot {
     fun verifyNoTabAddressView() = assertNoTabAddressText()
 
@@ -48,10 +46,8 @@ class NavigationToolbarRobot {
             mDevice.pressEnter()
 
             mDevice
-                .findObject(
-                UiSelector()
-                    .resourceId("$packageName:id/mozac_browser_toolbar_progress"),
-            ).waitUntilGone(waitingTime)
+                .findObject(UiSelector().resourceId("$packageName:id/mozac_browser_toolbar_progress"))
+                .waitUntilGone(waitingTime)
 
             BrowserRobot().interact()
             return BrowserRobot.Transition()
@@ -59,10 +55,8 @@ class NavigationToolbarRobot {
 
         fun openThreeDotMenu(interact: ThreeDotMenuRobot.() -> Unit): ThreeDotMenuRobot.Transition {
             mDevice
-                .findObject(
-                UiSelector()
-                    .resourceId("$packageName:id/mozac_browser_toolbar_menu"),
-            ).waitForExists(waitingTime)
+                .findObject(UiSelector().resourceId("$packageName:id/mozac_browser_toolbar_menu"))
+                .waitForExists(waitingTime)
             threeDotMenuButton().click()
 
             ThreeDotMenuRobot().interact()
@@ -78,9 +72,7 @@ class NavigationToolbarRobot {
         fun clickToolbar(interact: AwesomeBarRobot.() -> Unit): AwesomeBarRobot.Transition {
             urlBar().click()
             mDevice.waitForIdle()
-            mDevice
-                .findObject(UiSelector().textContains("Search or enter address"))
-                .waitForExists(waitingTime)
+            mDevice.findObject(UiSelector().textContains("Search or enter address")).waitForExists(waitingTime)
             AwesomeBarRobot().interact()
             return AwesomeBarRobot.Transition()
         }
@@ -123,9 +115,8 @@ private fun assertNewTabAddressText(url: String) {
 private fun assertReaderViewButton() {
     mDevice.waitForWindowUpdate(packageName, waitingTime)
     mDevice
-        .findObject(
-        UiSelector().resourceId("$packageName:id/mozac_browser_toolbar_page_actions"),
-    ).waitForExists(waitingTime)
+        .findObject(UiSelector().resourceId("$packageName:id/mozac_browser_toolbar_page_actions"))
+        .waitForExists(waitingTime)
 
     readerViewButton().check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
 }

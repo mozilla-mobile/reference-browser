@@ -57,52 +57,56 @@ class ToolbarIntegration(
     private val tabsUseCases: TabsUseCases,
     private val webAppUseCases: WebAppUseCases,
     sessionId: String? = null,
-) : LifecycleAwareFeature,
-    UserInteractionHandler {
-    private val shippedDomainsProvider = ShippedDomainsProvider().also {
-        it.initialize(context)
-    }
+) : LifecycleAwareFeature, UserInteractionHandler {
+    private val shippedDomainsProvider =
+        ShippedDomainsProvider().also {
+            it.initialize(context)
+        }
 
     private val scope = MainScope()
 
     private fun menuToolbar(session: SessionState?): RowMenuCandidate {
         val tint = ContextCompat.getColor(context, R.color.icons)
 
-        val forward = SmallMenuCandidate(
-            contentDescription = "Forward",
-            icon = DrawableMenuIcon(
-                context,
-                mozilla.components.ui.icons.R.drawable.mozac_ic_forward_24,
-                tint = tint,
-            ),
-            containerStyle = ContainerStyle(
-                isEnabled = session?.content?.canGoForward == true,
-            ),
-        ) {
-            sessionUseCases.goForward.invoke()
-        }
+        val forward =
+            SmallMenuCandidate(
+                contentDescription = "Forward",
+                icon =
+                    DrawableMenuIcon(
+                        context,
+                        mozilla.components.ui.icons.R.drawable.mozac_ic_forward_24,
+                        tint = tint,
+                    ),
+                containerStyle = ContainerStyle(isEnabled = session?.content?.canGoForward == true),
+            ) {
+                sessionUseCases.goForward.invoke()
+            }
 
-        val refresh = SmallMenuCandidate(
-            contentDescription = "Refresh",
-            icon = DrawableMenuIcon(
-                context,
-                mozilla.components.ui.icons.R.drawable.mozac_ic_arrow_clockwise_24,
-                tint = tint,
-            ),
-        ) {
-            sessionUseCases.reload.invoke()
-        }
+        val refresh =
+            SmallMenuCandidate(
+                contentDescription = "Refresh",
+                icon =
+                    DrawableMenuIcon(
+                        context,
+                        mozilla.components.ui.icons.R.drawable.mozac_ic_arrow_clockwise_24,
+                        tint = tint,
+                    ),
+            ) {
+                sessionUseCases.reload.invoke()
+            }
 
-        val stop = SmallMenuCandidate(
-            contentDescription = "Stop",
-            icon = DrawableMenuIcon(
-                context,
-                mozilla.components.ui.icons.R.drawable.mozac_ic_cross_24,
-                tint = tint,
-            ),
-        ) {
-            sessionUseCases.stopLoading.invoke()
-        }
+        val stop =
+            SmallMenuCandidate(
+                contentDescription = "Stop",
+                icon =
+                    DrawableMenuIcon(
+                        context,
+                        mozilla.components.ui.icons.R.drawable.mozac_ic_cross_24,
+                        tint = tint,
+                    ),
+            ) {
+                sessionUseCases.stopLoading.invoke()
+            }
 
         return RowMenuCandidate(listOf(forward, refresh, stop))
     }
@@ -124,68 +128,63 @@ class ToolbarIntegration(
             if (webAppUseCases.isPinningSupported()) {
                 TextMenuCandidate(
                     text = "Add to homescreen",
-                    containerStyle = ContainerStyle(
-                        isVisible = webAppUseCases.isPinningSupported(),
-                    ),
+                    containerStyle = ContainerStyle(isVisible = webAppUseCases.isPinningSupported()),
                 ) {
                     scope.launch { webAppUseCases.addToHomescreen() }
                 }
             } else {
                 null
             },
-            TextMenuCandidate(
-                text = "Find in Page",
-            ) {
+            TextMenuCandidate(text = "Find in Page") {
                 FindInPageIntegration.launch?.invoke()
             },
         )
 
     private fun menuItems(sessionState: SessionState?): List<MenuCandidate> {
-        val sessionMenuItems = if (sessionState != null) {
-            sessionMenuItems(sessionState)
-        } else {
-            emptyList()
-        }
+        val sessionMenuItems =
+            if (sessionState != null) {
+                sessionMenuItems(sessionState)
+            } else {
+                emptyList()
+            }
 
-        return sessionMenuItems + listOf(
-            TextMenuCandidate(text = "Add-ons") {
-                val intent = Intent(context, AddonsActivity::class.java)
-                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                context.startActivity(intent)
-            },
-            TextMenuCandidate(text = "Synced Tabs") {
-                val intent = Intent(context, SyncedTabsActivity::class.java)
-                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                context.startActivity(intent)
-            },
-            TextMenuCandidate(text = "Report issue") {
-                tabsUseCases.addTab(
-                    url = "https://github.com/mozilla-mobile/reference-browser/issues/new",
-                )
-            },
-            TextMenuCandidate(text = "Settings") {
-                val intent = Intent(context, SettingsActivity::class.java)
-                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                context.startActivity(intent)
-            },
-        )
+        return sessionMenuItems +
+            listOf(
+                TextMenuCandidate(text = "Add-ons") {
+                    val intent = Intent(context, AddonsActivity::class.java)
+                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                    context.startActivity(intent)
+                },
+                TextMenuCandidate(text = "Synced Tabs") {
+                    val intent = Intent(context, SyncedTabsActivity::class.java)
+                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                    context.startActivity(intent)
+                },
+                TextMenuCandidate(text = "Report issue") {
+                    tabsUseCases.addTab(url = "https://github.com/mozilla-mobile/reference-browser/issues/new")
+                },
+                TextMenuCandidate(text = "Settings") {
+                    val intent = Intent(context, SettingsActivity::class.java)
+                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                    context.startActivity(intent)
+                },
+            )
     }
 
     private val browserMenuController: MenuController = BrowserMenuController()
 
     init {
         toolbar.display.apply {
-            indicators = listOf(
-                DisplayToolbar.Indicators.SECURITY,
-                DisplayToolbar.Indicators.TRACKING_PROTECTION,
-            )
+            indicators =
+                listOf(
+                    DisplayToolbar.Indicators.SECURITY,
+                    DisplayToolbar.Indicators.TRACKING_PROTECTION,
+                )
             displayIndicatorSeparator = true
             menuController = browserMenuController
             hint = context.getString(R.string.toolbar_hint)
 
-            setUrlBackground(
-                ResourcesCompat.getDrawable(context.resources, R.drawable.url_background, context.theme),
-            )
+            setUrlBackground(ResourcesCompat.getDrawable(context.resources, R.drawable.url_background, context.theme))
         }
 
         toolbar.edit.apply {
@@ -193,9 +192,7 @@ class ToolbarIntegration(
         }
 
         ToolbarAutocompleteFeature(toolbar).apply {
-            updateAutocompleteProviders(
-                listOf(historyStorage, shippedDomainsProvider),
-            )
+            updateAutocompleteProviders(listOf(historyStorage, shippedDomainsProvider))
         }
 
         ImeInsetsSynchronizer.setup(
@@ -232,19 +229,20 @@ class ToolbarIntegration(
         }
     }
 
-    private val toolbarFeature: ToolbarFeature = ToolbarFeature(
-        toolbar,
-        context.components.core.store,
-        context.components.useCases.sessionUseCases.loadUrl,
-        { searchTerms ->
-            context.components.useCases.searchUseCases.defaultSearch.invoke(
-                searchTerms = searchTerms,
-                searchEngine = null,
-                parentSessionId = null,
-            )
-        },
-        sessionId,
-    )
+    private val toolbarFeature: ToolbarFeature =
+        ToolbarFeature(
+            toolbar,
+            context.components.core.store,
+            context.components.useCases.sessionUseCases.loadUrl,
+            { searchTerms ->
+                context.components.useCases.searchUseCases.defaultSearch.invoke(
+                    searchTerms = searchTerms,
+                    searchEngine = null,
+                    parentSessionId = null,
+                )
+            },
+            sessionId,
+        )
 
     override fun start() {
         toolbarFeature.start()

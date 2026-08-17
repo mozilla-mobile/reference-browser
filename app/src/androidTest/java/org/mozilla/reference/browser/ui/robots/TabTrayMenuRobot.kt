@@ -28,10 +28,7 @@ import org.mozilla.reference.browser.helpers.assertIsSelected
 import org.mozilla.reference.browser.helpers.click
 import org.mozilla.reference.browser.helpers.matchers.TabMatcher
 
-/**
- * Implementation of Robot Pattern for the tab tray menu.
- */
-
+/** Implementation of Robot Pattern for the tab tray menu. */
 val mDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
 
 class TabTrayMenuRobot {
@@ -125,20 +122,16 @@ private fun closeTabButtonTabTray() = onView(withId(R.id.mozac_browser_tabstray_
 private fun tab() = onView(TabMatcher.withText("about:blank"))
 
 private fun assertRegularBrowsingTabs() =
-    regularTabs()
-    .check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+    regularTabs().check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
 
 private fun assertPrivateBrowsingTabs() =
-    privateTabs()
-    .check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+    privateTabs().check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
 
 private fun assertGoBackButton() =
-    goBackButton()
-    .check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+    goBackButton().check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
 
 private fun assertNewTabButton() =
-    newTabButton()
-    .check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+    newTabButton().check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
 
 private fun assertPrivateTabs() {
     mDevice.wait(Until.findObject(By.text("Private Browsing")), waitingTime)
@@ -155,12 +148,8 @@ private fun assertThereAreNoPrivateTabsOpen() {
 
 private fun assertExistingOpenTabs(title: String) {
     mDevice.waitForIdle()
-    mDevice
-        .findObject(UiSelector().resourceId("${TestHelper.packageName}:id/tabsTray"))
-        .waitForExists(waitingTime)
-    Assert.assertTrue(
-        mDevice.findObject(UiSelector().textContains(title)).waitForExists(waitingTime),
-    )
+    mDevice.findObject(UiSelector().resourceId("${TestHelper.packageName}:id/tabsTray")).waitForExists(waitingTime)
+    Assert.assertTrue(mDevice.findObject(UiSelector().textContains(title)).waitForExists(waitingTime))
 }
 
 private fun openTab(title: String) = mDevice.findObject(UiSelector().textContains(title))

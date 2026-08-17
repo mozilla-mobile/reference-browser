@@ -27,12 +27,8 @@ import org.mozilla.reference.browser.browser.BrowserFragment
 import org.mozilla.reference.browser.ext.components
 import org.mozilla.reference.browser.ext.requireComponents
 
-/**
- * A fragment for displaying the tabs tray.
- */
-class TabsTrayFragment :
-    Fragment(),
-    UserInteractionHandler {
+/** A fragment for displaying the tabs tray. */
+class TabsTrayFragment : Fragment(), UserInteractionHandler {
     private var tabsFeature: TabsFeature? = null
 
     override fun onCreateView(
@@ -49,11 +45,14 @@ class TabsTrayFragment :
 
         val trayAdapter = createAndSetupTabsTray(requireContext())
 
-        tabsFeature = TabsFeature(
-            trayAdapter,
-            requireComponents.core.store,
-            ::closeTabsTray,
-        ) { !it.content.private }
+        tabsFeature =
+            TabsFeature(
+                trayAdapter,
+                requireComponents.core.store,
+                ::closeTabsTray,
+            ) {
+                !it.content.private
+            }
 
         val tabsPanel: TabsPanel = view.findViewById(R.id.tabsPanel)
         val tabsToolbar: TabsToolbar = view.findViewById(R.id.tabsToolbar)
@@ -96,41 +95,42 @@ class TabsTrayFragment :
         val thumbnailLoader = ThumbnailLoader(context.components.core.thumbnailStorage)
         val trayStyling = TabsTrayStyling(itemBackgroundColor = Color.TRANSPARENT, itemTextColor = Color.WHITE)
         val viewHolderProvider: ViewHolderProvider = { viewGroup ->
-            val view = LayoutInflater
-                .from(context)
-                .inflate(R.layout.browser_tabstray_item, viewGroup, false)
+            val view = LayoutInflater.from(context).inflate(R.layout.browser_tabstray_item, viewGroup, false)
 
             DefaultTabViewHolder(view, thumbnailLoader)
         }
-        val tabsAdapter = TabsAdapter(
-            thumbnailLoader = thumbnailLoader,
-            viewHolderProvider = viewHolderProvider,
-            styling = trayStyling,
-            delegate = object : TabsTray.Delegate {
-                override fun onTabSelected(
-                    tab: TabSessionState,
-                    source: String?,
-                ) {
-                    requireComponents.useCases.tabsUseCases.selectTab(tab.id)
-                    closeTabsTray()
-                }
+        val tabsAdapter =
+            TabsAdapter(
+                thumbnailLoader = thumbnailLoader,
+                viewHolderProvider = viewHolderProvider,
+                styling = trayStyling,
+                delegate =
+                    object : TabsTray.Delegate {
+                        override fun onTabSelected(
+                            tab: TabSessionState,
+                            source: String?,
+                        ) {
+                            requireComponents.useCases.tabsUseCases.selectTab(tab.id)
+                            closeTabsTray()
+                        }
 
-                override fun onTabClosed(
-                    tab: TabSessionState,
-                    source: String?,
-                ) {
-                    requireComponents.useCases.tabsUseCases.removeTab(tab.id)
-                }
-            },
-        )
+                        override fun onTabClosed(
+                            tab: TabSessionState,
+                            source: String?,
+                        ) {
+                            requireComponents.useCases.tabsUseCases.removeTab(tab.id)
+                        }
+                    },
+            )
 
         val tabsTray = requireView().findViewById<RecyclerView>(R.id.tabsTray)
         tabsTray.layoutManager = layoutManager
         tabsTray.adapter = tabsAdapter
 
         TabsTouchHelper {
-            requireComponents.useCases.tabsUseCases.removeTab(it.id)
-        }.attachToRecyclerView(tabsTray)
+                requireComponents.useCases.tabsUseCases.removeTab(it.id)
+            }
+            .attachToRecyclerView(tabsTray)
 
         return tabsAdapter
     }

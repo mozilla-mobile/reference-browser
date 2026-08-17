@@ -24,19 +24,20 @@ class CrashIntegration(
     private val crashReporter: CrashReporter,
     private val onCrash: (Crash) -> Unit,
 ) : DefaultLifecycleObserver {
-    private val receiver = object : BroadcastReceiver() {
-        override fun onReceive(
-            context: Context,
-            intent: Intent,
-        ) {
-            if (!Crash.isCrashIntent(intent)) {
-                return
-            }
+    private val receiver =
+        object : BroadcastReceiver() {
+            override fun onReceive(
+                context: Context,
+                intent: Intent,
+            ) {
+                if (!Crash.isCrashIntent(intent)) {
+                    return
+                }
 
-            val crash = Crash.fromIntent(intent)
-            onCrash(crash)
+                val crash = Crash.fromIntent(intent)
+                onCrash(crash)
+            }
         }
-    }
 
     override fun onStart(owner: LifecycleOwner) {
         super.onStart(owner)
