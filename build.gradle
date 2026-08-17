@@ -36,6 +36,7 @@ plugins {
     alias libs.plugins.compose.compiler apply false
     alias libs.plugins.dependency.analysis
     alias libs.plugins.detekt
+    alias libs.plugins.spotless
 }
 
 allprojects {
@@ -147,10 +148,6 @@ subprojects {
 }
 
 
-tasks.register('clean', Delete) {
-    delete rootProject.buildDir
-}
-
 dependencyAnalysis {
     structure {
         // Ignore Android KTX dependencies. See https://developer.android.com/kotlin/ktx#modules
@@ -188,6 +185,19 @@ tasks.withType(Detekt).configureEach {
     }
 }
 
+spotless {
+    lineEndings = com.diffplug.spotless.LineEnding.UNIX
+    kotlin {
+        target fileTree(projectDir) {
+            include 'app/src/**/*.kt', 'buildSrc/src/**/*.kt'
+            exclude '**/build/**'
+        }
+        ktfmt(libs.versions.ktfmt.get()).kotlinlangStyle().configure {
+            it.setMaxWidth(120)
+        }
+    }
+}
+
 configurations {
     ktlint
 }
@@ -198,6 +208,18 @@ dependencies {
             attribute(Bundling.BUNDLING_ATTRIBUTE, getObjects().named(Bundling, Bundling.EXTERNAL))
         }
     }
+}
+
+tasks.register('ktfmtCheck') {
+    group = "verification"
+    description = "Check Kotlin code style with ktfmt."
+    dependsOn 'spotlessKotlinCheck'
+}
+
+tasks.register('ktfmtFormat') {
+    group = "formatting"
+    description = "Format Kotlin code with ktfmt."
+    dependsOn 'spotlessKotlinApply'
 }
 
 tasks.register('ktlint', JavaExec) {

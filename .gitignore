@@ -17,6 +17,7 @@ out/
 .gradle/
 build/
 !taskcluster/ci/build
+gradle/verification-metadata.dryrun.xml
 
 # Local configuration file (sdk path, etc)
 local.properties
