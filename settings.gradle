@@ -24,6 +24,18 @@ pluginManagement {
         } else {
             mavenCentral()
         }
+
+        // Spotless publishes its plugin marker only to the plugin portal.
+        def pluginRepo = providers.gradleProperty("pluginRepo")
+        if (pluginRepo.present) {
+            maven {
+                name "GradlePlugins"
+                url pluginRepo.get()
+                allowInsecureProtocol true // Local Nexus in CI uses HTTP
+            }
+        } else {
+            gradlePluginPortal()
+        }
     }
 }
 

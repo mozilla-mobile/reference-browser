@@ -6,24 +6,24 @@ package org.mozilla.reference.browser.ext
 
 import android.content.Context
 import android.text.format.DateUtils
-import org.mozilla.reference.browser.R
 import java.util.Calendar
 import java.util.Date
 import java.util.GregorianCalendar
+import org.mozilla.reference.browser.R
 
 /**
- * Returns a human-readable string describing how long ago a given timestamp occurred,
- * relative to this `Long` value (typically representing the current system time in millis).
- *
+ * Returns a human-readable string describing how long ago a given timestamp occurred, relative to this `Long` value
+ * (typically representing the current system time in millis).
  */
 fun Long.timeSince(
     context: Context,
     time: Long,
 ): String {
-    val earliestValidSyncDate: Date = GregorianCalendar.getInstance().run {
-        set(2000, Calendar.JANUARY, 1, 0, 0, 0)
-        getTime()
-    }
+    val earliestValidSyncDate: Date =
+        GregorianCalendar.getInstance().run {
+            set(2000, Calendar.JANUARY, 1, 0, 0, 0)
+            getTime()
+        }
 
     if (Date(time).before(earliestValidSyncDate)) {
         return context.getString(R.string.preferences_sync_never_synced_summary)

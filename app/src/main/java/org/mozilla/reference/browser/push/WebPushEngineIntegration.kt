@@ -50,9 +50,7 @@ class WebPushEngineIntegration(
     }
 }
 
-internal class WebPushEngineDelegate(
-    private val pushFeature: AutoPushFeature,
-) : WebPushDelegate {
+internal class WebPushEngineDelegate(private val pushFeature: AutoPushFeature) : WebPushDelegate {
     private val logger = Logger("WebPushEngineDelegate")
 
     override fun onGetSubscription(
@@ -105,17 +103,17 @@ internal class WebPushEngineDelegate(
 
 internal fun AutoPushSubscription.toEnginePushSubscription() =
     WebPushSubscription(
-    scope = this.scope,
-    publicKey = this.publicKey.toDecodedByteArray(),
-    endpoint = this.endpoint,
-    authSecret = this.authKey.toDecodedByteArray(),
-    // We don't send the `serverKey` because the code path from that will query
-    // the push database for this key, which leads to an exception thrown.
-    // Our workaround for now is to not put the server key in to begin with (which
-    // will probably break a lot of sites).
-    // See: https://github.com/mozilla/application-services/issues/2698
-    appServerKey = null,
-)
+        scope = this.scope,
+        publicKey = this.publicKey.toDecodedByteArray(),
+        endpoint = this.endpoint,
+        authSecret = this.authKey.toDecodedByteArray(),
+        // We don't send the `serverKey` because the code path from that will query
+        // the push database for this key, which leads to an exception thrown.
+        // Our workaround for now is to not put the server key in to begin with (which
+        // will probably break a lot of sites).
+        // See: https://github.com/mozilla/application-services/issues/2698
+        appServerKey = null,
+    )
 
 private fun String.toDecodedByteArray() =
     Base64.decode(this.toByteArray(), Base64.URL_SAFE or Base64.NO_PADDING or Base64.NO_WRAP)

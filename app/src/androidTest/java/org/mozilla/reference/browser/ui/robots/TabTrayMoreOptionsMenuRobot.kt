@@ -15,10 +15,9 @@ import org.mozilla.reference.browser.ext.waitAndInteract
 import org.mozilla.reference.browser.helpers.click
 
 /**
- * Implementation of Robot Pattern for menu in tab tray that shows more options.
- * So far only Close All Tabs is implemented.
+ * Implementation of Robot Pattern for menu in tab tray that shows more options. So far only Close All Tabs is
+ * implemented.
  */
-
 class TabTrayMoreOptionsMenuRobot {
     fun verifyCloseAllTabsButton() = assertCloseAllTabsButton()
 
@@ -54,4 +53,4 @@ private fun assertCloseAllTabsButton() {
 
 private fun assertCloseAllPrivateTabsButton() =
     closeAllPrivateTabsButton()
-    .check(ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+        .check(ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))

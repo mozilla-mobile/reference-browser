@@ -19,6 +19,7 @@ import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.uiautomator.By
 import androidx.test.uiautomator.UiSelector
 import androidx.test.uiautomator.Until
+import mozilla.components.feature.addons.R as addonsR
 import org.hamcrest.CoreMatchers.allOf
 import org.hamcrest.CoreMatchers.containsString
 import org.junit.Assert.assertTrue
@@ -32,11 +33,8 @@ import org.mozilla.reference.browser.helpers.TestHelper.itemWithResId
 import org.mozilla.reference.browser.helpers.TestHelper.itemWithResIdContainingText
 import org.mozilla.reference.browser.helpers.TestHelper.packageName
 import org.mozilla.reference.browser.helpers.click
-import mozilla.components.feature.addons.R as addonsR
 
-/**
- * Implementation of Robot Pattern for the addons manager.
- */
+/** Implementation of Robot Pattern for the addons manager. */
 class AddonsManagerRobot {
     fun verifyAddonsRecommendedView() {
         assertTrue(mDevice.findObject(UiSelector().text("Recommended")).waitForExists(waitingTime))
@@ -70,11 +68,10 @@ class AddonsManagerRobot {
     fun waitForAddonDownloadComplete() = waitForDownloadProgressUntilGone()
 
     fun openAddon(addonName: String) =
-        itemWithResIdContainingText("$packageName:id/add_on_name", addonName)
-            .also {
-                it.waitForExists(waitingTimeShort)
-                it.clickAndWaitForNewWindow()
-            }
+        itemWithResIdContainingText("$packageName:id/add_on_name", addonName).also {
+            it.waitForExists(waitingTimeShort)
+            it.clickAndWaitForNewWindow()
+        }
 
     fun dismissAddonDownloadCompletedPrompt(addonName: String) {
         mDevice.waitForWindowUpdate(packageName, waitingTime)
@@ -83,17 +80,15 @@ class AddonsManagerRobot {
             .waitForExists(waitingTime)
         mDevice.waitAndInteract(
             Until.findObject(
-                By.text(
-                    getStringResource(addonsR.string.mozac_feature_addons_installed_dialog_okay_button_2),
-                ),
-            ),
+                By.text(getStringResource(addonsR.string.mozac_feature_addons_installed_dialog_okay_button_2))
+            )
         ) {}
         mDevice
             .findObject(
-            UiSelector().textContains(
-                getStringResource(addonsR.string.mozac_feature_addons_installed_dialog_okay_button_2),
-            ),
-        ).click()
+                UiSelector()
+                    .textContains(getStringResource(addonsR.string.mozac_feature_addons_installed_dialog_okay_button_2))
+            )
+            .click()
     }
 
     fun clickRemoveAddonButton() {
@@ -114,95 +109,80 @@ class AddonsManagerRobot {
                 withContentDescription("Install $addonName"),
                 isDescendantOfA(withId(R.id.add_on_item)),
                 hasSibling(hasDescendant(withText(addonName))),
-            ),
+            )
         )
 
     private fun removeAddonButton() = onView(withId(R.id.remove_add_on))
 
     private fun selectInstallAddonButton(addonName: String) {
         mDevice.waitForIdle()
-        mDevice
-            .findObject(UiSelector().textContains(addonName))
-            .waitForExists(waitingTime)
+        mDevice.findObject(UiSelector().textContains(addonName)).waitForExists(waitingTime)
 
-        installAddonButton(addonName)
-            .check(matches(isCompletelyDisplayed()))
-            .perform(click())
+        installAddonButton(addonName).check(matches(isCompletelyDisplayed())).perform(click())
     }
 
     private fun assertAddonPrompt(addonName: String) {
         mDevice.waitForIdle()
-        mDevice
-            .findObject(
-            UiSelector()
-                .resourceId("$packageName:id/title"),
-        ).waitForExists(waitingTime)
+        mDevice.findObject(UiSelector().resourceId("$packageName:id/title")).waitForExists(waitingTime)
 
-        assertTrue(
-            mDevice
-                .findObject(UiSelector().textContains("Add $addonName"))
-                .waitForExists(waitingTime),
-        )
+        assertTrue(mDevice.findObject(UiSelector().textContains("Add $addonName")).waitForExists(waitingTime))
 
         onView(
-            allOf(
-                withId(addonsR.id.optional_or_required_text),
-                withText(containsString("Required permissions:")),
-            ),
-        ).check(matches(isCompletelyDisplayed()))
+                allOf(
+                    withId(addonsR.id.optional_or_required_text),
+                    withText(containsString("Required permissions:")),
+                )
+            )
+            .check(matches(isCompletelyDisplayed()))
 
         onView(
-            allOf(
-                withId(addonsR.id.allow_button),
-                withText(addonsR.string.mozac_feature_addons_permissions_dialog_add),
-            ),
-        ).check(matches(isCompletelyDisplayed()))
+                allOf(
+                    withId(addonsR.id.allow_button),
+                    withText(addonsR.string.mozac_feature_addons_permissions_dialog_add),
+                )
+            )
+            .check(matches(isCompletelyDisplayed()))
 
         onView(
-            allOf(
-                withId(addonsR.id.deny_button),
-                withText(addonsR.string.mozac_feature_addons_permissions_dialog_cancel),
-            ),
-        ).check(matches(isCompletelyDisplayed()))
+                allOf(
+                    withId(addonsR.id.deny_button),
+                    withText(addonsR.string.mozac_feature_addons_permissions_dialog_cancel),
+                )
+            )
+            .check(matches(isCompletelyDisplayed()))
     }
 
     private fun cancelInstallButton() {
         onView(
-            allOf(
-                withId(addonsR.id.deny_button),
-                withText(addonsR.string.mozac_feature_addons_permissions_dialog_cancel),
-            ),
-        ).check(matches(isCompletelyDisplayed()))
+                allOf(
+                    withId(addonsR.id.deny_button),
+                    withText(addonsR.string.mozac_feature_addons_permissions_dialog_cancel),
+                )
+            )
+            .check(matches(isCompletelyDisplayed()))
             .perform(click())
     }
 
     private fun allowInstallAddonButton() {
         // The permissions dialog disables the "Add" button for ~1s as
         // clickjacking protection. Wait until it becomes enabled.
-        val allowButton = mDevice.wait(
-            Until.findObject(By.res("$packageName:id/allow_button").enabled(true)),
-            waitingTime,
-        )
+        val allowButton =
+            mDevice.wait(
+                Until.findObject(By.res("$packageName:id/allow_button").enabled(true)),
+                waitingTime,
+            )
         assertTrue("Allow button did not become enabled", allowButton != null)
         allowButton.click()
     }
 
     private fun assertAddonDownloadCompletedPrompt(addonName: String) {
         mDevice.waitForIdle()
-        assertTrue(
-            mDevice
-                .findObject(
-                UiSelector()
-                    .textContains("$addonName was added"),
-            ).waitForExists(waitingTime),
-        )
+        assertTrue(mDevice.findObject(UiSelector().textContains("$addonName was added")).waitForExists(waitingTime))
     }
 
     private fun waitForDownloadProgressUntilGone() {
         mDevice.waitForIdle()
-        mDevice
-            .findObject(UiSelector().resourceId("$packageName:id/addonProgressOverlay"))
-            .waitUntilGone(waitingTime)
+        mDevice.findObject(UiSelector().resourceId("$packageName:id/addonProgressOverlay")).waitUntilGone(waitingTime)
     }
 
     private fun assertAddonElementsView(addonName: String) {
@@ -210,14 +190,15 @@ class AddonsManagerRobot {
         mDevice.findObject(UiSelector().textContains(addonName)).waitForExists(waitingTime)
 
         onView(
-            allOf(
-                withId(R.id.remove_add_on),
-                hasSibling(withId(R.id.enable_switch)),
-                hasSibling(withId(R.id.settings)),
-                hasSibling(withId(R.id.details)),
-                hasSibling(withId(R.id.permissions)),
-                hasSibling(withId(R.id.allow_in_private_browsing_switch)),
-            ),
-        ).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+                allOf(
+                    withId(R.id.remove_add_on),
+                    hasSibling(withId(R.id.enable_switch)),
+                    hasSibling(withId(R.id.settings)),
+                    hasSibling(withId(R.id.details)),
+                    hasSibling(withId(R.id.permissions)),
+                    hasSibling(withId(R.id.allow_in_private_browsing_switch)),
+                )
+            )
+            .check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
     }
 }

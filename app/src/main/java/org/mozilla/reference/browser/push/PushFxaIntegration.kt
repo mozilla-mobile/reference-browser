@@ -23,35 +23,31 @@ import org.mozilla.reference.browser.components.Push
 /**
  * A lazy initializer for FxaAccountManager if it isn't already initialized.
  *
- * Implementation notes: For push notifications, we need to initialize the service on
- * Application#onCreate as soon as possible in order to receive messages. These are then decrypted
- * and the observers of the push feature are notified.
+ * Implementation notes: For push notifications, we need to initialize the service on Application#onCreate as soon as
+ * possible in order to receive messages. These are then decrypted and the observers of the push feature are notified.
  *
- * One of our observers is [FxaAccountManager] that needs to know about messages like Send Tab,
- * new account logins, etc. This however comes at the cost of having the account manager
- * initialized and observing the push feature when it initializes (which once again happens on
- * application create) - the total cost of startup time now is additive for the both of them.
+ * One of our observers is [FxaAccountManager] that needs to know about messages like Send Tab, new account logins, etc.
+ * This however comes at the cost of having the account manager initialized and observing the push feature when it
+ * initializes (which once again happens on application create) - the total cost of startup time now is additive for the
+ * both of them.
  *
- * What this integration class aims to do, is to observe the push feature immediately in order to act
- * as a (temporary) delegate, and when we see a push message from FxA, only then we should
- * initialize and deliver the message.
+ * What this integration class aims to do, is to observe the push feature immediately in order to act as a (temporary)
+ * delegate, and when we see a push message from FxA, only then we should initialize and deliver the message.
  *
- * Once FxaAccountManager is initialized, we no longer need this integration as there already are
- * existing features to support these feature requirements, so we safely unregister ourselves.
- * See: [FxaPushSupportFeature] and [SendTabFeature].
+ * Once FxaAccountManager is initialized, we no longer need this integration as there already are existing features to
+ * support these feature requirements, so we safely unregister ourselves. See: [FxaPushSupportFeature] and
+ * [SendTabFeature].
  *
- * A solution that we considered was to pass in [BackgroundServices] to the [Push] class
- * and lazily invoke the account manager - that lead to a cyclic dependency of initialization since
- * [BackgroundServices] also depends on [Push] directly for observing messages via the account-based
- * features.
+ * A solution that we considered was to pass in [BackgroundServices] to the [Push] class and lazily invoke the account
+ * manager - that lead to a cyclic dependency of initialization since [BackgroundServices] also depends on [Push]
+ * directly for observing messages via the account-based features.
  *
- * Another solution was to create a message buffer to queue up the messages until the account could
- * consume them - this added the complexity of maintaining a buffer, the possibility of flooding the
- * buffer, and delaying the delivery of high importance messages like Send Tab which are required to
- * be processed immediately.
+ * Another solution was to create a message buffer to queue up the messages until the account could consume them - this
+ * added the complexity of maintaining a buffer, the possibility of flooding the buffer, and delaying the delivery of
+ * high importance messages like Send Tab which are required to be processed immediately.
  *
- * Our final solution ended up being more concise that the above options that met all our required
- * assurances, and most importantly, maintainable.
+ * Our final solution ended up being more concise that the above options that met all our required assurances, and most
+ * importantly, maintainable.
  */
 class PushFxaIntegration(
     private val pushFeature: AutoPushFeature,
@@ -73,10 +69,7 @@ class PushFxaIntegration(
     }
 }
 
-/**
- * Observes push messages from [AutoPushFeature], then initializes [FxaAccountManager] if it isn't
- * already.
- */
+/** Observes push messages from [AutoPushFeature], then initializes [FxaAccountManager] if it isn't already. */
 internal class OneTimePushMessageObserver(
     private val lazyAccountManager: Lazy<FxaAccountManager>,
     private val pushFeature: AutoPushFeature,
@@ -110,8 +103,8 @@ internal class OneTimePushMessageObserver(
 }
 
 /**
- * Waits for the [FxaAccountManager] to authenticate itself in order to deliver the [message], then
- * unregisters itself once complete.
+ * Waits for the [FxaAccountManager] to authenticate itself in order to deliver the [message], then unregisters itself
+ * once complete.
  */
 internal class OneTimeMessageDeliveryObserver(
     private val lazyAccount: Lazy<FxaAccountManager>,

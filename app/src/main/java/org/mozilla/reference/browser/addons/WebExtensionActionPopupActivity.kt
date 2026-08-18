@@ -24,9 +24,7 @@ import mozilla.components.support.ktx.android.view.setupPersistentInsets
 import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.ext.components
 
-/**
- * An activity to show the pop up action of a web extension.
- */
+/** An activity to show the pop up action of a web extension. */
 class WebExtensionActionPopupActivity : AppCompatActivity() {
     private lateinit var webExtensionId: String
 
@@ -55,9 +53,7 @@ class WebExtensionActionPopupActivity : AppCompatActivity() {
     ): View? =
         when (name) {
             EngineView::class.java.name -> {
-                components.core.engine
-                .createView(context, attrs)
-                .asView()
+                components.core.engine.createView(context, attrs).asView()
             }
 
             else -> {
@@ -65,12 +61,8 @@ class WebExtensionActionPopupActivity : AppCompatActivity() {
             }
         }
 
-    /**
-     * A fragment to show the web extension action popup with [EngineView].
-     */
-    class WebExtensionActionPopupFragment :
-        Fragment(),
-        EngineSession.Observer {
+    /** A fragment to show the web extension action popup with [EngineView]. */
+    class WebExtensionActionPopupFragment : Fragment(), EngineSession.Observer {
         private var engineSession: EngineSession? = null
         private lateinit var webExtensionId: String
 
@@ -83,9 +75,7 @@ class WebExtensionActionPopupActivity : AppCompatActivity() {
             savedInstanceState: Bundle?,
         ): View? {
             webExtensionId = requireNotNull(arguments?.getString("web_extension_id"))
-            engineSession = requireContext()
-                .components.core.store.state.extensions[webExtensionId]
-                ?.popupSession
+            engineSession = requireContext().components.core.store.state.extensions[webExtensionId]?.popupSession
 
             return inflater.inflate(R.layout.fragment_add_on_settings, container, false)
         }
@@ -132,21 +122,22 @@ class WebExtensionActionPopupActivity : AppCompatActivity() {
         }
 
         private fun consumePopupSession() {
-            requireContext().components.core.store.dispatch(
-                WebExtensionAction.UpdatePopupSessionAction(webExtensionId, popupSession = null),
-            )
+            requireContext()
+                .components
+                .core
+                .store
+                .dispatch(WebExtensionAction.UpdatePopupSessionAction(webExtensionId, popupSession = null))
         }
 
         companion object {
-            /**
-             * Create an [WebExtensionActionPopupFragment] with webExtensionId as a required parameter.
-             */
+            /** Create an [WebExtensionActionPopupFragment] with webExtensionId as a required parameter. */
             fun create(webExtensionId: String) =
                 WebExtensionActionPopupFragment().apply {
-                arguments = Bundle().apply {
-                    putString("web_extension_id", webExtensionId)
+                    arguments =
+                        Bundle().apply {
+                            putString("web_extension_id", webExtensionId)
+                        }
                 }
-            }
         }
     }
 }

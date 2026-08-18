@@ -61,14 +61,10 @@ import org.mozilla.reference.browser.tabs.LastTabFeature
 private const val BOTTOM_TOOLBAR_HEIGHT = 0
 
 /**
- * Base fragment extended by [BrowserFragment] and [ExternalAppBrowserFragment].
- * This class only contains shared code focused on the main browsing content.
- * UI code specific to the app or to custom tabs can be found in the subclasses.
+ * Base fragment extended by [BrowserFragment] and [ExternalAppBrowserFragment]. This class only contains shared code
+ * focused on the main browsing content. UI code specific to the app or to custom tabs can be found in the subclasses.
  */
-abstract class BaseBrowserFragment :
-    Fragment(),
-    UserInteractionHandler,
-    ActivityResultHandler {
+abstract class BaseBrowserFragment : Fragment(), UserInteractionHandler, ActivityResultHandler {
     private val sessionFeature = ViewBoundFeatureWrapper<SessionFeature>()
     private val toolbarIntegration = ViewBoundFeatureWrapper<ToolbarIntegration>()
     private val contextMenuIntegration = ViewBoundFeatureWrapper<ContextMenuIntegration>()
@@ -90,25 +86,30 @@ abstract class BaseBrowserFragment :
 
     private val engineView: EngineView
         get() = requireView().findViewById<View>(R.id.engineView) as EngineView
+
     private val toolbar: BrowserToolbar
         get() = requireView().findViewById(R.id.toolbar)
+
     private val findInPageBar: FindInPageBar
         get() = requireView().findViewById(R.id.findInPageBar)
+
     private val swipeRefresh: SwipeRefreshLayout
         get() = requireView().findViewById(R.id.swipeRefresh)
 
-    private val backButtonHandler: List<ViewBoundFeatureWrapper<*>> = listOf(
-        fullScreenFeature,
-        findInPageIntegration,
-        toolbarIntegration,
-        sessionFeature,
-        lastTabFeature,
-    )
+    private val backButtonHandler: List<ViewBoundFeatureWrapper<*>> =
+        listOf(
+            fullScreenFeature,
+            findInPageIntegration,
+            toolbarIntegration,
+            sessionFeature,
+            lastTabFeature,
+        )
 
-    private val activityResultHandler: List<ViewBoundFeatureWrapper<*>> = listOf(
-        webAuthnFeature,
-        promptsFeature,
-    )
+    private val activityResultHandler: List<ViewBoundFeatureWrapper<*>> =
+        listOf(
+            webAuthnFeature,
+            promptsFeature,
+        )
 
     protected val sessionId: String?
         get() = arguments?.getString(SESSION_ID)
@@ -127,8 +128,9 @@ abstract class BaseBrowserFragment :
                 val grantResults =
                     results.values
                         .map {
-                        if (it) PackageManager.PERMISSION_GRANTED else PackageManager.PERMISSION_DENIED
-                    }.toIntArray()
+                            if (it) PackageManager.PERMISSION_GRANTED else PackageManager.PERMISSION_DENIED
+                        }
+                        .toIntArray()
                 downloadsFeature.withFeature {
                     it.onPermissionsResult(permissions, grantResults)
                 }
@@ -140,8 +142,9 @@ abstract class BaseBrowserFragment :
                 val grantResults =
                     results.values
                         .map {
-                        if (it) PackageManager.PERMISSION_GRANTED else PackageManager.PERMISSION_DENIED
-                    }.toIntArray()
+                            if (it) PackageManager.PERMISSION_GRANTED else PackageManager.PERMISSION_DENIED
+                        }
+                        .toIntArray()
                 sitePermissionFeature.withFeature {
                     it.onPermissionsResult(permissions, grantResults)
                 }
@@ -153,8 +156,9 @@ abstract class BaseBrowserFragment :
                 val grantResults =
                     results.values
                         .map {
-                        if (it) PackageManager.PERMISSION_GRANTED else PackageManager.PERMISSION_DENIED
-                    }.toIntArray()
+                            if (it) PackageManager.PERMISSION_GRANTED else PackageManager.PERMISSION_DENIED
+                        }
+                        .toIntArray()
                 promptsFeature.withFeature {
                     it.onPermissionsResult(permissions, grantResults)
                 }
@@ -178,52 +182,56 @@ abstract class BaseBrowserFragment :
         val prefs = PreferenceManager.getDefaultSharedPreferences(requireContext())
 
         sessionFeature.set(
-            feature = SessionFeature(
-                requireComponents.core.store,
-                requireComponents.useCases.sessionUseCases.goBack,
-                requireComponents.useCases.sessionUseCases.goForward,
-                engineView,
-                sessionId,
-            ),
+            feature =
+                SessionFeature(
+                    requireComponents.core.store,
+                    requireComponents.useCases.sessionUseCases.goBack,
+                    requireComponents.useCases.sessionUseCases.goForward,
+                    engineView,
+                    sessionId,
+                ),
             owner = this,
             view = view,
         )
 
         (toolbar.layoutParams as? CoordinatorLayout.LayoutParams)?.apply {
-            behavior = EngineViewScrollingGesturesBehavior(
-                engineView = engineView,
-                dependency = toolbar,
-                dependencyGravity = DependencyGravity.Bottom,
-            )
+            behavior =
+                EngineViewScrollingGesturesBehavior(
+                    engineView = engineView,
+                    dependency = toolbar,
+                    dependencyGravity = DependencyGravity.Bottom,
+                )
         }
 
         toolbarIntegration.set(
-            feature = ToolbarIntegration(
-                requireContext(),
-                toolbar,
-                view,
-                requireComponents.core.historyStorage,
-                requireComponents.core.store,
-                requireComponents.useCases.sessionUseCases,
-                requireComponents.useCases.tabsUseCases,
-                requireComponents.useCases.webAppUseCases,
-                sessionId,
-            ),
+            feature =
+                ToolbarIntegration(
+                    requireContext(),
+                    toolbar,
+                    view,
+                    requireComponents.core.historyStorage,
+                    requireComponents.core.store,
+                    requireComponents.useCases.sessionUseCases,
+                    requireComponents.useCases.tabsUseCases,
+                    requireComponents.useCases.webAppUseCases,
+                    sessionId,
+                ),
             owner = this,
             view = view,
         )
 
         contextMenuIntegration.set(
-            feature = ContextMenuIntegration(
-                requireContext(),
-                parentFragmentManager,
-                requireComponents.core.store,
-                requireComponents.useCases.tabsUseCases,
-                requireComponents.useCases.contextMenuUseCases,
-                engineView,
-                view,
-                sessionId,
-            ),
+            feature =
+                ContextMenuIntegration(
+                    requireContext(),
+                    parentFragmentManager,
+                    requireComponents.core.store,
+                    requireComponents.useCases.tabsUseCases,
+                    requireComponents.useCases.contextMenuUseCases,
+                    engineView,
+                    view,
+                    sessionId,
+                ),
             owner = this,
             view = view,
         )
@@ -239,67 +247,76 @@ abstract class BaseBrowserFragment :
         )
 
         downloadsFeature.set(
-            feature = DownloadsFeature(
-                requireContext(),
-                store = requireComponents.core.store,
-                useCases = requireComponents.useCases.downloadsUseCases,
-                fragmentManager = childFragmentManager,
-                downloadFileUtils = DefaultDownloadFileUtils(
-                    context = requireContext().applicationContext,
-                    downloadLocation = {
-                        Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).path
+            feature =
+                DownloadsFeature(
+                    requireContext(),
+                    store = requireComponents.core.store,
+                    useCases = requireComponents.useCases.downloadsUseCases,
+                    fragmentManager = childFragmentManager,
+                    downloadFileUtils =
+                        DefaultDownloadFileUtils(
+                            context = requireContext().applicationContext,
+                            downloadLocation = {
+                                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).path
+                            },
+                        ),
+                    downloadManager =
+                        FetchDownloadManager(
+                            requireContext().applicationContext,
+                            requireComponents.core.store,
+                            DownloadService::class,
+                            notificationsDelegate = requireComponents.notificationsDelegate,
+                        ),
+                    onNeedToRequestPermissions = { permissions ->
+                        requestDownloadPermissionsLauncher.launch(permissions)
                     },
                 ),
-                downloadManager = FetchDownloadManager(
-                    requireContext().applicationContext,
-                    requireComponents.core.store,
-                    DownloadService::class,
-                    notificationsDelegate = requireComponents.notificationsDelegate,
-                ),
-                onNeedToRequestPermissions = { permissions ->
-                    requestDownloadPermissionsLauncher.launch(permissions)
-                },
-            ),
             owner = this,
             view = view,
         )
 
         appLinksFeature.set(
-            feature = AppLinksFeature(
-                requireContext(),
-                store = requireComponents.core.store,
-                sessionId = sessionId,
-                fragmentManager = parentFragmentManager,
-                launchInApp = {
-                    prefs.getBoolean(requireContext().getPreferenceKey(R.string.pref_key_launch_external_app), false)
-                },
-            ),
+            feature =
+                AppLinksFeature(
+                    requireContext(),
+                    store = requireComponents.core.store,
+                    sessionId = sessionId,
+                    fragmentManager = parentFragmentManager,
+                    launchInApp = {
+                        prefs.getBoolean(
+                            requireContext().getPreferenceKey(R.string.pref_key_launch_external_app),
+                            false,
+                        )
+                    },
+                ),
             owner = this,
             view = view,
         )
 
         promptsFeature.set(
-            feature = PromptFeature(
-                fragment = this,
-                store = requireComponents.core.store,
-                tabsUseCases = requireComponents.useCases.tabsUseCases,
-                customTabId = sessionId,
-                fileUploadsDirCleaner = requireComponents.core.fileUploadsDirCleaner,
-                fragmentManager = parentFragmentManager,
-                onNeedToRequestPermissions = { permissions ->
-                    requestPromptsPermissionsLauncher.launch(permissions)
-                },
-            ),
+            feature =
+                PromptFeature(
+                    fragment = this,
+                    store = requireComponents.core.store,
+                    tabsUseCases = requireComponents.useCases.tabsUseCases,
+                    customTabId = sessionId,
+                    fileUploadsDirCleaner = requireComponents.core.fileUploadsDirCleaner,
+                    fragmentManager = parentFragmentManager,
+                    onNeedToRequestPermissions = { permissions ->
+                        requestPromptsPermissionsLauncher.launch(permissions)
+                    },
+                ),
             owner = this,
             view = view,
         )
 
         webExtensionPromptFeature.set(
-            feature = WebExtensionPromptFeature(
-                store = requireComponents.core.store,
-                context = requireContext(),
-                fragmentManager = parentFragmentManager,
-            ),
+            feature =
+                WebExtensionPromptFeature(
+                    store = requireComponents.core.store,
+                    context = requireContext(),
+                    fragmentManager = parentFragmentManager,
+                ),
             owner = this,
             view = view,
         )
@@ -311,110 +328,122 @@ abstract class BaseBrowserFragment :
         )
 
         fullScreenFeature.set(
-            feature = FullScreenFeature(
-                store = requireComponents.core.store,
-                sessionUseCases = requireComponents.useCases.sessionUseCases,
-                tabId = sessionId,
-                viewportFitChanged = ::viewportFitChanged,
-                fullScreenChanged = ::fullScreenChanged,
-            ),
+            feature =
+                FullScreenFeature(
+                    store = requireComponents.core.store,
+                    sessionUseCases = requireComponents.useCases.sessionUseCases,
+                    tabId = sessionId,
+                    viewportFitChanged = ::viewportFitChanged,
+                    fullScreenChanged = ::fullScreenChanged,
+                ),
             owner = this,
             view = view,
         )
 
         findInPageIntegration.set(
-            feature = FindInPageIntegration(
-                requireComponents.core.store,
-                sessionId,
-                findInPageBar as FindInPageView,
-                engineView,
-            ),
+            feature =
+                FindInPageIntegration(
+                    requireComponents.core.store,
+                    sessionId,
+                    findInPageBar as FindInPageView,
+                    engineView,
+                ),
             owner = this,
             view = view,
         )
 
         sitePermissionFeature.set(
-            feature = SitePermissionsFeature(
-                context = requireContext(),
-                fragmentManager = parentFragmentManager,
-                sessionId = sessionId,
-                storage = requireComponents.core.geckoSitePermissionsStorage,
-                onNeedToRequestPermissions = { permissions ->
-                    requestSitePermissionsLauncher.launch(permissions)
-                },
-                onShouldShowRequestPermissionRationale = { shouldShowRequestPermissionRationale(it) },
-                store = requireComponents.core.store,
-            ),
+            feature =
+                SitePermissionsFeature(
+                    context = requireContext(),
+                    fragmentManager = parentFragmentManager,
+                    sessionId = sessionId,
+                    storage = requireComponents.core.geckoSitePermissionsStorage,
+                    onNeedToRequestPermissions = { permissions ->
+                        requestSitePermissionsLauncher.launch(permissions)
+                    },
+                    onShouldShowRequestPermissionRationale = { shouldShowRequestPermissionRationale(it) },
+                    store = requireComponents.core.store,
+                ),
             owner = this,
             view = view,
         )
 
         pictureInPictureIntegration.set(
-            feature = PictureInPictureIntegration(
-                requireComponents.core.store,
-                requireActivity(),
-                sessionId,
-            ),
+            feature =
+                PictureInPictureIntegration(
+                    requireComponents.core.store,
+                    requireActivity(),
+                    sessionId,
+                ),
             owner = this,
             view = view,
         )
 
         fullScreenMediaSessionFeature.set(
-            feature = MediaSessionFullscreenFeature(
-                requireActivity(),
-                requireComponents.core.store,
-                sessionId,
-            ),
+            feature =
+                MediaSessionFullscreenFeature(
+                    requireActivity(),
+                    requireComponents.core.store,
+                    sessionId,
+                ),
             owner = this,
             view = view,
         )
 
         (swipeRefresh.layoutParams as? CoordinatorLayout.LayoutParams)?.apply {
-            behavior = EngineViewClippingBehavior(
-                context = requireContext(),
-                attrs = null,
-                engineViewParent = swipeRefresh,
-                topToolbarHeight = toolbar.height,
-                bottomToolbarHeight = BOTTOM_TOOLBAR_HEIGHT,
-            )
+            behavior =
+                EngineViewClippingBehavior(
+                    context = requireContext(),
+                    attrs = null,
+                    engineViewParent = swipeRefresh,
+                    topToolbarHeight = toolbar.height,
+                    bottomToolbarHeight = BOTTOM_TOOLBAR_HEIGHT,
+                )
         }
         swipeRefreshFeature.set(
-            feature = SwipeRefreshFeature(
-                requireComponents.core.store,
-                requireComponents.useCases.sessionUseCases.reload,
-                swipeRefresh,
-            ),
+            feature =
+                SwipeRefreshFeature(
+                    requireComponents.core.store,
+                    requireComponents.useCases.sessionUseCases.reload,
+                    swipeRefresh,
+                ),
             owner = this,
             view = view,
         )
 
         lastTabFeature.set(
-            feature = LastTabFeature(
-                requireComponents.core.store,
-                sessionId,
-                requireComponents.useCases.tabsUseCases.removeTab,
-                requireActivity(),
-            ),
+            feature =
+                LastTabFeature(
+                    requireComponents.core.store,
+                    sessionId,
+                    requireComponents.useCases.tabsUseCases.removeTab,
+                    requireActivity(),
+                ),
             owner = this,
             view = view,
         )
 
         screenOrientationFeature.set(
-            feature = ScreenOrientationFeature(
-                requireComponents.core.engine,
-                requireActivity(),
-            ),
+            feature =
+                ScreenOrientationFeature(
+                    requireComponents.core.engine,
+                    requireActivity(),
+                ),
             owner = this,
             view = view,
         )
 
         if (BuildConfig.MOZILLA_OFFICIAL) {
             webAuthnFeature.set(
-                feature = WebAuthnFeature(
-                    requireComponents.core.engine,
-                    requireActivity(),
-                    requireComponents.useCases.sessionUseCases.exitFullscreen::invoke,
-                ) { requireComponents.core.store.state.selectedTabId },
+                feature =
+                    WebAuthnFeature(
+                        requireComponents.core.engine,
+                        requireActivity(),
+                        requireComponents.useCases.sessionUseCases.exitFullscreen::invoke,
+                    ) {
+                        requireComponents.core.store.state.selectedTabId
+                    },
                 owner = this,
                 view = view,
             )
@@ -449,8 +478,7 @@ abstract class BaseBrowserFragment :
         }
     }
 
-    @CallSuper
-    override fun onBackPressed(): Boolean = backButtonHandler.any { it.onBackPressed() }
+    @CallSuper override fun onBackPressed(): Boolean = backButtonHandler.any { it.onBackPressed() }
 
     final override fun onHomePressed(): Boolean = pictureInPictureIntegration.get()?.onHomePressed() ?: false
 
@@ -480,7 +508,7 @@ abstract class BaseBrowserFragment :
     ): Boolean {
         Logger.info(
             "Fragment onActivityResult received with " +
-                "requestCode: $requestCode, resultCode: $resultCode, data: $data",
+                "requestCode: $requestCode, resultCode: $resultCode, data: $data"
         )
 
         return activityResultHandler.any { it.onActivityResult(requestCode, data, resultCode) }

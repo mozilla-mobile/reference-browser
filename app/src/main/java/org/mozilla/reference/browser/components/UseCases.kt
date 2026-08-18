@@ -20,8 +20,7 @@ import mozilla.components.feature.tabs.TabsUseCases
 import mozilla.components.support.utils.DefaultDownloadFileUtils
 
 /**
- * Component group for all use cases. Use cases are provided by feature
- * modules and can be triggered by UI interactions.
+ * Component group for all use cases. Use cases are provided by feature modules and can be triggered by UI interactions.
  */
 class UseCases(
     private val context: Context,
@@ -29,55 +28,40 @@ class UseCases(
     private val store: BrowserStore,
     private val shortcutManager: WebAppShortcutManager,
 ) {
-    /**
-     * Use cases that provide engine interactions for a given browser session.
-     */
+    /** Use cases that provide engine interactions for a given browser session. */
     val sessionUseCases by lazy { SessionUseCases(store) }
 
-    /**
-     * Use cases that provide tab management.
-     */
+    /** Use cases that provide tab management. */
     val tabsUseCases: TabsUseCases by lazy { TabsUseCases(store) }
 
-    /**
-     * Use cases that provide search engine integration.
-     */
+    /** Use cases that provide search engine integration. */
     val searchUseCases by lazy {
         SearchUseCases(store, tabsUseCases, sessionUseCases)
     }
 
-    /**
-     * Use cases that provide settings management.
-     */
+    /** Use cases that provide settings management. */
     val settingsUseCases by lazy { SettingsUseCases(engine, store) }
 
-    /**
-     * Use cases that provide shortcut and progressive web app management.
-     */
+    /** Use cases that provide shortcut and progressive web app management. */
     val webAppUseCases by lazy { WebAppUseCases(context, store, shortcutManager) }
 
-    /**
-     * Uses cases that provides context menu
-     */
+    /** Uses cases that provides context menu */
     val contextMenuUseCases: ContextMenuUseCases by lazy { ContextMenuUseCases(store) }
 
-    /**
-     * Use cases related to the downloads feature.
-     */
+    /** Use cases related to the downloads feature. */
     val downloadsUseCases: DownloadsUseCases by lazy {
         DownloadsUseCases(
             store = store,
-            downloadFileUtils = DefaultDownloadFileUtils(
-                context = context,
-                downloadLocation = {
-                    Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).path
-                },
-            ),
+            downloadFileUtils =
+                DefaultDownloadFileUtils(
+                    context = context,
+                    downloadLocation = {
+                        Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).path
+                    },
+                ),
         )
     }
 
-    /**
-     * Use cases related to Custom Tabs.
-     */
+    /** Use cases related to Custom Tabs. */
     val customTabsUseCases: CustomTabsUseCases by lazy { CustomTabsUseCases(store, sessionUseCases.loadUrl) }
 }

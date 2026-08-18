@@ -36,6 +36,7 @@ plugins {
     alias libs.plugins.compose.compiler apply false
     alias libs.plugins.dependency.analysis
     alias libs.plugins.detekt
+    alias libs.plugins.spotless
 }
 
 allprojects {
@@ -147,10 +148,6 @@ subprojects {
 }
 
 
-tasks.register('clean', Delete) {
-    delete rootProject.buildDir
-}
-
 dependencyAnalysis {
     structure {
         // Ignore Android KTX dependencies. See https://developer.android.com/kotlin/ktx#modules
@@ -188,30 +185,29 @@ tasks.withType(Detekt).configureEach {
     }
 }
 
-configurations {
-    ktlint
-}
-
-dependencies {
-    ktlint(libs.ktlint) {
-        attributes {
-            attribute(Bundling.BUNDLING_ATTRIBUTE, getObjects().named(Bundling, Bundling.EXTERNAL))
+spotless {
+    lineEndings = com.diffplug.spotless.LineEnding.UNIX
+    kotlin {
+        target fileTree(projectDir) {
+            include 'app/src/**/*.kt', 'buildSrc/src/**/*.kt'
+            exclude '**/build/**'
+        }
+        ktfmt(libs.versions.ktfmt.get()).kotlinlangStyle().configure {
+            it.setMaxWidth(120)
         }
     }
 }
 
-tasks.register('ktlint', JavaExec) {
-    description = "Check Kotlin code style."
-    classpath = configurations.ktlint
-    mainClass.set("com.pinterest.ktlint.Main")
-    args "app/src/**/*.kt", "!**/build/**/*.kt"
+tasks.register('ktfmtCheck') {
+    group = "verification"
+    description = "Check Kotlin code style with ktfmt."
+    dependsOn 'spotlessKotlinCheck'
 }
 
-tasks.register('ktlintFormat', JavaExec) {
-    description = "Fix Kotlin code style deviations."
-    classpath = configurations.ktlint
-    mainClass.set("com.pinterest.ktlint.Main")
-    args "-F", "app/src/**/*.kt", "!**/build/**/*.kt"
+tasks.register('ktfmtFormat') {
+    group = "formatting"
+    description = "Format Kotlin code with ktfmt."
+    dependsOn 'spotlessKotlinApply'
 }
 
 tasks.register('listRepositories') {

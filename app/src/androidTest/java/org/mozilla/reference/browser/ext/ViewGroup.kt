@@ -7,8 +7,6 @@ package org.mozilla.reference.browser.ext
 import android.view.View
 import android.view.ViewGroup
 
-/**
- * The [ViewGroup] children as an [Iterable] on [View]s
- */
+/** The [ViewGroup] children as an [Iterable] on [View]s */
 val ViewGroup.children: Iterable<View>
     get() = (0 until childCount).map(this::getChildAt)

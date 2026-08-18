@@ -14,17 +14,15 @@ import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withSubstring
 import androidx.test.uiautomator.By
 import androidx.test.uiautomator.UiSelector
+import mozilla.components.browser.toolbar.R as toolbarR
 import org.hamcrest.CoreMatchers.allOf
 import org.junit.Assert.assertTrue
 import org.mozilla.reference.browser.helpers.Constants.LONG_CLICK_DURATION
 import org.mozilla.reference.browser.helpers.TestAssetHelper.waitingTime
 import org.mozilla.reference.browser.helpers.TestHelper.packageName
 import org.mozilla.reference.browser.helpers.click
-import mozilla.components.browser.toolbar.R as toolbarR
 
-/**
- * Implementation of Robot Pattern for awesomebar.
- */
+/** Implementation of Robot Pattern for awesomebar. */
 class AwesomeBarRobot {
     fun verifySearchSuggestion(searchSuggestionTitle: String) = assertSearchSuggestion(searchSuggestionTitle)
 
@@ -45,12 +43,8 @@ class AwesomeBarRobot {
 
     fun longClickToolbar() {
         mDevice.waitForWindowUpdate(packageName, waitingTime)
-        mDevice
-            .findObject(UiSelector().resourceId("$packageName:id/awesomeBar"))
-            .waitForExists(waitingTime)
-        mDevice
-            .findObject(UiSelector().resourceId("$packageName:id/toolbar"))
-            .waitForExists(waitingTime)
+        mDevice.findObject(UiSelector().resourceId("$packageName:id/awesomeBar")).waitForExists(waitingTime)
+        mDevice.findObject(UiSelector().resourceId("$packageName:id/toolbar")).waitForExists(waitingTime)
         val toolbar = mDevice.findObject(By.res("$packageName:id/toolbar"))
         toolbar.click(LONG_CLICK_DURATION)
     }
@@ -98,7 +92,7 @@ private fun awesomeBar() =
         allOf(
             withId(toolbarR.id.mozac_browser_toolbar_edit_url_view),
             isDescendantOfA(withId(toolbarR.id.mozac_browser_toolbar_container)),
-        ),
+        )
     )
 
 private fun clearToolbarButton() =
@@ -106,39 +100,28 @@ private fun clearToolbarButton() =
 
 private fun assertSearchSuggestion(searchSuggestionTitle: String) {
     mDevice.waitForIdle()
-    assertTrue(
-        mDevice
-            .findObject(UiSelector().textContains(searchSuggestionTitle))
-            .waitForExists(waitingTime),
-    )
+    assertTrue(mDevice.findObject(UiSelector().textContains(searchSuggestionTitle)).waitForExists(waitingTime))
 }
 
 private fun assertLinkFromClipboard(clipboardLink: String) {
     mDevice.waitForIdle()
-    mDevice
-        .findObject(UiSelector().resourceId("$packageName:id/awesomeBar"))
-        .waitForExists(waitingTime)
+    mDevice.findObject(UiSelector().resourceId("$packageName:id/awesomeBar")).waitForExists(waitingTime)
     mDevice
         .findObject(UiSelector().resourceId("$packageName:id/mozac_browser_awesomebar_title"))
         .waitForExists(waitingTime)
-    assertTrue(
-        mDevice
-            .findObject(UiSelector().textContains(clipboardLink))
-            .waitForExists(waitingTime),
-    )
+    assertTrue(mDevice.findObject(UiSelector().textContains(clipboardLink)).waitForExists(waitingTime))
 }
 
 private fun assertPastedToolbarText(expectedText: String) {
-    mDevice
-        .findObject(UiSelector().resourceId("$packageName:id/toolbar"))
-        .waitForExists(waitingTime)
+    mDevice.findObject(UiSelector().resourceId("$packageName:id/toolbar")).waitForExists(waitingTime)
     mDevice
         .findObject(UiSelector().resourceId("$packageName:id/mozac_browser_toolbar_url_view"))
         .waitForExists(waitingTime)
     onView(
-        allOf(
-            withSubstring(expectedText),
-            withId(toolbarR.id.mozac_browser_toolbar_edit_url_view),
-        ),
-    ).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+            allOf(
+                withSubstring(expectedText),
+                withId(toolbarR.id.mozac_browser_toolbar_edit_url_view),
+            )
+        )
+        .check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
 }

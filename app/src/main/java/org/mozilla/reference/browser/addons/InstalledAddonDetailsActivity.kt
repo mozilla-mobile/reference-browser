@@ -19,16 +19,14 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import mozilla.components.feature.addons.Addon
 import mozilla.components.feature.addons.AddonManagerException
+import mozilla.components.feature.addons.R as addonsR
 import mozilla.components.feature.addons.ui.translateName
 import mozilla.components.support.ktx.android.view.setupPersistentInsets
 import mozilla.components.support.utils.ext.getParcelableExtraCompat
 import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.ext.components
-import mozilla.components.feature.addons.R as addonsR
 
-/**
- * An activity to show the details of a installed add-on.
- */
+/** An activity to show the details of a installed add-on. */
 class InstalledAddonDetailsActivity : AppCompatActivity() {
     private val scope = CoroutineScope(Dispatchers.IO)
 
@@ -38,11 +36,10 @@ class InstalledAddonDetailsActivity : AppCompatActivity() {
         setContentView(R.layout.activity_installed_add_on_details)
         window.setupPersistentInsets(true)
 
-        val addon = requireNotNull(
-            intent.getParcelableExtraCompat("add_on", Addon::class.java),
-        ).also {
-            bindUI(it)
-        }
+        val addon =
+            requireNotNull(intent.getParcelableExtraCompat("add_on", Addon::class.java)).also {
+                bindUI(it)
+            }
 
         bindAddon(addon)
     }
@@ -50,25 +47,26 @@ class InstalledAddonDetailsActivity : AppCompatActivity() {
     private fun bindAddon(addon: Addon) {
         scope.launch {
             try {
-                val addons = baseContext.components.core.addonManager
-                    .getAddons()
+                val addons = baseContext.components.core.addonManager.getAddons()
                 scope.launch(Dispatchers.Main) {
-                    addons.find { addon.id == it.id }.let {
-                        if (it == null) {
-                            throw AddonManagerException(Exception("Addon ${addon.id} not found"))
-                        } else {
-                            bindUI(it)
+                    addons
+                        .find { addon.id == it.id }
+                        .let {
+                            if (it == null) {
+                                throw AddonManagerException(Exception("Addon ${addon.id} not found"))
+                            } else {
+                                bindUI(it)
+                            }
                         }
-                    }
                 }
             } catch (e: AddonManagerException) {
                 scope.launch(Dispatchers.Main) {
-                    Toast
-                        .makeText(
-                        baseContext,
-                        addonsR.string.mozac_feature_addons_failed_to_load_extensions,
-                        Toast.LENGTH_SHORT,
-                    ).show()
+                    Toast.makeText(
+                            baseContext,
+                            addonsR.string.mozac_feature_addons_failed_to_load_extensions,
+                            Toast.LENGTH_SHORT,
+                        )
+                        .show()
                 }
             }
         }

@@ -30,9 +30,7 @@ import org.mozilla.reference.browser.helpers.TestHelper.packageName
 import org.mozilla.reference.browser.helpers.click
 import org.mozilla.reference.browser.helpers.hasCousin
 
-/**
- * Implementation of Robot Pattern for the settings menu.
- */
+/** Implementation of Robot Pattern for the settings menu. */
 class SettingsViewRobot {
     fun verifySettingsViewExists() = assertSettingsView()
 
@@ -80,15 +78,13 @@ class SettingsViewRobot {
 
     // toggleRemoteDebugging does not yet verify that the debug service is started
     // server runs on port 6000
-    fun toggleRemoteDebuggingOn() =
-        {
+    fun toggleRemoteDebuggingOn() = {
         Espresso.onView(withText("OFF")).check(matches(isDisplayed()))
         remoteDebuggingToggle().click()
         Espresso.onView(withText("ON")).check(matches(isDisplayed()))
     }
 
-    fun toggleRemoteDebuggingOff() =
-        {
+    fun toggleRemoteDebuggingOff() = {
         Espresso.onView(withText("ON")).check(matches(isDisplayed()))
         remoteDebuggingToggle().click()
         Espresso.onView(withText("OFF")).check(matches(isDisplayed()))
@@ -96,7 +92,7 @@ class SettingsViewRobot {
 
     class Transition {
         fun openSettingsViewPrivacy(
-            interact: SettingsViewPrivacyRobot.() -> Unit,
+            interact: SettingsViewPrivacyRobot.() -> Unit
         ): SettingsViewPrivacyRobot.Transition {
             privacyButton().click()
             SettingsViewPrivacyRobot().interact()
@@ -144,11 +140,7 @@ class SettingsViewRobot {
 }
 
 private fun waitForSettingsRecyclerViewToExist() {
-    mDevice
-        .findObject(UiSelector().resourceId("$packageName:id/recycler_view"))
-        .waitForExists(
-            waitingTime,
-        )
+    mDevice.findObject(UiSelector().resourceId("$packageName:id/recycler_view")).waitForExists(waitingTime)
 }
 
 private fun assertSettingsView() {
@@ -156,15 +148,11 @@ private fun assertSettingsView() {
     assertTrue(
         mDevice
             .findObject(
-            UiSelector()
-                .resourceId("$packageName:id/action_bar")
-                .childSelector(
-                    UiSelector()
-                        .textContains(
-                            getStringResource(R.string.settings),
-                        ),
-                ),
-        ).waitForExists(waitingTime),
+                UiSelector()
+                    .resourceId("$packageName:id/action_bar")
+                    .childSelector(UiSelector().textContains(getStringResource(R.string.settings)))
+            )
+            .waitForExists(waitingTime)
     )
 }
 
@@ -182,11 +170,11 @@ private fun privacySummary() = Espresso.onView(withText(R.string.preferences_pri
 
 private fun openLinksInAppsToggle() =
     Espresso.onView(
-    allOf(
-        withId(androidx.preference.R.id.switchWidget),
-        hasCousin(withText(R.string.open_links_in_apps)),
-    ),
-)
+        allOf(
+            withId(androidx.preference.R.id.switchWidget),
+            hasCousin(withText(R.string.open_links_in_apps)),
+        )
+    )
 
 private fun makeDefaultBrowserButton() = Espresso.onView(withText(R.string.preferences_make_default_browser))
 
@@ -200,11 +188,11 @@ private fun developerToolsHeading() = Espresso.onView(withText(R.string.develope
 
 private fun remoteDebuggingToggle() =
     Espresso.onView(
-    allOf(
-        withId(androidx.preference.R.id.switchWidget),
-        hasCousin(withText(R.string.preferences_remote_debugging)),
-    ),
-)
+        allOf(
+            withId(androidx.preference.R.id.switchWidget),
+            hasCousin(withText(R.string.preferences_remote_debugging)),
+        )
+    )
 
 private fun customAddonCollectionButton() = onView(withText("Custom Add-on collection"))
 
@@ -219,76 +207,62 @@ private fun assertNavigateUpButton() {
 private fun assertSyncSigninButton() = assertUIObjectExists(syncSignInButton())
 
 private fun assertSyncHistorySummary() =
-    syncHistorySummary()
-    .check(matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+    syncHistorySummary().check(matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
 
 private fun assertSyncQrCodeButton() =
-    syncQrCodeButton()
-    .check(matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+    syncQrCodeButton().check(matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
 
 private fun assertSyncQrSummary() =
-    syncQrSummary()
-    .check(matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+    syncQrSummary().check(matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
 
 private fun assertPrivacyButton() =
-    privacyButton()
-    .check(matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+    privacyButton().check(matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
 
 private fun assertPrivacySummary() =
-    privacySummary()
-    .check(matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+    privacySummary().check(matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
 
 private fun assertOpenLinksInApps() =
-    openLinksInAppsToggle()
-    .check(matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+    openLinksInAppsToggle().check(matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
 
 private fun assertMakeDefaultBrowserButton() =
-    makeDefaultBrowserButton()
-    .check(matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+    makeDefaultBrowserButton().check(matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
 
 private fun assertAutofillAppsButton() =
-    autofillAppsButton()
-    .check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+    autofillAppsButton().check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
 
 private fun assertAutofillAppsSummary() =
-    autofillAppsSummary()
-    .check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+    autofillAppsSummary().check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
 
 private fun assertJetpackComposeButton() =
-    jetpackComposeButton()
-    .check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+    jetpackComposeButton().check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
 
 private fun assertDeveloperToolsHeading() =
-    developerToolsHeading()
-    .check(matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+    developerToolsHeading().check(matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
 
 private fun assertRemoteDebugging() =
-    remoteDebuggingToggle()
-    .check(matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+    remoteDebuggingToggle().check(matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
 
 private fun assertCustomAddonCollectionButton() =
-    customAddonCollectionButton()
-    .check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+    customAddonCollectionButton().check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
 
 private fun assertMozillaHeading() =
     mozillaHeading().check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
 
 private fun assertAboutReferenceBrowserButton() =
-    aboutReferenceBrowserButton()
-    .check(matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+    aboutReferenceBrowserButton().check(matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
 
 private fun assertCustomAddonCollectionPanel() {
     mDevice.waitForIdle()
-    mDevice
-        .findObject(UiSelector().resourceId("$packageName:id/parentPanel"))
-        .waitForExists(waitingTime)
+    mDevice.findObject(UiSelector().resourceId("$packageName:id/parentPanel")).waitForExists(waitingTime)
     onView(
-        allOf(
-            withText(R.string.preferences_customize_amo_collection),
-            anyOf(
-                withId(androidx.appcompat.R.id.alertTitle),
-                withId(android.R.id.title),
-            ),
-        ),
-    ).inRoot(isDialog()).check(matches(isCompletelyDisplayed()))
+            allOf(
+                withText(R.string.preferences_customize_amo_collection),
+                anyOf(
+                    withId(androidx.appcompat.R.id.alertTitle),
+                    withId(android.R.id.title),
+                ),
+            )
+        )
+        .inRoot(isDialog())
+        .check(matches(isCompletelyDisplayed()))
 }

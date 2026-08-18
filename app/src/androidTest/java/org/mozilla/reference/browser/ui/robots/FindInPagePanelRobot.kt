@@ -10,6 +10,7 @@ import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibility
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.uiautomator.UiSelector
+import mozilla.components.feature.findinpage.R as findinpageR
 import org.hamcrest.Matchers.not
 import org.junit.Assert.assertTrue
 import org.mozilla.reference.browser.R
@@ -17,11 +18,8 @@ import org.mozilla.reference.browser.helpers.TestAssetHelper.waitingTime
 import org.mozilla.reference.browser.helpers.TestHelper.packageName
 import org.mozilla.reference.browser.helpers.TestHelper.waitForObjects
 import org.mozilla.reference.browser.helpers.click
-import mozilla.components.feature.findinpage.R as findinpageR
 
-/**
- * Implementation of Robot Pattern for the FindInPage Panel.
- */
+/** Implementation of Robot Pattern for the FindInPage Panel. */
 class FindInPagePanelRobot {
     fun verifyFindInPageBar() = assertFindInPageBarExists()
 

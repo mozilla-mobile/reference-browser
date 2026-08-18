@@ -6,38 +6,35 @@ package org.mozilla.reference.browser.helpers
 
 import androidx.test.espresso.NoMatchingViewException
 import androidx.test.uiautomator.UiObjectNotFoundException
+import java.lang.AssertionError
 import org.junit.rules.TestRule
 import org.junit.runner.Description
 import org.junit.runners.model.Statement
-import java.lang.AssertionError
 
-class RetryTestRule(
-    private val retryCount: Int = 5,
-) : TestRule {
+class RetryTestRule(private val retryCount: Int = 5) : TestRule {
     override fun apply(
         base: Statement,
         description: Description,
-    ): Statement =
-        statement {
-            for (i in 1..retryCount) {
-                try {
-                    base.evaluate()
-                    break
-                } catch (t: AssertionError) {
-                    if (i == retryCount) {
-                        throw t
-                    }
-                } catch (t: UiObjectNotFoundException) {
-                    if (i == retryCount) {
-                        throw t
-                    }
-                } catch (t: NoMatchingViewException) {
-                    if (i == retryCount) {
-                        throw t
-                    }
+    ): Statement = statement {
+        for (i in 1..retryCount) {
+            try {
+                base.evaluate()
+                break
+            } catch (t: AssertionError) {
+                if (i == retryCount) {
+                    throw t
+                }
+            } catch (t: UiObjectNotFoundException) {
+                if (i == retryCount) {
+                    throw t
+                }
+            } catch (t: NoMatchingViewException) {
+                if (i == retryCount) {
+                    throw t
                 }
             }
         }
+    }
 
     private inline fun statement(crossinline eval: () -> Unit): Statement =
         object : Statement() {

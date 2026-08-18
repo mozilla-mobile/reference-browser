@@ -35,15 +35,16 @@ class SyncedTabsFragment : Fragment() {
         val backgroundServices = requireContext().components.backgroundServices
 
         syncedTabsFeature.set(
-            feature = SyncedTabsFeature(
-                context = requireContext(),
-                storage = backgroundServices.syncedTabsStorage,
-                commands = backgroundServices.syncedTabsCommands,
-                accountManager = backgroundServices.accountManager,
-                view = view.findViewById<SyncedTabsLayout>(R.id.synced_tabs_layout),
-                lifecycleOwner = this,
-                onTabClicked = ::handleTabClicked,
-            ),
+            feature =
+                SyncedTabsFeature(
+                    context = requireContext(),
+                    storage = backgroundServices.syncedTabsStorage,
+                    commands = backgroundServices.syncedTabsCommands,
+                    accountManager = backgroundServices.accountManager,
+                    view = view.findViewById<SyncedTabsLayout>(R.id.synced_tabs_layout),
+                    lifecycleOwner = this,
+                    onTabClicked = ::handleTabClicked,
+                ),
             owner = this,
             view = view,
         )

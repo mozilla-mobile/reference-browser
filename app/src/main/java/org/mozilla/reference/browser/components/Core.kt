@@ -8,6 +8,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.os.Environment
 import androidx.preference.PreferenceManager
+import java.util.concurrent.TimeUnit
 import mozilla.components.browser.engine.gecko.permission.GeckoSitePermissionsStorage
 import mozilla.components.browser.icons.BrowserIcons
 import mozilla.components.browser.session.storage.SessionStorage
@@ -57,147 +58,120 @@ import org.mozilla.reference.browser.ext.components
 import org.mozilla.reference.browser.ext.getPreferenceKey
 import org.mozilla.reference.browser.media.MediaSessionService
 import org.mozilla.reference.browser.settings.Settings
-import java.util.concurrent.TimeUnit
 
 private const val DAY_IN_MINUTES = 24 * 60L
 
-/**
- * Component group for all core browser functionality.
- */
+/** Component group for all core browser functionality. */
 class Core(
     private val context: Context,
     crashReporter: CrashReporter,
 ) {
-    /**
-     * The browser engine component initialized based on the build
-     * configuration (see build variants).
-     */
+    /** The browser engine component initialized based on the build configuration (see build variants). */
     val engine: Engine by lazy {
         val prefs = PreferenceManager.getDefaultSharedPreferences(context)
 
-        val defaultSettings = DefaultSettings(
-            requestInterceptor = AppRequestInterceptor(context),
-            remoteDebuggingEnabled = prefs.getBoolean(context.getPreferenceKey(pref_key_remote_debugging), false),
-            testingModeEnabled = prefs.getBoolean(context.getPreferenceKey(R.string.pref_key_testing_mode), false),
-            trackingProtectionPolicy = createTrackingProtectionPolicy(prefs),
-            historyTrackingDelegate = HistoryDelegate(lazyHistoryStorage),
-            globalPrivacyControlEnabled = prefs.getBoolean(
-                context.getPreferenceKey(R.string.pref_key_global_privacy_control),
-                false,
-            ),
-        )
+        val defaultSettings =
+            DefaultSettings(
+                requestInterceptor = AppRequestInterceptor(context),
+                remoteDebuggingEnabled = prefs.getBoolean(context.getPreferenceKey(pref_key_remote_debugging), false),
+                testingModeEnabled = prefs.getBoolean(context.getPreferenceKey(R.string.pref_key_testing_mode), false),
+                trackingProtectionPolicy = createTrackingProtectionPolicy(prefs),
+                historyTrackingDelegate = HistoryDelegate(lazyHistoryStorage),
+                globalPrivacyControlEnabled =
+                    prefs.getBoolean(
+                        context.getPreferenceKey(R.string.pref_key_global_privacy_control),
+                        false,
+                    ),
+            )
         EngineProvider.createEngine(context, defaultSettings)
     }
 
-    /**
-     * The [Client] implementation (`concept-fetch`) used for HTTP requests.
-     */
+    /** The [Client] implementation (`concept-fetch`) used for HTTP requests. */
     val client: Client by lazy {
         EngineProvider.createClient(context)
     }
 
-    /**
-     * The [BrowserStore] holds the global [BrowserState].
-     */
+    /** The [BrowserStore] holds the global [BrowserState]. */
     val store by lazy {
         BrowserStore(
-            middleware = listOf(
-                DownloadMiddleware(
-                    applicationContext = context,
-                    downloadServiceClass = DownloadService::class.java,
-                    deleteFileFromStorage = { false },
-                    downloadFileUtils = DefaultDownloadFileUtils(
-                        context = context,
-                        downloadLocation = {
-                            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).path
-                        },
-                    ),
-                ),
-                ThumbnailsMiddleware(thumbnailStorage),
-                ReaderViewMiddleware(),
-                RegionMiddleware(
-                    context,
-                    LocationService.default(),
-                ),
-                SearchMiddleware(context),
-                RecordingDevicesMiddleware(context, context.components.notificationsDelegate),
-            ) + EngineMiddleware.create(engine),
-        ).apply {
-            icons.install(engine, this)
-
-            WebNotificationFeature(
-                context,
-                engine,
-                icons,
-                R.drawable.ic_notification,
-                geckoSitePermissionsStorage,
-                BrowserActivity::class.java,
-                notificationsDelegate = context.components.notificationsDelegate,
+                middleware =
+                    listOf(
+                        DownloadMiddleware(
+                            applicationContext = context,
+                            downloadServiceClass = DownloadService::class.java,
+                            deleteFileFromStorage = { false },
+                            downloadFileUtils =
+                                DefaultDownloadFileUtils(
+                                    context = context,
+                                    downloadLocation = {
+                                        Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
+                                            .path
+                                    },
+                                ),
+                        ),
+                        ThumbnailsMiddleware(thumbnailStorage),
+                        ReaderViewMiddleware(),
+                        RegionMiddleware(
+                            context,
+                            LocationService.default(),
+                        ),
+                        SearchMiddleware(context),
+                        RecordingDevicesMiddleware(context, context.components.notificationsDelegate),
+                    ) + EngineMiddleware.create(engine)
             )
+            .apply {
+                icons.install(engine, this)
 
-            MediaSessionFeature(context, MediaSessionService::class.java, this).start()
-        }
+                WebNotificationFeature(
+                    context,
+                    engine,
+                    icons,
+                    R.drawable.ic_notification,
+                    geckoSitePermissionsStorage,
+                    BrowserActivity::class.java,
+                    notificationsDelegate = context.components.notificationsDelegate,
+                )
+
+                MediaSessionFeature(context, MediaSessionService::class.java, this).start()
+            }
     }
 
-    /**
-     * The [CustomTabsServiceStore] holds global custom tabs related data.
-     */
+    /** The [CustomTabsServiceStore] holds global custom tabs related data. */
     val customTabsStore by lazy { CustomTabsServiceStore() }
 
-    /**
-     * The storage component for persisting browser tab sessions.
-     */
+    /** The storage component for persisting browser tab sessions. */
     val sessionStorage: SessionStorage by lazy {
         SessionStorage(context, engine)
     }
 
-    /**
-     * The storage component to persist browsing history (with the exception of
-     * private sessions).
-     */
+    /** The storage component to persist browsing history (with the exception of private sessions). */
     val lazyHistoryStorage = lazy { PlacesHistoryStorage(context) }
 
-    /**
-     * A convenience accessor to the [PlacesHistoryStorage].
-     */
+    /** A convenience accessor to the [PlacesHistoryStorage]. */
     val historyStorage by lazy { lazyHistoryStorage.value }
 
-    /**
-     * The storage component to persist logins data (username/password) for websites.
-     */
+    /** The storage component to persist logins data (username/password) for websites. */
     val lazyLoginsStorage = lazy { SyncableLoginsStorage(context, lazySecurePrefs) }
 
-    /**
-     * A convenience accessor to the [SyncableLoginsStorage].
-     */
+    /** A convenience accessor to the [SyncableLoginsStorage]. */
     val loginsStorage by lazy { lazyLoginsStorage.value }
 
-    /**
-     * The storage component to sync and persist tabs in a Firefox Sync account.
-     */
+    /** The storage component to sync and persist tabs in a Firefox Sync account. */
     val lazyRemoteTabsStorage = lazy { RemoteTabsStorage(context, crashReporter) }
 
-    /**
-     * A storage component for persisting thumbnail images of tabs.
-     */
+    /** A storage component for persisting thumbnail images of tabs. */
     val thumbnailStorage by lazy { ThumbnailStorage(context) }
 
-    /**
-     * Component for managing shortcuts (both regular and PWA).
-     */
+    /** Component for managing shortcuts (both regular and PWA). */
     val shortcutManager by lazy { WebAppShortcutManager(context, client, ManifestStorage(context)) }
 
-    /**
-     * A storage component for site permissions.
-     */
+    /** A storage component for site permissions. */
     val geckoSitePermissionsStorage by lazy {
         val geckoRuntime = EngineProvider.getOrCreateRuntime(context)
         GeckoSitePermissionsStorage(geckoRuntime, OnDiskSitePermissionsStorage(context))
     }
 
-    /**
-     * Icons component for loading, caching and processing website icons.
-     */
+    /** Icons component for loading, caching and processing website icons. */
     val icons by lazy { BrowserIcons(context, client) }
 
     // Addons
@@ -251,12 +225,11 @@ class Core(
     /**
      * Constructs a [TrackingProtectionPolicy] based on current preferences.
      *
-     * @param prefs the shared preferences to use when reading tracking
-     * protection settings.
-     * @param normalMode whether or not tracking protection should be enabled
-     * in normal browsing mode, defaults to the current preference value.
-     * @param privateMode whether or not tracking protection should be enabled
-     * in private browsing mode, default to the current preference value.
+     * @param prefs the shared preferences to use when reading tracking protection settings.
+     * @param normalMode whether or not tracking protection should be enabled in normal browsing mode, defaults to the
+     *   current preference value.
+     * @param privateMode whether or not tracking protection should be enabled in private browsing mode, default to the
+     *   current preference value.
      * @return the constructed tracking protection policy based on preferences.
      */
     fun createTrackingProtectionPolicy(

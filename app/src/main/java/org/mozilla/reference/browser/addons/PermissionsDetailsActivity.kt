@@ -23,24 +23,17 @@ import mozilla.components.support.ktx.android.view.setupPersistentInsets
 import mozilla.components.support.utils.ext.getParcelableExtraCompat
 import org.mozilla.reference.browser.R
 
-private const val LEARN_MORE_URL =
-    "https://support.mozilla.org/kb/permission-request-messages-firefox-extensions"
+private const val LEARN_MORE_URL = "https://support.mozilla.org/kb/permission-request-messages-firefox-extensions"
 
-/**
- * An activity to show the permissions of an add-on.
- */
-class PermissionsDetailsActivity :
-    AppCompatActivity(),
-    View.OnClickListener {
+/** An activity to show the permissions of an add-on. */
+class PermissionsDetailsActivity : AppCompatActivity(), View.OnClickListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge(SystemBarStyle.dark(Color.TRANSPARENT))
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_on_permissions)
         window.setupPersistentInsets()
 
-        val addon = requireNotNull(
-            intent.getParcelableExtraCompat("add_on", Addon::class.java),
-        )
+        val addon = requireNotNull(intent.getParcelableExtraCompat("add_on", Addon::class.java))
 
         title = addon.translateName(this)
 
@@ -60,12 +53,8 @@ class PermissionsDetailsActivity :
         findViewById<View>(R.id.learn_more_label).setOnClickListener(this)
     }
 
-    /**
-     * An adapter for displaying the permissions of an add-on.
-     */
-    class PermissionsAdapter(
-        private val permissions: List<String>,
-    ) : RecyclerView.Adapter<PermissionViewHolder>() {
+    /** An adapter for displaying the permissions of an add-on. */
+    class PermissionsAdapter(private val permissions: List<String>) : RecyclerView.Adapter<PermissionViewHolder>() {
         override fun onCreateViewHolder(
             parent: ViewGroup,
             viewType: Int,
@@ -91,9 +80,7 @@ class PermissionsDetailsActivity :
         }
     }
 
-    /**
-     * A view holder for displaying the permissions of an add-on.
-     */
+    /** A view holder for displaying the permissions of an add-on. */
     class PermissionViewHolder(
         val view: View,
         val textView: TextView,

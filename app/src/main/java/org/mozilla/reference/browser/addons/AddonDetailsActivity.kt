@@ -16,20 +16,18 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.net.toUri
 import androidx.core.text.HtmlCompat
+import java.text.DateFormat
+import java.text.SimpleDateFormat
+import java.util.Locale
 import mozilla.components.feature.addons.Addon
+import mozilla.components.feature.addons.R as addonsR
 import mozilla.components.feature.addons.ui.translateDescription
 import mozilla.components.feature.addons.ui.translateName
 import mozilla.components.support.ktx.android.view.setupPersistentInsets
 import mozilla.components.support.utils.ext.getParcelableExtraCompat
 import org.mozilla.reference.browser.R
-import java.text.DateFormat
-import java.text.SimpleDateFormat
-import java.util.Locale
-import mozilla.components.feature.addons.R as addonsR
 
-/**
- * An activity to show the details of an add-on.
- */
+/** An activity to show the details of an add-on. */
 class AddonDetailsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge(SystemBarStyle.dark(Color.TRANSPARENT))
@@ -37,9 +35,7 @@ class AddonDetailsActivity : AppCompatActivity() {
         setContentView(R.layout.activity_add_on_details)
         window.setupPersistentInsets()
 
-        val addon = requireNotNull(
-            intent.getParcelableExtraCompat("add_on", Addon::class.java),
-        )
+        val addon = requireNotNull(intent.getParcelableExtraCompat("add_on", Addon::class.java))
         bind(addon)
     }
 

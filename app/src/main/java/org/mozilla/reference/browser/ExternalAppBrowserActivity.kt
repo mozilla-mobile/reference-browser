@@ -11,24 +11,23 @@ import mozilla.components.feature.pwa.ext.getWebAppManifest
 import org.mozilla.reference.browser.browser.ExternalAppBrowserFragment
 
 /**
- * Activity that holds the BrowserFragment that is launched within an external app,
- * such as custom tabs and progressive web apps.
+ * Activity that holds the BrowserFragment that is launched within an external app, such as custom tabs and progressive
+ * web apps.
  */
 class ExternalAppBrowserActivity : BrowserActivity() {
     override fun createBrowserFragment(sessionId: String?): Fragment =
         if (sessionId != null) {
             val manifest = intent.getWebAppManifest()
-            val scope = when (manifest?.display) {
-                WebAppManifest.DisplayMode.FULLSCREEN,
-                WebAppManifest.DisplayMode.STANDALONE,
-                -> (manifest.scope ?: manifest.startUrl).toUri()
+            val scope =
+                when (manifest?.display) {
+                    WebAppManifest.DisplayMode.FULLSCREEN,
+                    WebAppManifest.DisplayMode.STANDALONE -> (manifest.scope ?: manifest.startUrl).toUri()
 
-                WebAppManifest.DisplayMode.MINIMAL_UI,
-                WebAppManifest.DisplayMode.BROWSER,
-                -> null
+                    WebAppManifest.DisplayMode.MINIMAL_UI,
+                    WebAppManifest.DisplayMode.BROWSER -> null
 
-                else -> null
-            }
+                    else -> null
+                }
 
             ExternalAppBrowserFragment.create(
                 sessionId,

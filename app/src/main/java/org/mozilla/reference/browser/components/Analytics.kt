@@ -20,55 +20,52 @@ import org.mozilla.reference.browser.BrowserApplication
 import org.mozilla.reference.browser.BuildConfig
 import org.mozilla.reference.browser.R
 
-/**
- * Component group for all functionality related to analytics e.g. crash
- * reporting and telemetry.
- */
-class Analytics(
-    private val context: Context,
-) {
-    /**
-     * A generic crash reporter component configured to use both Sentry and Socorro.
-     */
+/** Component group for all functionality related to analytics e.g. crash reporting and telemetry. */
+class Analytics(private val context: Context) {
+    /** A generic crash reporter component configured to use both Sentry and Socorro. */
     val crashReporter: CrashReporter by lazy {
-        val socorroService = MozillaSocorroService(
-            context,
-            appName = "ReferenceBrowser",
-            version = MOZ_APP_VERSION,
-            buildId = MOZ_APP_BUILDID,
-            vendor = MOZ_APP_VENDOR,
-            releaseChannel = MOZ_UPDATE_CHANNEL,
-        )
+        val socorroService =
+            MozillaSocorroService(
+                context,
+                appName = "ReferenceBrowser",
+                version = MOZ_APP_VERSION,
+                buildId = MOZ_APP_BUILDID,
+                vendor = MOZ_APP_VENDOR,
+                releaseChannel = MOZ_UPDATE_CHANNEL,
+            )
 
         val services: MutableList<CrashReporterService> = mutableListOf(socorroService)
 
         if (isSentryEnabled()) {
-            val sentryService = SentryService(
-                context,
-                BuildConfig.SENTRY_TOKEN,
-                mapOf("geckoview" to "$MOZ_APP_VERSION-$MOZ_APP_BUILDID"),
-                sendEventForNativeCrashes = true,
-            )
+            val sentryService =
+                SentryService(
+                    context,
+                    BuildConfig.SENTRY_TOKEN,
+                    mapOf("geckoview" to "$MOZ_APP_VERSION-$MOZ_APP_BUILDID"),
+                    sendEventForNativeCrashes = true,
+                )
             services.add(sentryService)
         }
 
-        val flags = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            PendingIntent.FLAG_IMMUTABLE
-        } else {
-            0
-        }
+        val flags =
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                PendingIntent.FLAG_IMMUTABLE
+            } else {
+                0
+            }
 
         CrashReporter(
             context = context,
             services = services,
             telemetryServices = emptyList(),
             shouldPrompt = CrashReporter.Prompt.ALWAYS,
-            promptConfiguration = CrashReporter.PromptConfiguration(
-                appName = context.getString(R.string.app_name),
-                organizationName = "Mozilla",
-            ),
-            nonFatalCrashIntent = PendingIntent
-                .getBroadcast(context, 0, Intent(BrowserApplication.NON_FATAL_CRASH_BROADCAST), flags),
+            promptConfiguration =
+                CrashReporter.PromptConfiguration(
+                    appName = context.getString(R.string.app_name),
+                    organizationName = "Mozilla",
+                ),
+            nonFatalCrashIntent =
+                PendingIntent.getBroadcast(context, 0, Intent(BrowserApplication.NON_FATAL_CRASH_BROADCAST), flags),
             enabled = true,
         )
     }

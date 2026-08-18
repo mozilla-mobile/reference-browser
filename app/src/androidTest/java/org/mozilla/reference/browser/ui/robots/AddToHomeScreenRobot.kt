@@ -9,9 +9,7 @@ import androidx.test.uiautomator.UiSelector
 import org.mozilla.reference.browser.helpers.TestAssetHelper.waitingTime
 import org.mozilla.reference.browser.helpers.TestAssetHelper.waitingTimeShort
 
-/**
- * Implementation of Robot Pattern for the Add to homescreen feature.
- */
+/** Implementation of Robot Pattern for the Add to homescreen feature. */
 class AddToHomeScreenRobot {
     fun clickCancelAddToHomeScreenButton() {
         cancelAddToHomeScreenButton().waitForExists(waitingTime)

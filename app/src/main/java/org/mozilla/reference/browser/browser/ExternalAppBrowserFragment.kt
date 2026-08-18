@@ -25,12 +25,8 @@ import mozilla.components.support.utils.ext.getParcelableArrayListCompat
 import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.ext.requireComponents
 
-/**
- * Fragment used for browsing within an external app, such as for custom tabs and PWAs.
- */
-class ExternalAppBrowserFragment :
-    BaseBrowserFragment(),
-    UserInteractionHandler {
+/** Fragment used for browsing within an external app, such as for custom tabs and PWAs. */
+class ExternalAppBrowserFragment : BaseBrowserFragment(), UserInteractionHandler {
     private val customTabsIntegration = ViewBoundFeatureWrapper<CustomTabsIntegration>()
     private val windowFeature = ViewBoundFeatureWrapper<CustomTabWindowFeature>()
     private val hideToolbarFeature = ViewBoundFeatureWrapper<WebAppHideToolbarFeature>()
@@ -39,11 +35,13 @@ class ExternalAppBrowserFragment :
 
     private val toolbar: BrowserToolbar
         get() = requireView().findViewById(R.id.toolbar)
+
     private val engineView: EngineView
         get() = requireView().findViewById<View>(R.id.engineView) as EngineView
 
     private val manifest: WebAppManifest?
         get() = arguments?.getWebAppManifest()
+
     private val trustedScopes: List<Uri>
         get() = arguments?.getParcelableArrayListCompat(ARG_TRUSTED_SCOPES, Uri::class.java).orEmpty()
 
@@ -57,42 +55,45 @@ class ExternalAppBrowserFragment :
         val sessionId = this.sessionId
 
         customTabsIntegration.set(
-            feature = CustomTabsIntegration(
-                requireContext(),
-                requireComponents.core.store,
-                toolbar,
-                engineView,
-                requireComponents.useCases.sessionUseCases,
-                requireComponents.useCases.customTabsUseCases,
-                sessionId!!,
-                activity,
-            ),
+            feature =
+                CustomTabsIntegration(
+                    requireContext(),
+                    requireComponents.core.store,
+                    toolbar,
+                    engineView,
+                    requireComponents.useCases.sessionUseCases,
+                    requireComponents.useCases.customTabsUseCases,
+                    sessionId!!,
+                    activity,
+                ),
             owner = this,
             view = view,
         )
 
         windowFeature.set(
-            feature = CustomTabWindowFeature(
-                requireActivity(),
-                requireComponents.core.store,
-                sessionId,
-            ),
+            feature =
+                CustomTabWindowFeature(
+                    requireActivity(),
+                    requireComponents.core.store,
+                    sessionId,
+                ),
             owner = this,
             view = view,
         )
 
         hideToolbarFeature.set(
-            feature = WebAppHideToolbarFeature(
-                requireComponents.core.store,
-                requireComponents.core.customTabsStore,
-                sessionId,
-                manifest,
-                scope = viewLifecycleOwner.lifecycleScope,
-            ) { toolbarVisible ->
-                toolbar.isVisible = toolbarVisible
-                webAppToolbarShouldBeVisible = toolbarVisible
-                if (!toolbarVisible) engineView.setDynamicToolbarMaxHeight(0)
-            },
+            feature =
+                WebAppHideToolbarFeature(
+                    requireComponents.core.store,
+                    requireComponents.core.customTabsStore,
+                    sessionId,
+                    manifest,
+                    scope = viewLifecycleOwner.lifecycleScope,
+                ) { toolbarVisible ->
+                    toolbar.isVisible = toolbarVisible
+                    webAppToolbarShouldBeVisible = toolbarVisible
+                    if (!toolbarVisible) engineView.setDynamicToolbarMaxHeight(0)
+                },
             owner = this,
             view = toolbar,
         )
@@ -119,8 +120,8 @@ class ExternalAppBrowserFragment :
     }
 
     /**
-     * Calls [onBackPressed] for features in the base class first,
-     * before trying to call the custom tab [UserInteractionHandler].
+     * Calls [onBackPressed] for features in the base class first, before trying to call the custom tab
+     * [UserInteractionHandler].
      */
     override fun onBackPressed(): Boolean = super.onBackPressed() || customTabsIntegration.onBackPressed()
 
@@ -131,12 +132,14 @@ class ExternalAppBrowserFragment :
             sessionId: String,
             manifest: WebAppManifest?,
             trustedScopes: List<Uri>,
-        ) = ExternalAppBrowserFragment().apply {
-            arguments = Bundle().apply {
-                putSessionId(sessionId)
-                putWebAppManifest(manifest)
-                putParcelableArrayList(ARG_TRUSTED_SCOPES, ArrayList(trustedScopes))
+        ) =
+            ExternalAppBrowserFragment().apply {
+                arguments =
+                    Bundle().apply {
+                        putSessionId(sessionId)
+                        putWebAppManifest(manifest)
+                        putParcelableArrayList(ARG_TRUSTED_SCOPES, ArrayList(trustedScopes))
+                    }
             }
-        }
     }
 }

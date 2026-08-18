@@ -4,9 +4,7 @@
 
 package org.mozilla.reference.browser.ext
 
-/**
- * Replaces the keys with the values with the map provided.
- */
+/** Replaces the keys with the values with the map provided. */
 fun String.replace(pairs: Map<String, String>): String {
     var result = this
     pairs.forEach { (l, r) -> result = result.replace(l, r) }

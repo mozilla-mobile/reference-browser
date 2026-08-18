@@ -10,11 +10,7 @@ import mozilla.components.browser.state.store.BrowserStore
 import mozilla.components.feature.session.SessionUseCases
 import org.mozilla.reference.browser.ext.components
 
-/**
- * Composable helper for providing the [BrowserStore] instance of this application.
- */
-@Composable
-fun browserStore(): BrowserStore = LocalContext.current.components.core.store
+/** Composable helper for providing the [BrowserStore] instance of this application. */
+@Composable fun browserStore(): BrowserStore = LocalContext.current.components.core.store
 
-@Composable
-fun sessionUseCases(): SessionUseCases = LocalContext.current.components.useCases.sessionUseCases
+@Composable fun sessionUseCases(): SessionUseCases = LocalContext.current.components.useCases.sessionUseCases

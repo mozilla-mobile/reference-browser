@@ -7,5 +7,4 @@ package org.mozilla.reference.browser.push
 import android.annotation.SuppressLint
 import mozilla.components.lib.push.firebase.AbstractFirebasePushService
 
-@SuppressLint("MissingFirebaseInstanceTokenRefresh")
-class FirebasePush : AbstractFirebasePushService()
+@SuppressLint("MissingFirebaseInstanceTokenRefresh") class FirebasePush : AbstractFirebasePushService()

@@ -19,18 +19,16 @@ import mozilla.components.support.ktx.android.view.hideKeyboard
 import org.mozilla.reference.browser.ext.components
 
 /**
- * This wrapper wraps the `AwesomeBar()` composable and exposes it as a `View` and `concept-awesomebar`
- * implementation to be integrated as a `View` until more parts of the app have been refactored to
- * use Jetpack Compose.
+ * This wrapper wraps the `AwesomeBar()` composable and exposes it as a `View` and `concept-awesomebar` implementation
+ * to be integrated as a `View` until more parts of the app have been refactored to use Jetpack Compose.
  */
 class AwesomeBarWrapper
-    @JvmOverloads
-    constructor(
+@JvmOverloads
+constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0,
-) : AbstractComposeView(context, attrs, defStyleAttr),
-    AwesomeBar {
+) : AbstractComposeView(context, attrs, defStyleAttr), AwesomeBar {
     private val providers = mutableStateOf(emptyList<AwesomeBar.SuggestionProvider>())
     private val text = mutableStateOf("")
     private val hiddenSuggestions = mutableStateOf(emptySet<GroupedSuggestion>())
@@ -50,12 +48,13 @@ class AwesomeBarWrapper
             providers = providers.value,
             hiddenSuggestions = hiddenSuggestions.value,
             orientation = AwesomeBarOrientation.BOTTOM,
-            colors = AwesomeBarDefaults.colors(
-                background = Color(0xff222222),
-                title = Color(0xffffffff),
-                description = Color(0xffdddddd),
-                autocompleteIcon = Color(0xffdddddd),
-            ),
+            colors =
+                AwesomeBarDefaults.colors(
+                    background = Color(0xff222222),
+                    title = Color(0xffffffff),
+                    description = Color(0xffdddddd),
+                    autocompleteIcon = Color(0xffdddddd),
+                ),
             onSuggestionClicked = { suggestion ->
                 suggestion.onSuggestionClicked?.invoke()
                 onStopListener?.invoke()

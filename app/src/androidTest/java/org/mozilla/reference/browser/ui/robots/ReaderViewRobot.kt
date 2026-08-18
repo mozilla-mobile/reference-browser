@@ -15,6 +15,7 @@ import androidx.test.espresso.matcher.ViewMatchers.withParent
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.uiautomator.UiSelector
+import mozilla.components.feature.readerview.R as readerviewR
 import org.hamcrest.CoreMatchers.allOf
 import org.junit.Assert.assertEquals
 import org.mozilla.reference.browser.R
@@ -22,11 +23,8 @@ import org.mozilla.reference.browser.helpers.TestAssetHelper.waitingTime
 import org.mozilla.reference.browser.helpers.TestHelper.packageName
 import org.mozilla.reference.browser.helpers.click
 import org.mozilla.reference.browser.ui.robots.mDevice
-import mozilla.components.feature.readerview.R as readerviewR
 
-/**
- * Implementation of Robot Pattern for Reader View UI.
- */
+/** Implementation of Robot Pattern for Reader View UI. */
 class ReaderViewRobot {
     fun verifyAppearanceButtonExists() = assertAppearanceButtonExists()
 
@@ -61,13 +59,13 @@ class ReaderViewRobot {
     fun verifyActiveAppearanceFont(fontType: String) {
         val fontTypeKey: String = "mozac-readerview-fonttype"
 
-        val prefs = InstrumentationRegistry
-            .getInstrumentation()
-            .targetContext
-            .getSharedPreferences(
-                "mozac_feature_reader_view",
-                Context.MODE_PRIVATE,
-            )
+        val prefs =
+            InstrumentationRegistry.getInstrumentation()
+                .targetContext
+                .getSharedPreferences(
+                    "mozac_feature_reader_view",
+                    Context.MODE_PRIVATE,
+                )
 
         assertEquals(fontType, prefs.getString(fontTypeKey, ""))
     }
@@ -75,13 +73,13 @@ class ReaderViewRobot {
     fun verifyAppearanceFontSize(expectedFontSize: Int) {
         val fontSizeKey: String = "mozac-readerview-fontsize"
 
-        val prefs = InstrumentationRegistry
-            .getInstrumentation()
-            .targetContext
-            .getSharedPreferences(
-                "mozac_feature_reader_view",
-                Context.MODE_PRIVATE,
-            )
+        val prefs =
+            InstrumentationRegistry.getInstrumentation()
+                .targetContext
+                .getSharedPreferences(
+                    "mozac_feature_reader_view",
+                    Context.MODE_PRIVATE,
+                )
 
         val fontSizeKeyValue = prefs.getInt(fontSizeKey, 3)
 
@@ -91,13 +89,13 @@ class ReaderViewRobot {
     fun verifyAppearanceColorScheme(expectedColorScheme: String) {
         val colorSchemeKey: String = "mozac-readerview-colorscheme"
 
-        val prefs = InstrumentationRegistry
-            .getInstrumentation()
-            .targetContext
-            .getSharedPreferences(
-                "mozac_feature_reader_view",
-                Context.MODE_PRIVATE,
-            )
+        val prefs =
+            InstrumentationRegistry.getInstrumentation()
+                .targetContext
+                .getSharedPreferences(
+                    "mozac_feature_reader_view",
+                    Context.MODE_PRIVATE,
+                )
 
         assertEquals(expectedColorScheme, prefs.getString(colorSchemeKey, ""))
     }
@@ -117,7 +115,7 @@ private fun appearanceButton() =
         allOf(
             withId(R.id.readerViewAppearanceButton),
             hasSibling(withId(R.id.toolbar)),
-        ),
+        )
     )
 
 private fun appearanceMenu() =
@@ -125,7 +123,7 @@ private fun appearanceMenu() =
         allOf(
             withId(R.id.readerViewAppearanceButton),
             hasSibling(withId(R.id.swipeRefresh)),
-        ),
+        )
     )
 
 private fun fontGroupButtons() =
@@ -133,7 +131,7 @@ private fun fontGroupButtons() =
         allOf(
             withId(readerviewR.id.mozac_feature_readerview_font_group),
             withParent(withId(R.id.readerViewBar)),
-        ),
+        )
     )
 
 private fun sansSerifButton() =
@@ -141,7 +139,7 @@ private fun sansSerifButton() =
         allOf(
             withId(readerviewR.id.mozac_feature_readerview_font_sans_serif),
             withParent(withId(readerviewR.id.mozac_feature_readerview_font_group)),
-        ),
+        )
     )
 
 private fun serifButton() =
@@ -149,7 +147,7 @@ private fun serifButton() =
         allOf(
             withId(readerviewR.id.mozac_feature_readerview_font_serif),
             withParent(withId(readerviewR.id.mozac_feature_readerview_font_group)),
-        ),
+        )
     )
 
 private fun increaseFontSizeButton() =
@@ -157,7 +155,7 @@ private fun increaseFontSizeButton() =
         allOf(
             withText("+"),
             withParent(withId(R.id.readerViewBar)),
-        ),
+        )
     )
 
 private fun decreaseFontSizeButton() =
@@ -165,7 +163,7 @@ private fun decreaseFontSizeButton() =
         allOf(
             withText("−"),
             withParent(withId(R.id.readerViewBar)),
-        ),
+        )
     )
 
 private fun colorSchemeGroupButtons() =
@@ -173,7 +171,7 @@ private fun colorSchemeGroupButtons() =
         allOf(
             withId(readerviewR.id.mozac_feature_readerview_color_scheme_group),
             withParent(withId(R.id.readerViewBar)),
-        ),
+        )
     )
 
 private fun lightColorButton() =
@@ -181,7 +179,7 @@ private fun lightColorButton() =
         allOf(
             withText("Light"),
             withParent(withId(readerviewR.id.mozac_feature_readerview_color_scheme_group)),
-        ),
+        )
     )
 
 private fun sepiaColorButton() =
@@ -189,7 +187,7 @@ private fun sepiaColorButton() =
         allOf(
             withText("Sepia"),
             withParent(withId(readerviewR.id.mozac_feature_readerview_color_scheme_group)),
-        ),
+        )
     )
 
 private fun darkColorButton() =
@@ -197,20 +195,16 @@ private fun darkColorButton() =
         allOf(
             withText("Dark"),
             withParent(withId(readerviewR.id.mozac_feature_readerview_color_scheme_group)),
-        ),
+        )
     )
 
 private fun assertAppearanceButtonExists() {
-    mDevice
-        .findObject(UiSelector().resourceId("$packageName:id/readerViewAppearanceButton"))
-        .waitForExists(waitingTime)
+    mDevice.findObject(UiSelector().resourceId("$packageName:id/readerViewAppearanceButton")).waitForExists(waitingTime)
     appearanceButton().check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
 }
 
 private fun assertAppearanceButtonDoesntExists() {
-    mDevice
-        .findObject(UiSelector().resourceId("$packageName:id/readerViewAppearanceButton"))
-        .waitUntilGone(waitingTime)
+    mDevice.findObject(UiSelector().resourceId("$packageName:id/readerViewAppearanceButton")).waitUntilGone(waitingTime)
     appearanceButton().check((matches(withEffectiveVisibility(ViewMatchers.Visibility.GONE))))
 }
 
@@ -222,32 +216,28 @@ private fun assertAppearanceMenu() {
 
 private fun assertFontGroupButtons() {
     mDevice
-        .findObject(
-        UiSelector().resourceId("$packageName:id/:id/mozac_feature_readerview_font_group"),
-    ).waitForExists(waitingTime)
+        .findObject(UiSelector().resourceId("$packageName:id/:id/mozac_feature_readerview_font_group"))
+        .waitForExists(waitingTime)
     fontGroupButtons().check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
 }
 
 private fun assertIncreaseFontSizeButton() {
     mDevice
-        .findObject(
-        UiSelector().resourceId("$packageName:id/mozac_feature_readerview_font_size_increase"),
-    ).waitForExists(waitingTime)
+        .findObject(UiSelector().resourceId("$packageName:id/mozac_feature_readerview_font_size_increase"))
+        .waitForExists(waitingTime)
     increaseFontSizeButton().check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
 }
 
 private fun assertDecreaseFontSizeButton() {
     mDevice
-        .findObject(
-        UiSelector().resourceId("$packageName:id/mozac_feature_readerview_font_size_decrease"),
-    ).waitForExists(waitingTime)
+        .findObject(UiSelector().resourceId("$packageName:id/mozac_feature_readerview_font_size_decrease"))
+        .waitForExists(waitingTime)
     decreaseFontSizeButton().check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
 }
 
 private fun assertColorSchemeGroupButtons() {
     mDevice
-        .findObject(
-        UiSelector().resourceId("$packageName:id/mozac_feature_readerview_color_scheme_group"),
-    ).waitForExists(waitingTime)
+        .findObject(UiSelector().resourceId("$packageName:id/mozac_feature_readerview_color_scheme_group"))
+        .waitForExists(waitingTime)
     colorSchemeGroupButtons().check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
 }

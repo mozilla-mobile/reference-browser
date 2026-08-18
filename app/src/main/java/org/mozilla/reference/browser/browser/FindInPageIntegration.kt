@@ -23,8 +23,7 @@ class FindInPageIntegration(
     private val sessionId: String? = null,
     private val view: FindInPageView,
     engineView: EngineView,
-) : LifecycleAwareFeature,
-    UserInteractionHandler {
+) : LifecycleAwareFeature, UserInteractionHandler {
     private val feature = FindInPageFeature(store, view, engineView, ::onClose)
 
     override fun start() {
@@ -63,8 +62,8 @@ class FindInPageIntegration(
 }
 
 /**
- * [CoordinatorLayout.Behavior] that will always position the [FindInPageBar] above the [BrowserToolbar] (including
- * when the browser toolbar is scrolling or performing a snap animation).
+ * [CoordinatorLayout.Behavior] that will always position the [FindInPageBar] above the [BrowserToolbar] (including when
+ * the browser toolbar is scrolling or performing a snap animation).
  */
 @Suppress("unused") // Referenced from XML
 class FindInPageBarBehavior(

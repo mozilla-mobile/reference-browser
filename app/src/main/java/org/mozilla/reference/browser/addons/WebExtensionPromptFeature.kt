@@ -20,6 +20,7 @@ import mozilla.components.browser.state.store.BrowserStore
 import mozilla.components.concept.engine.webextension.PermissionPromptResponse
 import mozilla.components.concept.engine.webextension.WebExtensionInstallException
 import mozilla.components.feature.addons.Addon
+import mozilla.components.feature.addons.R as addonsR
 import mozilla.components.feature.addons.ui.AddonInstallationDialogFragment
 import mozilla.components.feature.addons.ui.PermissionsDialogFragment
 import mozilla.components.lib.state.ext.flowScoped
@@ -27,44 +28,38 @@ import mozilla.components.support.base.feature.LifecycleAwareFeature
 import mozilla.components.support.ktx.android.content.appVersionName
 import mozilla.components.ui.widgets.withCenterAlignedButtons
 import org.mozilla.reference.browser.R
-import mozilla.components.feature.addons.R as addonsR
 
-/**
- * Feature implementation for handling [WebExtensionPromptRequest] and showing the respective UI.
- */
+/** Feature implementation for handling [WebExtensionPromptRequest] and showing the respective UI. */
 class WebExtensionPromptFeature(
     private val store: BrowserStore,
     private val context: Context,
     private val fragmentManager: FragmentManager,
     private val mainDispatcher: CoroutineDispatcher = Dispatchers.Main,
 ) : LifecycleAwareFeature {
-    /**
-     * Whether or not an add-on installation is in progress.
-     */
+    /** Whether or not an add-on installation is in progress. */
     private var isInstallationInProgress = false
     private var scope: CoroutineScope? = null
 
-    /**
-     * Starts observing the selected session to listen for window requests
-     * and opens / closes tabs as needed.
-     */
+    /** Starts observing the selected session to listen for window requests and opens / closes tabs as needed. */
     override fun start() {
-        scope = store.flowScoped(dispatcher = mainDispatcher) { flow ->
-            flow
-                .mapNotNull { state ->
-                    state.webExtensionPromptRequest
-                }.distinctUntilChanged()
-                .collect { promptRequest ->
-                    if (promptRequest is WebExtensionPromptRequest.AfterInstallation) {
-                        handleAfterInstallationRequest(promptRequest)
+        scope =
+            store.flowScoped(dispatcher = mainDispatcher) { flow ->
+                flow
+                    .mapNotNull { state ->
+                        state.webExtensionPromptRequest
                     }
+                    .distinctUntilChanged()
+                    .collect { promptRequest ->
+                        if (promptRequest is WebExtensionPromptRequest.AfterInstallation) {
+                            handleAfterInstallationRequest(promptRequest)
+                        }
 
-                    if (promptRequest is WebExtensionPromptRequest.BeforeInstallation.InstallationFailed) {
-                        handleBeforeInstallationRequest(promptRequest)
-                        consumePromptRequest()
+                        if (promptRequest is WebExtensionPromptRequest.BeforeInstallation.InstallationFailed) {
+                            handleBeforeInstallationRequest(promptRequest)
+                            consumePromptRequest()
+                        }
                     }
-                }
-        }
+            }
         tryToReAttachButtonHandlersToPreviousDialog()
     }
 
@@ -74,19 +69,19 @@ class WebExtensionPromptFeature(
         // opens the add-ons manager.
         val addon = Addon.newFromWebExtension(promptRequest.extension)
         when (promptRequest) {
-            is WebExtensionPromptRequest.AfterInstallation.Permissions.Required -> handlePermissionRequest(
-                addon,
-                promptRequest,
-            )
+            is WebExtensionPromptRequest.AfterInstallation.Permissions.Required ->
+                handlePermissionRequest(
+                    addon,
+                    promptRequest,
+                )
 
-            is WebExtensionPromptRequest.AfterInstallation.PostInstallation -> handlePostInstallationRequest(
-                addon,
-            )
+            is WebExtensionPromptRequest.AfterInstallation.PostInstallation -> handlePostInstallationRequest(addon)
 
-            is WebExtensionPromptRequest.AfterInstallation.Permissions.Optional -> handleOptionalPermissionsRequest(
-                addon,
-                promptRequest,
-            )
+            is WebExtensionPromptRequest.AfterInstallation.Permissions.Optional ->
+                handleOptionalPermissionsRequest(
+                    addon,
+                    promptRequest,
+                )
         }
     }
 
@@ -132,22 +127,21 @@ class WebExtensionPromptFeature(
 
     private fun showPostInstallationDialog(addon: Addon) {
         if (!isInstallationInProgress && !hasExistingAddonPostInstallationDialogFragment()) {
-            val dialog = AddonInstallationDialogFragment.newInstance(
-                addon = addon,
-                onDismissed = {
-                    consumePromptRequest()
-                },
-                onConfirmButtonClicked = { _ ->
-                    consumePromptRequest()
-                },
-            )
+            val dialog =
+                AddonInstallationDialogFragment.newInstance(
+                    addon = addon,
+                    onDismissed = {
+                        consumePromptRequest()
+                    },
+                    onConfirmButtonClicked = { _ ->
+                        consumePromptRequest()
+                    },
+                )
             dialog.show(fragmentManager, POST_INSTALLATION_DIALOG_FRAGMENT_TAG)
         }
     }
 
-    /**
-     * Stops observing the selected session for incoming window requests.
-     */
+    /** Stops observing the selected session for incoming window requests. */
     override fun stop() {
         scope?.cancel()
     }
@@ -161,32 +155,33 @@ class WebExtensionPromptFeature(
         forOptionalPermissions: Boolean = false,
     ) {
         if (!isInstallationInProgress && !hasExistingPermissionDialogFragment()) {
-            val dialog = PermissionsDialogFragment.newInstance(
-                addon = addon,
-                permissions = permissions,
-                origins = origins,
-                dataCollectionPermissions = emptyList(),
-                forOptionalPermissions = forOptionalPermissions,
-                onPositiveButtonClicked = { _, privateBrowsingAllowed, _ ->
-                    handlePermissions(
-                        promptRequest,
-                        granted = true,
-                        privateBrowsingAllowed = privateBrowsingAllowed,
-                    )
-                },
-                onNegativeButtonClicked = {
-                    when (promptRequest) {
-                        is WebExtensionPromptRequest.AfterInstallation.Permissions.Optional -> {
-                            promptRequest.onConfirm(false)
-                        }
+            val dialog =
+                PermissionsDialogFragment.newInstance(
+                    addon = addon,
+                    permissions = permissions,
+                    origins = origins,
+                    dataCollectionPermissions = emptyList(),
+                    forOptionalPermissions = forOptionalPermissions,
+                    onPositiveButtonClicked = { _, privateBrowsingAllowed, _ ->
+                        handlePermissions(
+                            promptRequest,
+                            granted = true,
+                            privateBrowsingAllowed = privateBrowsingAllowed,
+                        )
+                    },
+                    onNegativeButtonClicked = {
+                        when (promptRequest) {
+                            is WebExtensionPromptRequest.AfterInstallation.Permissions.Optional -> {
+                                promptRequest.onConfirm(false)
+                            }
 
-                        is WebExtensionPromptRequest.AfterInstallation.Permissions.Required -> {
-                            promptRequest.onConfirm(PermissionPromptResponse(isPermissionsGranted = false))
+                            is WebExtensionPromptRequest.AfterInstallation.Permissions.Required -> {
+                                promptRequest.onConfirm(PermissionPromptResponse(isPermissionsGranted = false))
+                            }
                         }
-                    }
-                    consumePromptRequest()
-                },
-            )
+                        consumePromptRequest()
+                    },
+                )
             dialog.show(
                 fragmentManager,
                 PERMISSIONS_DIALOG_FRAGMENT_TAG,
@@ -198,8 +193,9 @@ class WebExtensionPromptFeature(
         findPreviousDialogFragment()?.let { dialog ->
             dialog.onPositiveButtonClicked = { addon, privateBrowsingAllowed, _ ->
                 store.state.webExtensionPromptRequest?.let { promptRequest ->
-                    if (promptRequest is WebExtensionPromptRequest.AfterInstallation.Permissions &&
-                        addon.id == promptRequest.extension.id
+                    if (
+                        promptRequest is WebExtensionPromptRequest.AfterInstallation.Permissions &&
+                            addon.id == promptRequest.extension.id
                     ) {
                         handlePermissions(
                             promptRequest,
@@ -232,10 +228,11 @@ class WebExtensionPromptFeature(
             }
 
             is WebExtensionPromptRequest.AfterInstallation.Permissions.Required -> {
-                val response = PermissionPromptResponse(
-                    isPermissionsGranted = granted,
-                    isPrivateModeGranted = privateBrowsingAllowed,
-                )
+                val response =
+                    PermissionPromptResponse(
+                        isPermissionsGranted = granted,
+                        isPrivateModeGranted = privateBrowsingAllowed,
+                    )
                 promptRequest.onConfirm(response)
             }
 
@@ -264,15 +261,13 @@ class WebExtensionPromptFeature(
         fragmentManager.findFragmentByTag(PERMISSIONS_DIALOG_FRAGMENT_TAG) as? PermissionsDialogFragment
 
     private fun hasExistingAddonPostInstallationDialogFragment(): Boolean =
-        fragmentManager.findFragmentByTag(POST_INSTALLATION_DIALOG_FRAGMENT_TAG)
-            as? AddonInstallationDialogFragment != null
+        fragmentManager.findFragmentByTag(POST_INSTALLATION_DIALOG_FRAGMENT_TAG) as? AddonInstallationDialogFragment !=
+            null
 
     private fun handleBeforeInstallationRequest(promptRequest: WebExtensionPromptRequest.BeforeInstallation) {
         when (promptRequest) {
             is WebExtensionPromptRequest.BeforeInstallation.InstallationFailed -> {
-                handleInstallationFailedRequest(
-                    exception = promptRequest.exception,
-                )
+                handleInstallationFailedRequest(exception = promptRequest.exception)
                 consumePromptRequest()
             }
         }
@@ -282,63 +277,61 @@ class WebExtensionPromptFeature(
     internal fun handleInstallationFailedRequest(exception: WebExtensionInstallException) {
         val addonName = exception.extensionName ?: ""
         var title = context.getString(addonsR.string.mozac_feature_addons_cant_install_extension, "")
-        val message = when (exception) {
-            is WebExtensionInstallException.Blocklisted -> {
-                context.getString(addonsR.string.mozac_feature_addons_blocklisted_2, addonName, R.string.app_name)
-            }
+        val message =
+            when (exception) {
+                is WebExtensionInstallException.Blocklisted -> {
+                    context.getString(addonsR.string.mozac_feature_addons_blocklisted_2, addonName, R.string.app_name)
+                }
 
-            is WebExtensionInstallException.SoftBlocked -> {
-                context.getString(addonsR.string.mozac_feature_addons_soft_blocked_2, addonName, R.string.app_name)
-            }
+                is WebExtensionInstallException.SoftBlocked -> {
+                    context.getString(addonsR.string.mozac_feature_addons_soft_blocked_2, addonName, R.string.app_name)
+                }
 
-            is WebExtensionInstallException.UserCancelled -> {
-                // We don't want to show an error message when users cancel installation.
-                return
-            }
+                is WebExtensionInstallException.UserCancelled -> {
+                    // We don't want to show an error message when users cancel installation.
+                    return
+                }
 
-            is WebExtensionInstallException.UnsupportedAddonType,
-            is WebExtensionInstallException.Unknown,
-            -> {
-                // Making sure we don't have a
-                // Title = Can't install extension
-                // Message = Failed to install $addonName
-                title = ""
-                if (addonName.isNotEmpty()) {
-                    context.getString(addonsR.string.mozac_feature_addons_failed_to_install, addonName)
-                } else {
-                    context.getString(addonsR.string.mozac_feature_addons_extension_failed_to_install)
+                is WebExtensionInstallException.UnsupportedAddonType,
+                is WebExtensionInstallException.Unknown -> {
+                    // Making sure we don't have a
+                    // Title = Can't install extension
+                    // Message = Failed to install $addonName
+                    title = ""
+                    if (addonName.isNotEmpty()) {
+                        context.getString(addonsR.string.mozac_feature_addons_failed_to_install, addonName)
+                    } else {
+                        context.getString(addonsR.string.mozac_feature_addons_extension_failed_to_install)
+                    }
+                }
+
+                is WebExtensionInstallException.NetworkFailure -> {
+                    context.getString(addonsR.string.mozac_feature_addons_extension_failed_to_install_network_error)
+                }
+
+                is WebExtensionInstallException.CorruptFile -> {
+                    context.getString(addonsR.string.mozac_feature_addons_extension_failed_to_install_corrupt_error)
+                }
+
+                is WebExtensionInstallException.NotSigned -> {
+                    context.getString(addonsR.string.mozac_feature_addons_extension_failed_to_install_not_signed_error)
+                }
+
+                is WebExtensionInstallException.Incompatible -> {
+                    val appName = context.getString(R.string.app_name)
+                    val version = context.appVersionName
+                    context.getString(
+                        addonsR.string.mozac_feature_addons_failed_to_install_incompatible_error,
+                        addonName,
+                        appName,
+                        version,
+                    )
+                }
+
+                is WebExtensionInstallException.AdminInstallOnly -> {
+                    context.getString(addonsR.string.mozac_feature_addons_admin_install_only, addonName)
                 }
             }
-
-            is WebExtensionInstallException.NetworkFailure -> {
-                context.getString(addonsR.string.mozac_feature_addons_extension_failed_to_install_network_error)
-            }
-
-            is WebExtensionInstallException.CorruptFile -> {
-                context.getString(addonsR.string.mozac_feature_addons_extension_failed_to_install_corrupt_error)
-            }
-
-            is WebExtensionInstallException.NotSigned -> {
-                context.getString(
-                    addonsR.string.mozac_feature_addons_extension_failed_to_install_not_signed_error,
-                )
-            }
-
-            is WebExtensionInstallException.Incompatible -> {
-                val appName = context.getString(R.string.app_name)
-                val version = context.appVersionName
-                context.getString(
-                    addonsR.string.mozac_feature_addons_failed_to_install_incompatible_error,
-                    addonName,
-                    appName,
-                    version,
-                )
-            }
-
-            is WebExtensionInstallException.AdminInstallOnly -> {
-                context.getString(addonsR.string.mozac_feature_addons_admin_install_only, addonName)
-            }
-        }
 
         showDialog(
             title = title,
@@ -352,21 +345,18 @@ class WebExtensionPromptFeature(
         message: String,
     ) {
         context.let {
-            AlertDialog
-                .Builder(it)
+            AlertDialog.Builder(it)
                 .setTitle(title)
                 .setPositiveButton(android.R.string.ok) { _, _ -> }
                 .setCancelable(false)
-                .setMessage(
-                    message,
-                ).show()
+                .setMessage(message)
+                .show()
                 .withCenterAlignedButtons()
         }
     }
 
     companion object {
         private const val PERMISSIONS_DIALOG_FRAGMENT_TAG = "ADDONS_PERMISSIONS_DIALOG_FRAGMENT"
-        private const val POST_INSTALLATION_DIALOG_FRAGMENT_TAG =
-            "ADDONS_INSTALLATION_DIALOG_FRAGMENT"
+        private const val POST_INSTALLATION_DIALOG_FRAGMENT_TAG = "ADDONS_INSTALLATION_DIALOG_FRAGMENT"
     }
 }

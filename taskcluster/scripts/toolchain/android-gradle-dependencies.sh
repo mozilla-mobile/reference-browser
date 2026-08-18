@@ -30,10 +30,15 @@ GRADLE_FLAGS=(
 
 # Enumerates and downloads the dependencies of every resolvable configuration
 # without running the requested tasks.
-./gradlew "${GRADLE_FLAGS[@]}" --write-verification-metadata sha256 --dry-run detekt ktlint lint buildHealth build
+./gradlew "${GRADLE_FLAGS[@]}" --write-verification-metadata sha256 --dry-run detekt ktfmtCheck lint buildHealth build
 
 # AGP resolves the aapt2 binary while its tasks run, so the pass above misses it.
 ./gradlew "${GRADLE_FLAGS[@]}" :app:processDebugResources
+
+# Spotless resolves ktfmt the same way, so run the formatter for real. spotlessKotlin
+# rather than ktfmtCheck: it resolves the same classpath but reports no violations, so a
+# misformatted tree cannot fail the toolchain every other task depends on.
+./gradlew "${GRADLE_FLAGS[@]}" spotlessKotlin
 
 # Don't leave a 4GB heap sitting there while `after.sh` packages everything up.
 ./gradlew --stop

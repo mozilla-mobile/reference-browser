@@ -18,19 +18,17 @@ import org.mozilla.reference.browser.ui.robots.navigationToolbar
 class SearchTest {
     private lateinit var mockWebServer: MockWebServer
 
-    @get:Rule
-    val activityTestRule = BrowserActivityTestRule()
+    @get:Rule val activityTestRule = BrowserActivityTestRule()
 
-    @Rule
-    @JvmField
-    val retryTestRule = RetryTestRule(3)
+    @Rule @JvmField val retryTestRule = RetryTestRule(3)
 
     @Before
     fun setUp() {
-        mockWebServer = MockWebServer().apply {
-            dispatcher = AndroidAssetDispatcher()
-            start()
-        }
+        mockWebServer =
+            MockWebServer().apply {
+                dispatcher = AndroidAssetDispatcher()
+                start()
+            }
     }
 
     @After
@@ -42,17 +40,16 @@ class SearchTest {
     fun siteSearchSuggestionTest() {
         val defaultWebPage = TestAssetHelper.getGenericAsset(mockWebServer, 1)
 
-        navigationToolbar {
-        }.enterUrlAndEnterToBrowser(defaultWebPage.url) {
-        }
-        navigationToolbar {
-        }.openTabTrayMenu {
-        }.openNewTab {
-        }.clickToolbar {
-            typeText("generic1.html")
-            verifySearchSuggestion(defaultWebPage.title)
-        }.clickSearchSuggestion(defaultWebPage.title) {
-            verifyUrl(defaultWebPage.url.toString())
-        }
+        navigationToolbar {}.enterUrlAndEnterToBrowser(defaultWebPage.url) {}
+        navigationToolbar {}
+            .openTabTrayMenu {}
+            .openNewTab {}
+            .clickToolbar {
+                typeText("generic1.html")
+                verifySearchSuggestion(defaultWebPage.title)
+            }
+            .clickSearchSuggestion(defaultWebPage.title) {
+                verifyUrl(defaultWebPage.url.toString())
+            }
     }
 }

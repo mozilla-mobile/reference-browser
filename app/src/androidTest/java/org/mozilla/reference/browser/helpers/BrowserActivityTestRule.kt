@@ -9,18 +9,15 @@ import androidx.test.espresso.IdlingRegistry
 import org.junit.rules.ExternalResource
 import org.mozilla.reference.browser.BrowserActivity
 
-/**
- * A [org.junit.Rule] to handle shared test set up for tests on [BrowserActivity].
- */
+/** A [org.junit.Rule] to handle shared test set up for tests on [BrowserActivity]. */
 class BrowserActivityTestRule : ExternalResource() {
     /**
      * Ensures the test doesn't advance until session page load is completed.
      *
-     * N.B.: in the current implementation, tests pass without this so it seems to be
-     * unnecessary: I think this is because the progress bar animation acts as the
-     * necessary idling resource. However, we leave this in just in case the
-     * implementation changes and the tests break. In that case, this code might be
-     * broken because it's not used, and thus tested, at present.
+     * N.B.: in the current implementation, tests pass without this so it seems to be unnecessary: I think this is
+     * because the progress bar animation acts as the necessary idling resource. However, we leave this in just in case
+     * the implementation changes and the tests break. In that case, this code might be broken because it's not used,
+     * and thus tested, at present.
      */
     private lateinit var loadingIdlingResource: SessionLoadedIdlingResource
     private lateinit var scenario: ActivityScenario<BrowserActivity>
@@ -33,9 +30,10 @@ class BrowserActivityTestRule : ExternalResource() {
         }
 
     override fun before() {
-        loadingIdlingResource = SessionLoadedIdlingResource().also {
-            IdlingRegistry.getInstance().register(it)
-        }
+        loadingIdlingResource =
+            SessionLoadedIdlingResource().also {
+                IdlingRegistry.getInstance().register(it)
+            }
         scenario = ActivityScenario.launch(BrowserActivity::class.java)
     }
 

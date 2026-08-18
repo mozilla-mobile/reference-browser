@@ -16,33 +16,27 @@ import mozilla.components.lib.crash.ui.AbstractCrashListFragment
 import mozilla.components.support.ktx.android.view.setupPersistentInsets
 import org.mozilla.reference.browser.ext.requireComponents
 
-/**
- * A simple activity whose only purpose is to load the [CrashListFragment].
- */
+/** A simple activity whose only purpose is to load the [CrashListFragment]. */
 class CrashListActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge(SystemBarStyle.dark(Color.TRANSPARENT))
         super.onCreate(savedInstanceState)
         window.setupPersistentInsets()
 
-        supportFragmentManager
-            .beginTransaction()
-            .add(android.R.id.content, CrashListFragment())
-            .commit()
+        supportFragmentManager.beginTransaction().add(android.R.id.content, CrashListFragment()).commit()
     }
 }
 
-/**
- * An [AbstractCrashListFragment] implementor that uses the application [CrashReporter].
- */
+/** An [AbstractCrashListFragment] implementor that uses the application [CrashReporter]. */
 class CrashListFragment : AbstractCrashListFragment() {
     override val reporter: CrashReporter by lazy { requireComponents.analytics.crashReporter }
 
     override fun onCrashServiceSelected(url: String) {
-        val intent = Intent(Intent.ACTION_VIEW).apply {
-            data = url.toUri()
-            `package` = context?.packageName
-        }
+        val intent =
+            Intent(Intent.ACTION_VIEW).apply {
+                data = url.toUri()
+                `package` = context?.packageName
+            }
         startActivity(intent)
         activity?.finish()
     }
