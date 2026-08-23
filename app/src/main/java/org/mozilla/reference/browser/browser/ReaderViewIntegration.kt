@@ -56,7 +56,7 @@ class ReaderViewIntegration(
 
     init {
         toolbar.addPageAction(readerViewButton)
-        readerViewAppearanceButton.setOnClickListener { feature.showControls() }
+        readerViewAppearanceButton.setOnClickListener { feature.showControls(isListenEnabled = false) }
     }
 
     private val feature =
