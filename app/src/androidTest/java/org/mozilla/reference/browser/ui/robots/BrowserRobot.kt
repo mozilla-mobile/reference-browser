@@ -72,6 +72,14 @@ class BrowserRobot {
         link.click(LONG_CLICK_DURATION)
     }
 
+    fun longClickVideoWithNoControls() {
+        mDevice.waitForWindowUpdate(packageName, waitingTime)
+        mDevice.findObject(UiSelector().resourceId("$packageName:id/engineView")).waitForExists(waitingTime)
+        mDevice.waitForIdle()
+        val engineView = mDevice.findObject(By.res("$packageName:id/engineView"))
+        engineView.click(engineView.visibleCenter, LONG_CLICK_DURATION)
+    }
+
     fun longClickAndCopyText(
         expectedText: String,
         selectAll: Boolean = false,

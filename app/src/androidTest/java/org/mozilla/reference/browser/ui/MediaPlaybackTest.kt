@@ -80,7 +80,7 @@ class MediaPlaybackTest {
 
         navigationToolbar {}
             .enterUrlAndEnterToBrowser(noControlsVideoTestPage.url) {
-                longClickMatchingText("test_link_video")
+                longClickVideoWithNoControls()
                 verifyNoControlsVideoContextMenuItems()
             }
     }
