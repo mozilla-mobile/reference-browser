@@ -49,7 +49,6 @@ class AddonsFragment : Fragment(), AddonsManagerAdapterDelegate {
         savedInstanceState: Bundle?,
     ) {
         super.onViewCreated(rootView, savedInstanceState)
-        bindRecyclerView(rootView)
         webExtensionPromptFeature.set(
             feature =
                 WebExtensionPromptFeature(
