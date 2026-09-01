@@ -11,13 +11,12 @@ import android.content.IntentFilter
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
-import kotlinx.coroutines.DelicateCoroutinesApi
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import mozilla.components.lib.crash.Crash
 import mozilla.components.lib.crash.CrashReporter
 import mozilla.components.support.utils.ext.registerReceiverCompat
 import org.mozilla.reference.browser.BrowserApplication.Companion.NON_FATAL_CRASH_BROADCAST
+import org.mozilla.reference.browser.ext.components
 
 class CrashIntegration(
     private val context: Context,
@@ -53,9 +52,8 @@ class CrashIntegration(
         context.unregisterReceiver(receiver)
     }
 
-    @OptIn(DelicateCoroutinesApi::class)
     fun sendCrashReport(crash: Crash) {
-        GlobalScope.launch {
+        context.components.applicationScope.launch {
             crashReporter.submitReport(crash)
         }
     }

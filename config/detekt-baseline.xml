@@ -61,7 +61,7 @@
     <ID>UndocumentedPublicFunction:Config.kt$Config$@JvmStatic fun generateDebugVersionName(): String</ID>
     <ID>UndocumentedPublicFunction:Config.kt$Config$@JvmStatic fun releaseVersionName(project: Project): String</ID>
     <ID>UndocumentedPublicFunction:Context.kt$fun Context.getPreferenceKey(@StringRes resourceId: Int): String</ID>
-    <ID>UndocumentedPublicFunction:CrashIntegration.kt$CrashIntegration$@OptIn(DelicateCoroutinesApi::class) fun sendCrashReport(crash: Crash)</ID>
+    <ID>UndocumentedPublicFunction:CrashIntegration.kt$CrashIntegration$fun sendCrashReport(crash: Crash)</ID>
     <ID>UndocumentedPublicFunction:EngineProvider.kt$EngineProvider$@Synchronized fun getOrCreateRuntime(context: Context): GeckoRuntime</ID>
     <ID>UndocumentedPublicFunction:EngineProvider.kt$EngineProvider$fun createClient(context: Context): Client</ID>
     <ID>UndocumentedPublicFunction:EngineProvider.kt$EngineProvider$fun createEngine( context: Context, defaultSettings: DefaultSettings, ): Engine</ID>

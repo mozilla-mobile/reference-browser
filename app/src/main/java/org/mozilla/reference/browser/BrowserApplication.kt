@@ -8,9 +8,7 @@ import android.app.Application
 import java.util.concurrent.TimeUnit
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 import mozilla.components.browser.state.action.SystemAction
@@ -120,8 +118,7 @@ open class BrowserApplication : Application() {
             // Initialize the push feature and service.
             it.initialize()
         }
-        @OptIn(DelicateCoroutinesApi::class)
-        GlobalScope.launch(Dispatchers.IO) {
+        applicationScope.launch(Dispatchers.IO) {
             components.core.fileUploadsDirCleaner.cleanUploadsDirectory()
         }
     }
@@ -134,22 +131,20 @@ open class BrowserApplication : Application() {
         }
     }
 
-    @OptIn(DelicateCoroutinesApi::class)
-    private fun restoreBrowserState() =
-        GlobalScope.launch(Dispatchers.Main) {
-            val store = components.core.store
-            val sessionStorage = components.core.sessionStorage
+    private fun restoreBrowserState() = applicationScope.launch {
+        val store = components.core.store
+        val sessionStorage = components.core.sessionStorage
 
-            components.useCases.tabsUseCases.restore(sessionStorage)
+        components.useCases.tabsUseCases.restore(sessionStorage)
 
-            // Now that we have restored our previous state (if there's one) let's setup auto saving the state while
-            // the app is used.
-            sessionStorage
-                .autoSave(store)
-                .periodicallyInForeground(interval = 30, unit = TimeUnit.SECONDS)
-                .whenGoingToBackground()
-                .whenSessionsChange()
-        }
+        // Now that we have restored our previous state (if there's one) let's setup auto saving the state while
+        // the app is used.
+        sessionStorage
+            .autoSave(store)
+            .periodicallyInForeground(interval = 30, unit = TimeUnit.SECONDS)
+            .whenGoingToBackground()
+            .whenSessionsChange()
+    }
 
     companion object {
         const val NON_FATAL_CRASH_BROADCAST = "org.mozilla.reference.browser"
