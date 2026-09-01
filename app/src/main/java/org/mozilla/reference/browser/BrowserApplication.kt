@@ -110,10 +110,10 @@ open class BrowserApplication : Application() {
             PushProcessor.install(it)
 
             // WebPush integration to observe and deliver push messages to engine.
-            WebPushEngineIntegration(components.core.engine, it).start()
+            WebPushEngineIntegration(components.core.engine, it, applicationScope).start()
 
             // Perform a one-time initialization of the account manager if a message is received.
-            PushFxaIntegration(it, lazy { components.backgroundServices.accountManager }).launch()
+            PushFxaIntegration(it, lazy { components.backgroundServices.accountManager }, applicationScope).launch()
 
             // Initialize the push feature and service.
             it.initialize()

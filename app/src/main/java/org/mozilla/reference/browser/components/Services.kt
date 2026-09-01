@@ -6,7 +6,7 @@ package org.mozilla.reference.browser.components
 
 import android.content.Context
 import androidx.preference.PreferenceManager
-import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import mozilla.components.feature.accounts.FirefoxAccountsAuthFeature
 import mozilla.components.feature.app.links.AppLinksInterceptor
@@ -20,6 +20,7 @@ class Services(
     private val context: Context,
     private val accountManager: FxaAccountManager,
     private val tabsUseCases: TabsUseCases,
+    private val applicationScope: CoroutineScope,
 ) {
     private val prefs = PreferenceManager.getDefaultSharedPreferences(context)
     val accountsAuthFeature by lazy {
@@ -27,7 +28,7 @@ class Services(
             accountManager,
             redirectUrl = BackgroundServices.REDIRECT_URL,
         ) { _, authUrl ->
-            MainScope().launch {
+            applicationScope.launch {
                 tabsUseCases.addTab.invoke(authUrl)
             }
         }

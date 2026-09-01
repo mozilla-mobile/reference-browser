@@ -6,7 +6,6 @@ package org.mozilla.reference.browser.push
 
 import android.util.Base64
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import mozilla.components.concept.engine.Engine
 import mozilla.components.concept.engine.webpush.WebPushDelegate
@@ -20,6 +19,7 @@ import mozilla.components.support.base.log.logger.Logger
 class WebPushEngineIntegration(
     private val engine: Engine,
     private val pushFeature: AutoPushFeature,
+    private val applicationScope: CoroutineScope,
 ) : AutoPushFeature.Observer {
     private var handler: WebPushHandler? = null
     private val delegate = WebPushEngineDelegate(pushFeature)
@@ -38,13 +38,13 @@ class WebPushEngineIntegration(
         scope: PushScope,
         message: ByteArray?,
     ) {
-        CoroutineScope(Dispatchers.Main).launch {
+        applicationScope.launch {
             handler?.onPushMessage(scope, message)
         }
     }
 
     override fun onSubscriptionChanged(scope: PushScope) {
-        CoroutineScope(Dispatchers.Main).launch {
+        applicationScope.launch {
             handler?.onSubscriptionChanged(scope)
         }
     }
