@@ -5,8 +5,6 @@
 package org.mozilla.reference.browser.push
 
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import mozilla.components.concept.sync.AccountObserver
 import mozilla.components.concept.sync.AuthType
@@ -52,11 +50,13 @@ import org.mozilla.reference.browser.components.Push
 class PushFxaIntegration(
     private val pushFeature: AutoPushFeature,
     lazyAccountManager: Lazy<FxaAccountManager>,
+    applicationScope: CoroutineScope,
 ) {
     private val observer =
         OneTimePushMessageObserver(
             lazyAccountManager,
             pushFeature,
+            applicationScope,
         )
 
     /**
@@ -73,6 +73,7 @@ class PushFxaIntegration(
 internal class OneTimePushMessageObserver(
     private val lazyAccountManager: Lazy<FxaAccountManager>,
     private val pushFeature: AutoPushFeature,
+    private val applicationScope: CoroutineScope,
 ) : AutoPushFeature.Observer {
     override fun onMessageReceived(
         scope: PushScope,
@@ -85,8 +86,8 @@ internal class OneTimePushMessageObserver(
         if (scope.contains(FxaPushSupportFeature.PUSH_SCOPE_PREFIX)) {
             // If we aren't initialized, then we should do the initialization and message delivery.
             if (!lazyAccountManager.isInitialized()) {
-                CoroutineScope(Dispatchers.Main).launch {
-                    val fxaObserver = OneTimeMessageDeliveryObserver(lazyAccountManager, rawBytes)
+                applicationScope.launch {
+                    val fxaObserver = OneTimeMessageDeliveryObserver(lazyAccountManager, rawBytes, applicationScope)
 
                     // Start observing the account manager, so that we can deliver our message
                     // only when we are authenticated and are capable of processing it.
@@ -94,7 +95,7 @@ internal class OneTimePushMessageObserver(
                 }
             }
 
-            MainScope().launch {
+            applicationScope.launch {
                 // Remove ourselves when we're done.
                 pushFeature.unregister(this@OneTimePushMessageObserver)
             }
@@ -109,12 +110,13 @@ internal class OneTimePushMessageObserver(
 internal class OneTimeMessageDeliveryObserver(
     private val lazyAccount: Lazy<FxaAccountManager>,
     private val message: ByteArray,
+    private val applicationScope: CoroutineScope,
 ) : AccountObserver {
     override fun onAuthenticated(
         account: OAuthAccount,
         authType: AuthType,
     ) {
-        MainScope().launch {
+        applicationScope.launch {
             lazyAccount.value.withConstellationIfExists {
                 processRawEvent(String(message))
             }

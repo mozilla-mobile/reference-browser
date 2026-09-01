@@ -8,7 +8,6 @@ import android.content.Context
 import android.os.Build
 import java.util.concurrent.TimeUnit
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import mozilla.appservices.fxaclient.FxaServer
 import mozilla.components.browser.storage.sync.PlacesHistoryStorage
@@ -96,7 +95,7 @@ class BackgroundServices(
 
                 SyncedTabsIntegration(context, accountManager).launch()
 
-                CoroutineScope(Dispatchers.Main).launch { accountManager.start() }
+                applicationScope.launch { accountManager.start() }
             }
     }
 
