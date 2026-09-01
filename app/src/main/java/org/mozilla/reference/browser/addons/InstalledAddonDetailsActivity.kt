@@ -17,10 +17,12 @@ import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import mozilla.components.feature.addons.Addon
 import mozilla.components.feature.addons.AddonManagerException
 import mozilla.components.feature.addons.R as addonsR
 import mozilla.components.feature.addons.ui.translateName
+import mozilla.components.support.base.log.logger.Logger
 import mozilla.components.support.ktx.android.view.setupPersistentInsets
 import mozilla.components.support.utils.ext.getParcelableExtraCompat
 import org.mozilla.reference.browser.R
@@ -28,6 +30,8 @@ import org.mozilla.reference.browser.ext.components
 
 /** An activity to show the details of a installed add-on. */
 class InstalledAddonDetailsActivity : AppCompatActivity() {
+    private val logger = Logger("InstalledAddonDetailsActivity")
+
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge(SystemBarStyle.dark(Color.TRANSPARENT))
         super.onCreate(savedInstanceState)
@@ -43,29 +47,22 @@ class InstalledAddonDetailsActivity : AppCompatActivity() {
     }
 
     private fun bindAddon(addon: Addon) {
-        lifecycleScope.launch(Dispatchers.IO) {
+        lifecycleScope.launch {
             try {
-                val addons = baseContext.components.core.addonManager.getAddons()
-                lifecycleScope.launch(Dispatchers.Main) {
-                    addons
-                        .find { addon.id == it.id }
-                        .let {
-                            if (it == null) {
-                                throw AddonManagerException(Exception("Addon ${addon.id} not found"))
-                            } else {
-                                bindUI(it)
-                            }
-                        }
-                }
+                val addons = withContext(Dispatchers.IO) { baseContext.components.core.addonManager.getAddons() }
+                val installed =
+                    addons.find { addon.id == it.id }
+                        ?: throw AddonManagerException(Exception("Addon ${addon.id} not found"))
+
+                bindUI(installed)
             } catch (e: AddonManagerException) {
-                lifecycleScope.launch(Dispatchers.Main) {
-                    Toast.makeText(
-                            baseContext,
-                            addonsR.string.mozac_feature_addons_failed_to_load_extensions,
-                            Toast.LENGTH_SHORT,
-                        )
-                        .show()
-                }
+                logger.error("Failed to load add-on ${addon.id}", e)
+                Toast.makeText(
+                        baseContext,
+                        addonsR.string.mozac_feature_addons_failed_to_load_extensions,
+                        Toast.LENGTH_SHORT,
+                    )
+                    .show()
             }
         }
     }

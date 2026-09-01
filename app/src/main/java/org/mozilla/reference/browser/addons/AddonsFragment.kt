@@ -23,11 +23,13 @@ import mozilla.components.feature.addons.R as addonsR
 import mozilla.components.feature.addons.ui.AddonsManagerAdapter
 import mozilla.components.feature.addons.ui.AddonsManagerAdapterDelegate
 import mozilla.components.support.base.feature.ViewBoundFeatureWrapper
+import mozilla.components.support.base.log.logger.Logger
 import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.ext.components
 
 /** Fragment use for managing add-ons. */
 class AddonsFragment : Fragment(), AddonsManagerAdapterDelegate {
+    private val logger = Logger("AddonsFragment")
     private val webExtensionPromptFeature = ViewBoundFeatureWrapper<WebExtensionPromptFeature>()
     private lateinit var recyclerView: RecyclerView
     private lateinit var addons: List<Addon>
@@ -85,6 +87,7 @@ class AddonsFragment : Fragment(), AddonsManagerAdapterDelegate {
                     )
                 recyclerView.adapter = adapter
             } catch (e: AddonManagerException) {
+                logger.error("Failed to load add-ons", e)
                 Toast.makeText(
                         activity,
                         addonsR.string.mozac_feature_addons_failed_to_load_extensions,
