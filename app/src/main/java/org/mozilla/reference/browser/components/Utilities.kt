@@ -5,6 +5,7 @@
 package org.mozilla.reference.browser.components
 
 import android.content.Context
+import kotlinx.coroutines.CoroutineScope
 import mozilla.components.browser.state.store.BrowserStore
 import mozilla.components.feature.customtabs.CustomTabIntentProcessor
 import mozilla.components.feature.intent.processing.TabIntentProcessor
@@ -17,6 +18,7 @@ import mozilla.components.feature.tabs.TabsUseCases
 import mozilla.components.lib.publicsuffixlist.PublicSuffixList
 
 /** Component group for miscellaneous components. */
+@Suppress("LongParameterList")
 class Utilities(
     private val context: Context,
     private val store: BrowserStore,
@@ -24,6 +26,7 @@ class Utilities(
     private val searchUseCases: SearchUseCases,
     private val tabsUseCases: TabsUseCases,
     private val customTabsUseCases: CustomTabsUseCases,
+    private val applicationScope: CoroutineScope,
 ) {
     /** Provides intent processing functionality for Progressive Web App and Custom Tab intents. */
     val externalIntentProcessors by lazy {
@@ -46,7 +49,8 @@ class Utilities(
      * processors.
      */
     val intentProcessors by lazy {
-        externalIntentProcessors + TabIntentProcessor(tabsUseCases, searchUseCases.newTabSearch)
+        externalIntentProcessors +
+            TabIntentProcessor(tabsUseCases, searchUseCases.newTabSearch, applicationScope = applicationScope)
     }
 
     val publicSuffixList by lazy {

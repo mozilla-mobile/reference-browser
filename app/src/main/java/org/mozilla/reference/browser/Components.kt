@@ -7,6 +7,7 @@ package org.mozilla.reference.browser
 import android.annotation.SuppressLint
 import android.content.Context
 import androidx.core.app.NotificationManagerCompat
+import kotlinx.coroutines.CoroutineScope
 import mozilla.components.feature.autofill.AutofillConfiguration
 import mozilla.components.feature.downloads.DefaultFileSizeFormatter
 import mozilla.components.feature.downloads.DownloadEstimator
@@ -26,8 +27,11 @@ import org.mozilla.reference.browser.components.UseCases
 import org.mozilla.reference.browser.components.Utilities
 
 /** Provides access to all components. */
-class Components(private val context: Context) {
-    val core by lazy { Core(context, analytics.crashReporter) }
+class Components(
+    private val context: Context,
+    val applicationScope: CoroutineScope,
+) {
+    val core by lazy { Core(context, analytics.crashReporter, applicationScope) }
     val useCases by lazy {
         UseCases(
             context,
@@ -45,6 +49,7 @@ class Components(private val context: Context) {
             core.lazyHistoryStorage,
             core.lazyRemoteTabsStorage,
             core.lazyLoginsStorage,
+            applicationScope,
         )
     }
     val analytics by lazy { Analytics(context) }
@@ -56,6 +61,7 @@ class Components(private val context: Context) {
             useCases.searchUseCases,
             useCases.tabsUseCases,
             useCases.customTabsUseCases,
+            applicationScope,
         )
     }
     val services by lazy { Services(context, backgroundServices.accountManager, useCases.tabsUseCases) }

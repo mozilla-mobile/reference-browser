@@ -120,6 +120,7 @@ class AccountSettingsFragment : PreferenceFragmentCompat() {
         pref: Preference?,
         failed: Boolean = false,
     ) {
+        @Suppress("DEPRECATION") // getLastSynced is deprecated see bug 2067060
         val lastSyncTime = getLastSynced(context)
 
         pref?.summary =
