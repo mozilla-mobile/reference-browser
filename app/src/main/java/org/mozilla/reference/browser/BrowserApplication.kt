@@ -6,9 +6,12 @@ package org.mozilla.reference.browser
 
 import android.app.Application
 import java.util.concurrent.TimeUnit
+import kotlinx.coroutines.CoroutineExceptionHandler
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 import mozilla.components.browser.state.action.SystemAction
 import mozilla.components.concept.engine.webextension.isUnsupported
@@ -27,7 +30,20 @@ import org.mozilla.reference.browser.push.PushFxaIntegration
 import org.mozilla.reference.browser.push.WebPushEngineIntegration
 
 open class BrowserApplication : Application() {
-    val components by lazy { Components(this) }
+    /**
+     * Scope for long-running work that must outlive any individual activity. [SupervisorJob] keeps a failure in one
+     * child from cancelling the others.
+     */
+    private val applicationScope: CoroutineScope =
+        CoroutineScope(
+            SupervisorJob() +
+                Dispatchers.Main +
+                CoroutineExceptionHandler { _, throwable ->
+                    Logger.error("ApplicationScope: Unhandled error: ${throwable.message}", throwable)
+                }
+        )
+
+    val components by lazy { Components(this, applicationScope) }
 
     override fun onCreate() {
         super.onCreate()
