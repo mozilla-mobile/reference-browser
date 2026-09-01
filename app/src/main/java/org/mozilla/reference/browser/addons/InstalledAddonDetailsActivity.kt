@@ -14,7 +14,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SwitchCompat
 import androidx.core.view.isVisible
-import kotlinx.coroutines.CoroutineScope
+import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import mozilla.components.feature.addons.Addon
@@ -28,8 +28,6 @@ import org.mozilla.reference.browser.ext.components
 
 /** An activity to show the details of a installed add-on. */
 class InstalledAddonDetailsActivity : AppCompatActivity() {
-    private val scope = CoroutineScope(Dispatchers.IO)
-
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge(SystemBarStyle.dark(Color.TRANSPARENT))
         super.onCreate(savedInstanceState)
@@ -45,10 +43,10 @@ class InstalledAddonDetailsActivity : AppCompatActivity() {
     }
 
     private fun bindAddon(addon: Addon) {
-        scope.launch {
+        lifecycleScope.launch(Dispatchers.IO) {
             try {
                 val addons = baseContext.components.core.addonManager.getAddons()
-                scope.launch(Dispatchers.Main) {
+                lifecycleScope.launch(Dispatchers.Main) {
                     addons
                         .find { addon.id == it.id }
                         .let {
@@ -60,7 +58,7 @@ class InstalledAddonDetailsActivity : AppCompatActivity() {
                         }
                 }
             } catch (e: AddonManagerException) {
-                scope.launch(Dispatchers.Main) {
+                lifecycleScope.launch(Dispatchers.Main) {
                     Toast.makeText(
                             baseContext,
                             addonsR.string.mozac_feature_addons_failed_to_load_extensions,

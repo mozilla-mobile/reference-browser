@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
@@ -52,7 +53,7 @@ class ToolbarIntegration(
     toolbar: BrowserToolbar,
     toolbarParentView: View,
     historyStorage: PlacesHistoryStorage,
-    store: BrowserStore,
+    private val store: BrowserStore,
     private val sessionUseCases: SessionUseCases,
     private val tabsUseCases: TabsUseCases,
     private val webAppUseCases: WebAppUseCases,
@@ -64,6 +65,7 @@ class ToolbarIntegration(
         }
 
     private val scope = MainScope()
+    private var menuUpdateJob: Job? = null
 
     private fun menuToolbar(session: SessionState?): RowMenuCandidate {
         val tint = ContextCompat.getColor(context, R.color.icons)
@@ -217,16 +219,6 @@ class ToolbarIntegration(
                 }
             },
         )
-
-        scope.launch {
-            store
-                .flow()
-                .map { state -> state.selectedTab }
-                .distinctUntilChanged()
-                .collect { tab ->
-                    browserMenuController.submitList(menuItems(tab))
-                }
-        }
     }
 
     private val toolbarFeature: ToolbarFeature =
@@ -246,10 +238,24 @@ class ToolbarIntegration(
 
     override fun start() {
         toolbarFeature.start()
+
+        menuUpdateJob?.cancel()
+        menuUpdateJob = scope.launch {
+            store
+                .flow()
+                .map { state -> state.selectedTab }
+                .distinctUntilChanged()
+                .collect { tab ->
+                    browserMenuController.submitList(menuItems(tab))
+                }
+        }
     }
 
     override fun stop() {
         toolbarFeature.stop()
+
+        menuUpdateJob?.cancel()
+        menuUpdateJob = null
     }
 
     override fun onBackPressed(): Boolean = toolbarFeature.onBackPressed()
