@@ -132,6 +132,25 @@ class ComposeTabsTrayTest {
             }
     }
 
+    // Verifies swiping a tab row away closes that tab.
+    @Test
+    fun swipeTabAwayFromComposeTabsTrayTest() {
+        val page = TestAssetHelper.getGenericAsset(mockWebServer, 1)
+
+        navigationToolbar {}
+            .enterUrlAndEnterToBrowser(page.url) {
+                verifyPageContent(page.content)
+            }
+
+        navigationToolbar {}
+            .openComposeTabsTray {
+                verifyTab(page.url.toString())
+                swipeTabAway(page.url.toString())
+                verifyNoTab(page.url.toString())
+                verifyNoOpenTabs()
+            }
+    }
+
     // Verifies the three dot menu closes every tab of the page the user is looking at.
     @Test
     fun closeAllTabsFromComposeTabsTrayTest() {
