@@ -18,6 +18,15 @@
     <!-- Content description for the button in the tabs tray that returns to the browser -->
     <string name="tabs_tray_go_back">Back</string>
 
+    <!-- Content description for the tabs tray page that shows the normal tabs -->
+    <string name="tabs_tray_normal_tabs">Tabs</string>
+
+    <!-- Content description for the tabs tray page that shows the private tabs -->
+    <string name="tabs_tray_private_tabs">Private tabs</string>
+
+    <!-- Content description for the button that opens the tabs tray menu -->
+    <string name="tabs_tray_more_options">More options</string>
+
     <!-- Content description for the button that closes one tab in the tabs tray -->
     <string name="tabs_tray_close_tab">Close tab</string>
 

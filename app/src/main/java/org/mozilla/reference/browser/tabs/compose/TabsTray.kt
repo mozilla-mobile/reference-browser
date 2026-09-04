@@ -15,17 +15,26 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import mozilla.components.browser.state.state.TabSessionState
 import mozilla.components.compose.base.theme.AcornTheme
 import mozilla.components.compose.base.theme.acornDarkColorScheme
+import mozilla.components.compose.base.theme.acornPrivateColorScheme
 import mozilla.components.compose.base.theme.darkColorPalette
+import mozilla.components.compose.base.theme.privateColorPalette
 import mozilla.components.lib.state.ext.observeAsComposableState
 import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.compose.browserStore
 import org.mozilla.reference.browser.compose.tabsUseCases
+
+private const val NEW_NORMAL_TAB_URL = "about:blank"
+private const val NEW_PRIVATE_TAB_URL = "about:privatebrowsing"
 
 /**
  * The tabs tray screen.
@@ -40,11 +49,43 @@ internal fun TabsTray(onCloseTrayClick: () -> Unit) {
     val store = browserStore()
     val useCases = tabsUseCases()
 
-    val tabs by store.observeAsComposableState { state -> state.tabs.filter { !it.content.private } }
+    var selectedPage by rememberSaveable { mutableStateOf(TabsTrayPage.NormalTabs) }
+    val isPrivate = selectedPage == TabsTrayPage.PrivateTabs
+
+    // The list is filtered here rather than inside observeAsComposableState: that keys its subscription on the store
+    // alone, so a new mapping function is ignored and switching page would keep showing the previous page's tabs until
+    // the next unrelated store change.
+    val allTabs by store.observeAsComposableState { state -> state.tabs }
     val selectedTabId by store.observeAsComposableState { state -> state.selectedTabId }
 
-    AcornTheme(colors = darkColorPalette, colorScheme = acornDarkColorScheme()) {
-        Scaffold(topBar = { TabsTrayBanner(onCloseTrayClick = onCloseTrayClick) }) { contentPadding ->
+    val tabs = remember(allTabs, isPrivate) { allTabs.filter { it.content.private == isPrivate } }
+    val normalTabCount = remember(allTabs) { allTabs.count { !it.content.private } }
+
+    AcornTheme(
+        colors = if (isPrivate) privateColorPalette else darkColorPalette,
+        colorScheme = if (isPrivate) acornPrivateColorScheme() else acornDarkColorScheme(),
+    ) {
+        Scaffold(
+            topBar = {
+                TabsTrayBanner(
+                    selectedPage = selectedPage,
+                    normalTabCount = normalTabCount,
+                    onCloseTrayClick = onCloseTrayClick,
+                    onPageClick = { page -> selectedPage = page },
+                    onNewTabClick = {
+                        useCases.addTab(
+                            url = if (isPrivate) NEW_PRIVATE_TAB_URL else NEW_NORMAL_TAB_URL,
+                            selectTab = true,
+                            private = isPrivate,
+                        )
+                        onCloseTrayClick()
+                    },
+                    onCloseAllTabsClick = {
+                        if (isPrivate) useCases.removePrivateTabs() else useCases.removeNormalTabs()
+                    },
+                )
+            }
+        ) { contentPadding ->
             TabList(
                 tabs = tabs,
                 selectedTabId = selectedTabId,

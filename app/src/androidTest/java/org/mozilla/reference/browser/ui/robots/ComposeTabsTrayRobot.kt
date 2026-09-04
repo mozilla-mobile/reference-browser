@@ -32,6 +32,18 @@ class ComposeTabsTrayRobot {
 
     fun verifyTabThumbnail() = assertExists(By.desc(appContext.getString(R.string.tabs_tray_thumbnail)))
 
+    fun verifyNormalTabsPage() = assertExists(normalTabsPage)
+
+    fun verifyPrivateTabsPage() = assertExists(privateTabsPage)
+
+    fun openNormalTabsPage() {
+        requireNotNull(waitFor(normalTabsPage)).click()
+    }
+
+    fun openPrivateTabsPage() {
+        requireNotNull(waitFor(privateTabsPage)).click()
+    }
+
     fun closeTab(url: String) {
         // The close button is a sibling of the title and URL, so walk up to the row to find the right one.
         val row = requireNotNull(waitFor(By.text(url))).parent.parent
@@ -55,6 +67,29 @@ class ComposeTabsTrayRobot {
             BrowserRobot().interact()
             return BrowserRobot.Transition()
         }
+
+        fun openNewTab(interact: NavigationToolbarRobot.() -> Unit): NavigationToolbarRobot.Transition {
+            requireNotNull(waitFor(newTabButton)).click()
+
+            NavigationToolbarRobot().interact()
+            return NavigationToolbarRobot.Transition()
+        }
+
+        fun closeAllTabs(interact: ComposeTabsTrayRobot.() -> Unit): ComposeTabsTrayRobot.Transition {
+            requireNotNull(waitFor(moreOptionsButton)).click()
+            requireNotNull(waitFor(By.text(appContext.getString(R.string.menu_action_close_tabs)))).click()
+
+            ComposeTabsTrayRobot().interact()
+            return Transition()
+        }
+
+        fun closeAllPrivateTabs(interact: ComposeTabsTrayRobot.() -> Unit): ComposeTabsTrayRobot.Transition {
+            requireNotNull(waitFor(moreOptionsButton)).click()
+            requireNotNull(waitFor(By.text(appContext.getString(R.string.menu_action_close_tabs_private)))).click()
+
+            ComposeTabsTrayRobot().interact()
+            return Transition()
+        }
     }
 }
 
@@ -66,6 +101,14 @@ fun composeTabsTray(interact: ComposeTabsTrayRobot.() -> Unit): ComposeTabsTrayR
 private val goBackButton = By.desc(appContext.getString(R.string.tabs_tray_go_back))
 
 private val closeTabButton = By.desc(appContext.getString(R.string.tabs_tray_close_tab))
+
+private val newTabButton = By.desc(appContext.getString(R.string.menu_action_add_tab))
+
+private val moreOptionsButton = By.desc(appContext.getString(R.string.tabs_tray_more_options))
+
+private val normalTabsPage = By.desc(appContext.getString(R.string.tabs_tray_normal_tabs))
+
+private val privateTabsPage = By.desc(appContext.getString(R.string.tabs_tray_private_tabs))
 
 private fun waitFor(selector: BySelector): UiObject2? = mDevice.wait(Until.findObject(selector), waitingTime)
 

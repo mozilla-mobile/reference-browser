@@ -11,11 +11,13 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.RuleChain
 import org.mozilla.reference.browser.R
+import org.mozilla.reference.browser.ext.components
 import org.mozilla.reference.browser.helpers.AndroidAssetDispatcher
 import org.mozilla.reference.browser.helpers.BooleanPreferenceRule
 import org.mozilla.reference.browser.helpers.BrowserActivityTestRule
 import org.mozilla.reference.browser.helpers.RetryTestRule
 import org.mozilla.reference.browser.helpers.TestAssetHelper
+import org.mozilla.reference.browser.helpers.TestHelper.appContext
 import org.mozilla.reference.browser.ui.robots.navigationToolbar
 
 /**
@@ -27,10 +29,11 @@ import org.mozilla.reference.browser.ui.robots.navigationToolbar
 class ComposeTabsTrayTest {
     private lateinit var mockWebServer: MockWebServer
 
+    private val activityTestRule = BrowserActivityTestRule()
+
     @get:Rule
     val rules: RuleChain =
-        RuleChain.outerRule(BooleanPreferenceRule(R.string.pref_key_compose_tabs_tray, true))
-            .around(BrowserActivityTestRule())
+        RuleChain.outerRule(BooleanPreferenceRule(R.string.pref_key_compose_tabs_tray, true)).around(activityTestRule)
 
     @Rule @JvmField val retryTestRule = RetryTestRule(3)
 
@@ -41,6 +44,9 @@ class ComposeTabsTrayTest {
                 dispatcher = AndroidAssetDispatcher()
                 start()
             }
+
+        // Tabs outlive the activity within an instrumentation run, so every test has to start from a clean state.
+        activityTestRule.activity.components.useCases.tabsUseCases.removeAllTabs()
     }
 
     @After
@@ -54,6 +60,8 @@ class ComposeTabsTrayTest {
         navigationToolbar {}
             .openComposeTabsTray {
                 verifyTabsTray()
+                verifyNormalTabsPage()
+                verifyPrivateTabsPage()
                 verifyNoOpenTabs()
             }
             .goBackToBrowser {
@@ -96,6 +104,49 @@ class ComposeTabsTrayTest {
                 verifyTab(page.url.toString())
                 closeTab(page.url.toString())
                 verifyNoTab(page.url.toString())
+                verifyNoOpenTabs()
+            }
+    }
+
+    // Verifies the new tab button opens a tab for the page the user is looking at.
+    @Test
+    fun openNewTabFromComposeTabsTrayTest() {
+        navigationToolbar {}
+            .openComposeTabsTray {}
+            .openNewTab {
+                checkNumberOfTabsTabCounter("1")
+            }
+            .openComposeTabsTray {
+                verifyTab("about:blank")
+                openPrivateTabsPage()
+                verifyNoOpenTabs()
+            }
+            .openNewTab {}
+            .openComposeTabsTray {
+                openPrivateTabsPage()
+                // The private page is served by AppRequestInterceptor, so the tab ends up on a data URL and only its
+                // title is stable enough to match on.
+                verifyTab(appContext.getString(R.string.private_browsing_title))
+                openNormalTabsPage()
+                verifyTab("about:blank")
+            }
+    }
+
+    // Verifies the three dot menu closes every tab of the page the user is looking at.
+    @Test
+    fun closeAllTabsFromComposeTabsTrayTest() {
+        val page = TestAssetHelper.getGenericAsset(mockWebServer, 1)
+
+        navigationToolbar {}
+            .enterUrlAndEnterToBrowser(page.url) {
+                verifyPageContent(page.content)
+            }
+
+        navigationToolbar {}
+            .openComposeTabsTray {
+                verifyTab(page.url.toString())
+            }
+            .closeAllTabs {
                 verifyNoOpenTabs()
             }
     }
