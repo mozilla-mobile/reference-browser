@@ -215,6 +215,7 @@ dependencies {
     implementation libs.androidx.compose.ui.base
     implementation libs.androidx.compose.ui.graphics
     implementation libs.androidx.compose.ui.text
+    implementation libs.androidx.compose.ui.unit
     implementation libs.androidx.compose.ui.tooling
 
     implementation libs.google.material

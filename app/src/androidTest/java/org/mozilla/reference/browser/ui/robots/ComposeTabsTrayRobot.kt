@@ -5,10 +5,14 @@
 package org.mozilla.reference.browser.ui.robots
 
 import androidx.test.uiautomator.By
+import androidx.test.uiautomator.BySelector
+import androidx.test.uiautomator.UiObject2
 import androidx.test.uiautomator.Until
 import org.junit.Assert.assertNotNull
+import org.junit.Assert.assertNull
 import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.helpers.TestAssetHelper.waitingTime
+import org.mozilla.reference.browser.helpers.TestAssetHelper.waitingTimeShort
 import org.mozilla.reference.browser.helpers.TestHelper.appContext
 
 /**
@@ -18,14 +22,36 @@ import org.mozilla.reference.browser.helpers.TestHelper.appContext
  * with UiAutomator instead of Espresso.
  */
 class ComposeTabsTrayRobot {
-    fun verifyTabsTray() = assertNotNull(mDevice.wait(Until.findObject(goBackButton), waitingTime))
+    fun verifyTabsTray() = assertExists(goBackButton)
+
+    fun verifyTab(url: String) = assertExists(By.text(url))
+
+    fun verifyNoTab(url: String) = assertDoesNotExist(By.text(url))
+
+    fun verifyNoOpenTabs() = assertExists(By.text(appContext.getString(R.string.tabs_tray_no_tabs)))
+
+    fun closeTab(url: String) {
+        // The close button is a sibling of the title and URL, so walk up to the row to find the right one.
+        val row = requireNotNull(waitFor(By.text(url))).parent.parent
+        row.findObject(closeTabButton).click()
+    }
 
     class Transition {
         fun goBackToBrowser(interact: NavigationToolbarRobot.() -> Unit): NavigationToolbarRobot.Transition {
-            mDevice.wait(Until.findObject(goBackButton), waitingTime).click()
+            requireNotNull(waitFor(goBackButton)).click()
 
             NavigationToolbarRobot().interact()
             return NavigationToolbarRobot.Transition()
+        }
+
+        fun selectTab(
+            url: String,
+            interact: BrowserRobot.() -> Unit,
+        ): BrowserRobot.Transition {
+            requireNotNull(waitFor(By.text(url))).click()
+
+            BrowserRobot().interact()
+            return BrowserRobot.Transition()
         }
     }
 }
@@ -36,3 +62,12 @@ fun composeTabsTray(interact: ComposeTabsTrayRobot.() -> Unit): ComposeTabsTrayR
 }
 
 private val goBackButton = By.desc(appContext.getString(R.string.tabs_tray_go_back))
+
+private val closeTabButton = By.desc(appContext.getString(R.string.tabs_tray_close_tab))
+
+private fun waitFor(selector: BySelector): UiObject2? = mDevice.wait(Until.findObject(selector), waitingTime)
+
+private fun assertExists(selector: BySelector) = assertNotNull(waitFor(selector))
+
+private fun assertDoesNotExist(selector: BySelector) =
+    assertNull(mDevice.wait(Until.findObject(selector), waitingTimeShort))

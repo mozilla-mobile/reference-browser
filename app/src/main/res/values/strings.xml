@@ -18,6 +18,12 @@
     <!-- Content description for the button in the tabs tray that returns to the browser -->
     <string name="tabs_tray_go_back">Back</string>
 
+    <!-- Content description for the button that closes one tab in the tabs tray -->
+    <string name="tabs_tray_close_tab">Close tab</string>
+
+    <!-- Text shown in the tabs tray when the selected page has no tabs -->
+    <string name="tabs_tray_no_tabs">No open tabs</string>
+
 
 
 

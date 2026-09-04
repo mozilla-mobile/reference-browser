@@ -15,6 +15,7 @@ import org.mozilla.reference.browser.helpers.AndroidAssetDispatcher
 import org.mozilla.reference.browser.helpers.BooleanPreferenceRule
 import org.mozilla.reference.browser.helpers.BrowserActivityTestRule
 import org.mozilla.reference.browser.helpers.RetryTestRule
+import org.mozilla.reference.browser.helpers.TestAssetHelper
 import org.mozilla.reference.browser.ui.robots.navigationToolbar
 
 /**
@@ -53,9 +54,48 @@ class ComposeTabsTrayTest {
         navigationToolbar {}
             .openComposeTabsTray {
                 verifyTabsTray()
+                verifyNoOpenTabs()
             }
             .goBackToBrowser {
                 verifyNoTabAddressView()
+            }
+    }
+
+    // Verifies an open tab is listed by URL and can be selected again from the tray.
+    @Test
+    fun selectTabFromComposeTabsTrayTest() {
+        val page = TestAssetHelper.getGenericAsset(mockWebServer, 1)
+
+        navigationToolbar {}
+            .enterUrlAndEnterToBrowser(page.url) {
+                verifyPageContent(page.content)
+            }
+
+        navigationToolbar {}
+            .openComposeTabsTray {
+                verifyTab(page.url.toString())
+            }
+            .selectTab(page.url.toString()) {
+                verifyPageContent(page.content)
+            }
+    }
+
+    // Verifies the close button of a tab removes only that tab.
+    @Test
+    fun closeTabFromComposeTabsTrayTest() {
+        val page = TestAssetHelper.getGenericAsset(mockWebServer, 1)
+
+        navigationToolbar {}
+            .enterUrlAndEnterToBrowser(page.url) {
+                verifyPageContent(page.content)
+            }
+
+        navigationToolbar {}
+            .openComposeTabsTray {
+                verifyTab(page.url.toString())
+                closeTab(page.url.toString())
+                verifyNoTab(page.url.toString())
+                verifyNoOpenTabs()
             }
     }
 }
