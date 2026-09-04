@@ -111,8 +111,6 @@ class BrowserFragment : BaseBrowserFragment(), UserInteractionHandler {
                 tabsUseCases = requireComponents.useCases.tabsUseCases,
             ),
         )
-
-        engineView.setDynamicToolbarMaxHeight(resources.getDimensionPixelSize(R.dimen.browser_toolbar_height))
     }
 
     private fun setupAwesomeBar() {
