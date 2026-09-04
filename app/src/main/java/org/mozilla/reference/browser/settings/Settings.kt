@@ -17,6 +17,14 @@ object Settings {
                 true,
             )
 
+    /** Whether the experimental Jetpack Compose tabs tray should be used instead of the View based one. */
+    fun isComposeTabsTrayEnabled(context: Context): Boolean =
+        PreferenceManager.getDefaultSharedPreferences(context)
+            .getBoolean(
+                context.getString(R.string.pref_key_compose_tabs_tray),
+                false,
+            )
+
     fun getOverrideAmoUser(context: Context): String =
         PreferenceManager.getDefaultSharedPreferences(context)
             .getString(

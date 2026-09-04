@@ -69,6 +69,12 @@ class NavigationToolbarRobot {
             return TabTrayMenuRobot.Transition()
         }
 
+        fun openComposeTabsTray(interact: ComposeTabsTrayRobot.() -> Unit): ComposeTabsTrayRobot.Transition {
+            openTabTray().click()
+            ComposeTabsTrayRobot().interact()
+            return ComposeTabsTrayRobot.Transition()
+        }
+
         fun clickToolbar(interact: AwesomeBarRobot.() -> Unit): AwesomeBarRobot.Transition {
             urlBar().click()
             mDevice.waitForIdle()

@@ -43,6 +43,11 @@
         android:defaultValue="false"
         android:title="@string/preferences_compose_ui"/>
 
+    <androidx.preference.SwitchPreferenceCompat
+        android:key="@string/pref_key_compose_tabs_tray"
+        android:defaultValue="false"
+        android:title="@string/preferences_compose_tabs_tray"/>
+
     <PreferenceCategory
         android:title="@string/developer_tools_category">
 

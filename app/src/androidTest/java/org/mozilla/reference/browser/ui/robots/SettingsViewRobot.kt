@@ -58,6 +58,8 @@ class SettingsViewRobot {
 
     fun verifyJetpackComposeButton() = assertJetpackComposeButton()
 
+    fun verifyJetpackComposeTabsTrayButton() = assertJetpackComposeTabsTrayButton()
+
     fun verifyDeveloperToolsHeading() = assertDeveloperToolsHeading()
 
     fun verifyRemoteDebugging() = assertRemoteDebugging()
@@ -182,6 +184,8 @@ private fun autofillAppsButton() = onView(withText("Autofill apps"))
 
 private fun jetpackComposeButton() = onView(withText("Use experimental Jetpack Compose UI"))
 
+private fun jetpackComposeTabsTrayButton() = onView(withText("Use experimental Jetpack Compose tabs tray"))
+
 private fun autofillAppsSummary() = onView(withText("Autofill logins and passwords in other apps"))
 
 private fun developerToolsHeading() = Espresso.onView(withText(R.string.developer_tools_category))
@@ -235,6 +239,9 @@ private fun assertAutofillAppsSummary() =
 
 private fun assertJetpackComposeButton() =
     jetpackComposeButton().check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+
+private fun assertJetpackComposeTabsTrayButton() =
+    jetpackComposeTabsTrayButton().check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
 
 private fun assertDeveloperToolsHeading() =
     developerToolsHeading().check(matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))

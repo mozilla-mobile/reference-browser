@@ -15,6 +15,15 @@
     <string name="menu_action_close_tabs">Close All Tabs</string>
     <string name="menu_action_close_tabs_private">Close Private Tabs</string>
 
+    <!-- Content description for the button in the tabs tray that returns to the browser -->
+    <string name="tabs_tray_go_back">Back</string>
+
+
+
+
+
+
+
     <!-- Preference summary for settings related sign in -->
     <string name="preferences_sign_in_summary">Sync your tabs and history</string>
 
@@ -28,6 +37,8 @@
     <string name="preferences_make_default_browser">Make default browser</string>
 
     <string name="preferences_compose_ui">Use experimental Jetpack Compose UI</string>
+
+    <string name="preferences_compose_tabs_tray">Use experimental Jetpack Compose tabs tray</string>
 
     <string name="preferences_autofill">Autofill apps</string>
     <string name="preferences_autofill_summary">Autofill logins and passwords in other apps</string>

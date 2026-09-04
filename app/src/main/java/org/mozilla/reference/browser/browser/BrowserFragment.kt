@@ -28,7 +28,9 @@ import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.ext.components
 import org.mozilla.reference.browser.ext.requireComponents
 import org.mozilla.reference.browser.search.AwesomeBarWrapper
+import org.mozilla.reference.browser.settings.Settings
 import org.mozilla.reference.browser.tabs.TabsTrayFragment
+import org.mozilla.reference.browser.tabs.compose.ComposeTabsTrayFragment
 
 /** Fragment used for browsing the web within the main app. */
 class BrowserFragment : BaseBrowserFragment(), UserInteractionHandler {
@@ -159,10 +161,17 @@ class BrowserFragment : BaseBrowserFragment(), UserInteractionHandler {
     }
 
     private fun showTabs() {
+        val tabsTray =
+            if (Settings.isComposeTabsTrayEnabled(requireContext())) {
+                ComposeTabsTrayFragment()
+            } else {
+                TabsTrayFragment()
+            }
+
         // For now we are performing manual fragment transactions here. Once we can use the new
         // navigation support library we may want to pass navigation graphs around.
         activity?.supportFragmentManager?.beginTransaction()?.apply {
-            replace(R.id.container, TabsTrayFragment())
+            replace(R.id.container, tabsTray)
             commit()
         }
     }

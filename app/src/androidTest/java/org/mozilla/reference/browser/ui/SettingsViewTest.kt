@@ -48,6 +48,7 @@ class SettingsViewTest {
                 verifyAutofillAppsButton()
                 varifyAutofillAppsSummary()
                 verifyJetpackComposeButton()
+                verifyJetpackComposeTabsTrayButton()
                 verifyDeveloperToolsHeading()
                 verifyRemoteDebugging()
                 verifyCustomAddonCollectionButton()
