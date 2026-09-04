@@ -21,6 +21,9 @@
     <!-- Content description for the button that closes one tab in the tabs tray -->
     <string name="tabs_tray_close_tab">Close tab</string>
 
+    <!-- Content description for the thumbnail of the content of a tab in the tabs tray -->
+    <string name="tabs_tray_thumbnail">Tab preview</string>
+
     <!-- Text shown in the tabs tray when the selected page has no tabs -->
     <string name="tabs_tray_no_tabs">No open tabs</string>
 

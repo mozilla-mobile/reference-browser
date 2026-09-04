@@ -7,6 +7,7 @@ package org.mozilla.reference.browser.compose
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 import mozilla.components.browser.state.store.BrowserStore
+import mozilla.components.browser.thumbnails.storage.ThumbnailStorage
 import mozilla.components.feature.session.SessionUseCases
 import mozilla.components.feature.tabs.TabsUseCases
 import org.mozilla.reference.browser.ext.components
@@ -18,3 +19,6 @@ import org.mozilla.reference.browser.ext.components
 
 /** Composable helper for providing the [TabsUseCases] instance of this application. */
 @Composable fun tabsUseCases(): TabsUseCases = LocalContext.current.components.useCases.tabsUseCases
+
+/** Composable helper for providing the [ThumbnailStorage] instance of this application. */
+@Composable fun thumbnailStorage(): ThumbnailStorage = LocalContext.current.components.core.thumbnailStorage

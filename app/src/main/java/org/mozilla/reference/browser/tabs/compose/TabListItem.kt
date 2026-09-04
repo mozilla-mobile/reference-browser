@@ -29,7 +29,7 @@ import mozilla.components.compose.base.theme.AcornTheme
 import mozilla.components.ui.icons.R as iconsR
 import org.mozilla.reference.browser.R
 
-internal val TabListItemHeight: Dp = 84.dp
+internal val TabListItemHeight: Dp = ThumbnailHeight + 16.dp
 
 /**
  * A single tab in the tabs tray, showing the title and URL of the tab.
@@ -63,6 +63,8 @@ internal fun TabListItem(
         horizontalArrangement = Arrangement.spacedBy(AcornTheme.layout.space.static100),
         verticalAlignment = Alignment.CenterVertically,
     ) {
+        TabThumbnail(tabId = tab.id, isPrivate = tab.content.private)
+
         Column(modifier = Modifier.weight(1f)) {
             Text(
                 text = tab.content.title.ifEmpty { tab.content.url },

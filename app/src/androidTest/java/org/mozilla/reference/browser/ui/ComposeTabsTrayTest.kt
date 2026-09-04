@@ -74,6 +74,7 @@ class ComposeTabsTrayTest {
         navigationToolbar {}
             .openComposeTabsTray {
                 verifyTab(page.url.toString())
+                verifyTabThumbnail()
             }
             .selectTab(page.url.toString()) {
                 verifyPageContent(page.content)

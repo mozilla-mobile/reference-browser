@@ -30,6 +30,8 @@ class ComposeTabsTrayRobot {
 
     fun verifyNoOpenTabs() = assertExists(By.text(appContext.getString(R.string.tabs_tray_no_tabs)))
 
+    fun verifyTabThumbnail() = assertExists(By.desc(appContext.getString(R.string.tabs_tray_thumbnail)))
+
     fun closeTab(url: String) {
         // The close button is a sibling of the title and URL, so walk up to the row to find the right one.
         val row = requireNotNull(waitFor(By.text(url))).parent.parent
