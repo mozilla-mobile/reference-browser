@@ -58,8 +58,6 @@ import org.mozilla.reference.browser.ext.requireComponents
 import org.mozilla.reference.browser.pip.PictureInPictureIntegration
 import org.mozilla.reference.browser.tabs.LastTabFeature
 
-private const val BOTTOM_TOOLBAR_HEIGHT = 0
-
 /**
  * Base fragment extended by [BrowserFragment] and [ExternalAppBrowserFragment]. This class only contains shared code
  * focused on the main browsing content. UI code specific to the app or to custom tabs can be found in the subclasses.
@@ -391,14 +389,20 @@ abstract class BaseBrowserFragment : Fragment(), UserInteractionHandler, Activit
             view = view,
         )
 
+        // The toolbar is at the bottom of the screen, so its height belongs in
+        // `bottomToolbarHeight`. Read it from the dimension resource: `toolbar.height` is still 0
+        // here because the first layout pass has not run yet. Gecko must also know the same total
+        // height, or it reserves space that the clipping updates never release.
+        val bottomToolbarHeight = resources.getDimensionPixelSize(R.dimen.browser_toolbar_height)
+        engineView.setDynamicToolbarMaxHeight(bottomToolbarHeight)
         (swipeRefresh.layoutParams as? CoordinatorLayout.LayoutParams)?.apply {
             behavior =
                 EngineViewClippingBehavior(
                     context = requireContext(),
                     attrs = null,
                     engineViewParent = swipeRefresh,
-                    topToolbarHeight = toolbar.height,
-                    bottomToolbarHeight = BOTTOM_TOOLBAR_HEIGHT,
+                    topToolbarHeight = 0,
+                    bottomToolbarHeight = bottomToolbarHeight,
                 )
         }
         swipeRefreshFeature.set(
