@@ -69,7 +69,13 @@ class ContextMenusTest {
             .enterUrlAndEnterToBrowser(pageLinks.url) {
                 longClickMatchingText("Link 1")
                 clickContextOpenLinkInNewTab()
+                verifySnackbarIsAnchoredAboveToolbar()
+                focusToolbarWithSnackbarShown()
+                verifySnackbarIsAnchoredAboveToolbar()
+                dismissKeyboardWithSnackbarShown()
+                verifySnackbarIsAnchoredAboveToolbar()
                 clickSnackbarSwitchButton()
+                verifyUrl(genericURL.url.toString())
             }
         navigationToolbar {}
             .openTabTrayMenu {
