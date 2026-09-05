@@ -9,7 +9,6 @@ import android.view.View
 import androidx.lifecycle.lifecycleScope
 import androidx.preference.PreferenceManager
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import mozilla.components.browser.thumbnails.BrowserThumbnails
@@ -168,7 +167,6 @@ class BrowserFragment : BaseBrowserFragment(), UserInteractionHandler {
         }
     }
 
-    @OptIn(DelicateCoroutinesApi::class)
     private fun deleteHistorySuggestion(suggestion: Suggestion) {
         lifecycleScope.launch(Dispatchers.IO) {
             suggestion.description?.let {
