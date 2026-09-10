@@ -46,6 +46,7 @@ class BackgroundServices(
     placesHistoryStorage: Lazy<PlacesHistoryStorage>,
     remoteTabsStorage: Lazy<RemoteTabsStorage>,
     loginsStorage: Lazy<SyncableLoginsStorage>,
+    applicationScope: CoroutineScope,
 ) {
     companion object {
         const val CLIENT_ID = "3c49430b43dfba77"
@@ -91,7 +92,7 @@ class BackgroundServices(
                     NotificationManager.showReceivedTabs(context, device, tabs)
                 }
 
-                push.feature?.let { push -> FxaPushSupportFeature(context, accountManager, push) }
+                push.feature?.let { push -> FxaPushSupportFeature(context, accountManager, push, applicationScope) }
 
                 SyncedTabsIntegration(context, accountManager).launch()
 

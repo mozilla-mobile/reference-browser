@@ -9,6 +9,7 @@ import android.content.SharedPreferences
 import android.os.Environment
 import androidx.preference.PreferenceManager
 import java.util.concurrent.TimeUnit
+import kotlinx.coroutines.CoroutineScope
 import mozilla.components.browser.engine.gecko.permission.GeckoSitePermissionsStorage
 import mozilla.components.browser.icons.BrowserIcons
 import mozilla.components.browser.session.storage.SessionStorage
@@ -65,6 +66,7 @@ private const val DAY_IN_MINUTES = 24 * 60L
 class Core(
     private val context: Context,
     crashReporter: CrashReporter,
+    private val applicationScope: CoroutineScope,
 ) {
     /** The browser engine component initialized based on the build configuration (see build variants). */
     val engine: Engine by lazy {
@@ -114,6 +116,7 @@ class Core(
                         RegionMiddleware(
                             context,
                             LocationService.default(),
+                            applicationScope = applicationScope,
                         ),
                         SearchMiddleware(context),
                         RecordingDevicesMiddleware(context, context.components.notificationsDelegate),
@@ -141,7 +144,7 @@ class Core(
 
     /** The storage component for persisting browser tab sessions. */
     val sessionStorage: SessionStorage by lazy {
-        SessionStorage(context, engine)
+        SessionStorage(context, engine, applicationScope = applicationScope)
     }
 
     /** The storage component to persist browsing history (with the exception of private sessions). */
@@ -203,7 +206,7 @@ class Core(
     }
 
     val fileUploadsDirCleaner: FileUploadsDirCleaner by lazy {
-        FileUploadsDirCleaner { context.cacheDir }
+        FileUploadsDirCleaner(scope = applicationScope) { context.cacheDir }
     }
 
     private fun provideDefaultAddonProvider(): AMOAddonsProvider =
