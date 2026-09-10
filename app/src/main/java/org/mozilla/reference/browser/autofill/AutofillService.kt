@@ -10,4 +10,5 @@ import org.mozilla.reference.browser.ext.components
 
 class AutofillService : AbstractAutofillService() {
     override val configuration: AutofillConfiguration by lazy { components.autofillConfiguration }
+    override val applicationScope by lazy { components.applicationScope }
 }
