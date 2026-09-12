@@ -230,6 +230,7 @@ abstract class BaseBrowserFragment : Fragment(), UserInteractionHandler, Activit
                     requireComponents.useCases.contextMenuUseCases,
                     engineView,
                     view,
+                    toolbar,
                     sessionId,
                 ),
             owner = this,
