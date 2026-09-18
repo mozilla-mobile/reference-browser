@@ -31,11 +31,14 @@ class ContextMenuIntegration(
     contextMenuUseCases: ContextMenuUseCases,
     engineView: EngineView,
     parentView: View,
+    toolbar: View,
     sessionId: String? = null,
 ) : LifecycleAwareFeature {
     private val candidates = run {
         if (sessionId != null) {
-            val snackbarDelegate = DefaultSnackbarDelegate()
+            val snackbarDelegate = DefaultSnackbarDelegate { snackbar ->
+                snackbar.anchorView = toolbar
+            }
             listOf(
                 createCopyLinkCandidate(context, parentView, snackbarDelegate),
                 createShareLinkCandidate(context),
