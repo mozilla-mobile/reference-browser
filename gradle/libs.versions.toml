@@ -49,7 +49,7 @@ hamcrest = "1.3"
 jacoco = "0.8.15"
 junit = "4.13.2"
 okhttp = "5.5.0"
-okio = "3.18.1"
+okio = "3.18.2"
 
 [libraries]
 # Kotlin
