@@ -14,7 +14,7 @@ material = "1.14.0"
 
 # AndroidX
 androidx-activity = "1.13.0"
-androidx-annotation = "1.10.0"
+androidx-annotation = "1.11.0"
 androidx-appcompat = "1.8.0"
 androidx-browser = "1.10.0"
 androidx-cardview = "1.0.0"
