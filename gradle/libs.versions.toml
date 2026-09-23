@@ -12,9 +12,6 @@ kotlinx-coroutines = "1.11.0"
 # Google
 material = "1.14.0"
 
-# JNA
-jna = "5.18.1"
-
 # AndroidX
 androidx-activity = "1.13.0"
 androidx-annotation = "1.10.0"
@@ -61,9 +58,6 @@ kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-cor
 
 # Google
 google-material = { group = "com.google.android.material", name = "material", version.ref = "material" }
-
-# JNA
-jna = { group = "net.java.dev.jna", name = "jna", version.ref = "jna" }
 
 # AndroidX
 androidx-activity = { group = "androidx.activity", name = "activity", version.ref = "androidx-activity" }
