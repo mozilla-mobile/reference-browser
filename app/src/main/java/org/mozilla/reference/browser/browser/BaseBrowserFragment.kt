@@ -174,13 +174,65 @@ abstract class BaseBrowserFragment : Fragment(), UserInteractionHandler, Activit
     abstract val shouldUseComposeUI: Boolean
 
     @CallSuper
-    @Suppress("LongMethod")
     override fun onViewCreated(
         view: View,
         savedInstanceState: Bundle?,
     ) {
-        val prefs = PreferenceManager.getDefaultSharedPreferences(requireContext())
+        setupSessionAndToolbar(view)
+        setupDownloads(view)
+        setupLinksAndPrompts(view)
+        setupPageFeatures(view)
+        setupSwipeRefresh(view)
 
+        lastTabFeature.set(
+            feature =
+                LastTabFeature(
+                    requireComponents.core.store,
+                    sessionId,
+                    requireComponents.useCases.tabsUseCases.removeTab,
+                    requireActivity(),
+                ),
+            owner = this,
+            view = view,
+        )
+
+        screenOrientationFeature.set(
+            feature =
+                ScreenOrientationFeature(
+                    requireComponents.core.engine,
+                    requireActivity(),
+                ),
+            owner = this,
+            view = view,
+        )
+
+        if (BuildConfig.MOZILLA_OFFICIAL) {
+            webAuthnFeature.set(
+                feature =
+                    WebAuthnFeature(
+                        requireComponents.core.engine,
+                        requireActivity(),
+                        requireComponents.useCases.sessionUseCases.exitFullscreen::invoke,
+                    ) {
+                        requireComponents.core.store.state.selectedTabId
+                    },
+                owner = this,
+                view = view,
+            )
+        }
+
+        val composeView = view.findViewById<ComposeView>(R.id.compose_view)
+        if (shouldUseComposeUI) {
+            composeView.visibility = View.VISIBLE
+            composeView.setContent { BrowserToolbar() }
+
+            val params = swipeRefresh.layoutParams as CoordinatorLayout.LayoutParams
+            params.topMargin = resources.getDimensionPixelSize(R.dimen.browser_toolbar_height)
+            swipeRefresh.layoutParams = params
+        }
+    }
+
+    private fun setupSessionAndToolbar(view: View) {
         sessionFeature.set(
             feature =
                 SessionFeature(
@@ -235,6 +287,9 @@ abstract class BaseBrowserFragment : Fragment(), UserInteractionHandler, Activit
             owner = this,
             view = view,
         )
+    }
+
+    private fun setupDownloads(view: View) {
         shareResourceFeature.set(
             ShareResourceFeature(
                 context = requireContext().applicationContext,
@@ -274,6 +329,10 @@ abstract class BaseBrowserFragment : Fragment(), UserInteractionHandler, Activit
             owner = this,
             view = view,
         )
+    }
+
+    private fun setupLinksAndPrompts(view: View) {
+        val prefs = PreferenceManager.getDefaultSharedPreferences(requireContext())
 
         appLinksFeature.set(
             feature =
@@ -326,7 +385,9 @@ abstract class BaseBrowserFragment : Fragment(), UserInteractionHandler, Activit
             owner = this,
             view = view,
         )
+    }
 
+    private fun setupPageFeatures(view: View) {
         fullScreenFeature.set(
             feature =
                 FullScreenFeature(
@@ -390,7 +451,9 @@ abstract class BaseBrowserFragment : Fragment(), UserInteractionHandler, Activit
             owner = this,
             view = view,
         )
+    }
 
+    private fun setupSwipeRefresh(view: View) {
         (swipeRefresh.layoutParams as? CoordinatorLayout.LayoutParams)?.apply {
             behavior =
                 EngineViewClippingBehavior(
@@ -411,53 +474,6 @@ abstract class BaseBrowserFragment : Fragment(), UserInteractionHandler, Activit
             owner = this,
             view = view,
         )
-
-        lastTabFeature.set(
-            feature =
-                LastTabFeature(
-                    requireComponents.core.store,
-                    sessionId,
-                    requireComponents.useCases.tabsUseCases.removeTab,
-                    requireActivity(),
-                ),
-            owner = this,
-            view = view,
-        )
-
-        screenOrientationFeature.set(
-            feature =
-                ScreenOrientationFeature(
-                    requireComponents.core.engine,
-                    requireActivity(),
-                ),
-            owner = this,
-            view = view,
-        )
-
-        if (BuildConfig.MOZILLA_OFFICIAL) {
-            webAuthnFeature.set(
-                feature =
-                    WebAuthnFeature(
-                        requireComponents.core.engine,
-                        requireActivity(),
-                        requireComponents.useCases.sessionUseCases.exitFullscreen::invoke,
-                    ) {
-                        requireComponents.core.store.state.selectedTabId
-                    },
-                owner = this,
-                view = view,
-            )
-        }
-
-        val composeView = view.findViewById<ComposeView>(R.id.compose_view)
-        if (shouldUseComposeUI) {
-            composeView.visibility = View.VISIBLE
-            composeView.setContent { BrowserToolbar() }
-
-            val params = swipeRefresh.layoutParams as CoordinatorLayout.LayoutParams
-            params.topMargin = resources.getDimensionPixelSize(R.dimen.browser_toolbar_height)
-            swipeRefresh.layoutParams = params
-        }
     }
 
     private fun fullScreenChanged(enabled: Boolean) {
