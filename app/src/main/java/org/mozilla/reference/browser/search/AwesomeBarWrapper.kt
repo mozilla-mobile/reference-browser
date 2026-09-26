@@ -18,6 +18,10 @@ import mozilla.components.concept.awesomebar.AwesomeBar.GroupedSuggestion
 import mozilla.components.support.ktx.android.view.hideKeyboard
 import org.mozilla.reference.browser.ext.components
 
+private val backgroundColor = Color(0xff222222)
+private val titleColor = Color(0xffffffff)
+private val descriptionColor = Color(0xffdddddd)
+
 /**
  * This wrapper wraps the `AwesomeBar()` composable and exposes it as a `View` and `concept-awesomebar` implementation
  * to be integrated as a `View` until more parts of the app have been refactored to use Jetpack Compose.
@@ -37,7 +41,6 @@ constructor(
     private var onSuggestionRemovedListener: ((GroupedSuggestion) -> Unit)? = null
 
     @Composable
-    @Suppress("MagicNumber")
     override fun Content() {
         if (providers.value.isEmpty()) {
             return
@@ -50,10 +53,10 @@ constructor(
             orientation = AwesomeBarOrientation.BOTTOM,
             colors =
                 AwesomeBarDefaults.colors(
-                    background = Color(0xff222222),
-                    title = Color(0xffffffff),
-                    description = Color(0xffdddddd),
-                    autocompleteIcon = Color(0xffdddddd),
+                    background = backgroundColor,
+                    title = titleColor,
+                    description = descriptionColor,
+                    autocompleteIcon = descriptionColor,
                 ),
             onSuggestionClicked = { suggestion ->
                 suggestion.onSuggestionClicked?.invoke()
