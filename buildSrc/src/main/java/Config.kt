@@ -20,18 +20,11 @@ object Config {
      * Appends the year and week of year (two digits each), so ancient builds are easy to spot when debugging while the
      * version stays the same all week and tools like Sentry do not fill up with versions.
      */
-    @JvmStatic
-    fun generateDebugVersionName(): String {
-        val today = Date()
-        return SimpleDateFormat("1.0.yyww", Locale.US).format(today)
-    }
+    @JvmStatic fun generateDebugVersionName(): String = SimpleDateFormat("1.0.yyww", Locale.US).format(Date())
 
     /**
      * Nightly tasks pass `-PversionName`. This runs at configuration time, before Gradle knows which variant is being
      * built, so it returns an empty string instead of failing when the property is absent.
      */
-    @JvmStatic
-    fun releaseVersionName(project: Project): String {
-        return if (project.hasProperty("versionName")) project.property("versionName") as String else ""
-    }
+    @JvmStatic fun releaseVersionName(project: Project): String = project.findProperty("versionName") as String? ?: ""
 }
