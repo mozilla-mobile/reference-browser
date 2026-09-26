@@ -12,10 +12,12 @@ import mozilla.components.concept.sync.OAuthAccount
 import mozilla.components.service.fxa.manager.FxaAccountManager
 import org.mozilla.reference.browser.ext.components
 
+/** Starts synced tabs storage when a Firefox account signs in and stops it when the account signs out. */
 class SyncedTabsIntegration(
     private val context: Context,
     private val accountManager: FxaAccountManager,
 ) {
+    /** The observer is bound to the process lifecycle and paused while the app is in the background. */
     fun launch() {
         val accountObserver = SyncedTabsAccountObserver(context)
 

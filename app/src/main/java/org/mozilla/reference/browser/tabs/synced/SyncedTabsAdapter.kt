@@ -13,6 +13,7 @@ import mozilla.components.concept.sync.Device as SyncDevice
 import org.mozilla.reference.browser.tabs.synced.SyncedTabsViewHolder.DeviceViewHolder
 import org.mozilla.reference.browser.tabs.synced.SyncedTabsViewHolder.TabViewHolder
 
+/** Lists the tabs of the user's other synced devices, each device's tabs under a header naming it. */
 class SyncedTabsAdapter(private val listener: (SyncTab) -> Unit) :
     ListAdapter<SyncedTabsAdapter.AdapterItem, SyncedTabsViewHolder>(DiffCallback) {
     override fun onCreateViewHolder(
@@ -60,9 +61,12 @@ class SyncedTabsAdapter(private val listener: (SyncTab) -> Unit) :
         ) = oldItem == newItem
     }
 
+    /** A row of the synced tabs list: either a device header or one of that device's tabs. */
     sealed class AdapterItem {
+        /** Header row naming the device whose tabs follow. */
         data class Device(val device: SyncDevice) : AdapterItem()
 
+        /** A tab open on a synced device. */
         data class Tab(val tab: SyncTab) : AdapterItem()
     }
 }

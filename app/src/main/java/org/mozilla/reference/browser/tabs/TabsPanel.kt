@@ -19,6 +19,7 @@ import mozilla.components.feature.tabs.tabstray.TabsFeature
 import mozilla.components.ui.colors.R as colorsR
 import mozilla.components.ui.icons.R as iconsR
 
+/** Tab strip at the top of the tabs tray that switches it between normal and private tabs. */
 class TabsPanel
 @JvmOverloads
 constructor(
@@ -49,6 +50,10 @@ constructor(
         addTab(privateTab)
     }
 
+    /**
+     * Supplies the collaborators after inflation, since this view is created from XML and the [TabsFeature] only exists
+     * once the tabs tray fragment has built it.
+     */
     fun initialize(
         tabsFeature: TabsFeature?,
         updateTabsToolbar: (isPrivate: Boolean) -> Unit,

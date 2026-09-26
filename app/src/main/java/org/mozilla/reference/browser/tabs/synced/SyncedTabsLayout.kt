@@ -21,6 +21,7 @@ import mozilla.components.feature.syncedtabs.view.SyncedTabsView.ErrorType.SYNC_
 import mozilla.components.feature.syncedtabs.view.SyncedTabsView.ErrorType.SYNC_UNAVAILABLE
 import org.mozilla.reference.browser.R
 
+/** The [SyncedTabsView] that renders synced tabs, a status message for errors, and pull to refresh. */
 class SyncedTabsLayout
 @JvmOverloads
 constructor(

@@ -8,6 +8,7 @@ import android.content.Context
 import androidx.annotation.RawRes
 import org.mozilla.reference.browser.R
 
+/** Builds the about:privatebrowsing page, which the app serves itself instead of loading it from the engine. */
 object PrivatePage {
     /** Load and generate a private browsing page for the given url and html/css resources */
     fun createPrivateBrowsingPage(
