@@ -13,6 +13,7 @@ import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.ext.getPreferenceKey
 import org.mozilla.reference.browser.ext.requireComponents
 
+/** Privacy settings. Changes are applied to the engine as soon as they are made. */
 class PrivacySettingsFragment : PreferenceFragmentCompat() {
     override fun onCreatePreferences(
         savedInstanceState: Bundle?,

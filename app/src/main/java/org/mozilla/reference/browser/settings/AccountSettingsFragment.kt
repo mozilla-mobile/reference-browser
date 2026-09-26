@@ -35,6 +35,7 @@ import org.mozilla.reference.browser.ext.getPreferenceKey
 import org.mozilla.reference.browser.ext.requireComponents
 import org.mozilla.reference.browser.sync.BrowserFxAEntryPoint
 
+/** Firefox Account settings for a signed-in user: sync now, choice of synced engines, manage account and sign out. */
 class AccountSettingsFragment : PreferenceFragmentCompat() {
     private val syncStatusObserver =
         object : SyncStatusObserver {
@@ -114,6 +115,10 @@ class AccountSettingsFragment : PreferenceFragmentCompat() {
         )
     }
 
+    /**
+     * The summary depends on both the last sync time and [failed], so that a failed sync still tells the user when the
+     * last successful one was, and a first failure is not reported as "never synced".
+     */
     fun updateLastSyncedTimePref(
         context: Context,
         pref: Preference?,
