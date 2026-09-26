@@ -172,7 +172,6 @@ dependencyAnalysis {
 detekt {
     source.setFrom(files("$projectDir/app", "$projectDir/buildSrc"))
     config.setFrom("$projectDir/config/detekt.yml")
-    baseline = file("$projectDir/config/detekt-baseline.xml")
 }
 
 tasks.withType(Detekt).configureEach {
