@@ -39,8 +39,11 @@ import org.mozilla.reference.browser.sync.BrowserFxAEntryPoint
 
 private typealias RBSettings = org.mozilla.reference.browser.settings.Settings
 
+/** Top-level settings page. */
 class SettingsFragment : PreferenceFragmentCompat() {
+    /** Implemented by the hosting activity, which owns the action bar. */
     interface ActionBarUpdater {
+        /** Called on navigation because the fragments are swapped in one container and the title does not follow. */
         fun updateTitle(titleResId: Int)
     }
 

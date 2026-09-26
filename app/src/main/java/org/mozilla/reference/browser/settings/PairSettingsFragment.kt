@@ -22,6 +22,7 @@ import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.ext.requireComponents
 import org.mozilla.reference.browser.sync.BrowserFxAEntryPoint
 
+/** Scans a Firefox Account pairing QR code to sign in on this device. */
 class PairSettingsFragment : Fragment(), UserInteractionHandler {
     private val qrFeature = ViewBoundFeatureWrapper<QrFeature>()
     private lateinit var requestPermissionLauncher: ActivityResultLauncher<String>
