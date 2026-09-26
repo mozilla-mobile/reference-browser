@@ -11,12 +11,18 @@ import mozilla.components.browser.storage.sync.Tab
 import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.tabs.synced.SyncedTabsAdapter.AdapterItem
 
+/** View holders for the two row types of [SyncedTabsAdapter]. */
 sealed class SyncedTabsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    /**
+     * Takes the base item type so the adapter can bind without knowing the holder's type; each holder casts to the item
+     * type its view type was created for. [interactor] is only used by tab rows, device headers are not clickable.
+     */
     abstract fun <T : AdapterItem> bind(
         item: T,
         interactor: (Tab) -> Unit,
     )
 
+    /** Row for one synced tab, opening it when tapped. */
     class TabViewHolder(itemView: View) : SyncedTabsViewHolder(itemView) {
         // See TODO below
         // private val image = itemView.findViewById<ImageView>(R.id.synced_tabs_item_image)
@@ -48,6 +54,7 @@ sealed class SyncedTabsViewHolder(itemView: View) : RecyclerView.ViewHolder(item
         }
     }
 
+    /** Header row with the name of the device whose tabs follow. */
     class DeviceViewHolder(itemView: View) : SyncedTabsViewHolder(itemView) {
         private val title = itemView.findViewById<TextView>(R.id.synced_tabs_group_name)
 

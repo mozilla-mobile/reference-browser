@@ -17,6 +17,7 @@ import mozilla.components.support.base.feature.ViewBoundFeatureWrapper
 import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.ext.components
 
+/** Shows the tabs open on the user's other synced devices and sends a tapped one to an ACTION_VIEW intent. */
 class SyncedTabsFragment : Fragment() {
     private val syncedTabsFeature = ViewBoundFeatureWrapper<SyncedTabsFeature>()
 
