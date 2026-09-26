@@ -49,48 +49,42 @@ class ExternalAppBrowserFragment : BaseBrowserFragment(), UserInteractionHandler
         val manifest = this.manifest
         val sessionId = this.sessionId
 
-        customTabsIntegration.set(
-            feature =
-                CustomTabsIntegration(
-                    requireContext(),
-                    requireComponents.core.store,
-                    toolbar,
-                    engineView,
-                    requireComponents.useCases.sessionUseCases,
-                    requireComponents.useCases.customTabsUseCases,
-                    sessionId!!,
-                    activity,
-                ),
-            owner = this,
-            view = view,
+        customTabsIntegration.bind(
+            view,
+            CustomTabsIntegration(
+                requireContext(),
+                requireComponents.core.store,
+                toolbar,
+                engineView,
+                requireComponents.useCases.sessionUseCases,
+                requireComponents.useCases.customTabsUseCases,
+                sessionId!!,
+                activity,
+            ),
         )
 
-        windowFeature.set(
-            feature =
-                CustomTabWindowFeature(
-                    requireActivity(),
-                    requireComponents.core.store,
-                    sessionId,
-                ),
-            owner = this,
-            view = view,
+        windowFeature.bind(
+            view,
+            CustomTabWindowFeature(
+                requireActivity(),
+                requireComponents.core.store,
+                sessionId,
+            ),
         )
 
-        hideToolbarFeature.set(
-            feature =
-                WebAppHideToolbarFeature(
-                    requireComponents.core.store,
-                    requireComponents.core.customTabsStore,
-                    sessionId,
-                    manifest,
-                    scope = viewLifecycleOwner.lifecycleScope,
-                ) { toolbarVisible ->
-                    toolbar.isVisible = toolbarVisible
-                    webAppToolbarShouldBeVisible = toolbarVisible
-                    if (!toolbarVisible) engineView.setDynamicToolbarMaxHeight(0)
-                },
-            owner = this,
-            view = toolbar,
+        hideToolbarFeature.bind(
+            toolbar,
+            WebAppHideToolbarFeature(
+                requireComponents.core.store,
+                requireComponents.core.customTabsStore,
+                sessionId,
+                manifest,
+                scope = viewLifecycleOwner.lifecycleScope,
+            ) { toolbarVisible ->
+                toolbar.isVisible = toolbarVisible
+                webAppToolbarShouldBeVisible = toolbarVisible
+                if (!toolbarVisible) engineView.setDynamicToolbarMaxHeight(0)
+            },
         )
 
         if (manifest != null) {

@@ -75,49 +75,41 @@ class BrowserFragment : BaseBrowserFragment(), UserInteractionHandler {
             lifecycleOwner = this,
         )
 
-        thumbnailsFeature.set(
-            feature =
-                BrowserThumbnails(
-                    requireContext(),
-                    engineView,
-                    requireComponents.core.store,
-                ),
-            owner = this,
-            view = view,
+        thumbnailsFeature.bind(
+            view,
+            BrowserThumbnails(
+                requireContext(),
+                engineView,
+                requireComponents.core.store,
+            ),
         )
 
-        readerViewFeature.set(
-            feature =
-                ReaderViewIntegration(
-                    requireContext(),
-                    requireComponents.core.engine,
-                    requireComponents.core.store,
-                    toolbar,
-                    readerViewBar,
-                    readerViewAppearanceButton,
-                ),
-            owner = this,
-            view = view,
+        readerViewFeature.bind(
+            view,
+            ReaderViewIntegration(
+                requireContext(),
+                requireComponents.core.engine,
+                requireComponents.core.store,
+                toolbar,
+                readerViewBar,
+                readerViewAppearanceButton,
+            ),
         )
 
-        webExtToolbarFeature.set(
-            feature =
-                WebExtensionToolbarFeature(
-                    toolbar,
-                    requireContext().components.core.store,
-                ),
-            owner = this,
-            view = view,
+        webExtToolbarFeature.bind(
+            view,
+            WebExtensionToolbarFeature(
+                toolbar,
+                requireContext().components.core.store,
+            ),
         )
 
-        windowFeature.set(
-            feature =
-                WindowFeature(
-                    store = requireComponents.core.store,
-                    tabsUseCases = requireComponents.useCases.tabsUseCases,
-                ),
-            owner = this,
-            view = view,
+        windowFeature.bind(
+            view,
+            WindowFeature(
+                store = requireComponents.core.store,
+                tabsUseCases = requireComponents.useCases.tabsUseCases,
+            ),
         )
 
         engineView.setDynamicToolbarMaxHeight(resources.getDimensionPixelSize(R.dimen.browser_toolbar_height))
