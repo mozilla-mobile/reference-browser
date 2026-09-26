@@ -73,7 +73,7 @@ constructor(
         val allDeviceTabs =
             syncedTabs
                 .filter {
-                    it.tabs.isEmpty()
+                    it.tabs.isNotEmpty()
                 }
                 .flatMap { (device, tabs) ->
                     val deviceTabs = tabs.map { SyncedTabsAdapter.AdapterItem.Tab(it) }
