@@ -8,6 +8,7 @@ import mozilla.components.feature.autofill.AbstractAutofillService
 import mozilla.components.feature.autofill.AutofillConfiguration
 import org.mozilla.reference.browser.ext.components
 
+/** System autofill service that lets Android fill logins saved in this browser into other apps. */
 class AutofillService : AbstractAutofillService() {
     override val configuration: AutofillConfiguration by lazy { components.autofillConfiguration }
     override val applicationScope by lazy { components.applicationScope }

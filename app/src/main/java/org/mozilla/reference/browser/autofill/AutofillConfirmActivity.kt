@@ -8,6 +8,10 @@ import mozilla.components.feature.autofill.AutofillConfiguration
 import mozilla.components.feature.autofill.ui.AbstractAutofillConfirmActivity
 import org.mozilla.reference.browser.ext.components
 
+/**
+ * Asks the user to confirm before a login is filled into an app whose authenticity could not be verified automatically
+ * with Digital Asset Links.
+ */
 class AutofillConfirmActivity : AbstractAutofillConfirmActivity() {
     override val configuration: AutofillConfiguration by lazy { components.autofillConfiguration }
 }

@@ -15,6 +15,10 @@ import androidx.preference.Preference
 import androidx.preference.PreferenceViewHolder
 import org.mozilla.reference.browser.R
 
+/**
+ * Settings entry for choosing this app as the system autofill service. The switch mirrors system state instead of a
+ * stored preference because the choice is made in Android settings.
+ */
 class AutofillPreference
 @JvmOverloads
 constructor(
@@ -34,6 +38,10 @@ constructor(
         updateSwitch()
     }
 
+    /**
+     * The user changes the autofill service in Android settings, outside this app, so settings calls this on resume to
+     * keep the switch from showing a stale value after they come back.
+     */
     fun updateSwitch() {
         val autofillManager = context.getSystemService(AutofillManager::class.java)
         switchView?.isChecked = autofillManager.hasEnabledAutofillServices()
@@ -48,6 +56,7 @@ constructor(
     }
 
     companion object {
+        /** Lets settings hide the entry on devices where autofill is not supported. */
         fun isSupported(context: Context): Boolean {
             val autofillManager = context.getSystemService(AutofillManager::class.java)
             return autofillManager.isAutofillSupported
