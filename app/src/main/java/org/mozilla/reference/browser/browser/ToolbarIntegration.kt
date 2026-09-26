@@ -47,6 +47,10 @@ import org.mozilla.reference.browser.ext.share
 import org.mozilla.reference.browser.settings.SettingsActivity
 import org.mozilla.reference.browser.tabs.synced.SyncedTabsActivity
 
+/**
+ * Wires the browser toolbar to the selected tab, or to the tab given by [sessionId]: URL loading and search,
+ * autocomplete, the overflow menu and keeping the toolbar above the keyboard.
+ */
 @Suppress("LongParameterList")
 class ToolbarIntegration(
     private val context: Context,

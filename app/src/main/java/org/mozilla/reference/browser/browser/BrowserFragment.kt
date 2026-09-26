@@ -172,6 +172,10 @@ class BrowserFragment : BaseBrowserFragment(), UserInteractionHandler {
     override fun onBackPressed(): Boolean = readerViewFeature.onBackPressed() || super.onBackPressed()
 
     companion object {
+        /**
+         * Fragments must keep a no-argument constructor so the system can recreate them, which is why the session id
+         * travels in the arguments bundle instead of a constructor parameter.
+         */
         fun create(sessionId: String? = null) =
             BrowserFragment().apply {
                 arguments =

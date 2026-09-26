@@ -18,6 +18,7 @@ import mozilla.components.feature.findinpage.view.FindInPageView
 import mozilla.components.support.base.feature.LifecycleAwareFeature
 import mozilla.components.support.base.feature.UserInteractionHandler
 
+/** Shows the find-in-page bar for the current tab when "Find in Page" is picked from a toolbar menu. */
 class FindInPageIntegration(
     private val store: BrowserStore,
     private val sessionId: String? = null,
