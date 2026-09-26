@@ -4,7 +4,6 @@
 
 package org.mozilla.reference.browser.browser
 
-import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import androidx.core.view.isVisible
@@ -21,7 +20,6 @@ import mozilla.components.feature.pwa.feature.WebAppSiteControlsFeature
 import mozilla.components.support.base.feature.UserInteractionHandler
 import mozilla.components.support.base.feature.ViewBoundFeatureWrapper
 import mozilla.components.support.ktx.android.arch.lifecycle.addObservers
-import mozilla.components.support.utils.ext.getParcelableArrayListCompat
 import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.ext.requireComponents
 
@@ -41,9 +39,6 @@ class ExternalAppBrowserFragment : BaseBrowserFragment(), UserInteractionHandler
 
     private val manifest: WebAppManifest?
         get() = arguments?.getWebAppManifest()
-
-    private val trustedScopes: List<Uri>
-        get() = arguments?.getParcelableArrayListCompat(ARG_TRUSTED_SCOPES, Uri::class.java).orEmpty()
 
     override fun onViewCreated(
         view: View,
@@ -126,19 +121,12 @@ class ExternalAppBrowserFragment : BaseBrowserFragment(), UserInteractionHandler
     override fun onBackPressed(): Boolean = super.onBackPressed() || customTabsIntegration.onBackPressed()
 
     companion object {
-        private const val ARG_TRUSTED_SCOPES = "org.mozilla.samples.browser.TRUSTED_SCOPES"
-
-        fun create(
-            sessionId: String,
-            manifest: WebAppManifest?,
-            trustedScopes: List<Uri>,
-        ) =
+        fun create(sessionId: String, manifest: WebAppManifest?) =
             ExternalAppBrowserFragment().apply {
                 arguments =
                     Bundle().apply {
                         putSessionId(sessionId)
                         putWebAppManifest(manifest)
-                        putParcelableArrayList(ARG_TRUSTED_SCOPES, ArrayList(trustedScopes))
                     }
             }
     }
