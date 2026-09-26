@@ -21,9 +21,6 @@
     <!-- Preference summary for pairing sign in -->
     <string name="preferences_pair_sign_in_summary">Pair with Firefox Desktop</string>
 
-    <!-- Preference summary for settings related to send telemetry data -->
-    <string name="preferences_use_telemetry_summary">Send usage data</string>
-
     <!-- Preference for settings related to changing the default browser -->
     <string name="preferences_make_default_browser">Make default browser</string>
 
@@ -107,17 +104,11 @@
     <!-- Preference category for developer tools -->
     <string name="developer_tools_category">Developer tools</string>
 
-    <!-- Preference for settings related turn on telemetry data-->
-    <string name="use_telemetry">Use Telemetry</string>
-
     <!-- Preference category for Mozilla about/legal etc. -->
     <string name="mozilla_category">Mozilla</string>
 
     <!-- Preference category for tracking protection -->
     <string name="tracker_category">Tracking Protection</string>
-
-    <!-- Preference category for data choices e.g. usage data -->
-    <string name="data_choices_category">Data Choices</string>
 
     <!-- Menu option on the toolbar that takes you to settings page-->
     <string name="settings">Settings</string>
