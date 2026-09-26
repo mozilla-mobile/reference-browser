@@ -115,6 +115,10 @@ class ExternalAppBrowserFragment : BaseBrowserFragment(), UserInteractionHandler
     override fun onBackPressed(): Boolean = super.onBackPressed() || customTabsIntegration.onBackPressed()
 
     companion object {
+        /**
+         * Passes everything through the arguments bundle so the fragment can be recreated by the system after process
+         * death without losing its session or web app manifest.
+         */
         fun create(sessionId: String, manifest: WebAppManifest?) =
             ExternalAppBrowserFragment().apply {
                 arguments =

@@ -18,6 +18,7 @@ import mozilla.components.support.utils.ext.registerReceiverCompat
 import org.mozilla.reference.browser.BrowserApplication.Companion.NON_FATAL_CRASH_BROADCAST
 import org.mozilla.reference.browser.ext.components
 
+/** Forwards non-fatal crash broadcasts to [onCrash] while the owning lifecycle is started. */
 class CrashIntegration(
     private val context: Context,
     private val crashReporter: CrashReporter,
@@ -52,6 +53,7 @@ class CrashIntegration(
         context.unregisterReceiver(receiver)
     }
 
+    /** Uses the application scope, so the upload is not tied to the calling activity's lifecycle. */
     fun sendCrashReport(crash: Crash) {
         context.components.applicationScope.launch {
             crashReporter.submitReport(crash)
