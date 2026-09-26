@@ -26,6 +26,10 @@ val Context.application: BrowserApplication
 val Context.components: Components
     get() = application.components
 
+/**
+ * Preference keys are non-translatable string resources so the XML preference screens and the code share one
+ * definition.
+ */
 fun Context.getPreferenceKey(@StringRes resourceId: Int): String = resources.getString(resourceId)
 
 /**

@@ -27,6 +27,10 @@ import mozilla.components.support.webextensions.WebExtensionSupport
 import org.mozilla.reference.browser.push.PushFxaIntegration
 import org.mozilla.reference.browser.push.WebPushEngineIntegration
 
+/**
+ * Owns the app's [Components]. Engine, add-on and push setup run only in the main process, never in GeckoView child or
+ * crash handler processes.
+ */
 open class BrowserApplication : Application() {
     /**
      * Scope for long-running work that must outlive any individual activity. [SupervisorJob] keeps a failure in one

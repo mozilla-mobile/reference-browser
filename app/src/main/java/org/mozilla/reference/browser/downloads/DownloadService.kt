@@ -18,6 +18,7 @@ import mozilla.components.support.utils.DefaultDownloadFileUtils
 import mozilla.components.support.utils.DownloadFileUtils
 import org.mozilla.reference.browser.ext.components
 
+/** Runs downloads in a foreground service so they continue after the user leaves the app. */
 class DownloadService : AbstractFetchDownloadService() {
     override val httpClient by lazy { components.core.client }
     override val store: BrowserStore by lazy { components.core.store }

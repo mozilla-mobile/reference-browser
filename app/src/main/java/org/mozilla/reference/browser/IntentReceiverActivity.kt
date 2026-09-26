@@ -9,6 +9,10 @@ import android.content.Intent
 import android.os.Bundle
 import org.mozilla.reference.browser.ext.components
 
+/**
+ * Entry point for launcher, link, share, custom tab and PWA shortcut intents. It has no UI: the intent processors pick
+ * the target and it forwards to [BrowserActivity] or [ExternalAppBrowserActivity].
+ */
 class IntentReceiverActivity : Activity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

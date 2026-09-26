@@ -114,6 +114,10 @@ object NotificationManager {
         }
     }
 
+    /**
+     * [BrowserActivity] calls this from onCreate; the policy version stored after notifying limits the data policy
+     * notice to the first run.
+     */
     fun checkAndNotifyPolicy(context: Context) {
         val preferences = PreferenceManager.getDefaultSharedPreferences(context)
         val currentVersion = preferences.getInt(PREFS_POLICY_VERSION, -1)

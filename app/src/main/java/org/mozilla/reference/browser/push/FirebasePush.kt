@@ -7,4 +7,8 @@ package org.mozilla.reference.browser.push
 import android.annotation.SuppressLint
 import mozilla.components.lib.push.firebase.AbstractFirebasePushService
 
+/**
+ * Receives Firebase Cloud Messaging events and hands them to the push feature. The token refresh is handled by
+ * [AbstractFirebasePushService], so the lint warning about a missing override does not apply.
+ */
 @SuppressLint("MissingFirebaseInstanceTokenRefresh") class FirebasePush : AbstractFirebasePushService()
