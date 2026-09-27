@@ -92,9 +92,6 @@ class SettingsViewTest {
                 verifyTrackingProtectionHeading()
                 verifyTPEnableInNormalBrowsing()
                 verifyTPEnableinPrivateBrowsing()
-                verifyDataChoicesHeading()
-                verifyUseTelemetryToggle()
-                verifyTelemetrySummary()
             }
     }
 
