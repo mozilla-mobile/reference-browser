@@ -5,6 +5,7 @@
 import os
 
 from redo import retry
+from taskcluster.exceptions import TaskclusterRestFailure
 from taskgraph.target_tasks import register_target_task
 from taskgraph.util.taskcluster import find_task_id
 
@@ -15,7 +16,9 @@ def index_exists(index_path, reason=""):
         task_id = find_task_id(index_path)
         print(f"Index {index_path} exists: taskId {task_id}")
         return True
-    except KeyError:
+    except TaskclusterRestFailure as e:
+        if e.status_code != 404:
+            raise
         print(f"Index {index_path} doesn't exist.")
         return False
 
