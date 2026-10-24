@@ -5,10 +5,10 @@
 
 from taskgraph.transforms.run import run_task_using, configure_taskdesc_for_run
 from taskgraph.util import path
-from taskgraph.util.schema import Schema, taskref_or_string
+from taskgraph.util.schema import LegacySchema, taskref_or_string
 from voluptuous import Required, Optional
 
-from pipes import quote as shell_quote
+from shlex import quote as shell_quote
 
 
 secret_schema = {
@@ -26,7 +26,7 @@ dummy_secret_schema = {
 }
 
 
-gradlew_schema = Schema({
+gradlew_schema = LegacySchema({
     Required("using"): "gradlew",
     Optional("pre-gradlew"): [[str]],
     Required("gradlew"): [str],
@@ -38,7 +38,7 @@ gradlew_schema = Schema({
     Optional("dummy-secrets"): [dummy_secret_schema],
 })
 
-run_commands_schema = Schema({
+run_commands_schema = LegacySchema({
     Required("using"): "run-commands",
     Optional("pre-commands"): [[str]],
     Required("commands"): [[taskref_or_string]],
