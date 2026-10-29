@@ -41,8 +41,8 @@ androidx-test-uiautomator = "2.4.0"
 dependency-analysis = "3.19.2"
 detekt = "1.23.8"
 jspecify = "1.0.0"
-ktfmt = "0.64"
-spotless = "8.10.2"
+ktfmt = "0.65"
+spotless = "8.10.4"
 
 # Third Party Testing
 hamcrest = "1.3"
