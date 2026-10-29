@@ -40,7 +40,7 @@ androidx-test-uiautomator = "2.4.0"
 # Third Party Linting & Static Code Analysis
 dependency-analysis = "3.20.0"
 detekt = "1.23.8"
-jspecify = "1.0.0"
+jspecify = "1.0.1"
 ktfmt = "0.65"
 spotless = "8.10.4"
 
