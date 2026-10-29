@@ -1,6 +1,6 @@
 [versions]
 # Android Components
-android-components = "160.0.20261019073400"
+android-components = "161.0.20261028094858"
 
 # AGP
 android-gradle-plugin = "9.4.1"
@@ -171,6 +171,7 @@ mozilla-lib-state = { group = "org.mozilla.components", name = "lib-state", vers
 
 mozilla-service-firefox-accounts = { group = "org.mozilla.components", name = "service-firefox-accounts", version.ref = "android-components" }
 mozilla-service-location = { group = "org.mozilla.components", name = "service-location", version.ref = "android-components" }
+mozilla-service-merino-manifest = { group = "org.mozilla.components", name = "service-merino-manifest", version.ref = "android-components" }
 mozilla-service-sync-logins = { group = "org.mozilla.components", name = "service-sync-logins", version.ref = "android-components" }
 
 mozilla-support-appservices = { group = "org.mozilla.components", name = "support-appservices", version.ref = "android-components" }

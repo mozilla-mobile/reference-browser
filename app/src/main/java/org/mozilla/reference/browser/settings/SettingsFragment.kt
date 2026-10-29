@@ -20,6 +20,7 @@ import androidx.preference.Preference.OnPreferenceClickListener
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreferenceCompat
 import kotlin.system.exitProcess
+import mozilla.components.service.fxa.FxaService
 import mozilla.components.service.fxa.manager.SCOPE_PROFILE
 import mozilla.components.service.fxa.manager.SCOPE_SYNC
 import mozilla.components.support.ktx.android.view.showKeyboard
@@ -122,7 +123,8 @@ class SettingsFragment : PreferenceFragmentCompat() {
         requireComponents.services.accountsAuthFeature.beginAuthentication(
             requireContext(),
             BrowserFxAEntryPoint.HomeMenu,
-            setOf(SCOPE_PROFILE, SCOPE_SYNC),
+            service = FxaService.Sync.identifier,
+            scopes = setOf(SCOPE_PROFILE, SCOPE_SYNC),
         )
         activity?.finish()
         true
