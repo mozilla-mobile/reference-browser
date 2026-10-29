@@ -121,7 +121,7 @@ class BackgroundServices(
                     // If the queue is empty when the worker runs, that's OK; the worker
                     // won't do anything, and won't run again until the next call to `onAdded`.
                     override fun onRemoved() = Unit
-                }
+                },
             )
         }
     }

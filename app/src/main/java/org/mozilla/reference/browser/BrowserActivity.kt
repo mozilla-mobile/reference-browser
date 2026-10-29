@@ -88,7 +88,7 @@ open class BrowserActivity : AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         Logger.info(
             "Activity onActivityResult received with " +
-                "requestCode: $requestCode, resultCode: $resultCode, data: $data"
+                "requestCode: $requestCode, resultCode: $resultCode, data: $data",
         )
 
         supportFragmentManager.fragments.forEach {

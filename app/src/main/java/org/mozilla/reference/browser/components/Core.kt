@@ -120,7 +120,7 @@ class Core(
                         ),
                         SearchMiddleware(context),
                         RecordingDevicesMiddleware(context, context.components.notificationsDelegate),
-                    ) + EngineMiddleware.create(engine)
+                    ) + EngineMiddleware.create(engine),
             )
             .apply {
                 icons.install(engine, this)

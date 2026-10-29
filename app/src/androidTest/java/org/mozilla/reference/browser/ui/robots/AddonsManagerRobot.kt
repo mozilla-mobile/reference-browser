@@ -80,13 +80,15 @@ class AddonsManagerRobot {
             .waitForExists(waitingTime)
         mDevice.waitAndInteract(
             Until.findObject(
-                By.text(getStringResource(addonsR.string.mozac_feature_addons_installed_dialog_okay_button_2))
-            )
+                By.text(getStringResource(addonsR.string.mozac_feature_addons_installed_dialog_okay_button_2)),
+            ),
         ) {}
         mDevice
             .findObject(
                 UiSelector()
-                    .textContains(getStringResource(addonsR.string.mozac_feature_addons_installed_dialog_okay_button_2))
+                    .textContains(
+                        getStringResource(addonsR.string.mozac_feature_addons_installed_dialog_okay_button_2),
+                    ),
             )
             .click()
     }
@@ -109,7 +111,7 @@ class AddonsManagerRobot {
                 withContentDescription("Install $addonName"),
                 isDescendantOfA(withId(R.id.add_on_item)),
                 hasSibling(hasDescendant(withText(addonName))),
-            )
+            ),
         )
 
     private fun removeAddonButton() = onView(withId(R.id.remove_add_on))
@@ -131,7 +133,7 @@ class AddonsManagerRobot {
                 allOf(
                     withId(addonsR.id.optional_or_required_text),
                     withText(containsString("Required permissions:")),
-                )
+                ),
             )
             .check(matches(isCompletelyDisplayed()))
 
@@ -139,7 +141,7 @@ class AddonsManagerRobot {
                 allOf(
                     withId(addonsR.id.allow_button),
                     withText(addonsR.string.mozac_feature_addons_permissions_dialog_add),
-                )
+                ),
             )
             .check(matches(isCompletelyDisplayed()))
 
@@ -147,7 +149,7 @@ class AddonsManagerRobot {
                 allOf(
                     withId(addonsR.id.deny_button),
                     withText(addonsR.string.mozac_feature_addons_permissions_dialog_cancel),
-                )
+                ),
             )
             .check(matches(isCompletelyDisplayed()))
     }
@@ -157,7 +159,7 @@ class AddonsManagerRobot {
                 allOf(
                     withId(addonsR.id.deny_button),
                     withText(addonsR.string.mozac_feature_addons_permissions_dialog_cancel),
-                )
+                ),
             )
             .check(matches(isCompletelyDisplayed()))
             .perform(click())
@@ -197,7 +199,7 @@ class AddonsManagerRobot {
                     hasSibling(withId(R.id.details)),
                     hasSibling(withId(R.id.permissions)),
                     hasSibling(withId(R.id.allow_in_private_browsing_switch)),
-                )
+                ),
             )
             .check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
     }

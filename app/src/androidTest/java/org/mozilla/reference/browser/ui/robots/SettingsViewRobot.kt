@@ -92,7 +92,7 @@ class SettingsViewRobot {
 
     class Transition {
         fun openSettingsViewPrivacy(
-            interact: SettingsViewPrivacyRobot.() -> Unit
+            interact: SettingsViewPrivacyRobot.() -> Unit,
         ): SettingsViewPrivacyRobot.Transition {
             privacyButton().click()
             SettingsViewPrivacyRobot().interact()
@@ -150,9 +150,9 @@ private fun assertSettingsView() {
             .findObject(
                 UiSelector()
                     .resourceId("$packageName:id/action_bar")
-                    .childSelector(UiSelector().textContains(getStringResource(R.string.settings)))
+                    .childSelector(UiSelector().textContains(getStringResource(R.string.settings))),
             )
-            .waitForExists(waitingTime)
+            .waitForExists(waitingTime),
     )
 }
 
@@ -173,7 +173,7 @@ private fun openLinksInAppsToggle() =
         allOf(
             withId(androidx.preference.R.id.switchWidget),
             hasCousin(withText(R.string.open_links_in_apps)),
-        )
+        ),
     )
 
 private fun makeDefaultBrowserButton() = Espresso.onView(withText(R.string.preferences_make_default_browser))
@@ -191,7 +191,7 @@ private fun remoteDebuggingToggle() =
         allOf(
             withId(androidx.preference.R.id.switchWidget),
             hasCousin(withText(R.string.preferences_remote_debugging)),
-        )
+        ),
     )
 
 private fun customAddonCollectionButton() = onView(withText("Custom Add-on collection"))
@@ -261,7 +261,7 @@ private fun assertCustomAddonCollectionPanel() {
                     withId(androidx.appcompat.R.id.alertTitle),
                     withId(android.R.id.title),
                 ),
-            )
+            ),
         )
         .inRoot(isDialog())
         .check(matches(isCompletelyDisplayed()))
