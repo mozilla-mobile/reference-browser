@@ -72,7 +72,7 @@ class CustomTabRobot {
             assertTrue(
                 mDevice
                     .findObject(UiSelector().resourceId("$packageName:id/mozac_browser_menu_recyclerView"))
-                    .waitUntilGone(waitingTime)
+                    .waitUntilGone(waitingTime),
             )
         } catch (e: AssertionError) {
             println("Failed to click request desktop toggle")

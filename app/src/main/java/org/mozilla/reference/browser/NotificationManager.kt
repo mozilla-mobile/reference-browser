@@ -232,7 +232,7 @@ object NotificationManager {
                 context.getString(
                     R.string.fxa_tab_received_from_notification_name,
                     it.displayName,
-                )
+                ),
             )
             return this
         }

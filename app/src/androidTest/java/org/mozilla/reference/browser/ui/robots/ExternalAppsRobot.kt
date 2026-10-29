@@ -52,7 +52,7 @@ private fun assertYouTubeApp() {
         println("The native youtube app opens but needs to be updated")
         // In case the app isn't up to date on the emulator an update message will be displayed
         assertTrue(
-            mDevice.findObject(UiSelector().text("Update for a faster, better YouTube")).waitForExists(waitingTime)
+            mDevice.findObject(UiSelector().text("Update for a faster, better YouTube")).waitForExists(waitingTime),
         )
     }
 }
