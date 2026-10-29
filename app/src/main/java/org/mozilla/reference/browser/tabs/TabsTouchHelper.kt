@@ -17,5 +17,5 @@ class TabsTouchHelper(observable: (TabSessionState) -> Unit) :
                 dX: Float,
                 distanceToAlphaMin: Int,
             ): Float = 1f - 2f * abs(dX) / distanceToAlphaMin
-        }
+        },
     )

@@ -144,7 +144,7 @@ class BrowserFragment : BaseBrowserFragment(), UserInteractionHandler {
                 requireComponents.backgroundServices.syncedTabsStorage,
                 requireComponents.useCases.tabsUseCases.addTab,
                 requireComponents.core.icons,
-            )
+            ),
         )
         awesomeBar.setOnRemoveSuggestionButtonClicked {
             awesomeBar.addHiddenSuggestion(it)

@@ -28,9 +28,9 @@ class SyncedTabsRobot {
                 .findObject(
                     UiSelector()
                         .resourceId("$packageName:id/synced_tabs_status")
-                        .textContains(getStringResource(R.string.synced_tabs_connect_to_sync_account))
+                        .textContains(getStringResource(R.string.synced_tabs_connect_to_sync_account)),
                 )
-                .waitForExists(waitingTime)
+                .waitForExists(waitingTime),
         )
     }
 }

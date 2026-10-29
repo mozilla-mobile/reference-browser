@@ -38,7 +38,7 @@ class CustomTabsTest {
                         InstrumentationRegistry.getInstrumentation().targetContext,
                         IntentReceiverActivity::class.java,
                     )
-            }
+            },
         )
 
     @Before

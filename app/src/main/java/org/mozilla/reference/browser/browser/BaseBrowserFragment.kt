@@ -418,6 +418,7 @@ abstract class BaseBrowserFragment : Fragment(), UserInteractionHandler, Activit
                 },
                 onShouldShowRequestPermissionRationale = { shouldShowRequestPermissionRationale(it) },
                 store = requireComponents.core.store,
+                coroutineScope = requireComponents.applicationScope,
             ),
         )
 
@@ -493,7 +494,7 @@ abstract class BaseBrowserFragment : Fragment(), UserInteractionHandler, Activit
     ): Boolean {
         Logger.info(
             "Fragment onActivityResult received with " +
-                "requestCode: $requestCode, resultCode: $resultCode, data: $data"
+                "requestCode: $requestCode, resultCode: $resultCode, data: $data",
         )
 
         return activityResultHandler.any { it.onActivityResult(requestCode, data, resultCode) }

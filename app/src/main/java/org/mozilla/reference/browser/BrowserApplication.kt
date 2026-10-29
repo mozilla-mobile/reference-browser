@@ -42,7 +42,7 @@ open class BrowserApplication : Application() {
                 Dispatchers.Main +
                 CoroutineExceptionHandler { _, throwable ->
                     Logger.error("ApplicationScope: Unhandled error: ${throwable.message}", throwable)
-                }
+                },
         )
 
     val components by lazy { Components(this, applicationScope) }

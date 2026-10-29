@@ -44,7 +44,7 @@ class PrivacySettingsFragment : PreferenceFragmentCompat() {
     }
 
     private fun getChangeListenerForTrackingProtection(
-        createTrackingProtectionPolicy: (Boolean) -> TrackingProtectionPolicy
+        createTrackingProtectionPolicy: (Boolean) -> TrackingProtectionPolicy,
     ): OnPreferenceChangeListener = OnPreferenceChangeListener { _, value ->
         val policy = createTrackingProtectionPolicy(value as Boolean)
         requireComponents.useCases.settingsUseCases.updateTrackingProtection.invoke(policy)

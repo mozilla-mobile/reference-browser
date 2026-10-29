@@ -270,6 +270,7 @@ dependencies {
 
     implementation libs.mozilla.service.firefox.accounts
     implementation libs.mozilla.service.location
+    implementation libs.mozilla.service.merino.manifest
     implementation libs.mozilla.service.sync.logins
 
     implementation libs.mozilla.support.appservices

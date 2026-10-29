@@ -96,7 +96,7 @@ class ThreeDotMenuRobot {
         }
 
         fun switchRequestDesktopSiteToggle(
-            interact: NavigationToolbarRobot.() -> Unit
+            interact: NavigationToolbarRobot.() -> Unit,
         ): NavigationToolbarRobot.Transition {
             try {
                 mDevice.findObject(UiSelector().textContains("Request desktop site")).waitForExists(waitingTime)
@@ -105,7 +105,7 @@ class ThreeDotMenuRobot {
                 assertTrue(
                     mDevice
                         .findObject(UiSelector().resourceId("$packageName:id/mozac_browser_menu_recyclerView"))
-                        .waitUntilGone(waitingTime)
+                        .waitUntilGone(waitingTime),
                 )
             } catch (e: AssertionFailedError) {
                 println("Failed to click request desktop toggle")
@@ -119,7 +119,7 @@ class ThreeDotMenuRobot {
                 assertTrue(
                     mDevice
                         .findObject(UiSelector().resourceId("$packageName:id/mozac_browser_menu_recyclerView"))
-                        .waitUntilGone(waitingTime)
+                        .waitUntilGone(waitingTime),
                 )
             }
             NavigationToolbarRobot().interact()

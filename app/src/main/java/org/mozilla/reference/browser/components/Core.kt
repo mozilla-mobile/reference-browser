@@ -120,7 +120,7 @@ class Core(
                         ),
                         SearchMiddleware(context),
                         RecordingDevicesMiddleware(context, context.components.notificationsDelegate),
-                    ) + EngineMiddleware.create(engine)
+                    ) + EngineMiddleware.create(engine),
             )
             .apply {
                 icons.install(engine, this)
@@ -171,7 +171,10 @@ class Core(
     /** A storage component for site permissions. */
     val geckoSitePermissionsStorage by lazy {
         val geckoRuntime = EngineProvider.getOrCreateRuntime(context)
-        GeckoSitePermissionsStorage(geckoRuntime, OnDiskSitePermissionsStorage(context))
+        GeckoSitePermissionsStorage(
+            geckoRuntime,
+            OnDiskSitePermissionsStorage(context, coroutineScope = applicationScope),
+        )
     }
 
     /** Icons component for loading, caching and processing website icons. */

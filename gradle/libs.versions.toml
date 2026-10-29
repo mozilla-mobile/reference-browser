@@ -1,6 +1,6 @@
 [versions]
 # Android Components
-android-components = "160.0.20261019073400"
+android-components = "161.0.20261029094000"
 
 # AGP
 android-gradle-plugin = "9.5.0"
@@ -41,8 +41,8 @@ androidx-test-uiautomator = "2.4.0"
 dependency-analysis = "3.19.2"
 detekt = "1.23.8"
 jspecify = "1.0.0"
-ktfmt = "0.64"
-spotless = "8.10.2"
+ktfmt = "0.65"
+spotless = "8.10.4"
 
 # Third Party Testing
 hamcrest = "1.3"
@@ -171,6 +171,7 @@ mozilla-lib-state = { group = "org.mozilla.components", name = "lib-state", vers
 
 mozilla-service-firefox-accounts = { group = "org.mozilla.components", name = "service-firefox-accounts", version.ref = "android-components" }
 mozilla-service-location = { group = "org.mozilla.components", name = "service-location", version.ref = "android-components" }
+mozilla-service-merino-manifest = { group = "org.mozilla.components", name = "service-merino-manifest", version.ref = "android-components" }
 mozilla-service-sync-logins = { group = "org.mozilla.components", name = "service-sync-logins", version.ref = "android-components" }
 
 mozilla-support-appservices = { group = "org.mozilla.components", name = "support-appservices", version.ref = "android-components" }

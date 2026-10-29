@@ -115,7 +115,7 @@ private fun appearanceButton() =
         allOf(
             withId(R.id.readerViewAppearanceButton),
             hasSibling(withId(R.id.toolbar)),
-        )
+        ),
     )
 
 private fun appearanceMenu() =
@@ -123,7 +123,7 @@ private fun appearanceMenu() =
         allOf(
             withId(R.id.readerViewAppearanceButton),
             hasSibling(withId(R.id.swipeRefresh)),
-        )
+        ),
     )
 
 private fun fontGroupButtons() =
@@ -131,7 +131,7 @@ private fun fontGroupButtons() =
         allOf(
             withId(readerviewR.id.mozac_feature_readerview_font_group),
             withParent(withId(R.id.readerViewBar)),
-        )
+        ),
     )
 
 private fun sansSerifButton() =
@@ -139,7 +139,7 @@ private fun sansSerifButton() =
         allOf(
             withId(readerviewR.id.mozac_feature_readerview_font_sans_serif),
             withParent(withId(readerviewR.id.mozac_feature_readerview_font_group)),
-        )
+        ),
     )
 
 private fun serifButton() =
@@ -147,7 +147,7 @@ private fun serifButton() =
         allOf(
             withId(readerviewR.id.mozac_feature_readerview_font_serif),
             withParent(withId(readerviewR.id.mozac_feature_readerview_font_group)),
-        )
+        ),
     )
 
 private fun increaseFontSizeButton() =
@@ -155,7 +155,7 @@ private fun increaseFontSizeButton() =
         allOf(
             withText("+"),
             withParent(withId(R.id.readerViewBar)),
-        )
+        ),
     )
 
 private fun decreaseFontSizeButton() =
@@ -163,7 +163,7 @@ private fun decreaseFontSizeButton() =
         allOf(
             withText("−"),
             withParent(withId(R.id.readerViewBar)),
-        )
+        ),
     )
 
 private fun colorSchemeGroupButtons() =
@@ -171,7 +171,7 @@ private fun colorSchemeGroupButtons() =
         allOf(
             withId(readerviewR.id.mozac_feature_readerview_color_scheme_group),
             withParent(withId(R.id.readerViewBar)),
-        )
+        ),
     )
 
 private fun lightColorButton() =
@@ -179,7 +179,7 @@ private fun lightColorButton() =
         allOf(
             withText("Light"),
             withParent(withId(readerviewR.id.mozac_feature_readerview_color_scheme_group)),
-        )
+        ),
     )
 
 private fun sepiaColorButton() =
@@ -187,7 +187,7 @@ private fun sepiaColorButton() =
         allOf(
             withText("Sepia"),
             withParent(withId(readerviewR.id.mozac_feature_readerview_color_scheme_group)),
-        )
+        ),
     )
 
 private fun darkColorButton() =
@@ -195,7 +195,7 @@ private fun darkColorButton() =
         allOf(
             withText("Dark"),
             withParent(withId(readerviewR.id.mozac_feature_readerview_color_scheme_group)),
-        )
+        ),
     )
 
 private fun assertAppearanceButtonExists() {
