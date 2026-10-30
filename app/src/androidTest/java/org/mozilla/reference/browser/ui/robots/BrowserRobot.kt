@@ -4,6 +4,8 @@
 
 package org.mozilla.reference.browser.ui.robots
 
+import android.graphics.Rect
+import android.view.View
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers
@@ -20,9 +22,12 @@ import org.mozilla.reference.browser.helpers.Constants.LONG_CLICK_DURATION
 import org.mozilla.reference.browser.helpers.TestAssetHelper.waitingTime
 import org.mozilla.reference.browser.helpers.TestHelper.packageName
 import org.mozilla.reference.browser.helpers.TestHelper.waitForObjects
+import kotlin.math.abs
 
 /** Implementation of Robot Pattern for browser action. */
 class BrowserRobot {
+    private var snackbarToolbarGap: Int? = null
+
     /* Asserts that the text within DOM element with ID="testContent" has the given text, i.e.
      * document.querySelector('#testContent').innerText == expectedText
      */
@@ -208,6 +213,54 @@ class BrowserRobot {
             it.click()
         }
 
+    fun verifySnackbarIsAnchoredAboveToolbar() {
+        mDevice.findObject(UiSelector().resourceId("$packageName:id/snackbar_text")).waitForExists(waitingTime)
+        onView(withId(com.google.android.material.R.id.snackbar_text)).check { snackbarText, exception ->
+            if (exception != null) {
+                throw exception
+            }
+
+            val snackbarContent = snackbarText.parent as View
+            val snackbar = snackbarContent.parent as View
+            val toolbar = snackbar.rootView.findViewById<View>(org.mozilla.reference.browser.R.id.toolbar)
+            val snackbarBounds = Rect().also(snackbar::getGlobalVisibleRect)
+            val toolbarBounds = Rect().also(toolbar::getGlobalVisibleRect)
+            val visibleScreenBounds = Rect().also(snackbar.rootView::getWindowVisibleDisplayFrame)
+            val gap = toolbarBounds.top - snackbarBounds.bottom
+            val maximumGap = (snackbar.resources.displayMetrics.density * MAXIMUM_SNACKBAR_GAP_DP).toInt()
+            val positionTolerance = (snackbar.resources.displayMetrics.density * POSITION_TOLERANCE_DP).toInt()
+
+            assertTrue("Snackbar overlaps toolbar: snackbar=$snackbarBounds toolbar=$toolbarBounds", gap >= 0)
+            assertTrue("Snackbar is too far above toolbar: gap=$gap", gap <= maximumGap)
+            assertTrue(
+                "Toolbar is not aligned with the visible screen: toolbar=$toolbarBounds screen=$visibleScreenBounds",
+                abs(toolbarBounds.bottom - visibleScreenBounds.bottom) <= positionTolerance,
+            )
+
+            snackbarToolbarGap?.let { initialGap ->
+                assertTrue(
+                    "Snackbar gap changed from $initialGap to $gap",
+                    abs(initialGap - gap) <= positionTolerance,
+                )
+            } ?: run {
+                snackbarToolbarGap = gap
+            }
+        }
+    }
+
+    fun focusToolbarWithSnackbarShown() {
+        mDevice
+            .findObject(UiSelector().resourceId("$packageName:id/mozac_browser_toolbar_url_view"))
+            .click()
+        mDevice.findObject(UiSelector().textContains("Search or enter address")).waitForExists(waitingTime)
+        mDevice.waitForIdle()
+    }
+
+    fun dismissKeyboardWithSnackbarShown() {
+        mDevice.pressBack()
+        mDevice.waitForIdle()
+    }
+
     class Transition {
         fun checkExternalApps(interact: ExternalAppsRobot.() -> Unit): ExternalAppsRobot.Transition {
             mDevice.waitForWindowUpdate(packageName, waitingTime)
@@ -236,6 +289,9 @@ class BrowserRobot {
         }
     }
 }
+
+private const val MAXIMUM_SNACKBAR_GAP_DP = 32
+private const val POSITION_TOLERANCE_DP = 1
 
 fun browser(interact: BrowserRobot.() -> Unit): BrowserRobot.Transition {
     BrowserRobot().interact()
