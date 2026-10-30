@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity
 import mozilla.components.support.ktx.android.view.setupPersistentInsets
 import org.mozilla.reference.browser.R
 
+/** Activity whose only purpose is to host the [SyncedTabsFragment], opened from the browser menu. */
 class SyncedTabsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge(SystemBarStyle.dark(Color.TRANSPARENT))

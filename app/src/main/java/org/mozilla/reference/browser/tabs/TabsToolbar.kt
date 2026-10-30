@@ -11,6 +11,7 @@ import mozilla.components.ui.icons.R as iconsR
 import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.ext.components
 
+/** Toolbar of the tabs tray, with back navigation and the new tab and close tabs actions. */
 class TabsToolbar
 @JvmOverloads
 constructor(
@@ -50,6 +51,10 @@ constructor(
         }
     }
 
+    /**
+     * Supplies the collaborators after inflation, since this view is created from XML and only the tabs tray fragment
+     * knows how to close the tray.
+     */
     fun initialize(
         tabsFeature: TabsFeature?,
         closeTabsTray: () -> Unit,
@@ -58,6 +63,10 @@ constructor(
         this.closeTabsTray = closeTabsTray
     }
 
+    /**
+     * Called through [TabsPanel] whenever it switches between normal and private tabs, so the new tab and close tabs
+     * actions act on the type currently shown.
+     */
     fun updateToolbar(isPrivate: Boolean) {
         // Store the state for the menu option
         isPrivateTray = isPrivate

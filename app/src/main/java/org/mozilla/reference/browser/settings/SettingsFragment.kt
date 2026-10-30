@@ -20,6 +20,7 @@ import androidx.preference.Preference.OnPreferenceClickListener
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreferenceCompat
 import kotlin.system.exitProcess
+import mozilla.components.service.fxa.FxaService
 import mozilla.components.service.fxa.manager.SCOPE_PROFILE
 import mozilla.components.service.fxa.manager.SCOPE_SYNC
 import mozilla.components.support.ktx.android.view.showKeyboard
@@ -39,8 +40,11 @@ import org.mozilla.reference.browser.sync.BrowserFxAEntryPoint
 
 private typealias RBSettings = org.mozilla.reference.browser.settings.Settings
 
+/** Top-level settings page. */
 class SettingsFragment : PreferenceFragmentCompat() {
+    /** Implemented by the hosting activity, which owns the action bar. */
     interface ActionBarUpdater {
+        /** Called on navigation because the fragments are swapped in one container and the title does not follow. */
         fun updateTitle(titleResId: Int)
     }
 
@@ -119,7 +123,8 @@ class SettingsFragment : PreferenceFragmentCompat() {
         requireComponents.services.accountsAuthFeature.beginAuthentication(
             requireContext(),
             BrowserFxAEntryPoint.HomeMenu,
-            setOf(SCOPE_PROFILE, SCOPE_SYNC),
+            service = FxaService.Sync.identifier,
+            scopes = setOf(SCOPE_PROFILE, SCOPE_SYNC),
         )
         activity?.finish()
         true

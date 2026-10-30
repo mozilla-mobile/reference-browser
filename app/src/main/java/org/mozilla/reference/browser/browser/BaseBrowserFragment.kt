@@ -40,6 +40,7 @@ import mozilla.components.feature.sitepermissions.SitePermissionsFeature
 import mozilla.components.feature.tabs.WindowFeature
 import mozilla.components.feature.webauthn.WebAuthnFeature
 import mozilla.components.support.base.feature.ActivityResultHandler
+import mozilla.components.support.base.feature.LifecycleAwareFeature
 import mozilla.components.support.base.feature.UserInteractionHandler
 import mozilla.components.support.base.feature.ViewBoundFeatureWrapper
 import mozilla.components.support.base.log.logger.Logger
@@ -174,223 +175,14 @@ abstract class BaseBrowserFragment : Fragment(), UserInteractionHandler, Activit
     abstract val shouldUseComposeUI: Boolean
 
     @CallSuper
-    @Suppress("LongMethod")
     override fun onViewCreated(
         view: View,
         savedInstanceState: Bundle?,
     ) {
-        val prefs = PreferenceManager.getDefaultSharedPreferences(requireContext())
-
-        sessionFeature.set(
-            feature =
-                SessionFeature(
-                    requireComponents.core.store,
-                    requireComponents.useCases.sessionUseCases.goBack,
-                    requireComponents.useCases.sessionUseCases.goForward,
-                    engineView,
-                    sessionId,
-                ),
-            owner = this,
-            view = view,
-        )
-
-        (toolbar.layoutParams as? CoordinatorLayout.LayoutParams)?.apply {
-            behavior =
-                EngineViewScrollingGesturesBehavior(
-                    engineView = engineView,
-                    dependency = toolbar,
-                    dependencyGravity = DependencyGravity.Bottom,
-                )
-        }
-
-        toolbarIntegration.set(
-            feature =
-                ToolbarIntegration(
-                    requireContext(),
-                    toolbar,
-                    view,
-                    requireComponents.core.historyStorage,
-                    requireComponents.core.store,
-                    requireComponents.useCases.sessionUseCases,
-                    requireComponents.useCases.tabsUseCases,
-                    requireComponents.useCases.webAppUseCases,
-                    sessionId,
-                ),
-            owner = this,
-            view = view,
-        )
-
-        contextMenuIntegration.set(
-            feature =
-                ContextMenuIntegration(
-                    requireContext(),
-                    parentFragmentManager,
-                    requireComponents.core.store,
-                    requireComponents.useCases.tabsUseCases,
-                    requireComponents.useCases.contextMenuUseCases,
-                    engineView,
-                    view,
-                    toolbar,
-                    sessionId,
-                ),
-            owner = this,
-            view = view,
-        )
-        shareResourceFeature.set(
-            ShareResourceFeature(
-                context = requireContext().applicationContext,
-                httpClient = requireComponents.core.client,
-                store = requireComponents.core.store,
-                tabId = sessionId,
-            ),
-            owner = this,
-            view = view,
-        )
-
-        downloadsFeature.set(
-            feature =
-                DownloadsFeature(
-                    requireContext(),
-                    store = requireComponents.core.store,
-                    useCases = requireComponents.useCases.downloadsUseCases,
-                    fragmentManager = childFragmentManager,
-                    downloadFileUtils =
-                        DefaultDownloadFileUtils(
-                            context = requireContext().applicationContext,
-                            downloadLocation = {
-                                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).path
-                            },
-                        ),
-                    downloadManager =
-                        FetchDownloadManager(
-                            requireContext().applicationContext,
-                            requireComponents.core.store,
-                            DownloadService::class,
-                            notificationsDelegate = requireComponents.notificationsDelegate,
-                        ),
-                    onNeedToRequestPermissions = { permissions ->
-                        requestDownloadPermissionsLauncher.launch(permissions)
-                    },
-                ),
-            owner = this,
-            view = view,
-        )
-
-        appLinksFeature.set(
-            feature =
-                AppLinksFeature(
-                    requireContext(),
-                    store = requireComponents.core.store,
-                    sessionId = sessionId,
-                    fragmentManager = parentFragmentManager,
-                    launchInApp = {
-                        prefs.getBoolean(
-                            requireContext().getPreferenceKey(R.string.pref_key_launch_external_app),
-                            false,
-                        )
-                    },
-                ),
-            owner = this,
-            view = view,
-        )
-
-        promptsFeature.set(
-            feature =
-                PromptFeature(
-                    fragment = this,
-                    store = requireComponents.core.store,
-                    tabsUseCases = requireComponents.useCases.tabsUseCases,
-                    customTabId = sessionId,
-                    fileUploadsDirCleaner = requireComponents.core.fileUploadsDirCleaner,
-                    fragmentManager = parentFragmentManager,
-                    onNeedToRequestPermissions = { permissions ->
-                        requestPromptsPermissionsLauncher.launch(permissions)
-                    },
-                ),
-            owner = this,
-            view = view,
-        )
-
-        webExtensionPromptFeature.set(
-            feature =
-                WebExtensionPromptFeature(
-                    store = requireComponents.core.store,
-                    context = requireContext(),
-                    fragmentManager = parentFragmentManager,
-                ),
-            owner = this,
-            view = view,
-        )
-
-        windowFeature.set(
-            feature = WindowFeature(requireComponents.core.store, requireComponents.useCases.tabsUseCases),
-            owner = this,
-            view = view,
-        )
-
-        fullScreenFeature.set(
-            feature =
-                FullScreenFeature(
-                    store = requireComponents.core.store,
-                    sessionUseCases = requireComponents.useCases.sessionUseCases,
-                    tabId = sessionId,
-                    viewportFitChanged = ::viewportFitChanged,
-                    fullScreenChanged = ::fullScreenChanged,
-                ),
-            owner = this,
-            view = view,
-        )
-
-        findInPageIntegration.set(
-            feature =
-                FindInPageIntegration(
-                    requireComponents.core.store,
-                    sessionId,
-                    findInPageBar as FindInPageView,
-                    engineView,
-                ),
-            owner = this,
-            view = view,
-        )
-
-        sitePermissionFeature.set(
-            feature =
-                SitePermissionsFeature(
-                    context = requireContext(),
-                    fragmentManager = parentFragmentManager,
-                    sessionId = sessionId,
-                    storage = requireComponents.core.geckoSitePermissionsStorage,
-                    onNeedToRequestPermissions = { permissions ->
-                        requestSitePermissionsLauncher.launch(permissions)
-                    },
-                    onShouldShowRequestPermissionRationale = { shouldShowRequestPermissionRationale(it) },
-                    store = requireComponents.core.store,
-                ),
-            owner = this,
-            view = view,
-        )
-
-        pictureInPictureIntegration.set(
-            feature =
-                PictureInPictureIntegration(
-                    requireComponents.core.store,
-                    requireActivity(),
-                    sessionId,
-                ),
-            owner = this,
-            view = view,
-        )
-
-        fullScreenMediaSessionFeature.set(
-            feature =
-                MediaSessionFullscreenFeature(
-                    requireActivity(),
-                    requireComponents.core.store,
-                    sessionId,
-                ),
-            owner = this,
-            view = view,
-        )
+        setupSessionAndToolbar(view)
+        setupDownloads(view)
+        setupLinksAndPrompts(view)
+        setupPageFeatures(view)
 
         (swipeRefresh.layoutParams as? CoordinatorLayout.LayoutParams)?.apply {
             behavior =
@@ -402,51 +194,43 @@ abstract class BaseBrowserFragment : Fragment(), UserInteractionHandler, Activit
                     bottomToolbarHeight = BOTTOM_TOOLBAR_HEIGHT,
                 )
         }
-        swipeRefreshFeature.set(
-            feature =
-                SwipeRefreshFeature(
-                    requireComponents.core.store,
-                    requireComponents.useCases.sessionUseCases.reload,
-                    swipeRefresh,
-                ),
-            owner = this,
-            view = view,
+        swipeRefreshFeature.bind(
+            view,
+            SwipeRefreshFeature(
+                requireComponents.core.store,
+                requireComponents.useCases.sessionUseCases.reload,
+                swipeRefresh,
+            ),
         )
 
-        lastTabFeature.set(
-            feature =
-                LastTabFeature(
-                    requireComponents.core.store,
-                    sessionId,
-                    requireComponents.useCases.tabsUseCases.removeTab,
-                    requireActivity(),
-                ),
-            owner = this,
-            view = view,
+        lastTabFeature.bind(
+            view,
+            LastTabFeature(
+                requireComponents.core.store,
+                sessionId,
+                requireComponents.useCases.tabsUseCases.removeTab,
+                requireActivity(),
+            ),
         )
 
-        screenOrientationFeature.set(
-            feature =
-                ScreenOrientationFeature(
-                    requireComponents.core.engine,
-                    requireActivity(),
-                ),
-            owner = this,
-            view = view,
+        screenOrientationFeature.bind(
+            view,
+            ScreenOrientationFeature(
+                requireComponents.core.engine,
+                requireActivity(),
+            ),
         )
 
         if (BuildConfig.MOZILLA_OFFICIAL) {
-            webAuthnFeature.set(
-                feature =
-                    WebAuthnFeature(
-                        requireComponents.core.engine,
-                        requireActivity(),
-                        requireComponents.useCases.sessionUseCases.exitFullscreen::invoke,
-                    ) {
-                        requireComponents.core.store.state.selectedTabId
-                    },
-                owner = this,
-                view = view,
+            webAuthnFeature.bind(
+                view,
+                WebAuthnFeature(
+                    requireComponents.core.engine,
+                    requireActivity(),
+                    requireComponents.useCases.sessionUseCases.exitFullscreen::invoke,
+                ) {
+                    requireComponents.core.store.state.selectedTabId
+                },
             )
         }
 
@@ -459,6 +243,203 @@ abstract class BaseBrowserFragment : Fragment(), UserInteractionHandler, Activit
             params.topMargin = resources.getDimensionPixelSize(R.dimen.browser_toolbar_height)
             swipeRefresh.layoutParams = params
         }
+    }
+
+    private fun setupSessionAndToolbar(view: View) {
+        sessionFeature.bind(
+            view,
+            SessionFeature(
+                requireComponents.core.store,
+                requireComponents.useCases.sessionUseCases.goBack,
+                requireComponents.useCases.sessionUseCases.goForward,
+                engineView,
+                sessionId,
+            ),
+        )
+
+        (toolbar.layoutParams as? CoordinatorLayout.LayoutParams)?.apply {
+            behavior =
+                EngineViewScrollingGesturesBehavior(
+                    engineView = engineView,
+                    dependency = toolbar,
+                    dependencyGravity = DependencyGravity.Bottom,
+                )
+        }
+
+        toolbarIntegration.bind(
+            view,
+            ToolbarIntegration(
+                requireContext(),
+                toolbar,
+                view,
+                requireComponents.core.historyStorage,
+                requireComponents.core.store,
+                requireComponents.useCases.sessionUseCases,
+                requireComponents.useCases.tabsUseCases,
+                requireComponents.useCases.webAppUseCases,
+                sessionId,
+            ),
+        )
+
+        contextMenuIntegration.bind(
+            view,
+            ContextMenuIntegration(
+                requireContext(),
+                parentFragmentManager,
+                requireComponents.core.store,
+                requireComponents.useCases.tabsUseCases,
+                requireComponents.useCases.contextMenuUseCases,
+                engineView,
+                view,
+                toolbar,
+                sessionId,
+            ),
+        )
+    }
+
+    private fun setupDownloads(view: View) {
+        shareResourceFeature.bind(
+            view,
+            ShareResourceFeature(
+                context = requireContext().applicationContext,
+                httpClient = requireComponents.core.client,
+                store = requireComponents.core.store,
+                tabId = sessionId,
+            ),
+        )
+
+        downloadsFeature.bind(
+            view,
+            DownloadsFeature(
+                requireContext(),
+                store = requireComponents.core.store,
+                useCases = requireComponents.useCases.downloadsUseCases,
+                fragmentManager = childFragmentManager,
+                downloadFileUtils =
+                    DefaultDownloadFileUtils(
+                        context = requireContext().applicationContext,
+                        downloadLocation = {
+                            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).path
+                        },
+                    ),
+                downloadManager =
+                    FetchDownloadManager(
+                        requireContext().applicationContext,
+                        requireComponents.core.store,
+                        DownloadService::class,
+                        notificationsDelegate = requireComponents.notificationsDelegate,
+                    ),
+                onNeedToRequestPermissions = { permissions ->
+                    requestDownloadPermissionsLauncher.launch(permissions)
+                },
+            ),
+        )
+    }
+
+    private fun setupLinksAndPrompts(view: View) {
+        val prefs = PreferenceManager.getDefaultSharedPreferences(requireContext())
+
+        appLinksFeature.bind(
+            view,
+            AppLinksFeature(
+                requireContext(),
+                store = requireComponents.core.store,
+                sessionId = sessionId,
+                fragmentManager = parentFragmentManager,
+                launchInApp = {
+                    prefs.getBoolean(
+                        requireContext().getPreferenceKey(R.string.pref_key_launch_external_app),
+                        false,
+                    )
+                },
+            ),
+        )
+
+        promptsFeature.bind(
+            view,
+            PromptFeature(
+                fragment = this,
+                store = requireComponents.core.store,
+                tabsUseCases = requireComponents.useCases.tabsUseCases,
+                customTabId = sessionId,
+                fileUploadsDirCleaner = requireComponents.core.fileUploadsDirCleaner,
+                fragmentManager = parentFragmentManager,
+                onNeedToRequestPermissions = { permissions ->
+                    requestPromptsPermissionsLauncher.launch(permissions)
+                },
+            ),
+        )
+
+        webExtensionPromptFeature.bind(
+            view,
+            WebExtensionPromptFeature(
+                store = requireComponents.core.store,
+                context = requireContext(),
+                fragmentManager = parentFragmentManager,
+            ),
+        )
+
+        windowFeature.bind(
+            view,
+            WindowFeature(requireComponents.core.store, requireComponents.useCases.tabsUseCases),
+        )
+    }
+
+    private fun setupPageFeatures(view: View) {
+        fullScreenFeature.bind(
+            view,
+            FullScreenFeature(
+                store = requireComponents.core.store,
+                sessionUseCases = requireComponents.useCases.sessionUseCases,
+                tabId = sessionId,
+                viewportFitChanged = ::viewportFitChanged,
+                fullScreenChanged = ::fullScreenChanged,
+            ),
+        )
+
+        findInPageIntegration.bind(
+            view,
+            FindInPageIntegration(
+                requireComponents.core.store,
+                sessionId,
+                findInPageBar as FindInPageView,
+                engineView,
+            ),
+        )
+
+        sitePermissionFeature.bind(
+            view,
+            SitePermissionsFeature(
+                context = requireContext(),
+                fragmentManager = parentFragmentManager,
+                sessionId = sessionId,
+                storage = requireComponents.core.geckoSitePermissionsStorage,
+                onNeedToRequestPermissions = { permissions ->
+                    requestSitePermissionsLauncher.launch(permissions)
+                },
+                onShouldShowRequestPermissionRationale = { shouldShowRequestPermissionRationale(it) },
+                store = requireComponents.core.store,
+                coroutineScope = requireComponents.applicationScope,
+            ),
+        )
+
+        pictureInPictureIntegration.bind(
+            view,
+            PictureInPictureIntegration(
+                requireComponents.core.store,
+                requireActivity(),
+                sessionId,
+            ),
+        )
+
+        fullScreenMediaSessionFeature.bind(
+            view,
+            MediaSessionFullscreenFeature(
+                requireActivity(),
+                requireComponents.core.store,
+                sessionId,
+            ),
+        )
     }
 
     private fun fullScreenChanged(enabled: Boolean) {
@@ -493,6 +474,11 @@ abstract class BaseBrowserFragment : Fragment(), UserInteractionHandler, Activit
         }
     }
 
+    protected fun <T : LifecycleAwareFeature> ViewBoundFeatureWrapper<T>.bind(
+        view: View,
+        feature: T,
+    ) = set(feature, this@BaseBrowserFragment, view)
+
     companion object {
         private const val SESSION_ID = "session_id"
 
@@ -509,7 +495,7 @@ abstract class BaseBrowserFragment : Fragment(), UserInteractionHandler, Activit
     ): Boolean {
         Logger.info(
             "Fragment onActivityResult received with " +
-                "requestCode: $requestCode, resultCode: $resultCode, data: $data"
+                "requestCode: $requestCode, resultCode: $resultCode, data: $data",
         )
 
         return activityResultHandler.any { it.onActivityResult(requestCode, data, resultCode) }

@@ -92,7 +92,7 @@ private fun awesomeBar() =
         allOf(
             withId(toolbarR.id.mozac_browser_toolbar_edit_url_view),
             isDescendantOfA(withId(toolbarR.id.mozac_browser_toolbar_container)),
-        )
+        ),
     )
 
 private fun clearToolbarButton() =
@@ -121,7 +121,7 @@ private fun assertPastedToolbarText(expectedText: String) {
             allOf(
                 withSubstring(expectedText),
                 withId(toolbarR.id.mozac_browser_toolbar_edit_url_view),
-            )
+            ),
         )
         .check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
 }

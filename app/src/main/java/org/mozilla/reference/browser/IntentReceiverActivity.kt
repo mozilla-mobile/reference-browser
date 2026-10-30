@@ -7,10 +7,12 @@ package org.mozilla.reference.browser
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.launch
 import org.mozilla.reference.browser.ext.components
 
+/**
+ * Entry point for launcher, link, share, custom tab and PWA shortcut intents. It has no UI: the intent processors pick
+ * the target and it forwards to [BrowserActivity] or [ExternalAppBrowserActivity].
+ */
 class IntentReceiverActivity : Activity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,20 +29,18 @@ class IntentReceiverActivity : Activity() {
 
         val utils = components.utils
 
-        MainScope().launch {
-            val processor = utils.intentProcessors.firstOrNull { it.process(intent) }
+        val processor = utils.intentProcessors.firstOrNull { it.process(intent) }
 
-            val className =
-                if (processor in utils.externalIntentProcessors) {
-                    ExternalAppBrowserActivity::class
-                } else {
-                    BrowserActivity::class
-                }
+        val className =
+            if (processor in utils.externalIntentProcessors) {
+                ExternalAppBrowserActivity::class
+            } else {
+                BrowserActivity::class
+            }
 
-            intent.setClassName(applicationContext, className.java.name)
+        intent.setClassName(applicationContext, className.java.name)
 
-            startActivity(intent)
-            finish()
-        }
+        startActivity(intent)
+        finish()
     }
 }

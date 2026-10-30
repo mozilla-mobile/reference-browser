@@ -9,6 +9,10 @@ import mozilla.components.feature.customtabs.AbstractCustomTabsService
 import mozilla.components.feature.customtabs.store.CustomTabsServiceStore
 import org.mozilla.reference.browser.ext.components
 
+/**
+ * Service that apps using the Custom Tabs protocol bind to, so they can warm up the engine and hint likely URLs before
+ * opening a custom tab here.
+ */
 class CustomTabsService : AbstractCustomTabsService() {
     override val customTabsServiceStore: CustomTabsServiceStore by lazy { components.core.customTabsStore }
     override val engine: Engine by lazy { components.core.engine }

@@ -10,7 +10,6 @@
     <string name="pref_key_sync_now" translatable="false">pref_key_sync_now</string>
     <string name="pref_key_sync_manage_account" translatable="false">pref_key_sync_manage_account</string>
     <string name="pref_key_firefox_account" translatable="false">pref_key_firefox_account</string>
-    <string name="pref_key_telemetry" translatable="false">pref_key_telemetry</string>
     <string name="pref_key_make_default_browser" translatable="false">pref_key_make_default_browser</string>
     <string name="pref_key_sync_history" translatable="false">pref_key_sync_history</string>
     <string name="pref_key_sync_tabs" translatable="false">pref_key_sync_tabs</string>

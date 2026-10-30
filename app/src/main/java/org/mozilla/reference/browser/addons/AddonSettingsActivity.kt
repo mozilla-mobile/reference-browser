@@ -77,7 +77,7 @@ class AddonSettingsActivity : AppCompatActivity() {
                             Addon::class.java,
                         )
                         ?.installedState
-                        ?.optionsPageUrl
+                        ?.optionsPageUrl,
                 )
 
             engineSession = requireContext().components.core.engine.createSession()

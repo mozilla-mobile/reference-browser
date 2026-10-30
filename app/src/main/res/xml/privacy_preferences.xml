@@ -26,16 +26,4 @@
         android:title="@string/preferences_global_privacy_control"
         android:key="@string/pref_key_global_privacy_control"/>
 
-    <PreferenceCategory
-        android:title="@string/data_choices_category">
-
-        <androidx.preference.SwitchPreferenceCompat
-            android:defaultValue="true"
-            android:title="@string/use_telemetry"
-            android:key="@string/pref_key_telemetry"
-            android:summary="@string/preferences_use_telemetry_summary"/>
-
-    </PreferenceCategory>
-
-
 </androidx.preference.PreferenceScreen>

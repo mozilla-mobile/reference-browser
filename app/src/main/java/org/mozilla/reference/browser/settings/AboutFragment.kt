@@ -24,6 +24,7 @@ import org.mozilla.geckoview.BuildConfig.MOZ_APP_BUILDID
 import org.mozilla.geckoview.BuildConfig.MOZ_APP_VERSION
 import org.mozilla.reference.browser.R
 
+/** About page. Tapping the version line copies it to the clipboard. */
 class AboutFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater,

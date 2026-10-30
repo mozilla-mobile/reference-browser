@@ -23,13 +23,6 @@ class SettingsViewPrivacyRobot {
 
     fun verifyTPEnableinPrivateBrowsing() = assertTpEnableInPrivateBrowsing()
 
-    fun verifyDataChoicesHeading() = assertDataChoicesHeading()
-
-    // verifyUseTelemetryToggle does not yet check that the client telemetry is disabled/enabled
-    fun verifyUseTelemetryToggle() = assertUseTelemetryToggle()
-
-    fun verifyTelemetrySummary() = assertTelemetrySummary()
-
     class Transition {
         fun settingsViewPrivacy(): SettingsViewPrivacyRobot.Transition = SettingsViewPrivacyRobot.Transition()
     }
@@ -42,12 +35,6 @@ private fun trackingProtectionHeading() = Espresso.onView(ViewMatchers.withText(
 private fun tpEnableInNormalBrowsing() = Espresso.onView(ViewMatchers.withText("Enable in Normal Browsing Mode"))
 
 private fun tpEnableInPrivateBrowsing() = Espresso.onView(ViewMatchers.withText("Enable in Private Browsing Mode"))
-
-private fun dataChoicesHeading() = Espresso.onView(ViewMatchers.withText("Data Choices"))
-
-private fun useTelemetryToggle() = Espresso.onView(ViewMatchers.withText("Use Telemetry"))
-
-private fun telemetrySummary() = Espresso.onView(ViewMatchers.withText("Send usage data"))
 
 private fun assertPrivacyUpButton() {
     mDevice.wait(Until.findObject(By.text("Navigate up")), TestAssetHelper.waitingTimeShort)
@@ -67,16 +54,4 @@ private fun assertTpEnableInNormalBrowsing() =
 
 private fun assertTpEnableInPrivateBrowsing() =
     tpEnableInPrivateBrowsing()
-        .check(ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
-
-private fun assertDataChoicesHeading() =
-    dataChoicesHeading()
-        .check(ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
-
-private fun assertUseTelemetryToggle() =
-    useTelemetryToggle()
-        .check(ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
-
-private fun assertTelemetrySummary() =
-    telemetrySummary()
         .check(ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))

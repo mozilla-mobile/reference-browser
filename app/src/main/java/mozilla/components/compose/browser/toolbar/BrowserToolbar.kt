@@ -22,6 +22,10 @@ import mozilla.components.lib.state.observeAsState
 import org.mozilla.reference.browser.compose.browserStore
 import org.mozilla.reference.browser.compose.sessionUseCases
 
+/**
+ * Experimental Compose toolbar, shown at the top of the browser when the Compose UI setting is on. The URL comes from
+ * the store so it follows tab switches; only edit mode is local state.
+ */
 @Composable
 fun BrowserToolbar() {
     val url: String? by browserStore().observeAsState { state -> state.selectedTab?.content?.url }
@@ -44,6 +48,7 @@ fun BrowserToolbar() {
     }
 }
 
+/** Stateless: a tap is only reported, so [BrowserToolbar] decides when to switch into edit mode. */
 @Composable
 fun BrowserDisplayToolbar(
     url: String,
@@ -56,6 +61,10 @@ fun BrowserDisplayToolbar(
     )
 }
 
+/**
+ * Keeps the typed text locally and reports it only on Go, so nothing is loaded and the store's URL is untouched while
+ * the user is still typing.
+ */
 @Composable
 fun BrowserEditToolbar(
     url: String,

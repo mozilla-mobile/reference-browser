@@ -16,6 +16,10 @@ import mozilla.components.feature.session.PictureInPictureFeature
 import mozilla.components.lib.state.ext.flowScoped
 import mozilla.components.support.base.feature.LifecycleAwareFeature
 
+/**
+ * Enters picture-in-picture when the user leaves the app while the page is fullscreen and its media is playing, or on
+ * any page whose URL contains a [whiteList] entry.
+ */
 class PictureInPictureIntegration(
     private val store: BrowserStore,
     activity: Activity,
@@ -40,6 +44,10 @@ class PictureInPictureIntegration(
         scope?.cancel()
     }
 
+    /**
+     * Pages whose URL contains a [whiteList] entry enter PiP without the fullscreen-and-playing check of
+     * [PictureInPictureFeature].
+     */
     fun onHomePressed() =
         if (whiteListed) {
             pictureFeature.enterPipModeCompat()

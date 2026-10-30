@@ -4,6 +4,7 @@
 
 package org.mozilla.reference.browser
 
+/** Request codes for the app's PendingIntents. */
 object IntentRequestCodes {
     const val REQUEST_CODE_DATA_REPORTING = 0
 }

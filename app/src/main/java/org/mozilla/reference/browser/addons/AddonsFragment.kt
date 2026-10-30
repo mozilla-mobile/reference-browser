@@ -11,25 +11,27 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import mozilla.components.feature.addons.Addon
 import mozilla.components.feature.addons.AddonManagerException
 import mozilla.components.feature.addons.R as addonsR
 import mozilla.components.feature.addons.ui.AddonsManagerAdapter
 import mozilla.components.feature.addons.ui.AddonsManagerAdapterDelegate
 import mozilla.components.support.base.feature.ViewBoundFeatureWrapper
+import mozilla.components.support.base.log.logger.Logger
 import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.ext.components
 
 /** Fragment use for managing add-ons. */
 class AddonsFragment : Fragment(), AddonsManagerAdapterDelegate {
+    private val logger = Logger("AddonsFragment")
     private val webExtensionPromptFeature = ViewBoundFeatureWrapper<WebExtensionPromptFeature>()
     private lateinit var recyclerView: RecyclerView
-    private val scope = CoroutineScope(Dispatchers.IO)
     private lateinit var addons: List<Addon>
     private var adapter: AddonsManagerAdapter? = null
 
@@ -47,7 +49,6 @@ class AddonsFragment : Fragment(), AddonsManagerAdapterDelegate {
         savedInstanceState: Bundle?,
     ) {
         super.onViewCreated(rootView, savedInstanceState)
-        bindRecyclerView(rootView)
         webExtensionPromptFeature.set(
             feature =
                 WebExtensionPromptFeature(
@@ -73,28 +74,25 @@ class AddonsFragment : Fragment(), AddonsManagerAdapterDelegate {
     private fun bindRecyclerView(rootView: View) {
         recyclerView = rootView.findViewById(R.id.add_ons_list)
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
-        scope.launch {
+        viewLifecycleOwner.lifecycleScope.launch {
             try {
-                addons = requireContext().components.core.addonManager.getAddons()
+                addons = withContext(Dispatchers.IO) { requireContext().components.core.addonManager.getAddons() }
 
-                scope.launch(Dispatchers.Main) {
-                    adapter =
-                        AddonsManagerAdapter(
-                            this@AddonsFragment,
-                            addons,
-                            store = requireContext().components.core.store,
-                        )
-                    recyclerView.adapter = adapter
-                }
+                adapter =
+                    AddonsManagerAdapter(
+                        this@AddonsFragment,
+                        addons,
+                        store = requireContext().components.core.store,
+                    )
+                recyclerView.adapter = adapter
             } catch (e: AddonManagerException) {
-                scope.launch(Dispatchers.Main) {
-                    Toast.makeText(
-                            activity,
-                            addonsR.string.mozac_feature_addons_failed_to_load_extensions,
-                            Toast.LENGTH_SHORT,
-                        )
-                        .show()
-                }
+                logger.error("Failed to load add-ons", e)
+                Toast.makeText(
+                        activity,
+                        addonsR.string.mozac_feature_addons_failed_to_load_extensions,
+                        Toast.LENGTH_SHORT,
+                    )
+                    .show()
             }
         }
     }

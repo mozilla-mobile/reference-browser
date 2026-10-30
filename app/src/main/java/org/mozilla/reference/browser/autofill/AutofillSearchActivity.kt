@@ -10,6 +10,7 @@ import mozilla.components.feature.autofill.AutofillConfiguration
 import mozilla.components.feature.autofill.ui.AbstractAutofillSearchActivity
 import org.mozilla.reference.browser.ext.components
 
+/** Lets the user search all saved logins from the autofill suggestions instead of picking a matched one. */
 class AutofillSearchActivity : AbstractAutofillSearchActivity() {
     override val configuration: AutofillConfiguration by lazy { components.autofillConfiguration }
 

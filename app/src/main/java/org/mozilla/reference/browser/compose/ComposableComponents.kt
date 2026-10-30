@@ -13,4 +13,5 @@ import org.mozilla.reference.browser.ext.components
 /** Composable helper for providing the [BrowserStore] instance of this application. */
 @Composable fun browserStore(): BrowserStore = LocalContext.current.components.core.store
 
+/** Composable helper for the app's [SessionUseCases], so composables never need a Context passed in. */
 @Composable fun sessionUseCases(): SessionUseCases = LocalContext.current.components.useCases.sessionUseCases

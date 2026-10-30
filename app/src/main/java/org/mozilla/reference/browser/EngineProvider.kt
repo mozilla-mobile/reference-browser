@@ -15,9 +15,14 @@ import mozilla.components.lib.crash.handler.CrashHandlerService
 import org.mozilla.geckoview.GeckoRuntime
 import org.mozilla.geckoview.GeckoRuntimeSettings
 
+/**
+ * Holds the process-wide [GeckoRuntime]. GeckoView allows only one runtime per process, so the engine, the fetch client
+ * and site permission storage must all share it.
+ */
 object EngineProvider {
     private var runtime: GeckoRuntime? = null
 
+    /** Synchronized so that concurrent callers cannot create a second [GeckoRuntime]. */
     @Synchronized
     fun getOrCreateRuntime(context: Context): GeckoRuntime {
         if (runtime == null) {
@@ -34,6 +39,7 @@ object EngineProvider {
         return runtime!!
     }
 
+    /** Creates the engine on the shared runtime and installs [WebCompatFeature] on it. */
     fun createEngine(
         context: Context,
         defaultSettings: DefaultSettings,
@@ -45,6 +51,7 @@ object EngineProvider {
         }
     }
 
+    /** Backed by the shared runtime, so requests made through this client use Gecko's network stack. */
     fun createClient(context: Context): Client {
         val runtime = getOrCreateRuntime(context)
         return GeckoViewFetchClient(context, runtime)

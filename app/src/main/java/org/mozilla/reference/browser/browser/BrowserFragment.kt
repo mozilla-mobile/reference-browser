@@ -9,7 +9,6 @@ import android.view.View
 import androidx.lifecycle.lifecycleScope
 import androidx.preference.PreferenceManager
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import mozilla.components.browser.thumbnails.BrowserThumbnails
@@ -61,13 +60,62 @@ class BrowserFragment : BaseBrowserFragment(), UserInteractionHandler {
                     false,
                 )
 
-    @Suppress("LongMethod")
     override fun onViewCreated(
         view: View,
         savedInstanceState: Bundle?,
     ) {
         super.onViewCreated(view, savedInstanceState)
+        setupAwesomeBar()
 
+        TabsToolbarFeature(
+            toolbar = toolbar,
+            sessionId = sessionId,
+            store = requireComponents.core.store,
+            showTabs = ::showTabs,
+            lifecycleOwner = this,
+        )
+
+        thumbnailsFeature.bind(
+            view,
+            BrowserThumbnails(
+                requireContext(),
+                engineView,
+                requireComponents.core.store,
+            ),
+        )
+
+        readerViewFeature.bind(
+            view,
+            ReaderViewIntegration(
+                requireContext(),
+                requireComponents.core.engine,
+                requireComponents.core.store,
+                toolbar,
+                readerViewBar,
+                readerViewAppearanceButton,
+            ),
+        )
+
+        webExtToolbarFeature.bind(
+            view,
+            WebExtensionToolbarFeature(
+                toolbar,
+                requireContext().components.core.store,
+            ),
+        )
+
+        windowFeature.bind(
+            view,
+            WindowFeature(
+                store = requireComponents.core.store,
+                tabsUseCases = requireComponents.useCases.tabsUseCases,
+            ),
+        )
+
+        engineView.setDynamicToolbarMaxHeight(resources.getDimensionPixelSize(R.dimen.browser_toolbar_height))
+    }
+
+    private fun setupAwesomeBar() {
         AwesomeBarFeature(awesomeBar, toolbar, engineView)
             .addSearchProvider(
                 requireComponents.core.store,
@@ -96,67 +144,12 @@ class BrowserFragment : BaseBrowserFragment(), UserInteractionHandler {
                 requireComponents.backgroundServices.syncedTabsStorage,
                 requireComponents.useCases.tabsUseCases.addTab,
                 requireComponents.core.icons,
-            )
+            ),
         )
         awesomeBar.setOnRemoveSuggestionButtonClicked {
             awesomeBar.addHiddenSuggestion(it)
             (it.suggestion as? Suggestion)?.let { s -> deleteHistorySuggestion(s) }
         }
-
-        TabsToolbarFeature(
-            toolbar = toolbar,
-            sessionId = sessionId,
-            store = requireComponents.core.store,
-            showTabs = ::showTabs,
-            lifecycleOwner = this,
-        )
-
-        thumbnailsFeature.set(
-            feature =
-                BrowserThumbnails(
-                    requireContext(),
-                    engineView,
-                    requireComponents.core.store,
-                ),
-            owner = this,
-            view = view,
-        )
-
-        readerViewFeature.set(
-            feature =
-                ReaderViewIntegration(
-                    requireContext(),
-                    requireComponents.core.engine,
-                    requireComponents.core.store,
-                    toolbar,
-                    readerViewBar,
-                    readerViewAppearanceButton,
-                ),
-            owner = this,
-            view = view,
-        )
-
-        webExtToolbarFeature.set(
-            feature =
-                WebExtensionToolbarFeature(
-                    toolbar,
-                    requireContext().components.core.store,
-                ),
-            owner = this,
-            view = view,
-        )
-
-        windowFeature.set(
-            feature =
-                WindowFeature(
-                    store = requireComponents.core.store,
-                    tabsUseCases = requireComponents.useCases.tabsUseCases,
-                ),
-            owner = this,
-            view = view,
-        )
-
-        engineView.setDynamicToolbarMaxHeight(resources.getDimensionPixelSize(R.dimen.browser_toolbar_height))
     }
 
     private fun showTabs() {
@@ -168,7 +161,6 @@ class BrowserFragment : BaseBrowserFragment(), UserInteractionHandler {
         }
     }
 
-    @OptIn(DelicateCoroutinesApi::class)
     private fun deleteHistorySuggestion(suggestion: Suggestion) {
         lifecycleScope.launch(Dispatchers.IO) {
             suggestion.description?.let {
@@ -180,6 +172,10 @@ class BrowserFragment : BaseBrowserFragment(), UserInteractionHandler {
     override fun onBackPressed(): Boolean = readerViewFeature.onBackPressed() || super.onBackPressed()
 
     companion object {
+        /**
+         * Fragments must keep a no-argument constructor so the system can recreate them, which is why the session id
+         * travels in the arguments bundle instead of a constructor parameter.
+         */
         fun create(sessionId: String? = null) =
             BrowserFragment().apply {
                 arguments =

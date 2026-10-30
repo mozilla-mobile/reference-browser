@@ -15,7 +15,6 @@ import androidx.preference.CheckBoxPreference
 import androidx.preference.Preference
 import androidx.preference.Preference.OnPreferenceClickListener
 import androidx.preference.PreferenceFragmentCompat
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import mozilla.components.concept.sync.SyncEngine
@@ -36,11 +35,12 @@ import org.mozilla.reference.browser.ext.getPreferenceKey
 import org.mozilla.reference.browser.ext.requireComponents
 import org.mozilla.reference.browser.sync.BrowserFxAEntryPoint
 
+/** Firefox Account settings for a signed-in user: sync now, choice of synced engines, manage account and sign out. */
 class AccountSettingsFragment : PreferenceFragmentCompat() {
     private val syncStatusObserver =
         object : SyncStatusObserver {
             override fun onStarted() {
-                CoroutineScope(Dispatchers.Main).launch {
+                lifecycleScope.launch(Dispatchers.Main) {
                     val pref = findPreference<Preference>(requireContext().getPreferenceKey(pref_key_sync_now))
 
                     pref?.title = getString(R.string.syncing)
@@ -50,7 +50,7 @@ class AccountSettingsFragment : PreferenceFragmentCompat() {
 
             // Sync stopped successfully.
             override fun onIdle() {
-                CoroutineScope(Dispatchers.Main).launch {
+                lifecycleScope.launch(Dispatchers.Main) {
                     val pref = findPreference<Preference>(requireContext().getPreferenceKey(pref_key_sync_now))
                     pref?.title = getString(R.string.sync_now)
                     pref?.isEnabled = true
@@ -61,7 +61,7 @@ class AccountSettingsFragment : PreferenceFragmentCompat() {
 
             // Sync stopped after encountering a problem.
             override fun onError(error: Exception?) {
-                CoroutineScope(Dispatchers.Main).launch {
+                lifecycleScope.launch(Dispatchers.Main) {
                     val pref = findPreference<Preference>(requireContext().getPreferenceKey(pref_key_sync_now))
                     pref?.title = getString(R.string.sync_now)
                     pref?.isEnabled = true
@@ -115,6 +115,10 @@ class AccountSettingsFragment : PreferenceFragmentCompat() {
         )
     }
 
+    /**
+     * The summary depends on both the last sync time and [failed], so that a failed sync still tells the user when the
+     * last successful one was, and a first failure is not reported as "never synced".
+     */
     fun updateLastSyncedTimePref(
         context: Context,
         pref: Preference?,
@@ -146,7 +150,7 @@ class AccountSettingsFragment : PreferenceFragmentCompat() {
     }
 
     private fun getClickListenerForSignOut(): OnPreferenceClickListener = OnPreferenceClickListener {
-        CoroutineScope(Dispatchers.Main).launch {
+        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Main) {
             requireComponents.backgroundServices.accountManager.logout()
             activity?.onBackPressedDispatcher?.onBackPressed()
         }
@@ -154,7 +158,7 @@ class AccountSettingsFragment : PreferenceFragmentCompat() {
     }
 
     private fun getClickListenerForSyncNow(): OnPreferenceClickListener = OnPreferenceClickListener {
-        CoroutineScope(Dispatchers.Main).launch {
+        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Main) {
             // Trigger a sync & update devices.
             requireComponents.backgroundServices.accountManager.syncNow(SyncReason.User)
             // Poll for device events.
@@ -196,7 +200,7 @@ class AccountSettingsFragment : PreferenceFragmentCompat() {
         engine: SyncEngine,
         newState: Boolean,
     ) {
-        CoroutineScope(Dispatchers.Main).launch {
+        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Main) {
             requireComponents.backgroundServices.accountManager.setEngineEnabled(engine, newState)
         }
     }

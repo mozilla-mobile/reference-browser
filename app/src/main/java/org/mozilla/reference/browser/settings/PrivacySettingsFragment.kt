@@ -13,6 +13,7 @@ import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.ext.getPreferenceKey
 import org.mozilla.reference.browser.ext.requireComponents
 
+/** Privacy settings. Changes are applied to the engine as soon as they are made. */
 class PrivacySettingsFragment : PreferenceFragmentCompat() {
     override fun onCreatePreferences(
         savedInstanceState: Bundle?,
@@ -21,17 +22,14 @@ class PrivacySettingsFragment : PreferenceFragmentCompat() {
         setPreferencesFromResource(R.xml.privacy_preferences, rootKey)
 
         val context = requireContext()
-        val telemetryKey = context.getPreferenceKey(R.string.pref_key_telemetry)
         val trackingProtectionNormalKey = context.getPreferenceKey(R.string.pref_key_tracking_protection_normal)
         val trackingProtectionPrivateKey = context.getPreferenceKey(R.string.pref_key_tracking_protection_private)
         val globalPrivacyControlKey = context.getPreferenceKey(R.string.pref_key_global_privacy_control)
 
-        val prefTelemetry = findPreference<SwitchPreferenceCompat>(telemetryKey)
         val prefTrackingProtectionNormal = findPreference<SwitchPreferenceCompat>(trackingProtectionNormalKey)
         val prefTrackingProtectionPrivate = findPreference<SwitchPreferenceCompat>(trackingProtectionPrivateKey)
         val globalPrivacyControl = findPreference<SwitchPreferenceCompat>(globalPrivacyControlKey)
 
-        prefTelemetry?.onPreferenceChangeListener = getChangeListenerForTelemetry()
         prefTrackingProtectionNormal?.onPreferenceChangeListener = getChangeListenerForTrackingProtection { enabled ->
             requireComponents.core.createTrackingProtectionPolicy(normalMode = enabled)
         }
@@ -45,12 +43,8 @@ class PrivacySettingsFragment : PreferenceFragmentCompat() {
         }
     }
 
-    private fun getChangeListenerForTelemetry(): OnPreferenceChangeListener = OnPreferenceChangeListener { _, _ ->
-        true
-    }
-
     private fun getChangeListenerForTrackingProtection(
-        createTrackingProtectionPolicy: (Boolean) -> TrackingProtectionPolicy
+        createTrackingProtectionPolicy: (Boolean) -> TrackingProtectionPolicy,
     ): OnPreferenceChangeListener = OnPreferenceChangeListener { _, value ->
         val policy = createTrackingProtectionPolicy(value as Boolean)
         requireComponents.useCases.settingsUseCases.updateTrackingProtection.invoke(policy)

@@ -37,6 +37,10 @@ import org.mozilla.reference.browser.BrowserActivity
 import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.ext.share
 
+/**
+ * Toolbar and menu for a custom tab session, including the "Open in Browser" action that migrates the session into a
+ * regular tab.
+ */
 @Suppress("LongParameterList")
 class CustomTabsIntegration(
     private val context: Context,

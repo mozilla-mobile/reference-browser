@@ -71,4 +71,5 @@ class Analytics(private val context: Context) {
     }
 }
 
+/** Only builds with a `.sentry_token` file get a token; the others report crashes without the Sentry service. */
 fun isSentryEnabled() = !BuildConfig.SENTRY_TOKEN.isNullOrEmpty()

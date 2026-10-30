@@ -55,17 +55,17 @@ class BrowserRobot {
                     withSubstring(expectedUrl),
                     withId(toolbarR.id.mozac_browser_toolbar_url_view),
                     isDescendantOfA(withId(toolbarR.id.mozac_browser_toolbar_origin_view)),
-                )
+                ),
             )
             .check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
     }
 
     fun verifyAboutBrowser() {
         assertTrue(
-            mDevice.findObject(UiSelector().resourceId("$packageName:id/about_content")).waitForExists(waitingTime)
+            mDevice.findObject(UiSelector().resourceId("$packageName:id/about_content")).waitForExists(waitingTime),
         )
         assertTrue(
-            mDevice.findObject(UiSelector().resourceId("$packageName:id/version_info")).waitForExists(waitingTime)
+            mDevice.findObject(UiSelector().resourceId("$packageName:id/version_info")).waitForExists(waitingTime),
         )
     }
 
@@ -185,7 +185,7 @@ class BrowserRobot {
     fun waitUntilCopyLinkSnackbarIsGone() =
         mDevice
             .findObject(
-                UiSelector().resourceId("$packageName:id/snackbar_text").textContains("Link copied to clipboard")
+                UiSelector().resourceId("$packageName:id/snackbar_text").textContains("Link copied to clipboard"),
             )
             .waitUntilGone(waitingTime)
 

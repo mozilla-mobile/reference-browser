@@ -22,6 +22,10 @@ import mozilla.components.feature.tabs.TabsUseCases
 import mozilla.components.support.base.feature.LifecycleAwareFeature
 import mozilla.components.ui.widgets.DefaultSnackbarDelegate
 
+/**
+ * Long-press context menu for page content. Custom tabs and PWAs (a non-null [sessionId]) get a shorter menu: copy and
+ * share link, open image in a new tab, save image and copy image location.
+ */
 @Suppress("LongParameterList")
 class ContextMenuIntegration(
     context: Context,

@@ -6,7 +6,6 @@ package org.mozilla.reference.browser.push
 
 import android.util.Base64
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import mozilla.components.concept.engine.Engine
 import mozilla.components.concept.engine.webpush.WebPushDelegate
@@ -17,19 +16,29 @@ import mozilla.components.feature.push.AutoPushSubscription
 import mozilla.components.feature.push.PushScope
 import mozilla.components.support.base.log.logger.Logger
 
+/** Bridges Web Push between the engine (sites' service workers) and the app's [AutoPushFeature]. */
 class WebPushEngineIntegration(
     private val engine: Engine,
     private val pushFeature: AutoPushFeature,
+    private val applicationScope: CoroutineScope,
 ) : AutoPushFeature.Observer {
     private var handler: WebPushHandler? = null
     private val delegate = WebPushEngineDelegate(pushFeature)
 
+    /**
+     * Registers the engine delegate before observing the push feature; messages that arrive while [handler] is null are
+     * dropped.
+     */
     fun start() {
         handler = engine.registerWebPushDelegate(delegate)
 
         pushFeature.register(this)
     }
 
+    /**
+     * Stops forwarding push messages and subscription changes to the engine. [Engine] has no way to unregister the web
+     * push delegate, so sites can still subscribe and unsubscribe.
+     */
     fun stop() {
         pushFeature.unregister(this)
     }
@@ -38,13 +47,13 @@ class WebPushEngineIntegration(
         scope: PushScope,
         message: ByteArray?,
     ) {
-        CoroutineScope(Dispatchers.Main).launch {
+        applicationScope.launch {
             handler?.onPushMessage(scope, message)
         }
     }
 
     override fun onSubscriptionChanged(scope: PushScope) {
-        CoroutineScope(Dispatchers.Main).launch {
+        applicationScope.launch {
             handler?.onSubscriptionChanged(scope)
         }
     }

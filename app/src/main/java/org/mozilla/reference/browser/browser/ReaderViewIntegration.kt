@@ -22,6 +22,10 @@ import mozilla.components.support.base.feature.UserInteractionHandler
 import mozilla.components.ui.colors.R as colorsR
 import mozilla.components.ui.icons.R as iconsR
 
+/**
+ * Adds the reader view toggle to the toolbar, shown only on pages where reader mode is available, plus the floating
+ * button that opens the reader view appearance controls.
+ */
 class ReaderViewIntegration(
     context: Context,
     engine: Engine,
@@ -56,7 +60,7 @@ class ReaderViewIntegration(
 
     init {
         toolbar.addPageAction(readerViewButton)
-        readerViewAppearanceButton.setOnClickListener { feature.showControls(isListenEnabled = false) }
+        readerViewAppearanceButton.setOnClickListener { feature.showControls() }
     }
 
     private val feature =

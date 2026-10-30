@@ -9,6 +9,7 @@ import kotlin.math.abs
 import mozilla.components.browser.state.state.TabSessionState
 import mozilla.components.browser.tabstray.TabTouchCallback
 
+/** Lets the user swipe a tab in the tabs tray away to close it, fading it out as it moves. */
 class TabsTouchHelper(observable: (TabSessionState) -> Unit) :
     ItemTouchHelper(
         object : TabTouchCallback(observable) {
@@ -16,5 +17,5 @@ class TabsTouchHelper(observable: (TabSessionState) -> Unit) :
                 dX: Float,
                 distanceToAlphaMin: Int,
             ): Float = 1f - 2f * abs(dX) / distanceToAlphaMin
-        }
+        },
     )

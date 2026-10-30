@@ -179,16 +179,6 @@ project.configurations.configureEach {
 }
 
 dependencies {
-
-    // We pick up JNA transitively by way of Glean, which is currently on version 5.14.0.
-    // However, we need to force version 5.17.0 due to Google Play's 16KB page size requirement.
-    // JNA 5.15.0+ crashes on Android <7, however, so it can't be bumped in Glean at this time.
-    // Therefore, manually force the use of version 5.17.0 at the app level since we only support
-    // running on Android 8+ now anyway.
-    constraints {
-        implementation(libs.jna)
-    }
-
     implementation libs.androidx.activity
     implementation libs.androidx.annotation
     implementation libs.androidx.appcompat
@@ -205,7 +195,6 @@ dependencies {
     implementation libs.androidx.preference.ktx
     implementation libs.androidx.recyclerview
     implementation libs.androidx.swiperefreshlayout
-    implementation libs.androidx.work.runtime.ktx
 
     implementation platform(libs.androidx.compose.bom)
     implementation libs.androidx.compose.foundation
@@ -281,6 +270,7 @@ dependencies {
 
     implementation libs.mozilla.service.firefox.accounts
     implementation libs.mozilla.service.location
+    implementation libs.mozilla.service.merino.manifest
     implementation libs.mozilla.service.sync.logins
 
     implementation libs.mozilla.support.appservices
@@ -293,6 +283,8 @@ dependencies {
     implementation libs.mozilla.ui.icons
     implementation libs.mozilla.ui.tabcounter
     implementation libs.mozilla.ui.widgets
+
+    runtimeOnly libs.androidx.work.runtime
 
     androidTestImplementation libs.androidx.test.core
     androidTestImplementation libs.androidx.test.espresso.core

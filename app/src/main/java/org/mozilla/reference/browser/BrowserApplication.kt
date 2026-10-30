@@ -8,9 +8,7 @@ import android.app.Application
 import java.util.concurrent.TimeUnit
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 import mozilla.components.browser.state.action.SystemAction
@@ -29,6 +27,10 @@ import mozilla.components.support.webextensions.WebExtensionSupport
 import org.mozilla.reference.browser.push.PushFxaIntegration
 import org.mozilla.reference.browser.push.WebPushEngineIntegration
 
+/**
+ * Owns the app's [Components]. Engine, add-on and push setup run only in the main process, never in GeckoView child or
+ * crash handler processes.
+ */
 open class BrowserApplication : Application() {
     /**
      * Scope for long-running work that must outlive any individual activity. [SupervisorJob] keeps a failure in one
@@ -40,7 +42,7 @@ open class BrowserApplication : Application() {
                 Dispatchers.Main +
                 CoroutineExceptionHandler { _, throwable ->
                     Logger.error("ApplicationScope: Unhandled error: ${throwable.message}", throwable)
-                }
+                },
         )
 
     val components by lazy { Components(this, applicationScope) }
@@ -112,16 +114,15 @@ open class BrowserApplication : Application() {
             PushProcessor.install(it)
 
             // WebPush integration to observe and deliver push messages to engine.
-            WebPushEngineIntegration(components.core.engine, it).start()
+            WebPushEngineIntegration(components.core.engine, it, applicationScope).start()
 
             // Perform a one-time initialization of the account manager if a message is received.
-            PushFxaIntegration(it, lazy { components.backgroundServices.accountManager }).launch()
+            PushFxaIntegration(it, lazy { components.backgroundServices.accountManager }, applicationScope).launch()
 
             // Initialize the push feature and service.
             it.initialize()
         }
-        @OptIn(DelicateCoroutinesApi::class)
-        GlobalScope.launch(Dispatchers.IO) {
+        applicationScope.launch(Dispatchers.IO) {
             components.core.fileUploadsDirCleaner.cleanUploadsDirectory()
         }
     }
@@ -134,22 +135,20 @@ open class BrowserApplication : Application() {
         }
     }
 
-    @OptIn(DelicateCoroutinesApi::class)
-    private fun restoreBrowserState() =
-        GlobalScope.launch(Dispatchers.Main) {
-            val store = components.core.store
-            val sessionStorage = components.core.sessionStorage
+    private fun restoreBrowserState() = applicationScope.launch {
+        val store = components.core.store
+        val sessionStorage = components.core.sessionStorage
 
-            components.useCases.tabsUseCases.restore(sessionStorage)
+        components.useCases.tabsUseCases.restore(sessionStorage)
 
-            // Now that we have restored our previous state (if there's one) let's setup auto saving the state while
-            // the app is used.
-            sessionStorage
-                .autoSave(store)
-                .periodicallyInForeground(interval = 30, unit = TimeUnit.SECONDS)
-                .whenGoingToBackground()
-                .whenSessionsChange()
-        }
+        // Now that we have restored our previous state (if there's one) let's setup auto saving the state while
+        // the app is used.
+        sessionStorage
+            .autoSave(store)
+            .periodicallyInForeground(interval = 30, unit = TimeUnit.SECONDS)
+            .whenGoingToBackground()
+            .whenSessionsChange()
+    }
 
     companion object {
         const val NON_FATAL_CRASH_BROADCAST = "org.mozilla.reference.browser"

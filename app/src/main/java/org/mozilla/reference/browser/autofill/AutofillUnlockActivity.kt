@@ -13,6 +13,10 @@ import mozilla.components.feature.autofill.ui.AbstractAutofillUnlockActivity
 import mozilla.components.support.ktx.android.view.setupPersistentInsets
 import org.mozilla.reference.browser.ext.components
 
+/**
+ * Asks for device authentication before autofill hands saved logins to another app, unless autofill is still unlocked
+ * from a recent authentication.
+ */
 class AutofillUnlockActivity : AbstractAutofillUnlockActivity() {
     override val configuration: AutofillConfiguration by lazy { components.autofillConfiguration }
 
