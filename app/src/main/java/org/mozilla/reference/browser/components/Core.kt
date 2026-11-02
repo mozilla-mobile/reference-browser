@@ -189,7 +189,7 @@ class Core(
         DefaultAddonUpdater(
             context,
             Frequency(1, TimeUnit.DAYS),
-            notificationsDelegate = context.components.notificationsDelegate,
+            store = store,
         )
     }
 
