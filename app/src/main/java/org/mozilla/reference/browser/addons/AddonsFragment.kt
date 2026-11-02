@@ -17,11 +17,14 @@ import androidx.recyclerview.widget.RecyclerView
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import mozilla.components.browser.state.action.WebExtensionAction
 import mozilla.components.feature.addons.Addon
 import mozilla.components.feature.addons.AddonManagerException
 import mozilla.components.feature.addons.R as addonsR
 import mozilla.components.feature.addons.ui.AddonsManagerAdapter
 import mozilla.components.feature.addons.ui.AddonsManagerAdapterDelegate
+import mozilla.components.feature.addons.ui.PermissionsDialogFragment
+import mozilla.components.feature.addons.ui.PermissionsDialogMode
 import mozilla.components.support.base.feature.ViewBoundFeatureWrapper
 import mozilla.components.support.base.log.logger.Logger
 import org.mozilla.reference.browser.R
@@ -69,6 +72,13 @@ class AddonsFragment : Fragment(), AddonsManagerAdapterDelegate {
         }
 
         addonProgressOverlay.visibility = View.GONE
+
+        findUpdateDialog()?.let { dialog ->
+            val instanceId = dialog.promptInstanceId ?: return@let
+            dialog.onPositiveButtonClicked = { addon, _, _ ->
+                answerPendingUpdate(addon.id, instanceId, granted = true)
+            }
+        }
     }
 
     private fun bindRecyclerView(rootView: View) {
@@ -143,6 +153,44 @@ class AddonsFragment : Fragment(), AddonsManagerAdapterDelegate {
             )
     }
 
+    override fun onReviewExtensionUpdateClicked(addon: Addon) {
+        val pendingUpdate = requireContext().components.core.store.state.pendingExtensionUpdates[addon.id] ?: return
+        if (findUpdateDialog() != null) return
+        PermissionsDialogFragment.newInstance(
+                addon = addon,
+                mode = PermissionsDialogMode.UPDATE,
+                permissions = pendingUpdate.permissions,
+                origins = pendingUpdate.origins,
+                dataCollectionPermissions = pendingUpdate.dataCollectionPermissions,
+                promptInstanceId = pendingUpdate.instanceId,
+                onPositiveButtonClicked = { _, _, _ ->
+                    answerPendingUpdate(addon.id, pendingUpdate.instanceId, granted = true)
+                },
+            )
+            .show(parentFragmentManager, UPDATE_PERMISSIONS_DIALOG_FRAGMENT_TAG)
+    }
+
+    override fun onCancelExtensionUpdateClicked(addon: Addon) {
+        val pendingUpdate = requireContext().components.core.store.state.pendingExtensionUpdates[addon.id] ?: return
+        answerPendingUpdate(addon.id, pendingUpdate.instanceId, granted = false)
+    }
+
+    private fun answerPendingUpdate(addonId: String, instanceId: String, granted: Boolean) {
+        val store = requireContext().components.core.store
+        val pendingUpdate =
+            store.state.pendingExtensionUpdates[addonId]?.takeIf { it.instanceId == instanceId } ?: return
+        store.dispatch(WebExtensionAction.RemovePendingExtensionUpdateAction(addonId))
+        pendingUpdate.complete(granted)
+        adapter?.run { notifyItemRangeChanged(0, itemCount) }
+    }
+
+    private fun findUpdateDialog() =
+        parentFragmentManager.findFragmentByTag(UPDATE_PERMISSIONS_DIALOG_FRAGMENT_TAG) as? PermissionsDialogFragment
+
     /** Whether or not an add-on installation is in progress. */
     private var isInstallationInProgress = false
+
+    companion object {
+        private const val UPDATE_PERMISSIONS_DIALOG_FRAGMENT_TAG = "ADDONS_UPDATE_PERMISSIONS_DIALOG_FRAGMENT"
+    }
 }
