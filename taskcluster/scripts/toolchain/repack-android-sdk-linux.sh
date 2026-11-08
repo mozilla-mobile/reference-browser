@@ -16,12 +16,12 @@ COMPILE_SDK_VERSION="$(kotlin_const compileSdkMajorVersion).$(kotlin_const compi
 
 export ANDROID_SDK_ROOT=$MOZ_FETCHES_DIR
 
-JAVA17PATH="/usr/lib/jvm/java-17-openjdk-amd64/bin/:$PATH"
+JAVA25PATH="/usr/lib/jvm/java-25-openjdk-amd64/bin/:$PATH"
 
-PATH=$JAVA17PATH "${ANDROID_SDK_ROOT}/cmdline-tools/bin/android" --no-metrics --sdk "${ANDROID_SDK_ROOT}" \
+PATH=$JAVA25PATH "${ANDROID_SDK_ROOT}/cmdline-tools/bin/android" --no-metrics --sdk "${ANDROID_SDK_ROOT}" \
     sdk install "platforms;android-${COMPILE_SDK_VERSION}" "build-tools;${BUILD_TOOLS_VERSION}"
 
 # It's nice to have the build logs include the state of the world upon completion.
-PATH=$JAVA17PATH "${ANDROID_SDK_ROOT}/cmdline-tools/bin/android" --no-metrics --sdk "${ANDROID_SDK_ROOT}" sdk list
+PATH=$JAVA25PATH "${ANDROID_SDK_ROOT}/cmdline-tools/bin/android" --no-metrics --sdk "${ANDROID_SDK_ROOT}" sdk list
 
 tar cf - -C "$ANDROID_SDK_ROOT" . --transform 's,^\./,android-sdk-linux/,' | xz > "$UPLOAD_DIR/android-sdk-linux.tar.xz"
