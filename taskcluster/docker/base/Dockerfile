@@ -32,7 +32,7 @@ RUN apt-get update -qq \
     # We need to install tzdata before all of the other packages. Otherwise it will show an interactive dialog that
     # we cannot navigate while building the Docker image.
     && apt-get install -y tzdata \
-    && apt-get install -y openjdk-17-jdk \
+    && apt-get install -y openjdk-25-jdk \
                           wget \
                           expect \
                           git \

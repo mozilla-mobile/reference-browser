@@ -15,6 +15,7 @@ def baseVersionCode = generatedVersionCode
 import com.android.build.api.variant.BuildConfigField
 import com.android.build.api.variant.FilterConfiguration
 import groovy.json.JsonOutput
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 androidComponents {
     beforeVariants(selector().all()) { variantBuilder ->
@@ -93,6 +94,11 @@ androidComponents {
 }
 
 android {
+    compileOptions {
+        sourceCompatibility = JavaVersion.toVersion(Config.jvmTargetCompatibility)
+        targetCompatibility = JavaVersion.toVersion(Config.jvmTargetCompatibility)
+    }
+
     defaultConfig {
         applicationId "org.mozilla.reference.browser"
         buildToolsVersion Config.buildToolsVersion
@@ -162,7 +168,9 @@ android {
 }
 
 kotlin {
-    jvmToolchain(Config.jvmTargetCompatibility)
+    compilerOptions {
+        jvmTarget = JvmTarget.fromTarget(Config.jvmTargetCompatibility.toString())
+    }
 }
 
 // Select the Glean from GeckoView.
