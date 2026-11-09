@@ -197,7 +197,6 @@ dependencies {
     implementation libs.androidx.core.ktx
     implementation libs.androidx.fragment
     implementation libs.androidx.lifecycle.common
-    implementation libs.androidx.lifecycle.compose
     implementation libs.androidx.lifecycle.process
     implementation libs.androidx.lifecycle.viewmodel
     implementation libs.androidx.preference.ktx
@@ -205,12 +204,9 @@ dependencies {
     implementation libs.androidx.swiperefreshlayout
 
     implementation platform(libs.androidx.compose.bom)
-    implementation libs.androidx.compose.foundation
-    implementation libs.androidx.compose.material3
     implementation libs.androidx.compose.runtime
     implementation libs.androidx.compose.ui.base
     implementation libs.androidx.compose.ui.graphics
-    implementation libs.androidx.compose.ui.text
     implementation libs.androidx.compose.ui.tooling
 
     implementation libs.google.material
