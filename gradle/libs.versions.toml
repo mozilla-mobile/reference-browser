@@ -42,7 +42,7 @@ dependency-analysis = "3.20.2"
 detekt = "1.23.8"
 jspecify = "1.0.1"
 ktfmt = "0.65"
-spotless = "8.10.4"
+spotless = "8.11.0"
 
 # Third Party Testing
 hamcrest = "1.3"
