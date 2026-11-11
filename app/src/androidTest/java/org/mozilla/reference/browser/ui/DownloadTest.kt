@@ -36,7 +36,7 @@ class DownloadTest {
 
     @After
     fun tearDown() {
-        runCatching { mockWebServer.close() }
+        mockWebServer.close()
     }
 
     @Test

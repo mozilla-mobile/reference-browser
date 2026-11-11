@@ -71,7 +71,7 @@ class TabTrayMenuTest {
 
     @After
     fun tearDown() {
-        runCatching { mockWebServer.close() }
+        mockWebServer.close()
     }
 
     // This test verifies the tab tray menu items are all in place

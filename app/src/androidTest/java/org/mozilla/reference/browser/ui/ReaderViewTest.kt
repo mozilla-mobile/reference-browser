@@ -33,7 +33,7 @@ class ReaderViewTest {
 
     @After
     fun tearDown() {
-        runCatching { mockWebServer.close() }
+        mockWebServer.close()
     }
 
     @Test

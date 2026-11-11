@@ -32,7 +32,7 @@ class AddonsTest {
 
     @After
     fun tearDown() {
-        runCatching { mockWebServer.close() }
+        mockWebServer.close()
     }
 
     @Test

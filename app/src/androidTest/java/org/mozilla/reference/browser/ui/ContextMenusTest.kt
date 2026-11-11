@@ -41,7 +41,7 @@ class ContextMenusTest {
 
     @After
     fun tearDown() {
-        runCatching { mockWebServer.close() }
+        mockWebServer.close()
 
         // Allow the System UI from reading the clipboard content
         if (Build.VERSION.SDK_INT == Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
