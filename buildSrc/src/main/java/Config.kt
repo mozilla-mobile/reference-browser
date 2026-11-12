@@ -5,7 +5,6 @@
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
-import org.gradle.api.Project
 
 /** SDK levels, build tools and version names for the app's Gradle build. */
 object Config {
@@ -21,10 +20,4 @@ object Config {
      * version stays the same all week and tools like Sentry do not fill up with versions.
      */
     @JvmStatic fun generateDebugVersionName(): String = SimpleDateFormat("1.0.yyww", Locale.US).format(Date())
-
-    /**
-     * Nightly tasks pass `-PversionName`. This runs at configuration time, before Gradle knows which variant is being
-     * built, so it returns an empty string instead of failing when the property is absent.
-     */
-    @JvmStatic fun releaseVersionName(project: Project): String = project.findProperty("versionName") as String? ?: ""
 }
