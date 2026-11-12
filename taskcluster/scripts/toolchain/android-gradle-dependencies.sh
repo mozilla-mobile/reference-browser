@@ -22,7 +22,6 @@ GRADLE_FLAGS=(
     # Overrides the daemon=false the base image puts in GRADLE_OPTS.
     --daemon
     --no-configuration-cache
-    -Pcoverage
     -PcentralRepo='http://localhost:8081/nexus/content/repositories/central/'
     -PgoogleRepo='http://localhost:8081/nexus/content/repositories/google/'
     -PpluginRepo='http://localhost:8081/nexus/content/repositories/gradle-plugins/'
