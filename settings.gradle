@@ -6,9 +6,9 @@ pluginManagement {
         def googleRepo = providers.gradleProperty("googleRepo")
         if (googleRepo.present) {
             maven {
-                name "Google"
-                url googleRepo.get()
-                allowInsecureProtocol true // Local Nexus in CI uses HTTP
+                name = "Google"
+                url = googleRepo.get()
+                allowInsecureProtocol = true // Local Nexus in CI uses HTTP
             }
         } else {
             google()
@@ -17,9 +17,9 @@ pluginManagement {
         def centralRepo = providers.gradleProperty("centralRepo")
         if (centralRepo.present) {
             maven {
-                name "MavenCentral"
-                url centralRepo.get()
-                allowInsecureProtocol true // Local Nexus in CI uses HTTP
+                name = "MavenCentral"
+                url = centralRepo.get()
+                allowInsecureProtocol = true // Local Nexus in CI uses HTTP
             }
         } else {
             mavenCentral()
@@ -29,9 +29,9 @@ pluginManagement {
         def pluginRepo = providers.gradleProperty("pluginRepo")
         if (pluginRepo.present) {
             maven {
-                name "GradlePlugins"
-                url pluginRepo.get()
-                allowInsecureProtocol true // Local Nexus in CI uses HTTP
+                name = "GradlePlugins"
+                url = pluginRepo.get()
+                allowInsecureProtocol = true // Local Nexus in CI uses HTTP
             }
         } else {
             gradlePluginPortal()
