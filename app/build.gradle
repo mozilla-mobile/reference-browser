@@ -146,11 +146,15 @@ android {
     testOptions {
         execution = 'ANDROIDX_TEST_ORCHESTRATOR'
         animationsDisabled = true
+        unitTests {
+            includeAndroidResources = true
+        }
     }
 
     lintOptions {
         lintConfig = file("lint.xml")
         disable 'GradleDependency', 'AndroidGradlePluginVersion'
+        warningsAsErrors = true
     }
 
     splits {
@@ -168,6 +172,7 @@ android {
 
 kotlin {
     compilerOptions {
+        allWarningsAsErrors = true
         jvmTarget = JvmTarget.fromTarget(Config.jvmTargetCompatibility.toString())
     }
 }
