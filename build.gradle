@@ -6,28 +6,6 @@ buildscript {
     dependencies {
         classpath(libs.kotlin.gradle.plugin)
     }
-
-    repositories {
-        if (project.hasProperty("googleRepo")) {
-            maven {
-                name "Google"
-                url project.property("googleRepo")
-                allowInsecureProtocol true // Local Nexus in CI uses HTTP
-            }
-        } else {
-            google()
-        }
-
-        if (project.hasProperty("centralRepo")) {
-            maven {
-                name "MavenCentral"
-                url project.property("centralRepo")
-                allowInsecureProtocol true // Local Nexus in CI uses HTTP
-            }
-        } else {
-            mavenCentral()
-        }
-    }
 }
 
 plugins {
@@ -40,11 +18,12 @@ plugins {
 
 allprojects {
     repositories {
-        if (project.hasProperty("googleRepo")) {
+        def googleRepo = providers.gradleProperty("googleRepo")
+        if (googleRepo.present) {
             maven {
-                name "Google"
-                url project.property("googleRepo")
-                allowInsecureProtocol true // Local Nexus in CI uses HTTP
+                name = "Google"
+                url = googleRepo.get()
+                allowInsecureProtocol = true // Local Nexus in CI uses HTTP
             }
         } else {
             google()
@@ -70,11 +49,12 @@ allprojects {
             }
         }
 
-        if (project.hasProperty("centralRepo")) {
+        def centralRepo = providers.gradleProperty("centralRepo")
+        if (centralRepo.present) {
             maven {
-                name "MavenCentral"
-                url project.property("centralRepo")
-                allowInsecureProtocol true // Local Nexus in CI uses HTTP
+                name = "MavenCentral"
+                url = centralRepo.get()
+                allowInsecureProtocol = true // Local Nexus in CI uses HTTP
             }
         } else {
             mavenCentral()
@@ -144,11 +124,9 @@ tasks.register('ktfmtFormat') {
 }
 
 tasks.register('listRepositories') {
+    def repositories = project.repositories.collect { "Name: ${it.name}; url: ${it.url}" }
     doLast {
         println "Repositories:"
-        project.repositories.each { println "Name: " + it.name + "; url: " + it.url }
-        // Plugin repositories have no url to report, being wrappers.
-        println "Buildscript repositories:"
-        buildscript.repositories.each { println "Name: " + it.name }
+        repositories.each { println it }
     }
 }
