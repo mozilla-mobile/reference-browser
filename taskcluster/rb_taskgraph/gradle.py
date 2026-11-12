@@ -12,8 +12,7 @@
 # Here, we're just tracking a handful build_types, so we don't need the same complexity
 # as what was introduced in https://github.com/mozilla-mobile/firefox-android/pull/340.
 #
-# If you want to update this variable, just run `gradlew printVariants` and copy-paste
-# the result.
+# Keep this variable in sync with the build types and ABI splits in app/build.gradle.
 _ALL_VARIANTS = [
     {
         "apks": [

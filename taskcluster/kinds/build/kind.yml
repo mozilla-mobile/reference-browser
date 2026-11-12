@@ -15,10 +15,10 @@ kind-dependencies:
 
 
 task-defaults:
-    # Builds generate multiple APKs with different ABIs. For each APK described
-    # by `gradlew printVariants`, an artifact will be generated. `variant` and
-    # the per-apk config from `printVariants` can be used as subsistutions in
-    # `name` and `path`.
+    # Builds generate multiple APKs with different ABIs. For each APK listed in
+    # rb_taskgraph/gradle.py, an artifact will be generated. `variant` and the
+    # per-apk config from that list can be used as substitutions in `name` and
+    # `path`.
     apk-artifact-template:
         type: file
         name: public/target.{abi}.apk
