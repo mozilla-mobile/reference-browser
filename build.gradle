@@ -84,15 +84,10 @@ allprojects {
 }
 
 subprojects {
-    apply plugin: 'jacoco'
-
     afterEvaluate {
         if (it.hasProperty('android')) {
             android {
                 testOptions {
-                    testCoverage {
-                        jacocoVersion = libs.versions.jacoco.get()
-                    }
                     unitTests {
                         includeAndroidResources = true
                     }
@@ -107,40 +102,6 @@ subprojects {
             tasks.withType(KotlinCompile).configureEach {
                 compilerOptions {
                     allWarningsAsErrors = true
-                }
-            }
-
-            if (project.hasProperty("coverage") && project.name != "support-test") {
-                tasks.withType(Test).configureEach {
-                    jacoco.includeNoLocationClasses = true
-                    doLast { jacocoTestReport.execute() }
-                }
-
-                tasks.register('jacocoTestReport', JacocoReport) {
-                    reports {
-                        xml.required = true
-                        html.required = true
-                    }
-
-                    def fileFilter = ['**/R.class', '**/R$*.class', '**/BuildConfig.*', '**/Manifest*.*',
-                                      '**/*Test*.*', 'android/**/*.*', '**/*$[0-9].*']
-                    def kotlinDebugTree = fileTree(dir: "$project.buildDir/tmp/kotlin-classes/debug", excludes: fileFilter)
-                    def javaDebugTree = fileTree(dir: "$project.buildDir/intermediates/classes/debug", excludes: fileFilter)
-                    def mainSrc = "$project.projectDir/src/main/java"
-
-                    sourceDirectories = files([mainSrc])
-                    classDirectories = files([kotlinDebugTree, javaDebugTree])
-                    executionData = fileTree(dir: project.buildDir, includes: [
-                            'jacoco/testDebugUnitTest.exec', 'outputs/code-coverage/connected/*coverage.ec'
-                    ])
-                }
-
-                android {
-                    buildTypes {
-                        debug {
-                            testCoverageEnabled true
-                        }
-                    }
                 }
             }
         }
