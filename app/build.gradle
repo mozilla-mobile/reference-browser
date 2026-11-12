@@ -14,7 +14,6 @@ def baseVersionCode = generatedVersionCode
 
 import com.android.build.api.variant.BuildConfigField
 import com.android.build.api.variant.FilterConfiguration
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 androidComponents {
     beforeVariants(selector().all()) { variantBuilder ->
@@ -98,35 +97,22 @@ android {
         targetCompatibility = JavaVersion.toVersion(Config.jvmTargetCompatibility)
     }
 
-    defaultConfig {
-        applicationId "org.mozilla.reference.browser"
-        buildToolsVersion Config.buildToolsVersion
-        compileSdk {
-            version = release(Config.compileSdkMajorVersion) {
-                minorApiLevel = Config.compileSdkMinorVersion
-            }
+    buildToolsVersion = Config.buildToolsVersion
+    compileSdk {
+        version = release(Config.compileSdkMajorVersion) {
+            minorApiLevel = Config.compileSdkMinorVersion
         }
-        minSdkVersion Config.minSdkVersion
-        targetSdkVersion Config.targetSdkVersion
-        versionCode 1
-        versionName Config.generateDebugVersionName()
-
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-        testInstrumentationRunnerArguments clearPackageData: 'true'
     }
 
-    def releaseTemplate = {
-        minifyEnabled true
-        proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-        matchingFallbacks = ['release'] // Use on the "release" build type in dependencies (AARs)
+    defaultConfig {
+        applicationId = "org.mozilla.reference.browser"
+        minSdk = Config.minSdkVersion
+        targetSdk = Config.targetSdkVersion
+        versionCode = 1
+        versionName = Config.generateDebugVersionName()
 
-        if (gradle.hasProperty("localProperties.autosignReleaseWithDebugKey")) {
-            signingConfig signingConfigs.debug
-        }
-
-        if (gradle.hasProperty("localProperties.debuggable")) {
-            debuggable true
-        }
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunnerArguments clearPackageData: 'true'
     }
 
     buildFeatures {
@@ -136,9 +122,21 @@ android {
 
     buildTypes {
         debug {
-            applicationIdSuffix ".debug"
+            applicationIdSuffix = ".debug"
         }
-        nightly releaseTemplate >> {
+        nightly {
+            minifyEnabled = true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            matchingFallbacks = ['release'] // Use on the "release" build type in dependencies (AARs)
+
+            if (gradle.hasProperty("localProperties.autosignReleaseWithDebugKey")) {
+                signingConfig = signingConfigs.debug
+            }
+
+            if (gradle.hasProperty("localProperties.debuggable")) {
+                debuggable = true
+            }
+
             buildConfigField "boolean", "IS_RELEASED", "true"
         }
     }
@@ -151,9 +149,9 @@ android {
         }
     }
 
-    lintOptions {
+    lint {
         lintConfig = file("lint.xml")
-        disable 'GradleDependency', 'AndroidGradlePluginVersion'
+        disable += ['GradleDependency', 'AndroidGradlePluginVersion']
         warningsAsErrors = true
     }
 
@@ -173,7 +171,6 @@ android {
 kotlin {
     compilerOptions {
         allWarningsAsErrors = true
-        jvmTarget = JvmTarget.fromTarget(Config.jvmTargetCompatibility.toString())
     }
 }
 
