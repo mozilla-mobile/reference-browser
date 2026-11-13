@@ -6,9 +6,9 @@ pluginManagement {
         def googleRepo = providers.gradleProperty("googleRepo")
         if (googleRepo.present) {
             maven {
-                name "Google"
-                url googleRepo.get()
-                allowInsecureProtocol true // Local Nexus in CI uses HTTP
+                name = "Google"
+                url = googleRepo.get()
+                allowInsecureProtocol = true // Local Nexus in CI uses HTTP
             }
         } else {
             google()
@@ -17,9 +17,9 @@ pluginManagement {
         def centralRepo = providers.gradleProperty("centralRepo")
         if (centralRepo.present) {
             maven {
-                name "MavenCentral"
-                url centralRepo.get()
-                allowInsecureProtocol true // Local Nexus in CI uses HTTP
+                name = "MavenCentral"
+                url = centralRepo.get()
+                allowInsecureProtocol = true // Local Nexus in CI uses HTTP
             }
         } else {
             mavenCentral()
@@ -29,9 +29,9 @@ pluginManagement {
         def pluginRepo = providers.gradleProperty("pluginRepo")
         if (pluginRepo.present) {
             maven {
-                name "GradlePlugins"
-                url pluginRepo.get()
-                allowInsecureProtocol true // Local Nexus in CI uses HTTP
+                name = "GradlePlugins"
+                url = pluginRepo.get()
+                allowInsecureProtocol = true // Local Nexus in CI uses HTTP
             }
         } else {
             gradlePluginPortal()
@@ -45,18 +45,19 @@ def log(message) {
     logger.lifecycle("[settings] ${message}")
 }
 
-def runCmd(cmd, workingDir, successMessage, captureStdout=true) {
-    def proc = cmd.execute(null, new File(workingDir))
-    def standardOutput = captureStdout ? new ByteArrayOutputStream() : System.out
-    proc.consumeProcessOutput(standardOutput, System.err)
-    proc.waitFor()
-
-    if (proc.exitValue() != 0) {
-        throw new GradleException("Process '${cmd}' finished with non-zero exit value ${proc.exitValue()}");
-    } else {
-        log(successMessage)
+def runCmd(cmd, workingDir, successMessage) {
+    def exec = providers.exec {
+        commandLine(cmd)
+        setWorkingDir(file(workingDir))
+        ignoreExitValue = true
     }
-    return captureStdout ? standardOutput : null
+    print exec.standardOutput.asText.get()
+    System.err.print exec.standardError.asText.get()
+    int exitValue = exec.result.get().exitValue
+    if (exitValue != 0) {
+        throw new GradleException("Process '${cmd}' finished with non-zero exit value ${exitValue}")
+    }
+    log(successMessage)
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -85,7 +86,7 @@ if (localProperties != null) {
     if (appServicesLocalPath != null) {
         log("Enabling automatic publication of application-services from: $appServicesLocalPath")
         def publishAppServicesCmd = ["./automation/publish_to_maven_local_if_modified.py"]
-        runCmd(publishAppServicesCmd, appServicesLocalPath, "Published application-services for local development.", false)
+        runCmd(publishAppServicesCmd, appServicesLocalPath, "Published application-services for local development.")
     } else {
         log("Disabled auto-publication of application-services. Enable it by settings '$settingAppServicesPath' in local.properties")
     }
@@ -95,7 +96,7 @@ if (localProperties != null) {
     if (androidComponentsLocalPath != null) {
         log("Enabling automatic publication of android-components from: $androidComponentsLocalPath")
         def publishAcCmd = ["./automation/publish_to_maven_local_if_modified.py"]
-        runCmd(publishAcCmd, androidComponentsLocalPath, "Published android-components for local development.", false)
+        runCmd(publishAcCmd, androidComponentsLocalPath, "Published android-components for local development.")
     } else {
         log("Disabled auto-publication of android-components. Enable it by settings '$settingAndroidComponentsPath' in local.properties")
     }

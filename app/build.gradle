@@ -14,8 +14,6 @@ def baseVersionCode = generatedVersionCode
 
 import com.android.build.api.variant.BuildConfigField
 import com.android.build.api.variant.FilterConfiguration
-import groovy.json.JsonOutput
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 androidComponents {
     beforeVariants(selector().all()) { variantBuilder ->
@@ -27,67 +25,36 @@ androidComponents {
         }
     }
 
-    onVariants(selector().all()) { variant ->
-        // -------------------------------------------------------------------------
-        // 1. Sentry Token
-        // -------------------------------------------------------------------------
-        String sentryToken = "null"
-        try {
-            File tokenFile = file("${rootDir}/.sentry_token")
-            if (tokenFile.exists()) {
-                sentryToken = '"' + tokenFile.text.trim() + '"'
-                println("(Added Sentry token from file)")
-            }
-        } catch (Exception ignored) { }
+    def sentryTokenFile = providers.fileContents(rootProject.layout.projectDirectory.file(".sentry_token")).asText
+    String sentryToken = sentryTokenFile.map { '"' + it.trim() + '"' }.getOrElse("null")
+    if (sentryTokenFile.present) {
+        println("(Added Sentry token from file)")
+    }
+    boolean crashReporting = providers.gradleProperty("crashReportEnabled").orNull == "true"
+    boolean telemetry = providers.gradleProperty("telemetry").orNull == "true"
+    boolean official = providers.gradleProperty("official").present || gradle.hasProperty("localProperties.official")
+    boolean aab = providers.gradleProperty("aab").present
+    String versionName = providers.gradleProperty("versionName").getOrElse("")
 
+    onVariants(selector().all()) { variant ->
         variant.buildConfigFields.put("SENTRY_TOKEN",
                 new BuildConfigField("String", sentryToken, "Sentry Token"))
-
-        // -------------------------------------------------------------------------
-        // 2. Crash Reporting & Telemetry
-        // -------------------------------------------------------------------------
-        boolean crashReporting = project.hasProperty("crashReportEnabled") && project.property("crashReportEnabled") == "true"
         variant.buildConfigFields.put("CRASH_REPORTING_ENABLED",
                 new BuildConfigField("boolean", crashReporting.toString(), "Crash Reporting"))
-
-        boolean telemetry = project.hasProperty("telemetry") && project.property("telemetry") == "true"
         variant.buildConfigFields.put("TELEMETRY_ENABLED",
                 new BuildConfigField("boolean", telemetry.toString(), "Telemetry"))
-
-        // -------------------------------------------------------------------------
-        // 3. Official Build Flag
-        // -------------------------------------------------------------------------
-        boolean official = project.hasProperty("official") || gradle.hasProperty("localProperties.official")
         variant.buildConfigFields.put("MOZILLA_OFFICIAL",
                 new BuildConfigField("Boolean", official.toString(), "Official Build"))
 
-        // -------------------------------------------------------------------------
-        // 4. Version Codes (Only if IS_RELEASED is true)
-        // -------------------------------------------------------------------------
-        // Note: In the new API, checking buildConfigFields defined in build types is harder.
-        // We check the build type name directly instead.
         if (variant.buildType == "nightly") {
-            // Logic adapted for new API
-            def baseCode = baseVersionCode
-            if (baseCode % 2 != 0) baseCode += 1 // Ensure even
+            def baseCode = baseVersionCode + baseVersionCode % 2 // Ensure even
 
             variant.outputs.each { output ->
-                def abiFilter = output.filters.find { it.filterType == FilterConfiguration.FilterType.ABI }                // Note: Accessing specific ABI names in AGP 9 via 'filters' can be tricky
-                def abiName = abiFilter?.identifier // This returns "x86", "arm64-v8a", etc.
-
-                // Simplified mapping for demonstration:
-                def addedCode = 0
-                if (project.hasProperty("aab")) {
-                    addedCode = 1
-                } else if (abiName != null) {
-                    // FIX: Check the abiName identifier instead of output.name
-                    if (abiName == "x86_64") addedCode = 6
-                    else if (abiName == "x86") addedCode = 4
-                    else if (abiName == "arm64-v8a") addedCode = 2
-                }
+                def abiName = output.filters.find { it.filterType == FilterConfiguration.FilterType.ABI }?.identifier
+                def addedCode = aab ? 1 : ([x86_64: 6, 'arm64-v8a': 2][abiName] ?: 0)
 
                 output.versionCode.set(baseCode + addedCode)
-                output.versionName.set(Config.releaseVersionName(project))
+                output.versionName.set(versionName)
             }
         }
     }
@@ -99,35 +66,22 @@ android {
         targetCompatibility = JavaVersion.toVersion(Config.jvmTargetCompatibility)
     }
 
-    defaultConfig {
-        applicationId "org.mozilla.reference.browser"
-        buildToolsVersion Config.buildToolsVersion
-        compileSdk {
-            version = release(Config.compileSdkMajorVersion) {
-                minorApiLevel = Config.compileSdkMinorVersion
-            }
+    buildToolsVersion = Config.buildToolsVersion
+    compileSdk {
+        version = release(Config.compileSdkMajorVersion) {
+            minorApiLevel = Config.compileSdkMinorVersion
         }
-        minSdkVersion Config.minSdkVersion
-        targetSdkVersion Config.targetSdkVersion
-        versionCode 1
-        versionName Config.generateDebugVersionName()
-
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-        testInstrumentationRunnerArguments clearPackageData: 'true'
     }
 
-    def releaseTemplate = {
-        minifyEnabled true
-        proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-        matchingFallbacks = ['release'] // Use on the "release" build type in dependencies (AARs)
+    defaultConfig {
+        applicationId = "org.mozilla.reference.browser"
+        minSdk = Config.minSdkVersion
+        targetSdk = Config.targetSdkVersion
+        versionCode = 1
+        versionName = Config.generateDebugVersionName()
 
-        if (gradle.hasProperty("localProperties.autosignReleaseWithDebugKey")) {
-            signingConfig signingConfigs.debug
-        }
-
-        if (gradle.hasProperty("localProperties.debuggable")) {
-            debuggable true
-        }
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunnerArguments clearPackageData: 'true'
     }
 
     buildFeatures {
@@ -137,9 +91,21 @@ android {
 
     buildTypes {
         debug {
-            applicationIdSuffix ".debug"
+            applicationIdSuffix = ".debug"
         }
-        nightly releaseTemplate >> {
+        nightly {
+            minifyEnabled = true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            matchingFallbacks = ['release'] // Use on the "release" build type in dependencies (AARs)
+
+            if (gradle.hasProperty("localProperties.autosignReleaseWithDebugKey")) {
+                signingConfig = signingConfigs.debug
+            }
+
+            if (gradle.hasProperty("localProperties.debuggable")) {
+                debuggable = true
+            }
+
             buildConfigField "boolean", "IS_RELEASED", "true"
         }
     }
@@ -147,11 +113,15 @@ android {
     testOptions {
         execution = 'ANDROIDX_TEST_ORCHESTRATOR'
         animationsDisabled = true
+        unitTests {
+            includeAndroidResources = true
+        }
     }
 
-    lintOptions {
+    lint {
         lintConfig = file("lint.xml")
-        disable 'GradleDependency', 'AndroidGradlePluginVersion'
+        disable += ['GradleDependency', 'AndroidGradlePluginVersion']
+        warningsAsErrors = true
     }
 
     splits {
@@ -169,7 +139,7 @@ android {
 
 kotlin {
     compilerOptions {
-        jvmTarget = JvmTarget.fromTarget(Config.jvmTargetCompatibility.toString())
+        allWarningsAsErrors = true
     }
 }
 
@@ -312,37 +282,6 @@ dependencies {
     androidTestImplementation libs.okio
 
     androidTestUtil libs.androidx.test.orchestrator
-}
-
-// -------------------------------------------------------------------------------------------------
-// Task for printing APK information for the requested variant
-// Usage: ./gradlew printVariants
-// -------------------------------------------------------------------------------------------------
-tasks.register('printVariants') {
-    doLast {
-        def variants = android.applicationVariants.collect { variant ->
-            [
-                    apks      : variant.outputs.collect { output ->
-                        [
-                                abi     : output.getFilter(FilterConfiguration.FilterType.ABI.name()),
-                                fileName: output.outputFile.name
-                        ]
-                    },
-                    build_type: variant.buildType.name,
-                    name      : variant.name,
-            ]
-        }
-        println 'variants: ' + JsonOutput.toJson(variants)
-    }
-}
-
-tasks.register('printGeckoviewVersion') {
-    doLast {
-        def configuration = configurations.implementationDependenciesMetadata
-        def dependencies = configuration.incoming.resolutionResult.allDependencies
-        def geckoviewDependency = dependencies.find { it.selected.id.moduleIdentifier.group == 'org.mozilla.geckoview' }
-        println('geckoviewVersion: ' + JsonOutput.toJson(geckoviewDependency.selected.moduleVersion.version))
-    }
 }
 
 if (gradle.hasProperty('localProperties.dependencySubstitutions.geckoviewTopsrcdir')) {

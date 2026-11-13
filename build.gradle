@@ -1,33 +1,10 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
 import io.gitlab.arturbosch.detekt.Detekt
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 buildscript {
     dependencies {
         classpath(libs.kotlin.gradle.plugin)
-    }
-
-    repositories {
-        if (project.hasProperty("googleRepo")) {
-            maven {
-                name "Google"
-                url project.property("googleRepo")
-                allowInsecureProtocol true // Local Nexus in CI uses HTTP
-            }
-        } else {
-            google()
-        }
-
-        if (project.hasProperty("centralRepo")) {
-            maven {
-                name "MavenCentral"
-                url project.property("centralRepo")
-                allowInsecureProtocol true // Local Nexus in CI uses HTTP
-            }
-        } else {
-            mavenCentral()
-        }
     }
 }
 
@@ -41,11 +18,12 @@ plugins {
 
 allprojects {
     repositories {
-        if (project.hasProperty("googleRepo")) {
+        def googleRepo = providers.gradleProperty("googleRepo")
+        if (googleRepo.present) {
             maven {
-                name "Google"
-                url project.property("googleRepo")
-                allowInsecureProtocol true // Local Nexus in CI uses HTTP
+                name = "Google"
+                url = googleRepo.get()
+                allowInsecureProtocol = true // Local Nexus in CI uses HTTP
             }
         } else {
             google()
@@ -71,82 +49,18 @@ allprojects {
             }
         }
 
-        if (project.hasProperty("centralRepo")) {
+        def centralRepo = providers.gradleProperty("centralRepo")
+        if (centralRepo.present) {
             maven {
-                name "MavenCentral"
-                url project.property("centralRepo")
-                allowInsecureProtocol true // Local Nexus in CI uses HTTP
+                name = "MavenCentral"
+                url = centralRepo.get()
+                allowInsecureProtocol = true // Local Nexus in CI uses HTTP
             }
         } else {
             mavenCentral()
         }
     }
 }
-
-subprojects {
-    apply plugin: 'jacoco'
-
-    afterEvaluate {
-        if (it.hasProperty('android')) {
-            android {
-                testOptions {
-                    testCoverage {
-                        jacocoVersion = libs.versions.jacoco.get()
-                    }
-                    unitTests {
-                        includeAndroidResources = true
-                    }
-                }
-
-                lintOptions {
-                    warningsAsErrors = true
-                    abortOnError = true
-                }
-            }
-
-            tasks.withType(KotlinCompile).configureEach {
-                compilerOptions {
-                    allWarningsAsErrors = true
-                }
-            }
-
-            if (project.hasProperty("coverage") && project.name != "support-test") {
-                tasks.withType(Test).configureEach {
-                    jacoco.includeNoLocationClasses = true
-                    doLast { jacocoTestReport.execute() }
-                }
-
-                tasks.register('jacocoTestReport', JacocoReport) {
-                    reports {
-                        xml.required = true
-                        html.required = true
-                    }
-
-                    def fileFilter = ['**/R.class', '**/R$*.class', '**/BuildConfig.*', '**/Manifest*.*',
-                                      '**/*Test*.*', 'android/**/*.*', '**/*$[0-9].*']
-                    def kotlinDebugTree = fileTree(dir: "$project.buildDir/tmp/kotlin-classes/debug", excludes: fileFilter)
-                    def javaDebugTree = fileTree(dir: "$project.buildDir/intermediates/classes/debug", excludes: fileFilter)
-                    def mainSrc = "$project.projectDir/src/main/java"
-
-                    sourceDirectories = files([mainSrc])
-                    classDirectories = files([kotlinDebugTree, javaDebugTree])
-                    executionData = fileTree(dir: project.buildDir, includes: [
-                            'jacoco/testDebugUnitTest.exec', 'outputs/code-coverage/connected/*coverage.ec'
-                    ])
-                }
-
-                android {
-                    buildTypes {
-                        debug {
-                            testCoverageEnabled true
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
-
 
 dependencyAnalysis {
     structure {
@@ -210,11 +124,9 @@ tasks.register('ktfmtFormat') {
 }
 
 tasks.register('listRepositories') {
+    def repositories = project.repositories.collect { "Name: ${it.name}; url: ${it.url}" }
     doLast {
         println "Repositories:"
-        project.repositories.each { println "Name: " + it.name + "; url: " + it.url }
-        // Plugin repositories have no url to report, being wrappers.
-        println "Buildscript repositories:"
-        buildscript.repositories.each { println "Name: " + it.name }
+        repositories.each { println it }
     }
 }
