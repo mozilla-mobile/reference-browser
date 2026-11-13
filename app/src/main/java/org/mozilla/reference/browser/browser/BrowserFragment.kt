@@ -7,7 +7,6 @@ package org.mozilla.reference.browser.browser
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.lifecycleScope
-import androidx.preference.PreferenceManager
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -51,14 +50,6 @@ class BrowserFragment : BaseBrowserFragment(), UserInteractionHandler {
 
     private val readerViewAppearanceButton: FloatingActionButton
         get() = requireView().findViewById(R.id.readerViewAppearanceButton)
-
-    override val shouldUseComposeUI: Boolean
-        get() =
-            PreferenceManager.getDefaultSharedPreferences(requireContext())
-                .getBoolean(
-                    getString(R.string.pref_key_compose_ui),
-                    false,
-                )
 
     override fun onViewCreated(
         view: View,
@@ -111,8 +102,6 @@ class BrowserFragment : BaseBrowserFragment(), UserInteractionHandler {
                 tabsUseCases = requireComponents.useCases.tabsUseCases,
             ),
         )
-
-        engineView.setDynamicToolbarMaxHeight(resources.getDimensionPixelSize(R.dimen.browser_toolbar_height))
     }
 
     private fun setupAwesomeBar() {

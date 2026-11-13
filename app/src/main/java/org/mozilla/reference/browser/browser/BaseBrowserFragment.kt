@@ -15,14 +15,12 @@ import android.view.ViewGroup
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.CallSuper
-import androidx.compose.ui.platform.ComposeView
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.fragment.app.Fragment
 import androidx.preference.PreferenceManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import mozilla.components.browser.state.selector.selectedTab
 import mozilla.components.browser.toolbar.BrowserToolbar
-import mozilla.components.compose.browser.toolbar.BrowserToolbar
 import mozilla.components.concept.engine.EngineView
 import mozilla.components.feature.app.links.AppLinksFeature
 import mozilla.components.feature.downloads.DownloadsFeature
@@ -49,7 +47,7 @@ import mozilla.components.support.ktx.android.view.exitImmersiveMode
 import mozilla.components.support.utils.DefaultDownloadFileUtils
 import mozilla.components.ui.widgets.behavior.DependencyGravity
 import mozilla.components.ui.widgets.behavior.EngineViewClippingBehavior
-import mozilla.components.ui.widgets.behavior.EngineViewScrollingGesturesBehavior
+import mozilla.components.ui.widgets.behavior.EngineViewScrollingDataBehavior
 import org.mozilla.reference.browser.BuildConfig
 import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.addons.WebExtensionPromptFeature
@@ -58,8 +56,6 @@ import org.mozilla.reference.browser.ext.getPreferenceKey
 import org.mozilla.reference.browser.ext.requireComponents
 import org.mozilla.reference.browser.pip.PictureInPictureIntegration
 import org.mozilla.reference.browser.tabs.LastTabFeature
-
-private const val BOTTOM_TOOLBAR_HEIGHT = 0
 
 /**
  * Base fragment extended by [BrowserFragment] and [ExternalAppBrowserFragment]. This class only contains shared code
@@ -172,8 +168,6 @@ abstract class BaseBrowserFragment : Fragment(), UserInteractionHandler, Activit
         savedInstanceState: Bundle?,
     ): View = inflater.inflate(R.layout.fragment_browser, container, false)
 
-    abstract val shouldUseComposeUI: Boolean
-
     @CallSuper
     override fun onViewCreated(
         view: View,
@@ -184,16 +178,6 @@ abstract class BaseBrowserFragment : Fragment(), UserInteractionHandler, Activit
         setupLinksAndPrompts(view)
         setupPageFeatures(view)
 
-        (swipeRefresh.layoutParams as? CoordinatorLayout.LayoutParams)?.apply {
-            behavior =
-                EngineViewClippingBehavior(
-                    context = requireContext(),
-                    attrs = null,
-                    engineViewParent = swipeRefresh,
-                    topToolbarHeight = toolbar.height,
-                    bottomToolbarHeight = BOTTOM_TOOLBAR_HEIGHT,
-                )
-        }
         swipeRefreshFeature.bind(
             view,
             SwipeRefreshFeature(
@@ -233,16 +217,6 @@ abstract class BaseBrowserFragment : Fragment(), UserInteractionHandler, Activit
                 },
             )
         }
-
-        val composeView = view.findViewById<ComposeView>(R.id.compose_view)
-        if (shouldUseComposeUI) {
-            composeView.visibility = View.VISIBLE
-            composeView.setContent { BrowserToolbar() }
-
-            val params = swipeRefresh.layoutParams as CoordinatorLayout.LayoutParams
-            params.topMargin = resources.getDimensionPixelSize(R.dimen.browser_toolbar_height)
-            swipeRefresh.layoutParams = params
-        }
     }
 
     private fun setupSessionAndToolbar(view: View) {
@@ -257,9 +231,22 @@ abstract class BaseBrowserFragment : Fragment(), UserInteractionHandler, Activit
             ),
         )
 
+        val bottomToolbarHeight = resources.getDimensionPixelSize(R.dimen.browser_toolbar_height)
+        engineView.setDynamicToolbarMaxHeight(bottomToolbarHeight)
+        (swipeRefresh.layoutParams as? CoordinatorLayout.LayoutParams)?.apply {
+            behavior =
+                EngineViewClippingBehavior(
+                    context = requireContext(),
+                    attrs = null,
+                    engineViewParent = swipeRefresh,
+                    topToolbarHeight = 0,
+                    bottomToolbarHeight = bottomToolbarHeight,
+                )
+        }
+
         (toolbar.layoutParams as? CoordinatorLayout.LayoutParams)?.apply {
             behavior =
-                EngineViewScrollingGesturesBehavior(
+                EngineViewScrollingDataBehavior(
                     engineView = engineView,
                     dependency = toolbar,
                     dependencyGravity = DependencyGravity.Bottom,
