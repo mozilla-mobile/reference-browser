@@ -119,7 +119,7 @@ class Core(
                             applicationScope = applicationScope,
                         ),
                         SearchMiddleware(context),
-                        RecordingDevicesMiddleware(context, context.components.notificationsDelegate),
+                        RecordingDevicesMiddleware(context, context.components.notificationsDelegate, applicationScope),
                     ) + EngineMiddleware.create(engine),
             )
             .apply {
