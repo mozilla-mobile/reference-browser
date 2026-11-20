@@ -16,6 +16,7 @@ import mozilla.components.feature.session.SessionUseCases
 import mozilla.components.feature.tabs.CustomTabsUseCases
 import mozilla.components.feature.tabs.TabsUseCases
 import mozilla.components.lib.publicsuffixlist.PublicSuffixList
+import org.mozilla.reference.browser.tabs.SwitchTabIntentProcessor
 
 /** Component group for miscellaneous components. */
 @Suppress("LongParameterList")
@@ -45,11 +46,12 @@ class Utilities(
     }
 
     /**
-     * Provides intent processing functionality for ACTION_VIEW and ACTION_SEND intents, along with external intent
-     * processors.
+     * Provides intent processing functionality for switch tab, ACTION_VIEW and ACTION_SEND intents, along with external
+     * intent processors.
      */
     val intentProcessors by lazy {
-        externalIntentProcessors +
+        listOf(SwitchTabIntentProcessor(store, tabsUseCases.selectTab)) +
+            externalIntentProcessors +
             TabIntentProcessor(store, tabsUseCases, searchUseCases.newTabSearch, applicationScope = applicationScope)
     }
 

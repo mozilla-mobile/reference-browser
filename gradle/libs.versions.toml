@@ -142,6 +142,7 @@ mozilla-feature-downloads = { group = "org.mozilla.components", name = "feature-
 mozilla-feature-findinpage = { group = "org.mozilla.components", name = "feature-findinpage", version.ref = "android-components" }
 mozilla-feature-intent = { group = "org.mozilla.components", name = "feature-intent", version.ref = "android-components" }
 mozilla-feature-media = { group = "org.mozilla.components", name = "feature-media", version.ref = "android-components" }
+mozilla-feature-pictureinpicture = { group = "org.mozilla.components", name = "feature-pictureinpicture", version.ref = "android-components" }
 mozilla-feature-prompts = { group = "org.mozilla.components", name = "feature-prompts", version.ref = "android-components" }
 mozilla-feature-push = { group = "org.mozilla.components", name = "feature-push", version.ref = "android-components" }
 mozilla-feature-pwa = { group = "org.mozilla.components", name = "feature-pwa", version.ref = "android-components" }

@@ -4,59 +4,76 @@
 
 package org.mozilla.reference.browser.pip
 
-import android.app.Activity
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.cancel
-import kotlinx.coroutines.flow.distinctUntilChangedBy
-import kotlinx.coroutines.flow.mapNotNull
+import android.content.Context
+import android.content.pm.PackageManager
+import androidx.core.content.ContextCompat
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.map
 import mozilla.components.browser.state.selector.findTabOrCustomTabOrSelectedTab
+import mozilla.components.browser.state.state.BrowserState
 import mozilla.components.browser.state.store.BrowserStore
-import mozilla.components.feature.session.PictureInPictureFeature
-import mozilla.components.lib.state.ext.flowScoped
-import mozilla.components.support.base.feature.LifecycleAwareFeature
+import mozilla.components.browser.toolbar.BrowserToolbar
+import mozilla.components.feature.pictureinpicture.PictureInPictureUseCases
+import mozilla.components.lib.state.helpers.AbstractBinding
+import mozilla.components.ui.icons.R as iconsR
+import org.mozilla.reference.browser.R
 
 /**
- * Enters picture-in-picture when the user leaves the app while the page is fullscreen and its media is playing, or on
- * any page whose URL contains a [whiteList] entry.
+ * Adds a toolbar button that shows the video of the tab in a picture-in-picture window of its own, or closes that
+ * window. The button is shown only when the tab has media.
  */
 class PictureInPictureIntegration(
+    context: Context,
     private val store: BrowserStore,
-    activity: Activity,
+    private val toolbar: BrowserToolbar,
+    private val pictureInPictureUseCases: PictureInPictureUseCases,
     private val customTabId: String?,
-    private val whiteList: List<String> = listOf("youtube.com/tv"),
-) : LifecycleAwareFeature {
-    private var scope: CoroutineScope? = null
-    private val pictureFeature = PictureInPictureFeature(store, activity)
-    private var whiteListed = false
+) : AbstractBinding<BrowserState>(store) {
+    private val hasSystemFeature by lazy {
+        context.packageManager.hasSystemFeature(PackageManager.FEATURE_PICTURE_IN_PICTURE)
+    }
+    private var hasMedia = false
+    private var isInWindow = false
 
-    override fun start() {
-        scope =
-            store.flowScoped(dispatcher = Dispatchers.Main) { flow ->
-                flow
-                    .mapNotNull { state -> state.findTabOrCustomTabOrSelectedTab(customTabId) }
-                    .distinctUntilChangedBy { it.content.url }
-                    .collect { whiteListed = isWhitelisted(it.content.url) }
+    private val pictureInPictureButton: BrowserToolbar.ToggleButton =
+        BrowserToolbar.ToggleButton(
+            image = ContextCompat.getDrawable(context, iconsR.drawable.mozac_ic_picture_in_picture_24)!!,
+            imageSelected = ContextCompat.getDrawable(context, iconsR.drawable.mozac_ic_picture_in_picture_close_24)!!,
+            contentDescription = context.getString(R.string.pip_open),
+            contentDescriptionSelected = context.getString(R.string.pip_close),
+            visible = { hasSystemFeature && hasMedia },
+        ) { enabled ->
+            if (enabled) {
+                store.state.findTabOrCustomTabOrSelectedTab(customTabId)?.let {
+                    pictureInPictureUseCases.request(it.id)
+                }
+            } else {
+                pictureInPictureUseCases.closeWindow()
             }
-    }
-
-    override fun stop() {
-        scope?.cancel()
-    }
-
-    /**
-     * Pages whose URL contains a [whiteList] entry enter PiP without the fullscreen-and-playing check of
-     * [PictureInPictureFeature].
-     */
-    fun onHomePressed() =
-        if (whiteListed) {
-            pictureFeature.enterPipModeCompat()
-        } else {
-            pictureFeature.onHomePressed()
+            // The button follows the window in the store, not the tap. The request can fail if the page has no video.
+            pictureInPictureButton.setSelected(isInWindow, notifyListener = false)
         }
 
-    private fun isWhitelisted(url: String): Boolean {
-        val exists = whiteList.firstOrNull { url.contains(it) }
-        return exists != null
+    init {
+        toolbar.addPageAction(pictureInPictureButton)
+    }
+
+    override suspend fun onState(flow: Flow<BrowserState>) {
+        flow
+            .map { state ->
+                val tab = state.findTabOrCustomTabOrSelectedTab(customTabId)
+                // Requires Bug 2092305 to fix audio-only media.
+                val tabHasMedia = tab?.mediaSessionState != null
+                val tabIsInWindow = tab != null && state.pictureInPictureWindow.session?.tabId == tab.id
+                tabHasMedia to tabIsInWindow
+            }
+            .distinctUntilChanged()
+            .collect { (tabHasMedia, tabIsInWindow) ->
+                hasMedia = tabHasMedia
+                isInWindow = tabIsInWindow
+                pictureInPictureButton.setSelected(tabIsInWindow, notifyListener = false)
+                toolbar.invalidateActions()
+            }
     }
 }
