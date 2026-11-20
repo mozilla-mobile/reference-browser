@@ -220,6 +220,7 @@ dependencies {
     implementation libs.mozilla.feature.findinpage
     implementation libs.mozilla.feature.intent
     implementation libs.mozilla.feature.media
+    implementation libs.mozilla.feature.pictureinpicture
     implementation libs.mozilla.feature.prompts
     implementation libs.mozilla.feature.push
     implementation libs.mozilla.feature.pwa

@@ -19,7 +19,6 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.fragment.app.Fragment
 import androidx.preference.PreferenceManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import mozilla.components.browser.state.selector.selectedTab
 import mozilla.components.browser.toolbar.BrowserToolbar
 import mozilla.components.concept.engine.EngineView
 import mozilla.components.feature.app.links.AppLinksFeature
@@ -412,8 +411,10 @@ abstract class BaseBrowserFragment : Fragment(), UserInteractionHandler, Activit
         pictureInPictureIntegration.bind(
             view,
             PictureInPictureIntegration(
+                requireContext(),
                 requireComponents.core.store,
-                requireActivity(),
+                toolbar,
+                requireComponents.useCases.pictureInPictureUseCases,
                 sessionId,
             ),
         )
@@ -447,18 +448,6 @@ abstract class BaseBrowserFragment : Fragment(), UserInteractionHandler, Activit
     }
 
     @CallSuper override fun onBackPressed(): Boolean = backButtonHandler.any { it.onBackPressed() }
-
-    final override fun onHomePressed(): Boolean = pictureInPictureIntegration.get()?.onHomePressed() ?: false
-
-    final override fun onPictureInPictureModeChanged(enabled: Boolean) {
-        val session = requireComponents.core.store.state.selectedTab
-        val fullScreenMode = session?.content?.fullScreen ?: false
-        // If we're exiting PIP mode and we're in fullscreen mode, then we should exit fullscreen mode as well.
-        if (!enabled && fullScreenMode) {
-            onBackPressed()
-            fullScreenChanged(false)
-        }
-    }
 
     protected fun <T : LifecycleAwareFeature> ViewBoundFeatureWrapper<T>.bind(
         view: View,

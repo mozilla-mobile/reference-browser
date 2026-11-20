@@ -32,6 +32,8 @@ import mozilla.components.feature.customtabs.store.CustomTabsServiceStore
 import mozilla.components.feature.downloads.DownloadMiddleware
 import mozilla.components.feature.media.MediaSessionFeature
 import mozilla.components.feature.media.middleware.RecordingDevicesMiddleware
+import mozilla.components.feature.pictureinpicture.PictureInPictureMiddleware
+import mozilla.components.feature.pictureinpicture.PictureInPictureWindowFeature
 import mozilla.components.feature.prompts.file.FileUploadsDirCleaner
 import mozilla.components.feature.pwa.ManifestStorage
 import mozilla.components.feature.pwa.WebAppShortcutManager
@@ -58,6 +60,7 @@ import org.mozilla.reference.browser.downloads.DownloadService
 import org.mozilla.reference.browser.ext.components
 import org.mozilla.reference.browser.ext.getPreferenceKey
 import org.mozilla.reference.browser.media.MediaSessionService
+import org.mozilla.reference.browser.pip.PictureInPictureActivity
 import org.mozilla.reference.browser.settings.Settings
 
 private const val DAY_IN_MINUTES = 24 * 60L
@@ -120,6 +123,7 @@ class Core(
                         ),
                         SearchMiddleware(context),
                         RecordingDevicesMiddleware(context, context.components.notificationsDelegate, applicationScope),
+                        PictureInPictureMiddleware(),
                     ) + EngineMiddleware.create(engine),
             )
             .apply {
@@ -136,6 +140,7 @@ class Core(
                 )
 
                 MediaSessionFeature(context, MediaSessionService::class.java, this).start()
+                PictureInPictureWindowFeature(context, this, PictureInPictureActivity::class.java).start()
             }
     }
 

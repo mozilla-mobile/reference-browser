@@ -10,6 +10,7 @@ import mozilla.components.browser.state.store.BrowserStore
 import mozilla.components.concept.engine.Engine
 import mozilla.components.feature.contextmenu.ContextMenuUseCases
 import mozilla.components.feature.downloads.DownloadsUseCases
+import mozilla.components.feature.pictureinpicture.PictureInPictureUseCases
 import mozilla.components.feature.pwa.WebAppShortcutManager
 import mozilla.components.feature.pwa.WebAppUseCases
 import mozilla.components.feature.search.SearchUseCases
@@ -64,4 +65,7 @@ class UseCases(
 
     /** Use cases related to Custom Tabs. */
     val customTabsUseCases: CustomTabsUseCases by lazy { CustomTabsUseCases(store, sessionUseCases.loadUrl) }
+
+    /** Use cases that open and close the picture-in-picture window. */
+    val pictureInPictureUseCases: PictureInPictureUseCases by lazy { PictureInPictureUseCases(store) }
 }

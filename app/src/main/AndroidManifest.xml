@@ -46,11 +46,20 @@
         <activity android:name=".BrowserActivity"
             android:launchMode="singleTask"
             android:resizeableActivity="true"
-            android:supportsPictureInPicture="true"
             android:configChanges="keyboard|keyboardHidden|mcc|mnc|orientation|screenSize|locale|layoutDirection|smallestScreenSize|screenLayout"
             android:windowSoftInputMode="adjustResize"
             android:exported="false">
         </activity>
+
+        <activity
+            android:name=".pip.PictureInPictureActivity"
+            android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation|uiMode|density"
+            android:excludeFromRecents="true"
+            android:exported="false"
+            android:launchMode="singleTask"
+            android:resizeableActivity="true"
+            android:supportsPictureInPicture="true"
+            android:taskAffinity="" />
 
         <activity android:name=".ExternalAppBrowserActivity"
             android:configChanges="keyboard|keyboardHidden|mcc|mnc|orientation|screenSize|locale|layoutDirection|smallestScreenSize|screenLayout"

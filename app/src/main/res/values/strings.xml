@@ -15,6 +15,11 @@
     <string name="menu_action_close_tabs">Close All Tabs</string>
     <string name="menu_action_close_tabs_private">Close Private Tabs</string>
 
+    <!-- Content description of the toolbar button that shows the playing video in a picture-in-picture window -->
+    <string name="pip_open">Open picture-in-picture</string>
+    <!-- Content description of the toolbar button that closes the picture-in-picture window -->
+    <string name="pip_close">Close picture-in-picture</string>
+
     <!-- Preference summary for settings related sign in -->
     <string name="preferences_sign_in_summary">Sync your tabs and history</string>
 
